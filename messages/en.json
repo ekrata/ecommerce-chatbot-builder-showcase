@@ -119,7 +119,7 @@
     },
     "inbox": {
       "layout": {
-        "live-conversations": "Live conversations",
+        "live-chats": "Live chats",
         "unassigned": "Unassigned",
         "my-open": "My Open",
         "solved": "Solved",

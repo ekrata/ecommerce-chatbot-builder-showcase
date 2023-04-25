@@ -1,15 +1,15 @@
-2023-04-24T23:02:44.851Z  +2437ms [debug] Config loaded {"version":"2.5.8","cdkVersion":"2.72.1","constructsVersion":"10.1.156","config":{"name":"crow","region":"us-east-1","stage":"local","ssmPrefix":"/sst/crow/local/"},"metafile":{"inputs":{"stacks/DefaultStack.ts":{"bytes":1853,"imports":[{"path":"sst/constructs","kind":"import-statement","external":true},{"path":"electrodb","kind":"import-statement","external":true},{"path":"@aws-sdk/client-dynamodb","kind":"import-statement","external":true},{"path":"<runtime>","kind":"import-statement","external":true}]},"sst.config.ts":{"bytes":334,"imports":[{"path":"sst","kind":"import-statement","external":true},{"path":"sst/constructs","kind":"import-statement","external":true},{"path":"stacks/DefaultStack.ts","kind":"import-statement","original":"./stacks/DefaultStack"}]}},"outputs":{".sst.config.1682377362794.mjs":{"imports":[{"path":"sst/constructs","kind":"import-statement","external":true},{"path":"@aws-sdk/client-dynamodb","kind":"import-statement","external":true}],"exports":["default"],"entryPoint":"sst.config.ts","inputs":{"stacks/DefaultStack.ts":{"bytesInOutput":443},"sst.config.ts":{"bytesInOutput":169}},"bytes":4893}}},"paths":{"config":"/home/sol/Projects/ekrata/crow_apps/crow/sst.config.ts","root":"/home/sol/Projects/ekrata/crow_apps/crow","out":"/home/sol/Projects/ekrata/crow_apps/crow/.sst","artifacts":"/home/sol/Projects/ekrata/crow_apps/crow/.sst/artifacts"}}
-2023-04-24T23:02:44.976Z   +125ms [debug] Using AWS profile 
-2023-04-24T23:02:44.977Z     +1ms [debug] Created AWS client IoTClient
-2023-04-24T23:02:44.977Z     +0ms [debug] Getting IoT endpoint
-2023-04-24T23:02:46.113Z  +1136ms [debug] Using IoT endpoint: a3kid5076b4hed-ats.iot.us-east-1.amazonaws.com
-2023-04-24T23:02:46.113Z     +0ms [debug] Initializing bootstrap context
-2023-04-24T23:02:46.114Z     +1ms [debug] Created AWS client CloudFormationClient
-2023-04-24T23:02:47.222Z  +1108ms [debug] Loaded bootstrap status
-2023-04-24T23:02:47.222Z     +0ms [debug] Bootstrap context initialized {"version":"7","bucket":"sstbootstrap-useast124d14e4b-1hfi2zvusee82"}
-2023-04-24T23:02:47.223Z     +1ms [debug] Created AWS client S3Client
-2023-04-24T23:02:47.267Z    +44ms [debug] Fetching all metadata
-2023-04-24T23:02:48.626Z  +1359ms [debug] IoT connected
-2023-04-24T23:02:48.642Z    +16ms [debug] Fetched metadata from 1 stacks
-2023-04-24T23:02:48.644Z     +2ms [debug] Created AWS client LambdaClient
-2023-04-24T23:02:49.740Z  +1096ms [debug] Created AWS client STSClient
+2023-04-25T10:07:38.992Z  +2499ms [debug] Config loaded {"version":"2.5.8","cdkVersion":"2.72.1","constructsVersion":"10.1.156","config":{"name":"crow","region":"us-east-1","stage":"local","ssmPrefix":"/sst/crow/local/"},"metafile":{"inputs":{"stacks/DefaultStack.ts":{"bytes":1853,"imports":[{"path":"sst/constructs","kind":"import-statement","external":true},{"path":"electrodb","kind":"import-statement","external":true},{"path":"@aws-sdk/client-dynamodb","kind":"import-statement","external":true},{"path":"<runtime>","kind":"import-statement","external":true}]},"sst.config.ts":{"bytes":334,"imports":[{"path":"sst","kind":"import-statement","external":true},{"path":"sst/constructs","kind":"import-statement","external":true},{"path":"stacks/DefaultStack.ts","kind":"import-statement","original":"./stacks/DefaultStack"}]}},"outputs":{".sst.config.1682417256900.mjs":{"imports":[{"path":"sst/constructs","kind":"import-statement","external":true},{"path":"@aws-sdk/client-dynamodb","kind":"import-statement","external":true}],"exports":["default"],"entryPoint":"sst.config.ts","inputs":{"stacks/DefaultStack.ts":{"bytesInOutput":443},"sst.config.ts":{"bytesInOutput":169}},"bytes":4893}}},"paths":{"config":"/home/sol/Projects/ekrata/crow_apps/crow/sst.config.ts","root":"/home/sol/Projects/ekrata/crow_apps/crow","out":"/home/sol/Projects/ekrata/crow_apps/crow/.sst","artifacts":"/home/sol/Projects/ekrata/crow_apps/crow/.sst/artifacts"}}
+2023-04-25T10:07:39.132Z   +140ms [debug] Using AWS profile 
+2023-04-25T10:07:39.133Z     +1ms [debug] Created AWS client IoTClient
+2023-04-25T10:07:39.133Z     +0ms [debug] Getting IoT endpoint
+2023-04-25T10:07:40.214Z  +1081ms [debug] Using IoT endpoint: a3kid5076b4hed-ats.iot.us-east-1.amazonaws.com
+2023-04-25T10:07:40.215Z     +1ms [debug] Initializing bootstrap context
+2023-04-25T10:07:40.216Z     +1ms [debug] Created AWS client CloudFormationClient
+2023-04-25T10:07:41.470Z  +1254ms [debug] Loaded bootstrap status
+2023-04-25T10:07:41.470Z     +0ms [debug] Bootstrap context initialized {"version":"7","bucket":"sstbootstrap-useast124d14e4b-1hfi2zvusee82"}
+2023-04-25T10:07:41.471Z     +1ms [debug] Created AWS client S3Client
+2023-04-25T10:07:41.515Z    +44ms [debug] Fetching all metadata
+2023-04-25T10:07:42.889Z  +1374ms [debug] IoT connected
+2023-04-25T10:07:43.126Z   +237ms [debug] Fetched metadata from 1 stacks
+2023-04-25T10:07:43.128Z     +2ms [debug] Created AWS client LambdaClient
+2023-04-25T10:07:44.264Z  +1136ms [debug] Created AWS client STSClient

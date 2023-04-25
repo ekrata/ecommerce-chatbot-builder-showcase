@@ -13,12 +13,16 @@ import {
 import { GoBrowser } from 'react-icons/go';
 import { BiTimer } from 'react-icons/bi';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
-import { BsChatLeftText, BsRobot, BsTags } from 'react-icons/bs';
+import { Link, useTranslations } from 'next-intl';
+import {
+  BsChatLeftText,
+  BsChevronRight,
+  BsRobot,
+  BsTags,
+} from 'react-icons/bs';
 import { IconContext } from 'react-icons';
 import { TbChartGridDots } from 'react-icons/tb';
 import { RiCheckboxMultipleBlankFill, RiMailSendLine } from 'react-icons/ri';
-import { GrMultiple } from 'react-icons/gr';
 import {
   Avatar,
   Button,
@@ -237,7 +241,14 @@ export default function ComplexNavbar() {
         >
           <HiOutlineBars2 className='h-6 w-6' />
         </Button>
+
         <ProfileMenu />
+        <Link href={{ pathname: '/dash' }} key='dash'>
+          <Button size='sm' className='flex place-items-center'>
+            Dash
+            <BsChevronRight />
+          </Button>
+        </Link>
       </div>
       <MobileNav open={isNavOpen} className='overflow-scroll'>
         <NavList />

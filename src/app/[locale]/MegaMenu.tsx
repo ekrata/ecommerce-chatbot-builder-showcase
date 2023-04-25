@@ -27,7 +27,7 @@ interface Props {
 const renderItems = ({ navTitle, menuItems }: Props) => (
   <>
     {Object.entries(menuItems).map(([key, items]) => (
-      <section className='flex-col flex gap-y-2  gap-x-4 pl-2 font-light text-black dark:text-white'>
+      <div className='flex-col flex gap-y-2  gap-x-4 pl-2 font-light text-black dark:text-white'>
         <Typography variant='h5' className='ml-2 font-normal'>
           {key}
         </Typography>
@@ -47,7 +47,7 @@ const renderItems = ({ navTitle, menuItems }: Props) => (
             </MenuItem>
           </Link>
         ))}
-      </section>
+      </div>
     ))}
   </>
 );
@@ -70,6 +70,7 @@ export const MegaMenu: FC<
             <MenuItem
               {...triggers}
               className='hidden place-items-center gap-2 text-blue-gray-900 lg:flex lg:rounded-md'
+              key={navTitle}
             >
               <>{navIcon}</>
               {navTitle}

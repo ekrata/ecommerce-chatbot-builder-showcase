@@ -15,6 +15,7 @@ import {
   MenuList,
   MenuItem,
   Avatar,
+  IconButton,
 
 } from "@material-tailwind/react";
 
@@ -27,6 +28,7 @@ export {
   Card,
   Navbar,
   Typography,
+  IconButton,
   MobileNav,
   Menu,
   MenuHandler,
