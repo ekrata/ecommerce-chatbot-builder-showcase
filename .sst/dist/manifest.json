@@ -1,0 +1,313 @@
+{
+  "version": "31.0.0",
+  "artifacts": {
+    "local-crow-Site.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "local-crow-Site.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "local-crow-Site": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://206508349906/us-east-1",
+      "properties": {
+        "templateFile": "local-crow-Site.template.json",
+        "tags": {
+          "sst:app": "crow",
+          "sst:stage": "local"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-deploy-role-206508349906-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-cfn-exec-role-206508349906-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/0bba9678fef54cb4d58f5ec38e830f7366e566e677c07618cb716bb7c819b3b1.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "local-crow-Site.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-lookup-role-206508349906-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "local-crow-Site.assets"
+      ],
+      "metadata": {
+        "/local-crow-Site": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "sst:app",
+                "Value": "crow"
+              },
+              {
+                "Key": "sst:stage",
+                "Value": "local"
+              }
+            ]
+          }
+        ],
+        "/local-crow-Site/CustomResourceHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomResourceHandlerServiceRole41AEC181"
+          }
+        ],
+        "/local-crow-Site/CustomResourceHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomResourceHandlerE8FB56BA"
+          }
+        ],
+        "/local-crow-Site/Connections/Table": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "ConnectionsTable916FDB22"
+            }
+          }
+        ],
+        "/local-crow-Site/Connections/Table/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ConnectionsTable916FDB22"
+          }
+        ],
+        "/local-crow-Site/Connections/Parameter_tableName/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ConnectionsParametertableName54B3BE98"
+          }
+        ],
+        "/local-crow-Site/Api/Api/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiCD79AAA0"
+          }
+        ],
+        "/local-crow-Site/Api/APIGatewayCloudWatchRolePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiAPIGatewayCloudWatchRolePolicy1B35D79A"
+          }
+        ],
+        "/local-crow-Site/Api/APIGatewayCloudWatchRole/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiAPIGatewayCloudWatchRoleD34A70FD"
+          }
+        ],
+        "/local-crow-Site/Api/Stage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiStage4697DF29"
+          }
+        ],
+        "/local-crow-Site/Api/LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiLogGroup1717FE17"
+          }
+        ],
+        "/local-crow-Site/Api/$connect/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiconnectServiceRoleB38A655D"
+          }
+        ],
+        "/local-crow-Site/Api/$connect/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiconnectServiceRoleDefaultPolicy530B764C"
+          }
+        ],
+        "/local-crow-Site/Api/$connect/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Apiconnect6ADFCB1F"
+          }
+        ],
+        "/local-crow-Site/Api/$connect/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiconnectEventInvokeConfig04F8B351"
+          }
+        ],
+        "/local-crow-Site/Api/Route_$connect/Integration_$connect-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRouteconnectIntegrationconnectPermissionE1C61B07"
+          }
+        ],
+        "/local-crow-Site/Api/Route_$connect/Integration_$connect/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRouteconnectIntegrationconnect921690DB"
+          }
+        ],
+        "/local-crow-Site/Api/Route_$connect/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRouteconnectB48BEBFF"
+          }
+        ],
+        "/local-crow-Site/Api/$disconnect/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApidisconnectServiceRole73693786"
+          }
+        ],
+        "/local-crow-Site/Api/$disconnect/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApidisconnectServiceRoleDefaultPolicy37A097B3"
+          }
+        ],
+        "/local-crow-Site/Api/$disconnect/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApidisconnectCB51A101"
+          }
+        ],
+        "/local-crow-Site/Api/$disconnect/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApidisconnectEventInvokeConfig00A98405"
+          }
+        ],
+        "/local-crow-Site/Api/Route_$disconnect/Integration_$disconnect-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRoutedisconnectIntegrationdisconnectPermission3A437C86"
+          }
+        ],
+        "/local-crow-Site/Api/Route_$disconnect/Integration_$disconnect/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRoutedisconnectIntegrationdisconnect79054E04"
+          }
+        ],
+        "/local-crow-Site/Api/Route_$disconnect/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRoutedisconnectA45E960F"
+          }
+        ],
+        "/local-crow-Site/Api/sendmessage/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApisendmessageServiceRole3662664F"
+          }
+        ],
+        "/local-crow-Site/Api/sendmessage/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApisendmessageServiceRoleDefaultPolicyA129B65D"
+          }
+        ],
+        "/local-crow-Site/Api/sendmessage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Apisendmessage758172CC"
+          }
+        ],
+        "/local-crow-Site/Api/sendmessage/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApisendmessageEventInvokeConfig64CFE2D9"
+          }
+        ],
+        "/local-crow-Site/Api/Route_sendmessage/Integration_sendmessage-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRoutesendmessageIntegrationsendmessagePermissionF7C95549"
+          }
+        ],
+        "/local-crow-Site/Api/Route_sendmessage/Integration_sendmessage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRoutesendmessageIntegrationsendmessage2C5CF51C"
+          }
+        ],
+        "/local-crow-Site/Api/Route_sendmessage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiRoutesendmessageD5AAAEEB"
+          }
+        ],
+        "/local-crow-Site/Api/Parameter_url/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiParameterurl09B86AB9"
+          }
+        ],
+        "/local-crow-Site/site/ServerFunctionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "siteServerFunctionRole1F8F4FAC"
+          }
+        ],
+        "/local-crow-Site/site/ServerFunctionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "siteServerFunctionRoleDefaultPolicy213DB8A5"
+          }
+        ],
+        "/local-crow-Site/site/ServerFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "siteServerFunctionA4E45ACA"
+          }
+        ],
+        "/local-crow-Site/site/ServerFunction/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "siteServerFunctionEventInvokeConfigFF1EDAB7"
+          }
+        ],
+        "/local-crow-Site/site/Parameter_url/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "siteParameterurl3D1716BC"
+          }
+        ],
+        "/local-crow-Site/SSTStackOutputApiEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiEndpoint"
+          }
+        ],
+        "/local-crow-Site/SSTStackOutputSSTMetadata": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SSTMetadata"
+          }
+        ],
+        "/local-crow-Site/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/local-crow-Site/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "local-crow-Site"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

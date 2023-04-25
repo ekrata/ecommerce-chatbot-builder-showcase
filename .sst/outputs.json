@@ -1,0 +1,5 @@
+{
+  "local-crow-Site": {
+    "ApiEndpoint": "wss://dtare7rs48.execute-api.us-east-1.amazonaws.com/local"
+  }
+}

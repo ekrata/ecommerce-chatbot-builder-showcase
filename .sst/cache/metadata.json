@@ -1,0 +1,99 @@
+{
+  "stack.local-crow-Site.json": [
+    {
+      "id": "Connections",
+      "addr": "c8e2dc0ed067f9371ded50279e01b8b9578097c528",
+      "stack": "local-crow-Site",
+      "type": "Table",
+      "data": { "tableName": "local-crow-Connections", "consumers": [] }
+    },
+    {
+      "id": "Api",
+      "addr": "c880b84e009ac9abf6a74861d39346ed3737e46dbf",
+      "stack": "local-crow-Site",
+      "type": "WebSocketApi",
+      "data": {
+        "httpApiId": "dtare7rs48",
+        "routes": [
+          {
+            "route": "$connect",
+            "fn": {
+              "node": "c806965eb52afa97238316bc6a0cf9983493f217f1",
+              "stack": "local-crow-Site"
+            }
+          },
+          {
+            "route": "$disconnect",
+            "fn": {
+              "node": "c86bdc78e88848195f82f4cbc6fa29b0e6979a9673",
+              "stack": "local-crow-Site"
+            }
+          },
+          {
+            "route": "sendmessage",
+            "fn": {
+              "node": "c89d7e9fb7375544de45a5007d70c7b8ebd815187f",
+              "stack": "local-crow-Site"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "$connect",
+      "addr": "c806965eb52afa97238316bc6a0cf9983493f217f1",
+      "stack": "local-crow-Site",
+      "type": "Function",
+      "data": {
+        "arn": "arn:aws:lambda:us-east-1:206508349906:function:local-crow-Site-Apiconnect6ADFCB1F-egIdkJcNVvdz",
+        "localId": "c806965eb52afa97238316bc6a0cf9983493f217f1",
+        "secrets": []
+      }
+    },
+    {
+      "id": "$disconnect",
+      "addr": "c86bdc78e88848195f82f4cbc6fa29b0e6979a9673",
+      "stack": "local-crow-Site",
+      "type": "Function",
+      "data": {
+        "arn": "arn:aws:lambda:us-east-1:206508349906:function:local-crow-Site-ApidisconnectCB51A101-YbYpzbwEkGBl",
+        "localId": "c86bdc78e88848195f82f4cbc6fa29b0e6979a9673",
+        "secrets": []
+      }
+    },
+    {
+      "id": "sendmessage",
+      "addr": "c89d7e9fb7375544de45a5007d70c7b8ebd815187f",
+      "stack": "local-crow-Site",
+      "type": "Function",
+      "data": {
+        "arn": "arn:aws:lambda:us-east-1:206508349906:function:local-crow-Site-Apisendmessage758172CC-rJDpniWuOgBN",
+        "localId": "c89d7e9fb7375544de45a5007d70c7b8ebd815187f",
+        "secrets": []
+      }
+    },
+    {
+      "id": "site",
+      "addr": "c869405f8809671a321c07b5f150058c1dee08d80e",
+      "stack": "local-crow-Site",
+      "type": "NextjsSite",
+      "data": {
+        "mode": "placeholder",
+        "path": ".",
+        "server": "arn:aws:lambda:us-east-1:206508349906:function:local-crow-Site-siteServerFunctionA4E45ACA-1yf4SZbQlL8g",
+        "secrets": []
+      }
+    },
+    {
+      "id": "ServerFunction",
+      "addr": "c8aa1ceefdfa6d4a9fa27fb6d5d10ee0d9c320ca8a",
+      "stack": "local-crow-Site",
+      "type": "Function",
+      "data": {
+        "arn": "arn:aws:lambda:us-east-1:206508349906:function:local-crow-Site-siteServerFunctionA4E45ACA-1yf4SZbQlL8g",
+        "localId": "c8aa1ceefdfa6d4a9fa27fb6d5d10ee0d9c320ca8a",
+        "secrets": []
+      }
+    }
+  ]
+}
