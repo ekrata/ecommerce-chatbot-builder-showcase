@@ -20,11 +20,11 @@ interface Props {
 const renderItems = ({ navTitle, menuItems }: Props) => (
   <>
     {Object.entries(menuItems).map(([key, items]) => (
-      <li
+      <div
         key={key}
-        className='flex-col flex gap-y-2  gap-x-4 pl-2 font-light text-black dark:text-white'
+        className='flex-col flex gap-y-2  gap-x-4 pl-2 font-light '
       >
-        <h5 className='ml-2 font-normal'>{key}</h5>
+        <h5 className='font-normal'>{key}</h5>
         <ul className='menu bg-base-100'>
           {items?.map(({ title, description, route, icon }) => (
             <li key={title}>
@@ -38,7 +38,7 @@ const renderItems = ({ navTitle, menuItems }: Props) => (
             </li>
           ))}
         </ul>
-      </li>
+      </div>
     ))}
   </>
 );
@@ -65,11 +65,11 @@ export const MegaMenu: FC<
             }`}
           />
         </button>
-        <div className='menu dropdown-content lg:w-2/3 xl:w-1/3 grid-cols-10 gap-3 overflow-visible lg:grid fade-out duration-500 shadow-2xl mx-auto"'>
+        <div className='menu dropdown-content z-10 bg-white opacity-100 lg:w-2/3 xl:w-1/3 grid-cols-10 gap-3 overflow-visible lg:grid fade-out duration-500 shadow-2xl mx-auto"'>
           <div className='col-span-3 grid place-items-center rounded-md shadow-md mx-auto'>
             <Image
-              width={200}
-              height={200}
+              width={400}
+              height={400}
               src={dropdownImage}
               alt='Dropdown Image'
               className='rounded-md'

@@ -179,7 +179,7 @@ export default function ComplexNavbar() {
   function NavList() {
     return (
       <IconContext.Provider value={{ color: 'blue', className: 'h-5 w-5' }}>
-        <ul className='mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center gap-x-4'>
+        <ul className='flex gap-x-2'>
           <MegaMenu
             navTitle={t('products.title')}
             menuItems={productsMenu}
@@ -200,7 +200,7 @@ export default function ComplexNavbar() {
   return (
     <section
       id='navbar'
-      className='navbar mx-auto space-around max-w-full rounded-none p-1 lg:pl-6 border-0 relative lg:flex items-center text-black'
+      className='navbar mx-auto bg-default space-around max-w-full rounded-none  border-2 border-black/25 shadow-2xl relative lg:flex items-center text-black'
     >
       <div className='navbar-start '>
         <h2 className='flex place-items-center gap-2 mr-4 ml-2 cursor-pointer text-lg font-medium'>
