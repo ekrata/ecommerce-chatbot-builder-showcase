@@ -1,11 +1,10 @@
-'use-client';
+'use client';
 
 import { PropsWithChildren } from 'react';
-import { useTranslations } from 'next-intl';
-import { BsChatLeft } from 'react-icons/bs';
-import { IoMdChatbubbles } from 'react-icons/io';
-import { RiChatCheckLine } from 'react-icons/ri';
+import { useDashStore } from './useDashStore';
 
 export default function Page({ children }: PropsWithChildren) {
+  useDashStore((state) => state.setCurrentFeature('home'));
+
   return <div>{children}</div>;
 }

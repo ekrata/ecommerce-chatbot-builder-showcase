@@ -1,8 +1,7 @@
 import { useLocale } from 'next-intl';
-import { Inter } from 'next/font/google';
 import { FC, PropsWithChildren } from 'react';
 import { notFound } from 'next/navigation';
-import ComplexNavbar from './ComplexNavbar';
+import Navbar from './Navbar';
 import Footer from './Footer';
 
 interface Props {
@@ -18,7 +17,7 @@ const RootLayout: FC<PropsWithChildren<Props>> = ({ children, params }) => {
   return (
     <main>
       <div className='tracking-wide font-medium text-black'>
-        <ComplexNavbar />
+        <Navbar />
         {children}
         <Footer />
       </div>

@@ -4,8 +4,10 @@ import { useTranslations } from 'next-intl';
 import ChatListPanel from './ChatListPanel';
 import ChatPanel from './ChatPanel';
 import ChatInfoPanel from './ChatInfoPanel';
+import { useDashStore } from '../useDashStore';
 
 export default function Page() {
+  useDashStore((state) => state.setCurrentFeature('inbox'));
   return (
     <>
       <div

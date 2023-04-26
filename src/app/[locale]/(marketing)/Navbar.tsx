@@ -23,21 +23,11 @@ import {
 import { IconContext } from 'react-icons';
 import { TbChartGridDots } from 'react-icons/tb';
 import { RiCheckboxMultipleBlankFill, RiMailSendLine } from 'react-icons/ri';
-import {
-  Avatar,
-  Button,
-  Menu,
-  MenuHandler,
-  MenuItem,
-  MenuList,
-  MobileNav,
-  Navbar,
-  Typography,
-} from '../mt-components';
-import { MegaMenu, MenuItemData } from './MegaMenu';
-import chattingImage from '../../../public/graphics/chatting.png';
-import plansImage from '../../../public/graphics/plans.png';
-import logoImage from '../../../public/logo.png';
+
+import { MegaMenu, MenuItemData } from '../MegaMenu';
+import chattingImage from '../../../../public/graphics/chatting.png';
+import plansImage from '../../../../public/graphics/plans.png';
+import logoImage from '../../../../public/logo.png';
 
 // profile menu component
 const profileMenuItems = [
@@ -68,58 +58,51 @@ function ProfileMenu() {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <Menu open={isMenuOpen} handler={setIsMenuOpen} placement='bottom-end'>
-      <MenuHandler>
-        <Button
-          variant='text'
+    <>
+      <div className='dropdown'>
+        <button
+          type='button'
           color='blue-gray'
-          className='flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto'
+          className='btn btn-hidden flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto'
         >
-          <Avatar
-            variant='circular'
-            size='sm'
-            alt='candice wu'
-            className='border border-purple-500 p-0.5'
-            src='https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80'
-          />
+          <div className='avatar border border-purple-500 p-0.5'>
+            <div className='w-6 rounded-full bg-black' />
+          </div>
           <HiOutlineChevronDown
             strokeWidth={2.5}
             className={`h-3 w-3 transition-transform ${
               isMenuOpen ? 'rotate-180' : ''
             }`}
           />
-        </Button>
-      </MenuHandler>
-      <MenuList className='p-1'>
-        {profileMenuItems.map(({ label, icon }, key) => {
-          const isLastItem = key === profileMenuItems.length - 1;
-          return (
-            <MenuItem
-              key={label}
-              onClick={closeMenu}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? 'hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10'
-                  : ''
-              }`}
-            >
-              {createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? 'text-red-500' : ''}`,
-                strokeWidth: 2,
-              })}
-              <Typography
-                as='span'
-                variant='small'
-                className='font-normal'
-                color={isLastItem ? 'red' : 'inherit'}
+        </button>
+        <ul className='p-1 dropdown-content dropdown-bottom'>
+          {profileMenuItems.map(({ label, icon }, key) => {
+            const isLastItem = key === profileMenuItems.length - 1;
+            return (
+              <li
+                key={label}
+                className={`flex items-center gap-2 rounded ${
+                  isLastItem
+                    ? 'hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10'
+                    : ''
+                }`}
               >
-                {label}
-              </Typography>
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </Menu>
+                {createElement(icon, {
+                  className: `h-4 w-4 ${isLastItem ? 'text-red-500' : ''}`,
+                  strokeWidth: 2,
+                })}
+                <p
+                  className='font-normal'
+                  color={isLastItem ? 'red' : 'inherit'}
+                >
+                  {label}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </>
   );
 }
 
@@ -196,7 +179,7 @@ export default function ComplexNavbar() {
   function NavList() {
     return (
       <IconContext.Provider value={{ color: 'blue', className: 'h-5 w-5' }}>
-        <ul className='mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center'>
+        <ul className='mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center gap-x-4'>
           <MegaMenu
             navTitle={t('products.title')}
             menuItems={productsMenu}
@@ -215,44 +198,39 @@ export default function ComplexNavbar() {
   }
 
   return (
-    <Navbar className='mx-auto max-w-full rounded-none p-1 lg:pl-6 border-0'>
-      <div className='relative mx-auto flex items-center text-black'>
-        <Typography
-          as='h2'
-          href='#'
-          className='flex place-items-center gap-2 mr-4 ml-2 cursor-pointer text-lg font-medium'
-        >
+    <section
+      id='navbar'
+      className='navbar mx-auto space-around max-w-full rounded-none p-1 lg:pl-6 border-0 relative lg:flex items-center text-black'
+    >
+      <div className='navbar-start '>
+        <h2 className='flex place-items-center gap-2 mr-4 ml-2 cursor-pointer text-lg font-medium'>
           <Image
             src={logoImage}
             alt='Logo'
             className='h-12 w-12 p-1  bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-yellow-500 via-purple-500 to-blue-500 rounded-2xl shadow-2xl'
           />
           Crow Commerce
-        </Typography>
-        <div className='absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block'>
-          <NavList />
-        </div>
-        <Button
-          size='sm'
-          color='blue-gray'
-          variant='text'
-          onClick={toggleIsNavOpen}
-          className='ml-auto mr-2 lg:hidden'
-        >
-          <HiOutlineBars2 className='h-6 w-6' />
-        </Button>
-
-        <ProfileMenu />
-        <Link href={{ pathname: '/dash' }} key='dash'>
-          <Button size='sm' className='flex place-items-center'>
-            Dash
-            <BsChevronRight />
-          </Button>
-        </Link>
+        </h2>
       </div>
-      <MobileNav open={isNavOpen} className='overflow-scroll'>
+      <div className='navbar-center'>
         <NavList />
-      </MobileNav>
-    </Navbar>
+      </div>
+
+      <ProfileMenu />
+      <Link href={{ pathname: '/dash' }} key='dash'>
+        <button
+          type='button'
+          className='btn btn-outline flex place-items-center'
+        >
+          Dash
+          <BsChevronRight />
+        </button>
+      </Link>
+
+      <div className='navbar-end flex' />
+      {/* <MobileNav open={isNavOpen} className='overflow-scroll'>
+        <NavList />
+      </MobileNav> */}
+    </section>
   );
 }

@@ -16,8 +16,8 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.316.0",
     "@heroicons/react": "^2.0.17",
-    "@material-tailwind/react": "^1.4.2",
     "@sentry/nextjs": "^7.49.0",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/node": "18.15.13",
     "@types/react": "18.0.38",
     "@types/react-dom": "18.0.11",
@@ -25,6 +25,7 @@
     "aws-sdk": "^2.1363.0",
     "chalk": "5.2.0",
     "client-only": "^0.0.1",
+    "daisyui": "^2.51.6",
     "electrodb": "^2.5.1",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
