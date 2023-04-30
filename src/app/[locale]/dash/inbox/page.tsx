@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
-import ChatListPanel from './ChatListPanel';
+import {ChatListPanel} from './ChatListPanel';
 import ChatPanel from './ChatPanel';
 import ChatInfoPanel from './ChatInfoPanel';
 import ChatSkeleton from './ChatSkeleton';

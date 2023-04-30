@@ -3,32 +3,32 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { within, userEvent } from '@storybook/testing-library';
 import { ChatListPanel } from './ChatListPanel';
 import { createRandomChat } from './mocks';
+import ChatLog from './ChatLog';
+import { CurrentChatPanel } from './CurrentChatPanel';
 
-const meta: Meta<typeof ChatListPanel> = {
+const meta: Meta<typeof ChatLog> = {
   /* 👇 The title prop is optional.
    * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
    * to learn how to generate automatic titles
    */
   component: ChatListPanel,
 };
+
 export default meta;
-type Story = StoryObj<typeof ChatListPanel>;
+type Story = StoryObj<typeof CurrentChatPanel>;
+const unassignedChat = createRandomChat('unassigned');
 
 // Initial(No Data)
 export const EmptyChatList: Story = {
   render: () => (
     <>
-      <ChatListPanel unassignedChats={[]} openChats={[]} solvedChats={[]} />
+      <CurrentChatPanel chat={unassignedChat} />
     </>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    // 👇 Simulate interactions with the component
-    await userEvent.click(canvas.getByTestId('expand-unassigned-chats'));
-
-    await userEvent.click(canvas.getByTestId('expand-open-chats'));
-
-    await userEvent.click(canvas.getByTestId('expand-solved-chats'));
+    expect(canvas.getByTestId('current-chat-panel')).toBeInTheDocument();
+    expect(canvas.getByTestId('chat-log')).toBeInTheDocument();
   },
 };
 

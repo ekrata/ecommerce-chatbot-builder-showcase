@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Chat, ChatStatus, Message } from "./ChatListPanel";
+import { Chat, ChatStatus, Message } from "./Chat.type";
 
 export const createRandomMessage = (
   chatId: string,
@@ -7,16 +7,17 @@ export const createRandomMessage = (
 ): Message => {
   const now = new Date();
   const twoHoursAgo = new Date();
-  twoHoursAgo.setHours(now.getUTCHours() - 2);
-  twoHoursAgo.setHours(now.getUTCHours() - 2);
-  const sentAt = faker.date.between(now, twoHoursAgo);
+  twoHoursAgo.setHours(now.getHours() - 2);
+  const sentAt = faker.date.between(twoHoursAgo, now);
   return {
     id: faker.datatype.uuid(),
     chatId,
     senderId,
     senderType: faker.helpers.arrayElement(['operator', 'customer']),
-    sentAt: sentAt.getTime.toString(),
-    editedAt: faker.date.between(now, sentAt).getTime().toString(),
+    sentAt,
+    editedAt: faker.date.between(sentAt, now),
+    updatedAt: now,
+    createdAt: sentAt,
     content: faker.lorem.paragraph(),
   };
 };
@@ -35,8 +36,10 @@ export const createRandomChat = (status: ChatStatus): Chat => {
     orgId: faker.datatype.uuid(),
     customer: {
       id: userId,
-      name: faker.name.fullName(),
-      email: faker.internet.email(),
+      name: faker.helpers.arrayElement([faker.name.fullName(), '']),
+      email: faker.internet.exampleEmail(),
+      locale: 'en',
+      ip: faker.internet.ipv4(),
       profilePicture: faker.image.avatar(),
     },
     operators: [
@@ -54,7 +57,7 @@ export const createRandomChat = (status: ChatStatus): Chat => {
       'Billing',
       'Order Status',
     ]),
-    messages: Array(20)
+    messages: [...Array(20)]
       .map(() =>
         createRandomMessage(
           id,
@@ -63,10 +66,12 @@ export const createRandomChat = (status: ChatStatus): Chat => {
       )
       .sort(
         (a, b) =>
-          new Date(parseInt(a.sentAt, 10)).getTime() -
-          new Date(parseInt(b.sentAt, 10)).getTime()
+          a.sentAt.getTime() -
+          b.sentAt.getTime()
       ),
-    createdAt: faker.date.between(now, twoHoursAgo).getTime().toString(),
-    updatedAt: faker.date.between(now, twoHoursAgo).getTime().toString(),
+    read: faker.datatype.boolean(),
+    typing: faker.datatype.boolean(),
+    createdAt: faker.date.between(twoHoursAgo, now),
+    updatedAt: faker.date.between(twoHoursAgo, now)
   };
 };

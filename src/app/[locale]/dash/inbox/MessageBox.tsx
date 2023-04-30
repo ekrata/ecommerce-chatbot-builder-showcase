@@ -8,7 +8,7 @@ export default function MessageBox() {
           id='message-box'
           type='text'
           placeholder='Type here'
-          className='input input-bordered input-lg'
+          className='input input-bordered input-lg w-full'
         />
         <span>
           <BsArrowRight />
