@@ -16,15 +16,15 @@ export const ChatLog: FC<{ chat: Chat }> = ({ chat }) => {
       {messages?.map((message) => (
         <div className='w-full px-4  prose'>
           {message.senderType === 'customer' && (
-            <div className='left-0  inline-flex gap-x-2'>
+            <div className='inline-flex gap-x-2 w-full'>
               <Image
                 src={profilePicture}
                 alt='profile-picture'
-                width={60}
-                height={60}
-                className='object-contain rounded-full'
+                width={50}
+                height={50}
+                className='rounded-full m-0 p-0 object-contain'
               />
-              <p className='text-default p-2 rounded-xl bg-gray-100'>
+              <p className='text-default p-2 rounded-xl flex-initial bg-gray-100'>
                 {message.content}
               </p>
             </div>

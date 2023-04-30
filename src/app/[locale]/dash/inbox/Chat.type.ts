@@ -8,6 +8,7 @@ export interface Message {
   createdAt: Date;
   updatedAt: Date;
   content: string;
+  typing: boolean;
 }
 
 export interface Operator {
@@ -33,6 +34,6 @@ export interface Chat {
   updatedAt: Date;
   createdAt: Date;
   tags: string[];
-
+  read: boolean
   messages: Message[];
 }

@@ -24,7 +24,6 @@ export const ChatListPanel: FC<Props> = ({
   const [isOpenExpanded, setIsOpenExpanded] = useState(false);
   const [isSolvedExpanded, setIsSolveExpanded] = useState(false);
   const onExpansion = 'rotate-180';
-  const format = useFormatter();
 
   return (
     <ul className='space-y-2 font-medium prose bg-white dark:bg-gray-800 pr-4 truncate'>

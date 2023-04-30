@@ -3,11 +3,12 @@ import { Chat, ChatStatus, Message } from "./Chat.type";
 
 export const createRandomMessage = (
   chatId: string,
-  senderId: string
+  senderId: string,
+  typing = false
 ): Message => {
   const now = new Date();
-  const twoHoursAgo = new Date();
-  twoHoursAgo.setHours(now.getHours() - 2);
+  const twoHoursAgo = new Date()
+  twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
   const sentAt = faker.date.between(twoHoursAgo, now);
   return {
     id: faker.datatype.uuid(),
@@ -18,6 +19,7 @@ export const createRandomMessage = (
     editedAt: faker.date.between(sentAt, now),
     updatedAt: now,
     createdAt: sentAt,
+    typing,
     content: faker.lorem.paragraph(),
   };
 };
@@ -25,7 +27,7 @@ export const createRandomMessage = (
 export const createRandomChat = (status: ChatStatus): Chat => {
   const now = new Date();
   const twoHoursAgo = new Date();
-  twoHoursAgo.setHours(now.getUTCHours() - 2);
+  twoHoursAgo.setHours(now.getHours() - 2);
   const id = faker.datatype.uuid();
   const operatorId = faker.datatype.uuid();
   const userId = faker.datatype.uuid();
@@ -58,8 +60,11 @@ export const createRandomChat = (status: ChatStatus): Chat => {
       'Order Status',
     ]),
     messages: [...Array(20)]
-      .map(() =>
-        createRandomMessage(
+      .map((_, i) =>
+        i === 19 ? createRandomMessage(
+          id,
+          faker.helpers.arrayElement([operatorId, userId]), true
+        ) : createRandomMessage(
           id,
           faker.helpers.arrayElement([operatorId, userId])
         )
@@ -70,7 +75,6 @@ export const createRandomChat = (status: ChatStatus): Chat => {
           b.sentAt.getTime()
       ),
     read: faker.datatype.boolean(),
-    typing: faker.datatype.boolean(),
     createdAt: faker.date.between(twoHoursAgo, now),
     updatedAt: faker.date.between(twoHoursAgo, now)
   };

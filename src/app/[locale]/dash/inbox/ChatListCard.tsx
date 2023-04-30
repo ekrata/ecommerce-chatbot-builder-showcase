@@ -12,9 +12,8 @@ export const ChatListCard: FC<{ chat: Chat }> = ({ chat }) => {
     messages,
     customer: { name, email, profilePicture },
     read,
-    typing,
   } = chat;
-  const { sentAt, content } = messages.slice(-1)[0];
+  const { sentAt, content, typing } = messages.slice(-1)[0];
   const messageSentAt = sentAt;
   return (
     <li
@@ -40,7 +39,7 @@ export const ChatListCard: FC<{ chat: Chat }> = ({ chat }) => {
           <h5>{relativeTime(messageSentAt, now)}</h5>
         </div>
         <h5 className='truncate'>
-          {!typing ? content : <div className='animate-pulse  '>typing...</div>}
+          {!typing ? content : <div className='animate-pulse  '>...</div>}
         </h5>
       </div>
     </li>

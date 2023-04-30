@@ -2,7 +2,7 @@ import { expect } from '@storybook/jest';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within, userEvent } from '@storybook/testing-library';
 import { ChatListPanel } from './ChatListPanel';
-import { createRandomChat } from './mocks';
+import { createRandomChat } from './mocks.test';
 
 const meta: Meta<typeof ChatListPanel> = {
   /* 👇 The title prop is optional.
