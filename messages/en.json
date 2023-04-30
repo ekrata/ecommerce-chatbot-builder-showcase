@@ -13,7 +13,7 @@
         "title": "Customer Service",
         "live-chat": {
           "title": "Live chat",
-          "description": "Chat live with your users as they browse your site!"
+          "description": "Chat live with your users as they browse your site, recommend products, and more."
         },
         "chat-bot": {
           "title": "Chat Bots",
@@ -21,17 +21,17 @@
         },
         "multichannel": {
           "title": "Multichannel",
-          "description": "Communicate with customers; FB Messenger, Instagram, Email And More"
+          "description": "Communicate with customers; FB Messenger, Instagram, Email And more."
         }
       },
       "sales-analytics": {
-        "title": "Scale with Analytics",
+        "title": "Analytics",
         "live-analytics": {
-          "title": "Live Analytics",
-          "description": "Live, Real-time Visitor Analytics to enhance your live sales"
+          "title": "Live Visitors",
+          "description": "Live, Real-time Visitor Analytics to enhance your live sales."
         },
         "intelligent-analytics": {
-          "title": "Intelligent Analytics",
+          "title": "Pro Analytics",
           "description": "Track and Implement Strategies to supercharge your growth over time."
         }
       },
@@ -43,7 +43,7 @@
         },
         "multichannel-marketing": {
           "title": "Multichannel Marketing",
-          "description": "Create and Manage Ad Campaigns across several Ad Networks(Facebook Ads, Google Ads)"
+          "description": "Create and Manage Ad Campaigns across several Ad Networks(Facebook Ads, Google Ads)."
         }
       }
     },

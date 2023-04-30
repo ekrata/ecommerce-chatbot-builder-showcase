@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 import { HiOutlineSearch } from 'react-icons/hi';
 
 export default function SearchBar() {
@@ -11,24 +12,18 @@ export default function SearchBar() {
   // const setCurrentSearchTerm = useDashStore((state) => setCurrentSearchTerm)
 
   return (
-    <div
-      id='dash-nav-bar'
-      className='btm-nav btm-nav-xs lg:left-0 z-0 flex lg:h-screen border-t-2 px-1 py-1  dark:bg-gray-800 lg:border-r-2 border-black/50'
-      aria-label='Sidebar'
-    >
-      <div className='relative flex w-full max-w-[24rem]'>
+    <div className='form-control'>
+      <div className='input-group input-group-sm'>
         <input
           type='text'
-          placeholder='Type here'
-          value={searchTerm}
-          onChange={onChange}
-          className='input input-bordered input-primary w-full max-w-xs'
+          placeholder='Search…'
+          className='input input-bordered input-sm'
         />
         <button
           type='submit'
-          className='btn btn-outline !absolute right-1 top-1 rounded'
+          className='btn btn-square btn-sm focus:ring-black'
         >
-          <HiOutlineSearch />
+          <FaSearch />
         </button>
       </div>
     </div>

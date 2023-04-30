@@ -3,7 +3,10 @@
 import { Link } from 'next-intl';
 import Image, { StaticImageData } from 'next/image';
 import { useState, FC } from 'react';
+import { IconContext } from 'react-icons';
+import { FaFacebookMessenger, FaInstagram, FaMailBulk } from 'react-icons/fa';
 import { HiOutlineChevronDown } from 'react-icons/hi2';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 export type MenuItemData = {
   title: string;
@@ -20,21 +23,27 @@ interface Props {
 const renderItems = ({ navTitle, menuItems }: Props) => (
   <>
     {Object.entries(menuItems).map(([key, items]) => (
-      <div
-        key={key}
-        className='flex-col flex gap-y-2  gap-x-4 pl-2 font-light '
-      >
-        <h5 className='font-normal'>{key}</h5>
-        <ul className='menu bg-base-100'>
+      <div key={key} className=' lg:flex-col flex pl-4 divide-x-2'>
+        <h3 className='text-2xl'>{key}</h3>
+        <ul className='menu menu-compact bg-base-100 mt-4 space-y-4 no-underline'>
           {items?.map(({ title, description, route, icon }) => (
-            <li key={title}>
-              <Link href={{ pathname: route }} key={title}>
-                <h6 className='place-items-center flex gap-x-2 text-primary font-light'>
-                  <>{icon}</>
-                  {title}
-                </h6>
-                <p className='font-normal'>{description}</p>
-              </Link>
+            <li key={title} className='block flex-col p-0'>
+              <div>
+                <Link href={{ pathname: route }} key={title}>
+                  <h6 className='place-items-center text-lg flex gap-x-2 text-primary'>
+                    <>{icon}</>
+                    {title}
+                    {title === 'Multichannel' && (
+                      <>
+                        <FaFacebookMessenger />
+                        <FaInstagram />
+                        <FaMailBulk />
+                      </>
+                    )}
+                  </h6>
+                  <p className='font-normal text-sm flex'>{description}</p>
+                </Link>
+              </div>
             </li>
           ))}
         </ul>
@@ -49,11 +58,17 @@ export const MegaMenu: FC<
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <form>
-      <div className='dropdown dropdown-end'>
+    <OutsideClickHandler
+      onOutsideClick={() => {
+        setIsMenuOpen(false);
+      }}
+    >
+      <div className=''>
         <button
+          id='dropdownButton'
           type='button'
-          className='flex place-items-center'
+          data-dropdown-toggle='dropdown'
+          className='flex place-items-center gap-x-2'
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <>{navIcon}</>
@@ -65,21 +80,27 @@ export const MegaMenu: FC<
             }`}
           />
         </button>
-        <div className='menu dropdown-content z-10 bg-white opacity-100 lg:w-2/3 xl:w-1/3 grid-cols-10 gap-3 overflow-visible lg:grid fade-out duration-500 shadow-2xl mx-auto"'>
-          <div className='col-span-3 grid place-items-center rounded-md shadow-md mx-auto'>
+        <div
+          id='dropdown'
+          aria-labelledby='dropdownButton'
+          className={`${
+            isMenuOpen
+              ? 'fixed grid grid-cols-10 animate-in fade-in '
+              : 'hidden'
+          }    -translate-x-1/3 lg:w-1/3 justify-center overflow-hidden  xl:w-2/3 rounded-box  bg-white   duration-200  shadow-2xl p-6`}
+        >
+          <div className='col-span-10 lg:col-span-3 flex place-items-center '>
             <Image
-              width={400}
-              height={400}
               src={dropdownImage}
               alt='Dropdown Image'
-              className='rounded-md'
+              className='rounded-box w-full h-full shadow-md'
             />
           </div>
-          <ul className='col-span-7 flex w-full gap-1'>
+          <div className='col-span-10 lg:col-span-7 flex'>
             {renderItems({ navTitle, menuItems })}
-          </ul>
+          </div>
         </div>
       </div>
-    </form>
+    </OutsideClickHandler>
   );
 };

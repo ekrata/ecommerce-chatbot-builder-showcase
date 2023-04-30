@@ -108,7 +108,7 @@ function ProfileMenu() {
 
 // nav list component
 
-export default function ComplexNavbar() {
+export default function Navbar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const t = useTranslations('navbar');
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
@@ -179,7 +179,7 @@ export default function ComplexNavbar() {
   function NavList() {
     return (
       <IconContext.Provider value={{ color: 'blue', className: 'h-5 w-5' }}>
-        <ul className='flex gap-x-2'>
+        <div className='flex gap-x-2'>
           <MegaMenu
             navTitle={t('products.title')}
             menuItems={productsMenu}
@@ -192,7 +192,7 @@ export default function ComplexNavbar() {
             navIcon={<BsTags />}
             dropdownImage={plansImage}
           />
-        </ul>
+        </div>
       </IconContext.Provider>
     );
   }
@@ -200,7 +200,7 @@ export default function ComplexNavbar() {
   return (
     <section
       id='navbar'
-      className='navbar mx-auto bg-default space-around max-w-full rounded-none  border-2 border-black/25 shadow-2xl relative lg:flex items-center text-black'
+      className='navbar mx-auto bg-white dark:bg-black space-around max-w-full rounded-none  border-2 border-black/25 shadow-2xl relative lg:flex items-center text-black'
     >
       <div className='navbar-start '>
         <h2 className='flex place-items-center gap-2 mr-4 ml-2 cursor-pointer text-lg font-medium'>
@@ -216,18 +216,18 @@ export default function ComplexNavbar() {
         <NavList />
       </div>
 
-      <ProfileMenu />
-      <Link href={{ pathname: '/dash' }} key='dash'>
-        <button
-          type='button'
-          className='btn btn-outline flex place-items-center'
-        >
-          Dash
-          <BsChevronRight />
-        </button>
-      </Link>
-
-      <div className='navbar-end flex' />
+      <div className='navbar-end flex'>
+        <ProfileMenu />
+        <Link href={{ pathname: '/dash/home' }} key='dash'>
+          <button
+            type='button'
+            className='btn btn-outline flex place-items-center'
+          >
+            Dash
+            <BsChevronRight />
+          </button>
+        </Link>
+      </div>
       {/* <MobileNav open={isNavOpen} className='overflow-scroll'>
         <NavList />
       </MobileNav> */}
