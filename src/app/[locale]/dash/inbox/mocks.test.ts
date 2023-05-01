@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Chat, ChatStatus, Message } from "./Chat.type";
+import { Chat, ChatStatus, DefaultTags, Message } from "./Chat.type";
 
 export const createRandomMessage = (
   chatId: string,
@@ -41,9 +41,16 @@ export const createRandomChat = (status: ChatStatus): Chat => {
       id: userId,
       name: faker.helpers.arrayElement([faker.name.fullName(), undefined]),
       email: faker.internet.exampleEmail(),
-      locale: 'en',
       ip: faker.internet.ipv4(),
-      profilePicture: faker.image.avatar(),
+      profilePicture: faker.image.people(),
+      locale: 'en-US',
+      timezone: faker.address.timeZone(),
+      userAgent: faker.internet.userAgent(),
+      tags: faker.helpers.arrayElements(DefaultTags),
+      properties: {},
+      phone: faker.phone.number('501-###-###'),
+      createdAt: faker.date.between(twoHoursAgo, now),
+      updatedAt: now
     },
     operators: [
       {
@@ -51,6 +58,8 @@ export const createRandomChat = (status: ChatStatus): Chat => {
         name: faker.name.fullName(),
         email: faker.internet.email(),
         profilePicture: faker.image.avatar(),
+        createdAt: faker.date.between(twoHoursAgo, now),
+        updatedAt: now
       },
     ],
     tags: faker.helpers.arrayElements([

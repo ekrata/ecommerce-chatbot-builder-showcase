@@ -32,6 +32,8 @@ specifiers:
   client-only: ^0.0.1
   concurrently: ^8.0.1
   constructs: 10.1.156
+  countries-and-timezones: ^3.4.1
+  country-emoji: ^1.5.6
   daisyui: ^2.51.6
   electrodb: ^2.5.1
   eslint: 8.39.0
@@ -51,6 +53,7 @@ specifiers:
   jest: ^29.5.0
   jest-environment-jsdom: ^29.5.0
   lint-staged: ^13.2.1
+  locale-code: ^2.0.2
   msw-storybook-addon: ^1.8.0
   next: 13.3.1
   next-intl: 2.14.0-beta.2
@@ -85,11 +88,14 @@ dependencies:
   aws-sdk: 2.1363.0
   chalk: 5.2.0
   client-only: 0.0.1
+  countries-and-timezones: 3.4.1
+  country-emoji: 1.5.6
   daisyui: 2.51.6_3nau3chwaskv2dtdtzzur6h7oq
   electrodb: 2.5.1_ywj2ja7tipv4yu4a3wkc44mm64
   eslint: 8.39.0
   eslint-config-next: 13.3.1_iacogk7kkaymxepzhgcbytyi7q
   http-server: 14.1.1
+  locale-code: 2.0.2
   next: 13.3.1_z72xxk7vwlamvgqemvc4ptm4du
   next-intl: 2.14.0-beta.2_next@13.3.1+react@18.2.0
   postcss: 8.4.23
@@ -8363,6 +8369,15 @@ packages:
       path-type: 4.0.0
     dev: true
 
+  /countries-and-timezones/3.4.1:
+    resolution: {integrity: sha512-INeHGCony4XUUR8iGL/lmt9s1Oi+n+gFHeJAMfbV5hJfYeDOB8JG1oxz5xFQu5oBZoRCJe/87k1Vzue9DoIauA==}
+    engines: {node: '>=8.x', npm: '>=5.x'}
+    dev: false
+
+  /country-emoji/1.5.6:
+    resolution: {integrity: sha512-pSB8OOROfimFc2bcN+H41DuzXYIod/JQ6SgF4pYXkRCm9f8uF1JAJ0vXPhenug6xkpt3Gv33mdypMXB49CJWRA==}
+    dev: false
+
   /crc-32/1.2.2:
     resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
     engines: {node: '>=0.8'}
@@ -11306,6 +11321,23 @@ packages:
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
+  /iso-3166-1-alpha-2/1.0.1:
+    resolution: {integrity: sha512-hehv4FOIieRgJ4+AOdRptTB0wD6nSX85O731hGin0ZbLCyeQ+rVMtvUPBnsnjJCDgG5jCRtU4wGHXE85lSJk9Q==}
+    dependencies:
+      mout: 1.2.4
+    dev: false
+
+  /iso-639-1-zh/2.0.4:
+    resolution: {integrity: sha512-DsCQZFPVcbDr8MGRAP8U4LbAwGWtxx3HZFHoJNILKVvJpc4SMhmnMyhngV4mFcDQDwCp2szOX8npKmzyOoA8hQ==}
+    dependencies:
+      iso-639-1: 2.1.15
+    dev: false
+
+  /iso-639-1/2.1.15:
+    resolution: {integrity: sha512-7c7mBznZu2ktfvyT582E2msM+Udc1EjOyhVRE/0ZsjD9LBtWSm23h3PtiRh2a35XoUsTQQjJXaJzuLjXsOdFDg==}
+    engines: {node: '>=6.0'}
+    dev: false
+
   /isobject/3.0.1:
     resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
     engines: {node: '>=0.10.0'}
@@ -12725,6 +12757,13 @@ packages:
     engines: {node: '>= 12.13.0'}
     dev: true
 
+  /locale-code/2.0.2:
+    resolution: {integrity: sha512-wNcUMwk6Nlc10pnZZXWtKArAOZHhH8p2vohPEIENg7ImwMrib/CwKSvyV4g9Wm7KjylyHzXnEMz4i/W3w57wlw==}
+    dependencies:
+      iso-3166-1-alpha-2: 1.0.1
+      iso-639-1-zh: 2.0.4
+    dev: false
+
   /localforage/1.10.0:
     resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
     dependencies:
@@ -13109,6 +13148,10 @@ packages:
     dependencies:
       obliterator: 2.0.4
     dev: true
+
+  /mout/1.2.4:
+    resolution: {integrity: sha512-mZb9uOruMWgn/fw28DG4/yE3Kehfk1zKCLhuDU2O3vlKdnBBr4XaOCqVTflJ5aODavGUPqFHZgrFX3NJVuxGhQ==}
+    dev: false
 
   /mqtt-packet/6.10.0:
     resolution: {integrity: sha512-ja8+mFKIHdB1Tpl6vac+sktqy3gA8t9Mduom1BA75cI+R9AHnZOiaBQwpGiWnaVJLDGRdNhQmFaAqd7tkKSMGA==}
