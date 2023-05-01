@@ -46,7 +46,8 @@ module.exports = {
     'import/no-extraneous-dependencies': [
       'error',
       {
-        devDependencies: ['**/*.test.ts', '**/*.test.tsx'],
+        devDependencies: ['**/*.stories.*', '**/.storybook/**/*.*'],
+        peerDependencies: true,
       },
     ],
     '@typescript-eslint/no-unused-vars': 'error',

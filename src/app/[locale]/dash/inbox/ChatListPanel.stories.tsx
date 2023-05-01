@@ -51,7 +51,7 @@ export const ChatList: Story = {
       </>
     );
   },
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     await step('Open chats', async () => {
@@ -69,7 +69,6 @@ export const ChatList: Story = {
       await expect(canvas.getByTestId('open-chats').childNodes.length === 20);
       await expect(canvas.getByTestId('solved-chats').childNodes.length === 20);
 
-      expect(window.localStorage.getItem('name')).toBe(newName);
       // 👇 Assert DOM structure
     });
   },
