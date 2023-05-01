@@ -42,7 +42,7 @@ export const createRandomChat = (status: ChatStatus): Chat => {
       name: faker.helpers.arrayElement([faker.name.fullName(), undefined]),
       email: faker.internet.exampleEmail(),
       ip: faker.internet.ipv4(),
-      profilePicture: faker.image.people(),
+      profilePicture: faker.image.avatar(),
       locale: 'en-US',
       timezone: faker.address.timeZone(),
       userAgent: faker.internet.userAgent(),

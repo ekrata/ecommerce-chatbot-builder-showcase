@@ -38,7 +38,7 @@ export const ChatLog: FC<{ chat: Chat }> = ({ chat }) => {
                   <div className='indicator'>
                     <span
                       data-testid='status-badge'
-                      className={`indicator-item  badge-success  badge-xs text-white dark:text-default rounded-full ${
+                      className={`indicator-item  badge-success ring-white ring-2  badge-xs text-white dark:text-default rounded-full ${
                         message.typing
                           ? 'mx-0 my-0 indicator-bottom animate-bounce'
                           : 'my-2 mx-2 indicator-top'

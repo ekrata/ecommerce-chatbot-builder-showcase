@@ -34,15 +34,15 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
   return (
     <div
       data-testid='chat-info-panel'
-      className='flex flex-col gap-y-2 bg-white dark:bg-gray-800 w-full border-l-2 border-primary px-2'
+      className='flex flex-col gap-y-2 bg-white dark:bg-gray-800 w-full border-l-2 border-primary p-4'
     >
       <div className='flex gap-x-2 '>
         <Image
           src={profilePicture}
           alt='User image'
-          width={60}
-          height={60}
-          className='rounded-full '
+          width={80}
+          height={80}
+          className='rounded-full object-contain'
         />
         <div className='flex flex-col'>
           <p>{name ?? 'Unknown'}</p>
