@@ -6,6 +6,8 @@ module.exports = {
   '**/*.(ts|tsx|js)': (filenames) => [
     `turbo lint -- --fix ${filenames.join(' ')}`,
     `turbo prettier --write ${filenames.join(' ')}`,
+    `turbo storybook`,
+    `turbo test-storybook`,
   ],
 
   // this will Format MarkDown and JSON

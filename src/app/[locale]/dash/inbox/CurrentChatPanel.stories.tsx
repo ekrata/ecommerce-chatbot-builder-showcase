@@ -1,8 +1,9 @@
 import { expect } from '@storybook/jest';
-
+import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent } from '@storybook/testing-library';
 import { ChatListPanel } from './ChatListPanel';
 import { createRandomChat } from './mocks.test';
-import ChatLog from './ChatLog';
+import { ChatLog } from './ChatLog';
 import { CurrentChatPanel } from './CurrentChatPanel';
 
 const meta: Meta<typeof ChatLog> = {

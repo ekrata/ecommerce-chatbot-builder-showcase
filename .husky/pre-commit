@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# npx tsc --noEmit && npx eslint --fix . && npx prettier --write .
-turbo run lint-staged && turbo run storybook && turbo run test-storybook
+npx lint-staged
