@@ -32,6 +32,7 @@
     "electrodb": "^2.5.1",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
+    "http-server": "^14.1.1",
     "next": "13.3.1",
     "next-intl": "2.14.0-beta.2",
     "postcss": "8.4.23",
@@ -45,6 +46,7 @@
     "tailwindcss": "3.3.1",
     "testing-library": "link:@types/@storybook/testing-library",
     "typescript": "5.0.4",
+    "wait-on": "^7.0.1",
     "zustand": "^4.3.7"
   },
   "devDependencies": {
@@ -65,6 +67,7 @@
     "@typescript-eslint/eslint-plugin": "5.12.1",
     "aws-cdk-lib": "2.72.1",
     "axe-playwright": "^1.2.3",
+    "concurrently": "^8.0.1",
     "constructs": "10.1.156",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-prettier": "8.4.0",

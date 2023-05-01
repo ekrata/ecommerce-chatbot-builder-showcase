@@ -1,11 +1,11 @@
 'use client';
 
-import { useTranslations, useFormatter } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useState, FC } from 'react';
-import { BsChatLeft, BsChatLeftFill } from 'react-icons/bs';
+import { BsChatLeftFill } from 'react-icons/bs';
 import { HiOutlineChevronDown } from 'react-icons/hi2';
 import { IoMdChatbubbles } from 'react-icons/io';
-import { RiChatCheckFill, RiChatCheckLine } from 'react-icons/ri';
+import { RiChatCheckFill } from 'react-icons/ri';
 import { ChatListCard } from './ChatListCard';
 import { Chat } from './Chat.type';
 

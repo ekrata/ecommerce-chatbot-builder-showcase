@@ -43,13 +43,7 @@ module.exports = {
       'error',
       { props: true, ignorePropertyModificationsForRegex: ['^draft'] },
     ],
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: ['**/*.stories.*', '**/.storybook/**/*.*'],
-        peerDependencies: true,
-      },
-    ],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     'react/react-in-jsx-scope': 'off',

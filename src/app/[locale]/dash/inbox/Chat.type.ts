@@ -13,7 +13,7 @@ export interface Message {
 
 export interface Operator {
   id: string;
-  name: string;
+  name?: string;
   email: string;
   profilePicture: string;
 }

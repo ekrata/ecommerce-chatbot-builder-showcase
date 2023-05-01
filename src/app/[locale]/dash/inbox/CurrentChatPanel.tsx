@@ -7,7 +7,10 @@ import chatSkeleton from './ChatSkeleton';
 import { Chat } from './Chat.type';
 
 export const CurrentChatPanel: FC<{ chat: Chat }> = ({ chat }) => (
-  <div className='flex flex-col' data-testid='current-chat-panel'>
+  <div
+    className='flex flex-col bg-white dark:bg-gray-800'
+    data-testid='current-chat-panel'
+  >
     <div className='flex-grow'>
       <Suspense
         fallback={Array(20).map(() => (

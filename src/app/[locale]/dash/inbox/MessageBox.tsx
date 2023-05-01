@@ -1,17 +1,16 @@
-import { BsArrowRight } from 'react-icons/bs';
+import { IoMdSend } from 'react-icons/io';
 
 export default function MessageBox() {
   return (
-    <div className='form-control input-group w-full'>
-      <label htmlFor='message-box' className='input-group input-group-lg'>
-        <input
+    <div className='form-control input-group w-full border-t-4 border-t-primary'>
+      <label htmlFor='message-box' className='input-group input-group-lg '>
+        <textarea
           id='message-box'
-          type='text'
-          placeholder='Type here'
-          className='input input-bordered input-lg w-full'
+          placeholder='Write your message here or type "/" to pick a canned response.'
+          className='input input-bordered textarea input-lg w-full lg:h-40 '
         />
-        <span>
-          <BsArrowRight />
+        <span className='bg-primary'>
+          <IoMdSend className='text-white text-xl lg:text-4xl' />
         </span>
       </label>
     </div>

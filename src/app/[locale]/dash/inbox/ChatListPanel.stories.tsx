@@ -21,7 +21,7 @@ export const EmptyChatList: Story = {
       <ChatListPanel unassignedChats={[]} openChats={[]} solvedChats={[]} />
     </>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
     // 👇 Simulate interactions with the component
     await userEvent.click(canvas.getByTestId('expand-unassigned-chats'));
@@ -62,7 +62,7 @@ export const ChatList: Story = {
       await userEvent.click(canvas.getByTestId('expand-solved-chats'));
     });
 
-    await step('Open chats', async () => {
+    await step('Test Chat Content', async () => {
       await expect(
         canvas.getByTestId('unassigned-chats').childNodes.length === 20
       );

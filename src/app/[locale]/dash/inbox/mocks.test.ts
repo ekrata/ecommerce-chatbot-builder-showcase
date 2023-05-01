@@ -4,12 +4,13 @@ import { Chat, ChatStatus, Message } from "./Chat.type";
 export const createRandomMessage = (
   chatId: string,
   senderId: string,
-  typing = false
+  typing = false,
+  messageSentAt: Date | undefined = undefined
 ): Message => {
   const now = new Date();
   const twoHoursAgo = new Date()
   twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
-  const sentAt = faker.date.between(twoHoursAgo, now);
+  const sentAt = messageSentAt ?? faker.date.between(twoHoursAgo, now);
   return {
     id: faker.datatype.uuid(),
     chatId,
@@ -38,7 +39,7 @@ export const createRandomChat = (status: ChatStatus): Chat => {
     orgId: faker.datatype.uuid(),
     customer: {
       id: userId,
-      name: faker.helpers.arrayElement([faker.name.fullName(), '']),
+      name: faker.helpers.arrayElement([faker.name.fullName(), undefined]),
       email: faker.internet.exampleEmail(),
       locale: 'en',
       ip: faker.internet.ipv4(),

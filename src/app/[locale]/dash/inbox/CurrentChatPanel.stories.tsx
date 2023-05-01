@@ -1,8 +1,8 @@
 import { expect } from '@storybook/jest';
 import type { Meta, StoryObj } from '@storybook/react';
-import { within, userEvent } from '@storybook/testing-library';
+import { within } from '@storybook/testing-library';
 import { ChatListPanel } from './ChatListPanel';
-import { createRandomChat } from './mocks.test';
+import { createRandomChat, createRandomMessage } from './mocks.test';
 import { ChatLog } from './ChatLog';
 import { CurrentChatPanel } from './CurrentChatPanel';
 
@@ -17,59 +17,72 @@ const meta: Meta<typeof ChatLog> = {
 export default meta;
 type Story = StoryObj<typeof CurrentChatPanel>;
 const unassignedChat = createRandomChat('unassigned');
+unassignedChat.messages = [];
+const assignedChat = createRandomChat('open');
+type Canvas = ReturnType<typeof within>;
+
+const checkRender = (canvas: Canvas) => {
+  expect(canvas.getByTestId('current-chat-panel')).toBeInTheDocument();
+  expect(canvas.getByTestId('chat-log')).toBeInTheDocument();
+};
+
+const renderCheck = 'Render check';
 
 // Initial(No Data)
-export const EmptyChatList: Story = {
+export const EmptyChatLog: Story = {
   render: () => (
     <>
       <CurrentChatPanel chat={unassignedChat} />
     </>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    expect(canvas.getByTestId('current-chat-panel')).toBeInTheDocument();
-    expect(canvas.getByTestId('chat-log')).toBeInTheDocument();
+    await step(renderCheck, () => checkRender(canvas));
+    await step('View no messages', async () => {
+      await expect(canvas.getByTestId('chat-log').childNodes.length === 0);
+    });
   },
 };
 
-// Data
-
-export const ChatList: Story = {
-  render: () => {
-    const unassignedChats = [...Array(20)].map(() =>
-      createRandomChat('unassigned')
-    );
-    const openChats = [...Array(20)].map(() => createRandomChat('open'));
-    const solvedChats = [...Array(20)].map(() => createRandomChat('solved'));
-    return (
-      <>
-        <ChatListPanel
-          unassignedChats={unassignedChats}
-          openChats={openChats}
-          solvedChats={solvedChats}
-        />
-      </>
-    );
+export const PopulatedChatLog: Story = {
+  render: () => (
+    <>
+      <CurrentChatPanel chat={assignedChat} />
+    </>
+  ),
+  play: async ({ canvasElement, step }) => {
+    await step('View Messages', async () => {
+      const canvas = within(canvasElement);
+      await step(renderCheck, () => checkRender(canvas));
+      await expect(canvas.getByTestId('chat-log').childNodes.length === 20);
+      await unassignedChat.messages.map(async (message) => {
+        await expect(canvas.getByText(message.content)).toBeTruthy();
+      });
+    });
   },
+};
+
+const sendingChat = createRandomChat('open');
+sendingChat.messages.push(
+  createRandomMessage(sendingChat.id, sendingChat.customer.id, true, new Date())
+);
+export const SendingMessage: Story = {
+  render: () => <CurrentChatPanel chat={sendingChat} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    await step('Open chats', async () => {
-      await userEvent.click(canvas.getByTestId('expand-unassigned-chats'));
-
-      await userEvent.click(canvas.getByTestId('expand-open-chats'));
-
-      await userEvent.click(canvas.getByTestId('expand-solved-chats'));
+    await step(renderCheck, () => checkRender(canvas));
+    await step('View Messages', async () => {
+      expect(canvas.getByTestId('chat-log').childNodes.length === 20);
+      sendingChat.messages.map(async (message) => {
+        await expect(canvas.getByText(message.content)).toBeTruthy();
+      });
     });
 
-    await step('Open chats', async () => {
-      await expect(
-        canvas.getByTestId('unassigned-chats').childNodes.length === 20
+    await step('View user typing message', async () => {
+      const lastMessage = within(
+        canvas.getByTestId('chat-log')?.lastElementChild as HTMLElement
       );
-      await expect(canvas.getByTestId('open-chats').childNodes.length === 20);
-      await expect(canvas.getByTestId('solved-chats').childNodes.length === 20);
-
-      // 👇 Assert DOM structure
+      expect(lastMessage.findByText('...')).toBeTruthy();
     });
   },
 };
