@@ -25,6 +25,16 @@ export const createRandomMessage = (
   };
 };
 
+export const createRandomVisitedList = () => {
+  const dates = faker.date.betweens(faker.date.recent(60), new Date(), 20)
+  const visited: { [date: string]: string } = {}
+  const url = faker.internet.url()
+  dates.forEach((date) => {
+    visited[date.getTime()] = `${url}/${faker.internet.domainWord()}`
+  })
+  return visited
+}
+
 export const createRandomChat = (status: ChatStatus): Chat => {
   const now = new Date();
   const twoHoursAgo = new Date();
@@ -48,6 +58,7 @@ export const createRandomChat = (status: ChatStatus): Chat => {
       userAgent: faker.internet.userAgent(),
       tags: faker.helpers.arrayElements(DefaultTags),
       properties: {},
+      visited: createRandomVisitedList(),
       phone: faker.phone.number('501-###-###'),
       createdAt: faker.date.between(twoHoursAgo, now),
       updatedAt: now

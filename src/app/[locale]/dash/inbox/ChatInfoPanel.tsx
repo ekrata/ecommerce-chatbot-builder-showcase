@@ -10,9 +10,15 @@ import { BsGlobe, BsTagsFill } from 'react-icons/bs';
 import { flag } from 'country-emoji';
 import { FaLanguage } from 'react-icons/fa';
 import { HiDocumentText } from 'react-icons/hi2';
+import { BiTime } from 'react-icons/bi';
+import { useFormatter, useTranslations } from 'next-intl';
 import { Chat } from './Chat.type';
 
-type InfoTabs = 'Profile' | 'Viewed Pages' | 'Notes';
+type InfoTabs = 'Profile' | 'Visited Pages' | 'Notes';
+
+const visitedPages = 'Visited Pages';
+const profile = 'Profile';
+const notesTab = 'Notes';
 
 export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
   const [currentTab, setCurrentTab] = useState<InfoTabs>('Profile');
@@ -27,14 +33,18 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
       timezone,
       tags,
       properties,
+      visited,
+      notes,
     },
   } = chat;
   const country = ct.getCountryForTimezone(timezone);
   const tabActive = 'tab-active';
+  const t = useTranslations('app.inbox.chat');
+  const { relativeTime } = useFormatter();
   return (
     <div
       data-testid='chat-info-panel'
-      className='flex flex-col gap-y-2 bg-white dark:bg-gray-800 w-full border-l-2 border-primary p-4'
+      className='flex flex-col gap-y-2 bg-white dark:bg-gray-800 w-full border-l-2 border-primary p-4 h-screen'
     >
       <div className='flex gap-x-2 '>
         <Image
@@ -54,30 +64,33 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
         <div className='tabs w-full justify-items-stretch m-0'>
           <button
             type='button'
+            data-testid='profile-button'
             className={`tab tab-bordered w-1/3 ${
-              currentTab === 'Profile' && tabActive
+              currentTab === profile && tabActive
             }`}
-            onClick={() => setCurrentTab('Profile')}
+            onClick={() => setCurrentTab(profile)}
           >
-            Profile
+            {t('profile')}
           </button>
           <button
             type='button'
+            data-testid='visited-pages-button'
             className={`tab tab-bordered w-1/3 ${
-              currentTab === 'Viewed Pages' && tabActive
+              currentTab === visitedPages && tabActive
             }`}
-            onClick={() => setCurrentTab('Viewed Pages')}
+            onClick={() => setCurrentTab(visitedPages)}
           >
-            Viewed Pages
+            {t('visited-pages')}
           </button>
           <button
             type='button'
+            data-testid='notes-button'
             className={`tab tab-bordered w-1/3 ${
-              currentTab === 'Notes' && tabActive
+              currentTab === notesTab && tabActive
             }`}
-            onClick={() => setCurrentTab('Notes')}
+            onClick={() => setCurrentTab(notesTab)}
           >
-            Notes
+            {t('notes')}
           </button>
         </div>
         {currentTab === 'Profile' && (
@@ -97,8 +110,17 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
               </li>
               <li className='flex place-items-center justify-start gap-x-4'>
                 <BsGlobe className='text-primary text-lg' />
-                <p className='text-lg'>
-                  {timezone ? `${flag(country.name)} ${timezone}` : 'Phone...'}
+                <p className='flex text-xl'>{flag(country.name)}</p>
+                <p>{country.name}</p>
+              </li>
+              <li className='flex place-items-center justify-start gap-x-4'>
+                <BiTime className='text-primary text-xl' />
+                <p>
+                  {timezone
+                    ? `${new Date().toLocaleString(locale, {
+                        timeZone: timezone,
+                      })} ${timezone}`
+                    : 'Phone...'}
                 </p>
               </li>
               <li className='flex place-items-center justify-start gap-x-4'>
@@ -114,6 +136,32 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
                 <p className=''>{tags?.join(', ')}</p>
               </li>
             </ul>
+          </div>
+        )}
+        {currentTab === visitedPages && (
+          <div className=' shadow-lg p-4 my-6'>
+            <ul className='space-y-4'>
+              {Object.entries(visited)
+                .reverse()
+                ?.map(([key, link]) => (
+                  <li className='flex gap-x-2'>
+                    <p className='text-subtitle'>
+                      {relativeTime(new Date(parseInt(key, 10)), new Date())}
+                    </p>
+                    <a className='link link-primary'>{link}</a>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
+        {currentTab === notes && (
+          <div className=' shadow-lg p-4 my-6'>
+            <textarea
+              className='textarea textarea-primary w-full h-screen'
+              placeholder={t('notes-placeholder')}
+            >
+              {notes}
+            </textarea>
           </div>
         )}
       </div>

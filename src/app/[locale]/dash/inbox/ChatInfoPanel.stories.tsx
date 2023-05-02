@@ -1,6 +1,6 @@
 import { expect } from '@storybook/jest';
 import type { Meta, StoryObj } from '@storybook/react';
-import { within } from '@storybook/testing-library';
+import { userEvent, within } from '@storybook/testing-library';
 import { ChatListPanel } from './ChatListPanel';
 import { createRandomChat } from './mocks.test';
 import { ChatLog } from './ChatLog';
@@ -21,12 +21,15 @@ type Canvas = ReturnType<typeof within>;
 
 const checkRender = (canvas: Canvas) => {
   expect(canvas.getByTestId('chat-info-panel')).toBeInTheDocument();
+  expect(canvas.getByTestId('profile-button')).toBeInTheDocument();
+  expect(canvas.getByTestId('visited-pages-button')).toBeInTheDocument();
+  expect(canvas.getByTestId('notes-button')).toBeInTheDocument();
 };
 
 const renderCheck = 'Render check';
 
 // Initial(No Data)
-export const EmptyChatLog: Story = {
+export const DefaultInfo: Story = {
   render: () => (
     <>
       <ChatInfoPanel chat={unassignedChat} />
@@ -35,5 +38,10 @@ export const EmptyChatLog: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step(renderCheck, () => checkRender(canvas));
+    await step('Interact with buttons', async () => {
+      await userEvent.click(canvas.getByTestId('profile-button'));
+      await userEvent.click(canvas.getByTestId('visited-pages-button'));
+      await userEvent.click(canvas.getByTestId('notes-button'));
+    });
   },
 };

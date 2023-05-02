@@ -38,9 +38,9 @@ export interface Customer extends Operator {
   tags?: string[];
   properties?: { [key: string]: string };
   timezone?: string;
-  visited?: { [datetime: string]: string };
+  visited: { [datetime: string]: string };
   opinions?: Opinion[]
-
+  notes: string,
 }
 
 export type ChatStatus = 'unassigned' | 'open' | 'solved';
@@ -55,6 +55,6 @@ export interface Chat {
   updatedAt: Date;
   createdAt: Date;
   tags: string[];
-  read: boolean
+  read: boolean,
   messages: Message[];
 }

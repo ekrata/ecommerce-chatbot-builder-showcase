@@ -137,7 +137,11 @@
         "send": "Send",
         "generate-response": "Generate Response",
         "attach-document": "Add an Attachment",
-        "msg-placeholder": "Write your message or use '/' to search for a quick Response"
+        "msg-placeholder": "Write your message or use '/' to search for a canned response",
+        "profile": "Profile",
+        "visited-pages": "Visited Pages",
+        "notes": "Notes",
+        "notes-placeholder": "Write some notes about your customer here for future reference."
       }
     }
   }
