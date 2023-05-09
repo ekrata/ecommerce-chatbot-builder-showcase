@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 import messages from '../messages/en.json';
+import { mswDecorator } from 'msw-storybook-addon';
 
 const preview: Preview = {
   decorators: [
@@ -18,6 +19,7 @@ const preview: Preview = {
         </NextIntlClientProvider>
       </html>
     ),
+    mswDecorator,
   ],
 };
 

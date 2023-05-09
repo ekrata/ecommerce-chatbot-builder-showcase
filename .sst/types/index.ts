@@ -7,15 +7,29 @@ declare module "sst/node/config" {
 }import "sst/node/table";
 declare module "sst/node/table" {
   export interface TableResources {
-    "Connections": {
+    "app": {
       tableName: string;
     }
   }
 }import "sst/node/api";
 declare module "sst/node/api" {
   export interface WebSocketApiResources {
-    "Api": {
+    "ws": {
       url: string;
+    }
+  }
+}import "sst/node/api";
+declare module "sst/node/api" {
+  export interface ApiResources {
+    "api": {
+      url: string;
+    }
+  }
+}import "sst/node/auth";
+declare module "sst/node/auth" {
+  export interface AuthResources {
+    "auth": {
+      publicKey: string;
     }
   }
 }import "sst/node/site";

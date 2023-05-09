@@ -1,62 +1,38 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
-export const messageSender = ['operator', 'customer'] as const;
-export type MessageSender = (typeof messageSender)[number];
-
-export const Message = new Entity({
+export const Operator = new Entity({
   model: {
-    entity: 'message',
+    entity: 'operator',
     version: '1',
     service: 'appDb',
   },
   attributes: {
-    messageId: {
+    operatorId: {
       type: 'string',
       required: true,
       readOnly: true,
       default: () => uuidv4(),
     },
-    conversationId: {
-      type: 'string',
-      required: true,
-      readOnly: true,
-    },
     orgId: {
       type: 'string',
-      required: true,
       readOnly: true,
+      required: true,
     },
-    operatorId: {
+    firstName: {
       type: 'string',
-      required: true,
-      readOnly: true,
     },
-    customerId: {
+    lastName: {
       type: 'string',
-      required: true,
-      readOnly: true,
     },
-    sender: {
-      type: messageSender,
-      required: true,
-      readOnly: true,
-    },
-    content: {
+    email: {
       type: 'string',
-      required: true,
     },
-    sentAt: {
-      type: 'number',
-      required: true,
-      readOnly: true,
-    },
-    editedAt: {
+    screenName: {
       type: 'string',
     },
     createdAt: {
       type: 'number',
-      required: true,
       readOnly: true,
       default: Date.now(),
     },
@@ -64,22 +40,32 @@ export const Message = new Entity({
       type: 'number',
       readOnly: true,
       watch: '*',
-      default: Date.now(),
       set: () => Date.now(),
     },
   },
   indexes: {
-    primary: {
+    operator: {
       pk: {
         field: 'pk',
-        composite: ['messageId'],
+        composite: ['operatorId'],
       },
       sk: {
         field: 'sk',
-        composite: ['conversationId', 'sentAt'],
+        composite: [],
       },
     },
-    messages: {
+    org: {
+      index: 'gsi1pk-gsi1sk-index',
+      pk: {
+        field: 'gsi1pk',
+        composite: ['orgId'],
+      },
+      sk: {
+        field: 'gsi1sk',
+        composite: [],
+      },
+    },
+    operators: {
       collection: 'conversationList',
       index: 'gsi2',
       pk: {
@@ -88,7 +74,7 @@ export const Message = new Entity({
       },
       sk: {
         field: 'gsi2sk',
-        composite: ['conversationId'],
+        composite: ['operatorId'],
       },
     },
   },

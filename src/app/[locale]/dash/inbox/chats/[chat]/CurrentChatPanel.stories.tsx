@@ -1,9 +1,11 @@
 import { expect } from '@storybook/jest';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within } from '@storybook/testing-library';
-import { ChatListPanel } from './ChatListPanel';
-import { createRandomChat, createRandomMessage } from './mocks.test';
-import { ChatLog } from './ChatLog';
+import { action } from '@storybook/addon-actions';
+import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
+import { ChatListPanel } from '../../ChatListPanel';
+import { createRandomChat, createRandomMessage } from '../../mocks.test';
+import { ChatLog } from '../../ChatLog';
 import { CurrentChatPanel } from './CurrentChatPanel';
 
 const meta: Meta<typeof ChatLog> = {
@@ -32,7 +34,12 @@ const renderCheck = 'Render check';
 export const EmptyChatLog: Story = {
   render: () => (
     <>
-      <CurrentChatPanel chat={unassignedChat} />
+      <MemoryRouterProvider
+        url='/dash/inbox/chats/'
+        onPush={action('router.push')}
+      >
+        <CurrentChatPanel chat={unassignedChat} />
+      </MemoryRouterProvider>
     </>
   ),
   play: async ({ canvasElement, step }) => {

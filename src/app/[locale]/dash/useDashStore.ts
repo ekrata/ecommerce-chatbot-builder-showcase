@@ -1,28 +1,25 @@
 import { create } from "zustand"
 import { Chat } from "./inbox/Chat.type"
 
-
-
 type Feature = 'inbox' | 'chat-bot' | 'settings' | 'home'
 
 interface State {
   currentChatId?: string
   currentFeature?: Feature
   currentSearchTerm?: string
-  chats: Chat[],
+  currentOrg?: string
   loading: boolean,
   error: string
 }
 
 const initialState: State = {
-  chats: [],
   loading: false,
   error: "",
 }
 
 type Actions = {
-  setCurrentChatId: (chatId: string) => void
   setCurrentFeature: (feature: Feature) => void
+  setCurrentOrg: (orgId: string) => void
 }
 
 
@@ -32,12 +29,11 @@ export const useDashStore = create<State & Actions>(
     error: initialState.error,
     chats: initialState.chats,
     currentChatId: undefined,
-    setCurrentChatId: (chatId) =>
-      set((state) => ({ ...state, currentChatId: chatId })),
     setCurrentFeature: (feature) =>
       set((state) => ({ ...state, feature })),
-    fetchChats: () =>
-      []
+    setCurrentOperator: (orgId) =>
+      set((state) => ({ ...state, currentOrg: orgId })),
+  })))
     // set((state) => ({ ...state, loading: true }))
     // try {
     //   const res = await fetch("/")

@@ -1,93 +1,123 @@
 import { Entity } from 'electrodb';
+import { v4 as uuidv4 } from 'uuid';
 
-export default new Entity({
+export const Customer = new Entity({
   model: {
-    entity: "",
-    version: "1",
-    service: "app",
+    entity: 'customer',
+    version: '1',
+    service: 'appDb',
   },
   attributes: {
-    employee: {
-      type: "string",
+    customerId: {
+      type: 'string',
+      required: true,
+      readOnly: true,
+      default: () => uuidv4(),
     },
-    firstName: {
-      type: "string",
+    orgId: {
+      type: 'string',
+      required: true,
+      readOnly: true,
     },
-    lastName: {
-      type: "string",
+    name: {
+      type: 'string',
     },
-    username: {
-      type: "string"
-    }
-
+    email: {
+      type: 'string',
+      required: true,
+    },
+    profilePicture: {
+      type: 'string',
+    },
+    mailingSubscribed: {
+      type: 'boolean',
+      default: false,
+      required: true,
+    },
+    ip: {
+      type: 'string',
+    },
+    locale: {
+      type: 'string',
+      required: true,
+      default: 'en',
+    },
+    phone: {
+      type: 'string',
+    },
+    starRating: {
+      type: 'set',
+      items: [1, 2, 3, 4, 5] as const,
+    },
+    userAgent: {
+      type: 'string',
+    },
+    tags: {
+      type: 'string',
+    },
+    properties: {
+      type: 'map',
+      properties: {
+        key: {
+          type: 'string',
+        },
+        value: {
+          type: 'string',
+        },
+      },
+    },
+    visitedPages: {
+      type: 'map',
+      properties: {
+        datetimeAtVist: {
+          type: 'number',
+        },
+        value: {
+          type: 'string',
+        },
+      },
+    },
+    timezone: {
+      type: 'string',
+    },
+    notes: {
+      type: 'string',
+    },
+    createdAt: {
+      type: 'number',
+      readOnly: true,
+      default: Date.now(),
+    },
+    updatedAt: {
+      type: 'number',
+      readOnly: true,
+      watch: '*',
+      default: Date.now(),
+      set: () => Date.now(),
+    },
   },
   indexes: {
-    employee: {
+    primary: {
       pk: {
-        field: "pk",
-        composite: ["employee"],
+        field: 'pk',
+        composite: ['customerId'],
       },
       sk: {
-        field: "sk",
+        field: 'sk',
         composite: [],
       },
     },
-    coworkers: {
-      index: "gsi1pk-gsi1sk-index",
-      collection: "workplaces",
+    customer: {
+      collection: 'conversationList',
+      index: 'gsi2',
       pk: {
-        field: "gsi1pk",
-        composite: ["office"],
+        field: 'gsi2pk',
+        composite: ['orgId'],
       },
       sk: {
-        field: "gsi1sk",
-        composite: ["team", "title", "employee"],
+        field: 'gsi2sk',
+        composite: ['customerId', 'createdAt'],
       },
     },
-    teams: {
-      index: "gsi2pk-gsi2sk-index",
-      pk: {
-        field: "gsi2pk",
-        composite: ["team"],
-      },
-      sk: {
-        field: "gsi2sk",
-        composite: ["title", "salary", "employee"],
-      },
-    },
-    employeeLookup: {
-      collection: "assignments",
-      index: "gsi3pk-gsi3sk-index",
-      pk: {
-        field: "gsi3pk",
-        composite: ["employee"],
-      },
-      sk: {
-        field: "gsi3sk",
-        composite: [],
-      },
-    },
-    roles: {
-      index: "gsi4pk-gsi4sk-index",
-      pk: {
-        field: "gsi4pk",
-        composite: ["title"],
-      },
-      sk: {
-        field: "gsi4sk",
-        composite: ["salary", "employee"],
-      },
-    },
-    directReports: {
-      index: "gsi5pk-gsi5sk-index",
-      pk: {
-        field: "gsi5pk",
-        composite: ["manager"],
-      },
-      sk: {
-        field: "gsi5sk",
-        composite: ["team", "office", "employee"],
-      },
-    },
-  }
+  },
 });

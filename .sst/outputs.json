@@ -1,5 +1,6 @@
 {
-  "local-crow-Site": {
-    "ApiEndpoint": "wss://dtare7rs48.execute-api.us-east-1.amazonaws.com/local"
+  "local-crow-AppStack": {
+    "ApiUrl": "https://rwys6ma2k3.execute-api.us-east-1.amazonaws.com",
+    "WsApiUrl": "wss://etr95nhzwk.execute-api.us-east-1.amazonaws.com/local"
   }
 }

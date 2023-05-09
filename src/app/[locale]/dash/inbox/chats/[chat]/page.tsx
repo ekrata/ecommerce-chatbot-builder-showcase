@@ -5,10 +5,17 @@ import ChatPanel from './CurrentChatPanel';
 import ChatInfoPanel from './ChatInfoPanel';
 import ChatSkeleton from './ChatSkeleton';
 import chatSkeleton from './ChatSkeleton';
+import { CurrentChatPanel } from './CurrentChatPanel';
+import { useDashStore } from '../useDashStore';
+import { useParams } from 'next/navigation';
+import { useChat } from '../../useChats';
 
 export default async function Page() {
-  // useDashStore((state) => state.setCurrentFeature('inbox'));
+  const {chat} = useParams();
 
+  const chat = useChat(org, chat);
+  
+  
   return (
     <>
       <div
@@ -34,7 +41,7 @@ export default async function Page() {
             fallback={Array(20).map((i) => (
               <>{chatSkeleton(i % 2 === 0 ? 'left' : 'right')}</>
             ))}
-              <ChatPanel />
+              <CurrentChatPanel chat={currentChat} />
           </Suspense>
         </section>
         <section className='grid-cols-4 lg:col-span-4 flex-col flex'>

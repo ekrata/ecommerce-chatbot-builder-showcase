@@ -12,6 +12,7 @@ export interface Message {
 }
 
 type StarRating = 1 | 2 | 3 | 4 | 5
+
 export interface Opinion {
   date: Date
   productRange?: StarRating
@@ -30,7 +31,12 @@ export interface Operator {
 
 export const DefaultTags = ['New', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Loves to chat', 'Long Browser', 'Loves recommendations']
 
-export interface Customer extends Operator {
+export interface Customer {
+  customer: string;
+  name?: string;
+  email: string;
+  profilePicture: string;
+  mailingSubscribed: boolean;
   ip: string;
   locale: string;
   phone?: string;
@@ -41,12 +47,14 @@ export interface Customer extends Operator {
   visited: { [datetime: string]: string };
   opinions?: Opinion[]
   notes: string,
+  updatedAt: Date;
+  createdAt: Date;
 }
 
 export type ChatStatus = 'unassigned' | 'open' | 'solved';
 
 export interface Chat {
-  id: string;
+  chat: string;
   orgId: string;
   connectionId: string;
   status: ChatStatus;
@@ -54,7 +62,7 @@ export interface Chat {
   customer: Customer;
   updatedAt: Date;
   createdAt: Date;
-  tags: string[];
+  taggedViews: string[];
   read: boolean,
   messages: Message[];
 }

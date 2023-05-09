@@ -4,21 +4,21 @@
     "id": "App",
     "path": "",
     "children": {
-      "local-crow-Site": {
-        "id": "local-crow-Site",
-        "path": "local-crow-Site",
+      "local-crow-AppStack": {
+        "id": "local-crow-AppStack",
+        "path": "local-crow-AppStack",
         "children": {
           "CustomResourceHandler": {
             "id": "CustomResourceHandler",
-            "path": "local-crow-Site/CustomResourceHandler",
+            "path": "local-crow-AppStack/CustomResourceHandler",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "local-crow-Site/CustomResourceHandler/ServiceRole",
+                "path": "local-crow-AppStack/CustomResourceHandler/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "local-crow-Site/CustomResourceHandler/ServiceRole/ImportServiceRole",
+                    "path": "local-crow-AppStack/CustomResourceHandler/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.72.1"
@@ -26,7 +26,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/CustomResourceHandler/ServiceRole/Resource",
+                    "path": "local-crow-AppStack/CustomResourceHandler/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -81,11 +81,11 @@
               },
               "Code": {
                 "id": "Code",
-                "path": "local-crow-Site/CustomResourceHandler/Code",
+                "path": "local-crow-AppStack/CustomResourceHandler/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "local-crow-Site/CustomResourceHandler/Code/Stage",
+                    "path": "local-crow-AppStack/CustomResourceHandler/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.72.1"
@@ -93,7 +93,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "local-crow-Site/CustomResourceHandler/Code/AssetBucket",
+                    "path": "local-crow-AppStack/CustomResourceHandler/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.72.1"
@@ -107,13 +107,13 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "local-crow-Site/CustomResourceHandler/Resource",
+                "path": "local-crow-AppStack/CustomResourceHandler/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
-                      "s3Key": "2bcc77ae8ed65efe9ca220676a8756752acb41c74e4e334cedba12200af20acd.zip"
+                      "s3Key": "9cb90992c571e765327168009dc82870b88f284ed8f29cc9ab0fdaa66b82538e.zip"
                     },
                     "role": {
                       "Fn::GetAtt": [
@@ -148,37 +148,71 @@
               "version": "2.72.1"
             }
           },
-          "Connections": {
-            "id": "Connections",
-            "path": "local-crow-Site/Connections",
+          "app": {
+            "id": "app",
+            "path": "local-crow-AppStack/app",
             "children": {
               "Table": {
                 "id": "Table",
-                "path": "local-crow-Site/Connections/Table",
+                "path": "local-crow-AppStack/app/Table",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Connections/Table/Resource",
+                    "path": "local-crow-AppStack/app/Table/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                       "aws:cdk:cloudformation:props": {
                         "keySchema": [
                           {
-                            "attributeName": "id",
+                            "attributeName": "pk",
                             "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "sk",
+                            "keyType": "RANGE"
                           }
                         ],
                         "attributeDefinitions": [
                           {
-                            "attributeName": "id",
+                            "attributeName": "pk",
+                            "attributeType": "S"
+                          },
+                          {
+                            "attributeName": "sk",
+                            "attributeType": "S"
+                          },
+                          {
+                            "attributeName": "gsi1pk",
+                            "attributeType": "S"
+                          },
+                          {
+                            "attributeName": "gsi1sk",
                             "attributeType": "S"
                           }
                         ],
                         "billingMode": "PAY_PER_REQUEST",
+                        "globalSecondaryIndexes": [
+                          {
+                            "indexName": "gsi1pk-gsi1sk-index",
+                            "keySchema": [
+                              {
+                                "attributeName": "gsi1pk",
+                                "keyType": "HASH"
+                              },
+                              {
+                                "attributeName": "gsi1sk",
+                                "keyType": "RANGE"
+                              }
+                            ],
+                            "projection": {
+                              "projectionType": "ALL"
+                            }
+                          }
+                        ],
                         "pointInTimeRecoverySpecification": {
                           "pointInTimeRecoveryEnabled": true
                         },
-                        "tableName": "local-crow-Connections",
+                        "tableName": "local-crow-app",
                         "tags": [
                           {
                             "key": "sst:app",
@@ -198,7 +232,7 @@
                   },
                   "ScalingRole": {
                     "id": "ScalingRole",
-                    "path": "local-crow-Site/Connections/Table/ScalingRole",
+                    "path": "local-crow-AppStack/app/Table/ScalingRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.72.1"
@@ -212,19 +246,19 @@
               },
               "Parameter_tableName": {
                 "id": "Parameter_tableName",
-                "path": "local-crow-Site/Connections/Parameter_tableName",
+                "path": "local-crow-AppStack/app/Parameter_tableName",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Connections/Parameter_tableName/Resource",
+                    "path": "local-crow-AppStack/app/Parameter_tableName/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
                       "aws:cdk:cloudformation:props": {
                         "type": "String",
                         "value": {
-                          "Ref": "ConnectionsTable916FDB22"
+                          "Ref": "appTable49BA2E06"
                         },
-                        "name": "/sst/crow/local/Table/Connections/tableName",
+                        "name": "/sst/crow/local/Table/app/tableName",
                         "tags": {
                           "sst:app": "crow",
                           "sst:stage": "local"
@@ -248,21 +282,21 @@
               "version": "10.1.156"
             }
           },
-          "Api": {
-            "id": "Api",
-            "path": "local-crow-Site/Api",
+          "ws": {
+            "id": "ws",
+            "path": "local-crow-AppStack/ws",
             "children": {
               "Api": {
                 "id": "Api",
-                "path": "local-crow-Site/Api/Api",
+                "path": "local-crow-AppStack/ws/Api",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/Api/Resource",
+                    "path": "local-crow-AppStack/ws/Api/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Api",
                       "aws:cdk:cloudformation:props": {
-                        "name": "local-crow-Api",
+                        "name": "local-crow-ws",
                         "protocolType": "WEBSOCKET",
                         "routeSelectionExpression": "$request.body.action",
                         "tags": {
@@ -284,11 +318,11 @@
               },
               "APIGatewayCloudWatchRolePolicy": {
                 "id": "APIGatewayCloudWatchRolePolicy",
-                "path": "local-crow-Site/Api/APIGatewayCloudWatchRolePolicy",
+                "path": "local-crow-AppStack/ws/APIGatewayCloudWatchRolePolicy",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/APIGatewayCloudWatchRolePolicy/Resource",
+                    "path": "local-crow-AppStack/ws/APIGatewayCloudWatchRolePolicy/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                       "aws:cdk:cloudformation:props": {
@@ -336,7 +370,7 @@
                           ],
                           "Version": "2012-10-17"
                         },
-                        "policyName": "ApiAPIGatewayCloudWatchRolePolicy1B35D79A",
+                        "policyName": "wsAPIGatewayCloudWatchRolePolicyE503A1EE",
                         "roles": [
                           {
                             "Ref": "CustomResourceHandlerServiceRole41AEC181"
@@ -357,11 +391,11 @@
               },
               "APIGatewayCloudWatchRole": {
                 "id": "APIGatewayCloudWatchRole",
-                "path": "local-crow-Site/Api/APIGatewayCloudWatchRole",
+                "path": "local-crow-AppStack/ws/APIGatewayCloudWatchRole",
                 "children": {
                   "Default": {
                     "id": "Default",
-                    "path": "local-crow-Site/Api/APIGatewayCloudWatchRole/Default",
+                    "path": "local-crow-AppStack/ws/APIGatewayCloudWatchRole/Default",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.72.1"
@@ -375,23 +409,23 @@
               },
               "Stage": {
                 "id": "Stage",
-                "path": "local-crow-Site/Api/Stage",
+                "path": "local-crow-AppStack/ws/Stage",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/Stage/Resource",
+                    "path": "local-crow-AppStack/ws/Stage/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Stage",
                       "aws:cdk:cloudformation:props": {
                         "apiId": {
-                          "Ref": "ApiCD79AAA0"
+                          "Ref": "wsApi8530CADA"
                         },
                         "stageName": "local",
                         "accessLogSettings": {
                           "format": "{\"requestTime\":\"$context.requestTime\",\"requestId\":\"$context.requestId\",\"eventType\":\"$context.eventType\",\"routeKey\":\"$context.routeKey\",\"status\":$context.status,\"integrationRequestId\":\"$context.awsEndpointRequestId\",\"integrationStatus\":\"$context.integrationStatus\",\"integrationLatency\":\"$context.integrationLatency\",\"integrationServiceStatus\":\"$context.integration.integrationStatus\",\"ip\":\"$context.identity.sourceIp\",\"userAgent\":\"$context.identity.userAgent\",\"cognitoIdentityId\":\"$context.identity.cognitoIdentityId\",\"connectedAt\":\"$context.connectedAt\",\"connectionId\":\"$context.connectionId\"}",
                           "destinationArn": {
                             "Fn::GetAtt": [
-                              "ApiLogGroup1717FE17",
+                              "wsLogGroupB568EE4F",
                               "Arn"
                             ]
                           }
@@ -416,11 +450,11 @@
               },
               "LogGroup": {
                 "id": "LogGroup",
-                "path": "local-crow-Site/Api/LogGroup",
+                "path": "local-crow-AppStack/ws/LogGroup",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/LogGroup/Resource",
+                    "path": "local-crow-AppStack/ws/LogGroup/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
                       "aws:cdk:cloudformation:props": {
@@ -428,9 +462,9 @@
                           "Fn::Join": [
                             "",
                             [
-                              "/aws/vendedlogs/apis/local-crow-Api-",
+                              "/aws/vendedlogs/apis/local-crow-ws-",
                               {
-                                "Ref": "ApiCD79AAA0"
+                                "Ref": "wsApi8530CADA"
                               },
                               "/local"
                             ]
@@ -461,15 +495,15 @@
               },
               "$connect": {
                 "id": "$connect",
-                "path": "local-crow-Site/Api/$connect",
+                "path": "local-crow-AppStack/ws/$connect",
                 "children": {
                   "ServiceRole": {
                     "id": "ServiceRole",
-                    "path": "local-crow-Site/Api/$connect/ServiceRole",
+                    "path": "local-crow-AppStack/ws/$connect/ServiceRole",
                     "children": {
                       "ImportServiceRole": {
                         "id": "ImportServiceRole",
-                        "path": "local-crow-Site/Api/$connect/ServiceRole/ImportServiceRole",
+                        "path": "local-crow-AppStack/ws/$connect/ServiceRole/ImportServiceRole",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.Resource",
                           "version": "2.72.1"
@@ -477,7 +511,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/$connect/ServiceRole/Resource",
+                        "path": "local-crow-AppStack/ws/$connect/ServiceRole/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                           "aws:cdk:cloudformation:props": {
@@ -526,11 +560,11 @@
                       },
                       "DefaultPolicy": {
                         "id": "DefaultPolicy",
-                        "path": "local-crow-Site/Api/$connect/ServiceRole/DefaultPolicy",
+                        "path": "local-crow-AppStack/ws/$connect/ServiceRole/DefaultPolicy",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "local-crow-Site/Api/$connect/ServiceRole/DefaultPolicy/Resource",
+                            "path": "local-crow-AppStack/ws/$connect/ServiceRole/DefaultPolicy/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                               "aws:cdk:cloudformation:props": {
@@ -550,7 +584,7 @@
                                       "Resource": [
                                         {
                                           "Fn::GetAtt": [
-                                            "ConnectionsTable916FDB22",
+                                            "appTable49BA2E06",
                                             "Arn"
                                           ]
                                         },
@@ -560,7 +594,7 @@
                                             [
                                               {
                                                 "Fn::GetAtt": [
-                                                  "ConnectionsTable916FDB22",
+                                                  "appTable49BA2E06",
                                                   "Arn"
                                                 ]
                                               },
@@ -583,7 +617,7 @@
                                             },
                                             ":execute-api:us-east-1:206508349906:",
                                             {
-                                              "Ref": "ApiCD79AAA0"
+                                              "Ref": "wsApi8530CADA"
                                             },
                                             "/*/*/@connections/*"
                                           ]
@@ -598,15 +632,26 @@
                                     {
                                       "Action": "s3:*",
                                       "Effect": "Allow",
-                                      "Resource": "arn:aws:s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
                                     }
                                   ],
                                   "Version": "2012-10-17"
                                 },
-                                "policyName": "ApiconnectServiceRoleDefaultPolicy530B764C",
+                                "policyName": "wsconnectServiceRoleDefaultPolicy18F23E16",
                                 "roles": [
                                   {
-                                    "Ref": "ApiconnectServiceRoleB38A655D"
+                                    "Ref": "wsconnectServiceRole65384E2A"
                                   }
                                 ]
                               }
@@ -630,11 +675,11 @@
                   },
                   "Code": {
                     "id": "Code",
-                    "path": "local-crow-Site/Api/$connect/Code",
+                    "path": "local-crow-AppStack/ws/$connect/Code",
                     "children": {
                       "Stage": {
                         "id": "Stage",
-                        "path": "local-crow-Site/Api/$connect/Code/Stage",
+                        "path": "local-crow-AppStack/ws/$connect/Code/Stage",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.72.1"
@@ -642,7 +687,7 @@
                       },
                       "AssetBucket": {
                         "id": "AssetBucket",
-                        "path": "local-crow-Site/Api/$connect/Code/AssetBucket",
+                        "path": "local-crow-AppStack/ws/$connect/Code/AssetBucket",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                           "version": "2.72.1"
@@ -656,7 +701,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/$connect/Resource",
+                    "path": "local-crow-AppStack/ws/$connect/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                       "aws:cdk:cloudformation:props": {
@@ -666,19 +711,19 @@
                         },
                         "role": {
                           "Fn::GetAtt": [
-                            "ApiconnectServiceRoleB38A655D",
+                            "wsconnectServiceRole65384E2A",
                             "Arn"
                           ]
                         },
                         "environment": {
                           "variables": {
-                            "SST_FUNCTION_ID": "c806965eb52afa97238316bc6a0cf9983493f217f1",
+                            "SST_FUNCTION_ID": "c81fc92f159ae792326741347536c39ef89ef24bcd",
                             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
                             "SST_APP": "crow",
                             "SST_STAGE": "local",
                             "SST_SSM_PREFIX": "/sst/crow/local/",
-                            "SST_Table_tableName_Connections": {
-                              "Ref": "ConnectionsTable916FDB22"
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
                             }
                           }
                         },
@@ -711,16 +756,16 @@
                   },
                   "EventInvokeConfig": {
                     "id": "EventInvokeConfig",
-                    "path": "local-crow-Site/Api/$connect/EventInvokeConfig",
+                    "path": "local-crow-AppStack/ws/$connect/EventInvokeConfig",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/$connect/EventInvokeConfig/Resource",
+                        "path": "local-crow-AppStack/ws/$connect/EventInvokeConfig/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
                           "aws:cdk:cloudformation:props": {
                             "functionName": {
-                              "Ref": "Apiconnect6ADFCB1F"
+                              "Ref": "wsconnectC2B29F5B"
                             },
                             "qualifier": "$LATEST",
                             "maximumRetryAttempts": 0
@@ -745,18 +790,18 @@
               },
               "Route_$connect": {
                 "id": "Route_$connect",
-                "path": "local-crow-Site/Api/Route_$connect",
+                "path": "local-crow-AppStack/ws/Route_$connect",
                 "children": {
                   "Integration_$connect-Permission": {
                     "id": "Integration_$connect-Permission",
-                    "path": "local-crow-Site/Api/Route_$connect/Integration_$connect-Permission",
+                    "path": "local-crow-AppStack/ws/Route_$connect/Integration_$connect-Permission",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                       "aws:cdk:cloudformation:props": {
                         "action": "lambda:InvokeFunction",
                         "functionName": {
                           "Fn::GetAtt": [
-                            "Apiconnect6ADFCB1F",
+                            "wsconnectC2B29F5B",
                             "Arn"
                           ]
                         },
@@ -771,7 +816,7 @@
                               },
                               ":execute-api:us-east-1:206508349906:",
                               {
-                                "Ref": "ApiCD79AAA0"
+                                "Ref": "wsApi8530CADA"
                               },
                               "/*/*$connect"
                             ]
@@ -786,16 +831,16 @@
                   },
                   "Integration_$connect": {
                     "id": "Integration_$connect",
-                    "path": "local-crow-Site/Api/Route_$connect/Integration_$connect",
+                    "path": "local-crow-AppStack/ws/Route_$connect/Integration_$connect",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/Route_$connect/Integration_$connect/Resource",
+                        "path": "local-crow-AppStack/ws/Route_$connect/Integration_$connect/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
                           "aws:cdk:cloudformation:props": {
                             "apiId": {
-                              "Ref": "ApiCD79AAA0"
+                              "Ref": "wsApi8530CADA"
                             },
                             "integrationType": "AWS_PROXY",
                             "integrationUri": {
@@ -809,7 +854,7 @@
                                   ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
                                   {
                                     "Fn::GetAtt": [
-                                      "Apiconnect6ADFCB1F",
+                                      "wsconnectC2B29F5B",
                                       "Arn"
                                     ]
                                   },
@@ -832,12 +877,12 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/Route_$connect/Resource",
+                    "path": "local-crow-AppStack/ws/Route_$connect/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
                       "aws:cdk:cloudformation:props": {
                         "apiId": {
-                          "Ref": "ApiCD79AAA0"
+                          "Ref": "wsApi8530CADA"
                         },
                         "routeKey": "$connect",
                         "authorizationType": "NONE",
@@ -847,7 +892,7 @@
                             [
                               "integrations/",
                               {
-                                "Ref": "ApiRouteconnectIntegrationconnect921690DB"
+                                "Ref": "wsRouteconnectIntegrationconnect65EDCB14"
                               }
                             ]
                           ]
@@ -867,15 +912,15 @@
               },
               "$disconnect": {
                 "id": "$disconnect",
-                "path": "local-crow-Site/Api/$disconnect",
+                "path": "local-crow-AppStack/ws/$disconnect",
                 "children": {
                   "ServiceRole": {
                     "id": "ServiceRole",
-                    "path": "local-crow-Site/Api/$disconnect/ServiceRole",
+                    "path": "local-crow-AppStack/ws/$disconnect/ServiceRole",
                     "children": {
                       "ImportServiceRole": {
                         "id": "ImportServiceRole",
-                        "path": "local-crow-Site/Api/$disconnect/ServiceRole/ImportServiceRole",
+                        "path": "local-crow-AppStack/ws/$disconnect/ServiceRole/ImportServiceRole",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.Resource",
                           "version": "2.72.1"
@@ -883,7 +928,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/$disconnect/ServiceRole/Resource",
+                        "path": "local-crow-AppStack/ws/$disconnect/ServiceRole/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                           "aws:cdk:cloudformation:props": {
@@ -932,11 +977,11 @@
                       },
                       "DefaultPolicy": {
                         "id": "DefaultPolicy",
-                        "path": "local-crow-Site/Api/$disconnect/ServiceRole/DefaultPolicy",
+                        "path": "local-crow-AppStack/ws/$disconnect/ServiceRole/DefaultPolicy",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "local-crow-Site/Api/$disconnect/ServiceRole/DefaultPolicy/Resource",
+                            "path": "local-crow-AppStack/ws/$disconnect/ServiceRole/DefaultPolicy/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                               "aws:cdk:cloudformation:props": {
@@ -956,7 +1001,7 @@
                                       "Resource": [
                                         {
                                           "Fn::GetAtt": [
-                                            "ConnectionsTable916FDB22",
+                                            "appTable49BA2E06",
                                             "Arn"
                                           ]
                                         },
@@ -966,7 +1011,7 @@
                                             [
                                               {
                                                 "Fn::GetAtt": [
-                                                  "ConnectionsTable916FDB22",
+                                                  "appTable49BA2E06",
                                                   "Arn"
                                                 ]
                                               },
@@ -989,7 +1034,7 @@
                                             },
                                             ":execute-api:us-east-1:206508349906:",
                                             {
-                                              "Ref": "ApiCD79AAA0"
+                                              "Ref": "wsApi8530CADA"
                                             },
                                             "/*/*/@connections/*"
                                           ]
@@ -1004,15 +1049,26 @@
                                     {
                                       "Action": "s3:*",
                                       "Effect": "Allow",
-                                      "Resource": "arn:aws:s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
                                     }
                                   ],
                                   "Version": "2012-10-17"
                                 },
-                                "policyName": "ApidisconnectServiceRoleDefaultPolicy37A097B3",
+                                "policyName": "wsdisconnectServiceRoleDefaultPolicyF04FBF49",
                                 "roles": [
                                   {
-                                    "Ref": "ApidisconnectServiceRole73693786"
+                                    "Ref": "wsdisconnectServiceRoleFEF68B4C"
                                   }
                                 ]
                               }
@@ -1036,11 +1092,11 @@
                   },
                   "Code": {
                     "id": "Code",
-                    "path": "local-crow-Site/Api/$disconnect/Code",
+                    "path": "local-crow-AppStack/ws/$disconnect/Code",
                     "children": {
                       "Stage": {
                         "id": "Stage",
-                        "path": "local-crow-Site/Api/$disconnect/Code/Stage",
+                        "path": "local-crow-AppStack/ws/$disconnect/Code/Stage",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.72.1"
@@ -1048,7 +1104,7 @@
                       },
                       "AssetBucket": {
                         "id": "AssetBucket",
-                        "path": "local-crow-Site/Api/$disconnect/Code/AssetBucket",
+                        "path": "local-crow-AppStack/ws/$disconnect/Code/AssetBucket",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                           "version": "2.72.1"
@@ -1062,7 +1118,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/$disconnect/Resource",
+                    "path": "local-crow-AppStack/ws/$disconnect/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                       "aws:cdk:cloudformation:props": {
@@ -1072,19 +1128,19 @@
                         },
                         "role": {
                           "Fn::GetAtt": [
-                            "ApidisconnectServiceRole73693786",
+                            "wsdisconnectServiceRoleFEF68B4C",
                             "Arn"
                           ]
                         },
                         "environment": {
                           "variables": {
-                            "SST_FUNCTION_ID": "c86bdc78e88848195f82f4cbc6fa29b0e6979a9673",
+                            "SST_FUNCTION_ID": "c8cd402becf95abfb076e7b09a6a47c62d9339413d",
                             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
                             "SST_APP": "crow",
                             "SST_STAGE": "local",
                             "SST_SSM_PREFIX": "/sst/crow/local/",
-                            "SST_Table_tableName_Connections": {
-                              "Ref": "ConnectionsTable916FDB22"
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
                             }
                           }
                         },
@@ -1117,16 +1173,16 @@
                   },
                   "EventInvokeConfig": {
                     "id": "EventInvokeConfig",
-                    "path": "local-crow-Site/Api/$disconnect/EventInvokeConfig",
+                    "path": "local-crow-AppStack/ws/$disconnect/EventInvokeConfig",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/$disconnect/EventInvokeConfig/Resource",
+                        "path": "local-crow-AppStack/ws/$disconnect/EventInvokeConfig/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
                           "aws:cdk:cloudformation:props": {
                             "functionName": {
-                              "Ref": "ApidisconnectCB51A101"
+                              "Ref": "wsdisconnect1E2184EA"
                             },
                             "qualifier": "$LATEST",
                             "maximumRetryAttempts": 0
@@ -1151,18 +1207,18 @@
               },
               "Route_$disconnect": {
                 "id": "Route_$disconnect",
-                "path": "local-crow-Site/Api/Route_$disconnect",
+                "path": "local-crow-AppStack/ws/Route_$disconnect",
                 "children": {
                   "Integration_$disconnect-Permission": {
                     "id": "Integration_$disconnect-Permission",
-                    "path": "local-crow-Site/Api/Route_$disconnect/Integration_$disconnect-Permission",
+                    "path": "local-crow-AppStack/ws/Route_$disconnect/Integration_$disconnect-Permission",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                       "aws:cdk:cloudformation:props": {
                         "action": "lambda:InvokeFunction",
                         "functionName": {
                           "Fn::GetAtt": [
-                            "ApidisconnectCB51A101",
+                            "wsdisconnect1E2184EA",
                             "Arn"
                           ]
                         },
@@ -1177,7 +1233,7 @@
                               },
                               ":execute-api:us-east-1:206508349906:",
                               {
-                                "Ref": "ApiCD79AAA0"
+                                "Ref": "wsApi8530CADA"
                               },
                               "/*/*$disconnect"
                             ]
@@ -1192,16 +1248,16 @@
                   },
                   "Integration_$disconnect": {
                     "id": "Integration_$disconnect",
-                    "path": "local-crow-Site/Api/Route_$disconnect/Integration_$disconnect",
+                    "path": "local-crow-AppStack/ws/Route_$disconnect/Integration_$disconnect",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/Route_$disconnect/Integration_$disconnect/Resource",
+                        "path": "local-crow-AppStack/ws/Route_$disconnect/Integration_$disconnect/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
                           "aws:cdk:cloudformation:props": {
                             "apiId": {
-                              "Ref": "ApiCD79AAA0"
+                              "Ref": "wsApi8530CADA"
                             },
                             "integrationType": "AWS_PROXY",
                             "integrationUri": {
@@ -1215,7 +1271,7 @@
                                   ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
                                   {
                                     "Fn::GetAtt": [
-                                      "ApidisconnectCB51A101",
+                                      "wsdisconnect1E2184EA",
                                       "Arn"
                                     ]
                                   },
@@ -1238,12 +1294,12 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/Route_$disconnect/Resource",
+                    "path": "local-crow-AppStack/ws/Route_$disconnect/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
                       "aws:cdk:cloudformation:props": {
                         "apiId": {
-                          "Ref": "ApiCD79AAA0"
+                          "Ref": "wsApi8530CADA"
                         },
                         "routeKey": "$disconnect",
                         "authorizationType": "NONE",
@@ -1253,7 +1309,7 @@
                             [
                               "integrations/",
                               {
-                                "Ref": "ApiRoutedisconnectIntegrationdisconnect79054E04"
+                                "Ref": "wsRoutedisconnectIntegrationdisconnect225436F6"
                               }
                             ]
                           ]
@@ -1273,15 +1329,15 @@
               },
               "sendmessage": {
                 "id": "sendmessage",
-                "path": "local-crow-Site/Api/sendmessage",
+                "path": "local-crow-AppStack/ws/sendmessage",
                 "children": {
                   "ServiceRole": {
                     "id": "ServiceRole",
-                    "path": "local-crow-Site/Api/sendmessage/ServiceRole",
+                    "path": "local-crow-AppStack/ws/sendmessage/ServiceRole",
                     "children": {
                       "ImportServiceRole": {
                         "id": "ImportServiceRole",
-                        "path": "local-crow-Site/Api/sendmessage/ServiceRole/ImportServiceRole",
+                        "path": "local-crow-AppStack/ws/sendmessage/ServiceRole/ImportServiceRole",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.Resource",
                           "version": "2.72.1"
@@ -1289,7 +1345,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/sendmessage/ServiceRole/Resource",
+                        "path": "local-crow-AppStack/ws/sendmessage/ServiceRole/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                           "aws:cdk:cloudformation:props": {
@@ -1338,11 +1394,11 @@
                       },
                       "DefaultPolicy": {
                         "id": "DefaultPolicy",
-                        "path": "local-crow-Site/Api/sendmessage/ServiceRole/DefaultPolicy",
+                        "path": "local-crow-AppStack/ws/sendmessage/ServiceRole/DefaultPolicy",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "local-crow-Site/Api/sendmessage/ServiceRole/DefaultPolicy/Resource",
+                            "path": "local-crow-AppStack/ws/sendmessage/ServiceRole/DefaultPolicy/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                               "aws:cdk:cloudformation:props": {
@@ -1362,7 +1418,7 @@
                                       "Resource": [
                                         {
                                           "Fn::GetAtt": [
-                                            "ConnectionsTable916FDB22",
+                                            "appTable49BA2E06",
                                             "Arn"
                                           ]
                                         },
@@ -1372,7 +1428,7 @@
                                             [
                                               {
                                                 "Fn::GetAtt": [
-                                                  "ConnectionsTable916FDB22",
+                                                  "appTable49BA2E06",
                                                   "Arn"
                                                 ]
                                               },
@@ -1395,7 +1451,7 @@
                                             },
                                             ":execute-api:us-east-1:206508349906:",
                                             {
-                                              "Ref": "ApiCD79AAA0"
+                                              "Ref": "wsApi8530CADA"
                                             },
                                             "/*/*/@connections/*"
                                           ]
@@ -1410,15 +1466,26 @@
                                     {
                                       "Action": "s3:*",
                                       "Effect": "Allow",
-                                      "Resource": "arn:aws:s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
                                     }
                                   ],
                                   "Version": "2012-10-17"
                                 },
-                                "policyName": "ApisendmessageServiceRoleDefaultPolicyA129B65D",
+                                "policyName": "wssendmessageServiceRoleDefaultPolicy31E6B717",
                                 "roles": [
                                   {
-                                    "Ref": "ApisendmessageServiceRole3662664F"
+                                    "Ref": "wssendmessageServiceRoleE9DB3CAB"
                                   }
                                 ]
                               }
@@ -1442,11 +1509,11 @@
                   },
                   "Code": {
                     "id": "Code",
-                    "path": "local-crow-Site/Api/sendmessage/Code",
+                    "path": "local-crow-AppStack/ws/sendmessage/Code",
                     "children": {
                       "Stage": {
                         "id": "Stage",
-                        "path": "local-crow-Site/Api/sendmessage/Code/Stage",
+                        "path": "local-crow-AppStack/ws/sendmessage/Code/Stage",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.72.1"
@@ -1454,7 +1521,7 @@
                       },
                       "AssetBucket": {
                         "id": "AssetBucket",
-                        "path": "local-crow-Site/Api/sendmessage/Code/AssetBucket",
+                        "path": "local-crow-AppStack/ws/sendmessage/Code/AssetBucket",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                           "version": "2.72.1"
@@ -1468,7 +1535,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/sendmessage/Resource",
+                    "path": "local-crow-AppStack/ws/sendmessage/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                       "aws:cdk:cloudformation:props": {
@@ -1478,19 +1545,19 @@
                         },
                         "role": {
                           "Fn::GetAtt": [
-                            "ApisendmessageServiceRole3662664F",
+                            "wssendmessageServiceRoleE9DB3CAB",
                             "Arn"
                           ]
                         },
                         "environment": {
                           "variables": {
-                            "SST_FUNCTION_ID": "c89d7e9fb7375544de45a5007d70c7b8ebd815187f",
+                            "SST_FUNCTION_ID": "c8d46d681b4411b009fbecc1e0dfc88a9e81fccde8",
                             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
                             "SST_APP": "crow",
                             "SST_STAGE": "local",
                             "SST_SSM_PREFIX": "/sst/crow/local/",
-                            "SST_Table_tableName_Connections": {
-                              "Ref": "ConnectionsTable916FDB22"
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
                             }
                           }
                         },
@@ -1523,16 +1590,16 @@
                   },
                   "EventInvokeConfig": {
                     "id": "EventInvokeConfig",
-                    "path": "local-crow-Site/Api/sendmessage/EventInvokeConfig",
+                    "path": "local-crow-AppStack/ws/sendmessage/EventInvokeConfig",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/sendmessage/EventInvokeConfig/Resource",
+                        "path": "local-crow-AppStack/ws/sendmessage/EventInvokeConfig/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
                           "aws:cdk:cloudformation:props": {
                             "functionName": {
-                              "Ref": "Apisendmessage758172CC"
+                              "Ref": "wssendmessageEC37A4F8"
                             },
                             "qualifier": "$LATEST",
                             "maximumRetryAttempts": 0
@@ -1557,18 +1624,18 @@
               },
               "Route_sendmessage": {
                 "id": "Route_sendmessage",
-                "path": "local-crow-Site/Api/Route_sendmessage",
+                "path": "local-crow-AppStack/ws/Route_sendmessage",
                 "children": {
                   "Integration_sendmessage-Permission": {
                     "id": "Integration_sendmessage-Permission",
-                    "path": "local-crow-Site/Api/Route_sendmessage/Integration_sendmessage-Permission",
+                    "path": "local-crow-AppStack/ws/Route_sendmessage/Integration_sendmessage-Permission",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                       "aws:cdk:cloudformation:props": {
                         "action": "lambda:InvokeFunction",
                         "functionName": {
                           "Fn::GetAtt": [
-                            "Apisendmessage758172CC",
+                            "wssendmessageEC37A4F8",
                             "Arn"
                           ]
                         },
@@ -1583,7 +1650,7 @@
                               },
                               ":execute-api:us-east-1:206508349906:",
                               {
-                                "Ref": "ApiCD79AAA0"
+                                "Ref": "wsApi8530CADA"
                               },
                               "/*/*sendmessage"
                             ]
@@ -1598,16 +1665,16 @@
                   },
                   "Integration_sendmessage": {
                     "id": "Integration_sendmessage",
-                    "path": "local-crow-Site/Api/Route_sendmessage/Integration_sendmessage",
+                    "path": "local-crow-AppStack/ws/Route_sendmessage/Integration_sendmessage",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/Api/Route_sendmessage/Integration_sendmessage/Resource",
+                        "path": "local-crow-AppStack/ws/Route_sendmessage/Integration_sendmessage/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
                           "aws:cdk:cloudformation:props": {
                             "apiId": {
-                              "Ref": "ApiCD79AAA0"
+                              "Ref": "wsApi8530CADA"
                             },
                             "integrationType": "AWS_PROXY",
                             "integrationUri": {
@@ -1621,7 +1688,7 @@
                                   ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
                                   {
                                     "Fn::GetAtt": [
-                                      "Apisendmessage758172CC",
+                                      "wssendmessageEC37A4F8",
                                       "Arn"
                                     ]
                                   },
@@ -1644,12 +1711,12 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/Route_sendmessage/Resource",
+                    "path": "local-crow-AppStack/ws/Route_sendmessage/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
                       "aws:cdk:cloudformation:props": {
                         "apiId": {
-                          "Ref": "ApiCD79AAA0"
+                          "Ref": "wsApi8530CADA"
                         },
                         "routeKey": "sendmessage",
                         "authorizationType": "NONE",
@@ -1659,7 +1726,7 @@
                             [
                               "integrations/",
                               {
-                                "Ref": "ApiRoutesendmessageIntegrationsendmessage2C5CF51C"
+                                "Ref": "wsRoutesendmessageIntegrationsendmessage95CCCF20"
                               }
                             ]
                           ]
@@ -1679,11 +1746,11 @@
               },
               "Parameter_url": {
                 "id": "Parameter_url",
-                "path": "local-crow-Site/Api/Parameter_url",
+                "path": "local-crow-AppStack/ws/Parameter_url",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/Api/Parameter_url/Resource",
+                    "path": "local-crow-AppStack/ws/Parameter_url/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
                       "aws:cdk:cloudformation:props": {
@@ -1694,7 +1761,7 @@
                             [
                               "wss://",
                               {
-                                "Ref": "ApiCD79AAA0"
+                                "Ref": "wsApi8530CADA"
                               },
                               ".execute-api.us-east-1.",
                               {
@@ -1704,7 +1771,7 @@
                             ]
                           ]
                         },
-                        "name": "/sst/crow/local/WebSocketApi/Api/url",
+                        "name": "/sst/crow/local/WebSocketApi/ws/url",
                         "tags": {
                           "sst:app": "crow",
                           "sst:stage": "local"
@@ -1728,17 +1795,1107 @@
               "version": "10.1.156"
             }
           },
-          "site": {
-            "id": "site",
-            "path": "local-crow-Site/site",
+          "api": {
+            "id": "api",
+            "path": "local-crow-AppStack/api",
             "children": {
-              "ServerFunctionRole": {
-                "id": "ServerFunctionRole",
-                "path": "local-crow-Site/site/ServerFunctionRole",
+              "Api": {
+                "id": "Api",
+                "path": "local-crow-AppStack/api/Api",
                 "children": {
-                  "ImportServerFunctionRole": {
-                    "id": "ImportServerFunctionRole",
-                    "path": "local-crow-Site/site/ServerFunctionRole/ImportServerFunctionRole",
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Api/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Api",
+                      "aws:cdk:cloudformation:props": {
+                        "corsConfiguration": {
+                          "allowCredentials": false,
+                          "allowHeaders": [
+                            "*"
+                          ],
+                          "allowMethods": [
+                            "*"
+                          ],
+                          "allowOrigins": [
+                            "*"
+                          ]
+                        },
+                        "name": "local-crow-api",
+                        "protocolType": "HTTP",
+                        "tags": {
+                          "sst:app": "crow",
+                          "sst:stage": "local"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnApi",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "DefaultStage": {
+                    "id": "DefaultStage",
+                    "path": "local-crow-AppStack/api/Api/DefaultStage",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Api/DefaultStage/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Stage",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "stageName": "$default",
+                            "accessLogSettings": {
+                              "format": "{\"requestTime\":\"$context.requestTime\",\"requestId\":\"$context.requestId\",\"httpMethod\":\"$context.httpMethod\",\"path\":\"$context.path\",\"routeKey\":\"$context.routeKey\",\"status\":$context.status,\"responseLatency\":$context.responseLatency,\"integrationRequestId\":\"$context.integration.requestId\",\"integrationStatus\":\"$context.integration.status\",\"integrationLatency\":\"$context.integration.latency\",\"integrationServiceStatus\":\"$context.integration.integrationStatus\",\"ip\":\"$context.identity.sourceIp\",\"userAgent\":\"$context.identity.userAgent\"}",
+                              "destinationArn": {
+                                "Fn::GetAtt": [
+                                  "apiLogGroup924E5B7A",
+                                  "Arn"
+                                ]
+                              }
+                            },
+                            "autoDeploy": true,
+                            "tags": {
+                              "sst:app": "crow",
+                              "sst:stage": "local"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnStage",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpStage",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpApi",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "LogGroup": {
+                "id": "LogGroup",
+                "path": "local-crow-AppStack/api/LogGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/LogGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "logGroupName": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "/aws/vendedlogs/apis/local-crow-api-",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/default"
+                            ]
+                          ]
+                        },
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+                  "version": "2.72.1"
+                }
+              },
+              "Lambda_GET_--conversations": {
+                "id": "Lambda_GET_--conversations",
+                "path": "local-crow-AppStack/api/Lambda_GET_--conversations",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_GET_--conversations/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaGETconversationsServiceRoleDefaultPolicy138C2A5E",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaGETconversationsServiceRole756F54F3"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaGETconversationsServiceRole756F54F3",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c853e2fab26b5e925b47b4d518b28be6ff78425e37",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 10,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaGETconversationsECC16CD1"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_GET_--conversations": {
+                "id": "Route_GET_--conversations",
+                "path": "local-crow-AppStack/api/Route_GET_--conversations",
+                "children": {
+                  "Integration_GET_--conversations": {
+                    "id": "Integration_GET_--conversations",
+                    "path": "local-crow-AppStack/api/Route_GET_--conversations/Integration_GET_--conversations",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_GET_--conversations/Integration_GET_--conversations/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaGETconversationsECC16CD1",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_GET_--conversations-Permission": {
+                    "id": "Integration_GET_--conversations-Permission",
+                    "path": "local-crow-AppStack/api/Route_GET_--conversations/Integration_GET_--conversations-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaGETconversationsECC16CD1",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/conversations"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_GET_--conversations/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "GET /conversations",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRouteGETconversationsIntegrationGETconversationsFB5CBC4B"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Lambda_POST_--util": {
+                "id": "Lambda_POST_--util",
+                "path": "local-crow-AppStack/api/Lambda_POST_--util",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaPOSTutilServiceRoleDefaultPolicy22DF90EF",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaPOSTutilServiceRole01C23B40"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutilServiceRole01C23B40",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c834b2d7c2f855e469744733c38752823ff2516347",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 10,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaPOSTutil10B97231"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_POST_--util": {
+                "id": "Route_POST_--util",
+                "path": "local-crow-AppStack/api/Route_POST_--util",
+                "children": {
+                  "Integration_POST_--util": {
+                    "id": "Integration_POST_--util",
+                    "path": "local-crow-AppStack/api/Route_POST_--util/Integration_POST_--util",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_POST_--util/Integration_POST_--util/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaPOSTutil10B97231",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_POST_--util-Permission": {
+                    "id": "Integration_POST_--util-Permission",
+                    "path": "local-crow-AppStack/api/Route_POST_--util/Integration_POST_--util-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutil10B97231",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/util"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_POST_--util/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "POST /util",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRoutePOSTutilIntegrationPOSTutilB379E86B"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Parameter_url": {
+                "id": "Parameter_url",
+                "path": "local-crow-AppStack/api/Parameter_url",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Parameter_url/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                      "aws:cdk:cloudformation:props": {
+                        "type": "String",
+                        "value": {
+                          "Fn::GetAtt": [
+                            "apiApiC3C473D0",
+                            "ApiEndpoint"
+                          ]
+                        },
+                        "name": "/sst/crow/local/Api/api/url",
+                        "tags": {
+                          "sst:app": "crow",
+                          "sst:stage": "local"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
+                  "version": "2.72.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.156"
+            }
+          },
+          "auth": {
+            "id": "auth",
+            "path": "local-crow-AppStack/auth",
+            "children": {
+              "CloudFrontInvalidatorPolicy": {
+                "id": "CloudFrontInvalidatorPolicy",
+                "path": "local-crow-AppStack/auth/CloudFrontInvalidatorPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/auth/CloudFrontInvalidatorPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "ssm:GetParameter",
+                                "ssm:PutParameter",
+                                "ssm:DeleteParameter"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":ssm:us-east-1:206508349906:parameter/*"
+                                  ]
+                                ]
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "authCloudFrontInvalidatorPolicyE1B28EEC",
+                        "roles": [
+                          {
+                            "Ref": "CustomResourceHandlerServiceRole41AEC181"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.72.1"
+                }
+              },
+              "StackMetadata": {
+                "id": "StackMetadata",
+                "path": "local-crow-AppStack/auth/StackMetadata",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "local-crow-AppStack/auth/StackMetadata/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.72.1"
+                }
+              },
+              "prefix": {
+                "id": "prefix",
+                "path": "local-crow-AppStack/auth/prefix",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/auth/prefix/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                      "aws:cdk:cloudformation:props": {
+                        "type": "String",
+                        "value": "/auth",
+                        "name": "/sst/crow/local/Auth/auth/prefix",
+                        "tags": {
+                          "sst:app": "crow",
+                          "sst:stage": "local"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
+                  "version": "2.72.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.156"
+            }
+          },
+          "Lambda_ANY_--auth--{proxy+}": {
+            "id": "Lambda_ANY_--auth--{proxy+}",
+            "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.72.1"
@@ -1746,7 +2903,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/site/ServerFunctionRole/Resource",
+                    "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -1756,7 +2913,867 @@
                               "Action": "sts:AssumeRole",
                               "Effect": "Allow",
                               "Principal": {
-                                "AWS": "*"
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "xray:PutTraceSegments",
+                                    "xray:PutTelemetryRecords"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                },
+                                {
+                                  "Action": "dynamodb:*",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "appTable49BA2E06",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "appTable49BA2E06",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": "ssm:GetParameters",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/*"
+                                      ]
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": "iot:*",
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                },
+                                {
+                                  "Action": "s3:*",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                      ]
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": "ssm:GetParameters",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                      ]
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "LambdaANYauthproxyServiceRoleDefaultPolicyC59B6FCC",
+                            "roles": [
+                              {
+                                "Ref": "LambdaANYauthproxyServiceRoleB521D3D5"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.72.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.72.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                      "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "LambdaANYauthproxyServiceRoleB521D3D5",
+                        "Arn"
+                      ]
+                    },
+                    "environment": {
+                      "variables": {
+                        "SST_FUNCTION_ID": "c858a0239cfc0aebeacde546007c5ff07df4047485",
+                        "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                        "SST_APP": "crow",
+                        "SST_STAGE": "local",
+                        "SST_SSM_PREFIX": "/sst/crow/local/",
+                        "SST_Table_tableName_app": {
+                          "Ref": "appTable49BA2E06"
+                        },
+                        "SST_DEBUG_IS_API_ROUTE": "1",
+                        "SST_Auth_prefix_auth": "/auth",
+                        "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__",
+                        "SST_Auth_privateKey_auth": "__FETCH_FROM_SSM__"
+                      }
+                    },
+                    "ephemeralStorage": {
+                      "size": 512
+                    },
+                    "handler": "bridge.handler",
+                    "memorySize": 1024,
+                    "runtime": "nodejs16.x",
+                    "tags": [
+                      {
+                        "key": "sst:app",
+                        "value": "crow"
+                      },
+                      {
+                        "key": "sst:stage",
+                        "value": "local"
+                      }
+                    ],
+                    "timeout": 10,
+                    "tracingConfig": {
+                      "mode": "Active"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.72.1"
+                }
+              },
+              "EventInvokeConfig": {
+                "id": "EventInvokeConfig",
+                "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/EventInvokeConfig",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/Lambda_ANY_--auth--{proxy+}/EventInvokeConfig/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "LambdaANYauthproxy8E797D91"
+                        },
+                        "qualifier": "$LATEST",
+                        "maximumRetryAttempts": 0
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                  "version": "2.72.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.72.1"
+            }
+          },
+          "Route_ANY_--auth--{proxy+}": {
+            "id": "Route_ANY_--auth--{proxy+}",
+            "path": "local-crow-AppStack/Route_ANY_--auth--{proxy+}",
+            "children": {
+              "Integration_ANY_--auth--{proxy+}": {
+                "id": "Integration_ANY_--auth--{proxy+}",
+                "path": "local-crow-AppStack/Route_ANY_--auth--{proxy+}/Integration_ANY_--auth--{proxy+}",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/Route_ANY_--auth--{proxy+}/Integration_ANY_--auth--{proxy+}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "integrationType": "AWS_PROXY",
+                        "integrationUri": {
+                          "Fn::GetAtt": [
+                            "LambdaANYauthproxy8E797D91",
+                            "Arn"
+                          ]
+                        },
+                        "payloadFormatVersion": "2.0"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Integration_ANY_--auth--{proxy+}-Permission": {
+                "id": "Integration_ANY_--auth--{proxy+}-Permission",
+                "path": "local-crow-AppStack/Route_ANY_--auth--{proxy+}/Integration_ANY_--auth--{proxy+}-Permission",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                  "aws:cdk:cloudformation:props": {
+                    "action": "lambda:InvokeFunction",
+                    "functionName": {
+                      "Fn::GetAtt": [
+                        "LambdaANYauthproxy8E797D91",
+                        "Arn"
+                      ]
+                    },
+                    "principal": "apigateway.amazonaws.com",
+                    "sourceArn": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition"
+                          },
+                          ":execute-api:us-east-1:206508349906:",
+                          {
+                            "Ref": "apiApiC3C473D0"
+                          },
+                          "/*/*/auth/{proxy+}"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                  "version": "2.72.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "local-crow-AppStack/Route_ANY_--auth--{proxy+}/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Ref": "apiApiC3C473D0"
+                    },
+                    "routeKey": "ANY /auth/{proxy+}",
+                    "authorizationType": "NONE",
+                    "target": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "integrations/",
+                          {
+                            "Ref": "RouteANYauthproxyIntegrationANYauthproxy7D58D719"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                  "version": "2.72.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+              "version": "2.72.1-alpha.0"
+            }
+          },
+          "Lambda_GET_--auth": {
+            "id": "Lambda_GET_--auth",
+            "path": "local-crow-AppStack/Lambda_GET_--auth",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "local-crow-AppStack/Lambda_GET_--auth/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "local-crow-AppStack/Lambda_GET_--auth/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/Lambda_GET_--auth/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "local-crow-AppStack/Lambda_GET_--auth/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/Lambda_GET_--auth/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "xray:PutTraceSegments",
+                                    "xray:PutTelemetryRecords"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                },
+                                {
+                                  "Action": "dynamodb:*",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "appTable49BA2E06",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "appTable49BA2E06",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": "ssm:GetParameters",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/*"
+                                      ]
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": "iot:*",
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                },
+                                {
+                                  "Action": "s3:*",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                      ]
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": "ssm:GetParameters",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                      ]
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "LambdaGETauthServiceRoleDefaultPolicyCE020F66",
+                            "roles": [
+                              {
+                                "Ref": "LambdaGETauthServiceRoleFD1BFD8F"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.72.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "local-crow-AppStack/Lambda_GET_--auth/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "local-crow-AppStack/Lambda_GET_--auth/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "local-crow-AppStack/Lambda_GET_--auth/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.72.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "local-crow-AppStack/Lambda_GET_--auth/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                      "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "LambdaGETauthServiceRoleFD1BFD8F",
+                        "Arn"
+                      ]
+                    },
+                    "environment": {
+                      "variables": {
+                        "SST_FUNCTION_ID": "c885fa6a87a5271d0df47d3a09404d4f41a7cf373d",
+                        "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                        "SST_APP": "crow",
+                        "SST_STAGE": "local",
+                        "SST_SSM_PREFIX": "/sst/crow/local/",
+                        "SST_Table_tableName_app": {
+                          "Ref": "appTable49BA2E06"
+                        },
+                        "SST_DEBUG_IS_API_ROUTE": "1",
+                        "SST_Auth_prefix_auth": "/auth",
+                        "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__",
+                        "SST_Auth_privateKey_auth": "__FETCH_FROM_SSM__"
+                      }
+                    },
+                    "ephemeralStorage": {
+                      "size": 512
+                    },
+                    "handler": "bridge.handler",
+                    "memorySize": 1024,
+                    "runtime": "nodejs16.x",
+                    "tags": [
+                      {
+                        "key": "sst:app",
+                        "value": "crow"
+                      },
+                      {
+                        "key": "sst:stage",
+                        "value": "local"
+                      }
+                    ],
+                    "timeout": 10,
+                    "tracingConfig": {
+                      "mode": "Active"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.72.1"
+                }
+              },
+              "EventInvokeConfig": {
+                "id": "EventInvokeConfig",
+                "path": "local-crow-AppStack/Lambda_GET_--auth/EventInvokeConfig",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/Lambda_GET_--auth/EventInvokeConfig/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "LambdaGETauthEE6E69A6"
+                        },
+                        "qualifier": "$LATEST",
+                        "maximumRetryAttempts": 0
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                  "version": "2.72.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.72.1"
+            }
+          },
+          "Route_GET_--auth": {
+            "id": "Route_GET_--auth",
+            "path": "local-crow-AppStack/Route_GET_--auth",
+            "children": {
+              "Integration_GET_--auth": {
+                "id": "Integration_GET_--auth",
+                "path": "local-crow-AppStack/Route_GET_--auth/Integration_GET_--auth",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/Route_GET_--auth/Integration_GET_--auth/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "integrationType": "AWS_PROXY",
+                        "integrationUri": {
+                          "Fn::GetAtt": [
+                            "LambdaGETauthEE6E69A6",
+                            "Arn"
+                          ]
+                        },
+                        "payloadFormatVersion": "2.0"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Integration_GET_--auth-Permission": {
+                "id": "Integration_GET_--auth-Permission",
+                "path": "local-crow-AppStack/Route_GET_--auth/Integration_GET_--auth-Permission",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                  "aws:cdk:cloudformation:props": {
+                    "action": "lambda:InvokeFunction",
+                    "functionName": {
+                      "Fn::GetAtt": [
+                        "LambdaGETauthEE6E69A6",
+                        "Arn"
+                      ]
+                    },
+                    "principal": "apigateway.amazonaws.com",
+                    "sourceArn": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:",
+                          {
+                            "Ref": "AWS::Partition"
+                          },
+                          ":execute-api:us-east-1:206508349906:",
+                          {
+                            "Ref": "apiApiC3C473D0"
+                          },
+                          "/*/*/auth"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                  "version": "2.72.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "local-crow-AppStack/Route_GET_--auth/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Ref": "apiApiC3C473D0"
+                    },
+                    "routeKey": "GET /auth",
+                    "authorizationType": "NONE",
+                    "target": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "integrations/",
+                          {
+                            "Ref": "RouteGETauthIntegrationGETauth3FF21877"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                  "version": "2.72.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+              "version": "2.72.1-alpha.0"
+            }
+          },
+          "site": {
+            "id": "site",
+            "path": "local-crow-AppStack/site",
+            "children": {
+              "ServerFunctionRole": {
+                "id": "ServerFunctionRole",
+                "path": "local-crow-AppStack/site/ServerFunctionRole",
+                "children": {
+                  "ImportServerFunctionRole": {
+                    "id": "ImportServerFunctionRole",
+                    "path": "local-crow-AppStack/site/ServerFunctionRole/ImportServerFunctionRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/site/ServerFunctionRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:",
+                                      {
+                                        "Ref": "AWS::Partition"
+                                      },
+                                      ":iam::206508349906:root"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
                               }
                             }
                           ],
@@ -1782,33 +3799,35 @@
                   },
                   "DefaultPolicy": {
                     "id": "DefaultPolicy",
-                    "path": "local-crow-Site/site/ServerFunctionRole/DefaultPolicy",
+                    "path": "local-crow-AppStack/site/ServerFunctionRole/DefaultPolicy",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/site/ServerFunctionRole/DefaultPolicy/Resource",
+                        "path": "local-crow-AppStack/site/ServerFunctionRole/DefaultPolicy/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                           "aws:cdk:cloudformation:props": {
                             "policyDocument": {
                               "Statement": [
                                 {
-                                  "Action": [
-                                    "xray:PutTraceSegments",
-                                    "xray:PutTelemetryRecords"
-                                  ],
+                                  "Action": "execute-api:ManageConnections",
                                   "Effect": "Allow",
-                                  "Resource": "*"
-                                },
-                                {
-                                  "Action": "iot:*",
-                                  "Effect": "Allow",
-                                  "Resource": "*"
-                                },
-                                {
-                                  "Action": "s3:*",
-                                  "Effect": "Allow",
-                                  "Resource": "arn:aws:s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":execute-api:us-east-1:206508349906:",
+                                        {
+                                          "Ref": "wsApi8530CADA"
+                                        },
+                                        "/*/*/@connections/*"
+                                      ]
+                                    ]
+                                  }
                                 }
                               ],
                               "Version": "2012-10-17"
@@ -1840,15 +3859,15 @@
               },
               "ServerFunction": {
                 "id": "ServerFunction",
-                "path": "local-crow-Site/site/ServerFunction",
+                "path": "local-crow-AppStack/site/ServerFunction",
                 "children": {
-                  "Code": {
-                    "id": "Code",
-                    "path": "local-crow-Site/site/ServerFunction/Code",
+                  "FunctionAsset": {
+                    "id": "FunctionAsset",
+                    "path": "local-crow-AppStack/site/ServerFunction/FunctionAsset",
                     "children": {
                       "Stage": {
                         "id": "Stage",
-                        "path": "local-crow-Site/site/ServerFunction/Code/Stage",
+                        "path": "local-crow-AppStack/site/ServerFunction/FunctionAsset/Stage",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.72.1"
@@ -1856,7 +3875,7 @@
                       },
                       "AssetBucket": {
                         "id": "AssetBucket",
-                        "path": "local-crow-Site/site/ServerFunction/Code/AssetBucket",
+                        "path": "local-crow-AppStack/site/ServerFunction/FunctionAsset/AssetBucket",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                           "version": "2.72.1"
@@ -1868,100 +3887,204 @@
                       "version": "2.72.1"
                     }
                   },
-                  "Resource": {
-                    "id": "Resource",
-                    "path": "local-crow-Site/site/ServerFunction/Resource",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
-                      "aws:cdk:cloudformation:props": {
-                        "code": {
-                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
-                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
-                        },
-                        "role": {
-                          "Fn::GetAtt": [
-                            "siteServerFunctionRole1F8F4FAC",
-                            "Arn"
-                          ]
-                        },
-                        "description": "Server handler placeholder",
-                        "environment": {
-                          "variables": {
-                            "SST_FUNCTION_ID": "c8aa1ceefdfa6d4a9fa27fb6d5d10ee0d9c320ca8a",
-                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-                            "SST_APP": "crow",
-                            "SST_STAGE": "local",
-                            "SST_SSM_PREFIX": "/sst/crow/local/"
-                          }
-                        },
-                        "ephemeralStorage": {
-                          "size": 512
-                        },
-                        "handler": "bridge.handler",
-                        "memorySize": 1024,
-                        "runtime": "nodejs16.x",
-                        "tags": [
-                          {
-                            "key": "sst:app",
-                            "value": "crow"
-                          },
-                          {
-                            "key": "sst:stage",
-                            "value": "local"
-                          }
-                        ],
-                        "timeout": 10,
-                        "tracingConfig": {
-                          "mode": "Active"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "EventInvokeConfig": {
-                    "id": "EventInvokeConfig",
-                    "path": "local-crow-Site/site/ServerFunction/EventInvokeConfig",
+                  "AssetReplacerPolicy": {
+                    "id": "AssetReplacerPolicy",
+                    "path": "local-crow-AppStack/site/ServerFunction/AssetReplacerPolicy",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-Site/site/ServerFunction/EventInvokeConfig/Resource",
+                        "path": "local-crow-AppStack/site/ServerFunction/AssetReplacerPolicy/Resource",
                         "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                           "aws:cdk:cloudformation:props": {
-                            "functionName": {
-                              "Ref": "siteServerFunctionA4E45ACA"
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:GetObject",
+                                    "s3:PutObject"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":s3:::cdk-hnb659fds-assets-206508349906-us-east-1/*"
+                                      ]
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
                             },
-                            "qualifier": "$LATEST",
-                            "maximumRetryAttempts": 0
+                            "policyName": "siteServerFunctionAssetReplacerPolicy304BF125",
+                            "roles": [
+                              {
+                                "Ref": "CustomResourceHandlerServiceRole41AEC181"
+                              }
+                            ]
                           }
                         },
                         "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
                           "version": "2.72.1"
                         }
                       }
                     },
                     "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "AssetReplacer": {
+                    "id": "AssetReplacer",
+                    "path": "local-crow-AppStack/site/ServerFunction/AssetReplacer",
+                    "children": {
+                      "Default": {
+                        "id": "Default",
+                        "path": "local-crow-AppStack/site/ServerFunction/AssetReplacer/Default",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CfnResource",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CustomResource",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "IServerFunctionBucket": {
+                    "id": "IServerFunctionBucket",
+                    "path": "local-crow-AppStack/site/ServerFunction/IServerFunctionBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "ServerFunction": {
+                    "id": "ServerFunction",
+                    "path": "local-crow-AppStack/site/ServerFunction/ServerFunction",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/site/ServerFunction/ServerFunction/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                          "aws:cdk:cloudformation:props": {
+                            "code": {
+                              "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                              "s3Key": "2444d70760213a6f5266bbc978430f534e621ef69d6b90b4c3e42a258329b78d.zip"
+                            },
+                            "role": {
+                              "Fn::GetAtt": [
+                                "siteServerFunctionRole1F8F4FAC",
+                                "Arn"
+                              ]
+                            },
+                            "architectures": [
+                              "arm64"
+                            ],
+                            "description": "Server handler placeholder",
+                            "environment": {
+                              "variables": {
+                                "SST_APP": "crow",
+                                "SST_STAGE": "local",
+                                "SST_SSM_PREFIX": "/sst/crow/local/",
+                                "SST_Api_url_api": {
+                                  "Fn::GetAtt": [
+                                    "apiApiC3C473D0",
+                                    "ApiEndpoint"
+                                  ]
+                                },
+                                "SST_WebSocketApi_url_ws": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "wss://",
+                                      {
+                                        "Ref": "wsApi8530CADA"
+                                      },
+                                      ".execute-api.us-east-1.",
+                                      {
+                                        "Ref": "AWS::URLSuffix"
+                                      },
+                                      "/local"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            "handler": "index.handler",
+                            "memorySize": 1024,
+                            "runtime": "nodejs18.x",
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ],
+                            "timeout": 10
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "LogRetention": {
+                        "id": "LogRetention",
+                        "path": "local-crow-AppStack/site/ServerFunction/ServerFunction/LogRetention",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/site/ServerFunction/ServerFunction/LogRetention/Resource",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_logs.LogRetention",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "LogGroup": {
+                        "id": "LogGroup",
+                        "path": "local-crow-AppStack/site/ServerFunction/ServerFunction/LogGroup",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.Function",
                       "version": "2.72.1"
                     }
                   }
                 },
                 "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_lambda.Function",
-                  "version": "2.72.1"
+                  "fqn": "constructs.Construct",
+                  "version": "10.1.156"
                 }
               },
               "Parameter_url": {
                 "id": "Parameter_url",
-                "path": "local-crow-Site/site/Parameter_url",
+                "path": "local-crow-AppStack/site/Parameter_url",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-Site/site/Parameter_url/Resource",
+                    "path": "local-crow-AppStack/site/Parameter_url/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
                       "aws:cdk:cloudformation:props": {
@@ -1991,9 +4114,170 @@
               "version": "10.1.156"
             }
           },
-          "SSTStackOutputApiEndpoint": {
-            "id": "SSTStackOutputApiEndpoint",
-            "path": "local-crow-Site/SSTStackOutputApiEndpoint",
+          "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a": {
+            "id": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a",
+            "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.72.1"
+                }
+              },
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:PutRetentionPolicy",
+                                    "logs:DeleteRetentionPolicy"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+                            "roles": [
+                              {
+                                "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.72.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "local-crow-AppStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.72.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.156"
+            }
+          },
+          "SSTStackOutputWsApiUrl": {
+            "id": "SSTStackOutputWsApiUrl",
+            "path": "local-crow-AppStack/SSTStackOutputWsApiUrl",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.72.1"
+            }
+          },
+          "SSTStackOutputApiUrl": {
+            "id": "SSTStackOutputApiUrl",
+            "path": "local-crow-AppStack/SSTStackOutputApiUrl",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.72.1"
@@ -2001,7 +4285,7 @@
           },
           "SSTStackOutputSSTMetadata": {
             "id": "SSTStackOutputSSTMetadata",
-            "path": "local-crow-Site/SSTStackOutputSSTMetadata",
+            "path": "local-crow-AppStack/SSTStackOutputSSTMetadata",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.72.1"
@@ -2009,7 +4293,7 @@
           },
           "BootstrapVersion": {
             "id": "BootstrapVersion",
-            "path": "local-crow-Site/BootstrapVersion",
+            "path": "local-crow-AppStack/BootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
               "version": "2.72.1"
@@ -2017,7 +4301,7 @@
           },
           "CheckBootstrapVersion": {
             "id": "CheckBootstrapVersion",
-            "path": "local-crow-Site/CheckBootstrapVersion",
+            "path": "local-crow-AppStack/CheckBootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnRule",
               "version": "2.72.1"
