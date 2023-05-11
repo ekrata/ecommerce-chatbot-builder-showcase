@@ -51,24 +51,26 @@ export const Conversation = new Entity({
     // Current Operator
     operatorId: {
       type: 'string',
+      required: true,
+      default: '',
     },
 
     connectionId: {
       type: 'string',
     },
-    status: {
-      type: conversationStatus,
+    type: {
+      type: conversationType,
       required: true,
+      readOnly: true,
     },
     channel: {
       type: conversationChannel,
       required: true,
       readOnly: true,
     },
-    type: {
-      type: conversationType,
+    status: {
+      type: conversationStatus,
       required: true,
-      readOnly: true,
     },
     rating: {
       type: 'set',
@@ -91,38 +93,25 @@ export const Conversation = new Entity({
     },
   },
   indexes: {
-    primary: {
+    get: {
       pk: {
         field: 'pk',
-        composite: ['conversationId'],
+        composite: ['orgId', 'conversationId'],
       },
       sk: {
         field: 'sk',
-        composite: ['customerId', 'createdAt', 'updatedAt', 'type'],
+        composite: [],
       },
     },
-    conversationList: {
-      collection: 'conversationList',
-      index: 'gsi2',
+    listByOperator: {
+      index: 'gis1pk-gsi1sk-index',
       pk: {
-        field: 'gsi2pk',
-        composite: ['orgId'],
+        field: 'gsi1pk',
+        composite: ['orgId', 'operatorId'],
       },
       sk: {
-        field: 'gsi2sk',
-        composite: ['customerId', 'createdAt', 'type'],
-      },
-    },
-    conversationWithHistory: {
-      collection: 'conversationWithHistory',
-      index: 'gsi3',
-      pk: {
-        field: 'gsi3pk',
-        composite: ['conversationId'],
-      },
-      sk: {
-        field: 'gsi3sk',
-        composite: ['customerId', 'createdAt', 'type'],
+        field: 'gsi1sk',
+        composite: ['updatedAt', 'status', 'channel', 'type'],
       },
     },
   },

@@ -88,7 +88,9 @@ export function AppStack({ stack, app }: StackContext) {
   const api = new Api(stack, 'api', {
     defaults: {
       function: {
+        timeout: app.local ? 100 : 10,
         bind: [table],
+        permissions: [table],
       },
     },
     routes: {
