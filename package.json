@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test-app-api": "sst bind 'vitest run --threads=false'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
@@ -28,6 +29,7 @@
     "autoprefixer": "10.4.14",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1363.0",
+    "axios": "^1.4.0",
     "chalk": "5.2.0",
     "client-only": "^0.0.1",
     "countries-and-timezones": "^3.4.1",
@@ -99,7 +101,8 @@
     "sst": "2.8.12",
     "storybook": "^7.0.9",
     "tailwindcss-animate": "^1.0.5",
-    "ts-jest": "^29.1.0"
+    "ts-jest": "^29.1.0",
+    "vitest": "^0.31.0"
   },
   "msw": {
     "workerDirectory": "public"

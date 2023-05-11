@@ -1,6 +1,7 @@
 import {
   Api,
   Auth,
+  Config,
   NextjsSite,
   Script,
   StackContext,
@@ -17,6 +18,13 @@ import { Org } from './entities/org';
 import { Operator } from './entities/operator';
 
 export function AppStack({ stack, app }: StackContext) {
+  // const APP_API_URL = new Config.Parameter(stack, 'APP_API_URL', {
+  //   value: 'https://rwys6ma2k3.execute-api.us-east-1.amazonaws.com',
+  // });
+
+  // const APP_WS_URL = new Config.Parameter(stack, 'APP_API_URL', {
+  //   value: 'wss://etr95nhzwk.execute-api.us-east-1.amazonaws.com/local',
+  // });
   if (app.stage !== 'prod') {
     app.setDefaultRemovalPolicy('destroy');
   }
@@ -85,8 +93,16 @@ export function AppStack({ stack, app }: StackContext) {
     },
     routes: {
       'GET /conversations':
-        'packages/functions/app/api/src/conversations/getConversations.handler',
-      'POST /util': 'packages/functions/app/api/src/util/seed.handler',
+        'packages/functions/app/api/src/conversations/list.handler',
+      'POST /conversations':
+        'packages/functions/app/api/src/conversations/create.handler',
+      'GET /conversations/{id}':
+        'packages/functions/app/api/src/conversations/get.handler',
+      'DELETE /conversations/{id}':
+        'packages/functions/app/api/src/conversations/delete.handler',
+      'PUT /conversations/{id}':
+        'packages/functions/app/api/src/conversations/update.handler',
+      'POST /util/seed': 'packages/functions/app/api/src/util/seed.handler',
     },
   });
 
@@ -132,7 +148,7 @@ export function AppStack({ stack, app }: StackContext) {
   // Show the API endpoint in the output
   stack.addOutputs({
     SiteUrl: site.url,
-    WsApiUrl: wsApi.url,
-    ApiUrl: api.url,
+    AppWsUrl: wsApi.url,
+    AppApiUrl: api.url,
   });
 }

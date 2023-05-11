@@ -2329,17 +2329,17 @@
                   "version": "2.72.1-alpha.0"
                 }
               },
-              "Lambda_POST_--util": {
-                "id": "Lambda_POST_--util",
-                "path": "local-crow-AppStack/api/Lambda_POST_--util",
+              "Lambda_POST_--conversations": {
+                "id": "Lambda_POST_--conversations",
+                "path": "local-crow-AppStack/api/Lambda_POST_--conversations",
                 "children": {
                   "ServiceRole": {
                     "id": "ServiceRole",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--conversations/ServiceRole",
                     "children": {
                       "ImportServiceRole": {
                         "id": "ImportServiceRole",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--conversations/ServiceRole/ImportServiceRole",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.Resource",
                           "version": "2.72.1"
@@ -2347,7 +2347,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--conversations/ServiceRole/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                           "aws:cdk:cloudformation:props": {
@@ -2396,11 +2396,11 @@
                       },
                       "DefaultPolicy": {
                         "id": "DefaultPolicy",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--conversations/ServiceRole/DefaultPolicy",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "local-crow-AppStack/api/Lambda_POST_--util/ServiceRole/DefaultPolicy/Resource",
+                            "path": "local-crow-AppStack/api/Lambda_POST_--conversations/ServiceRole/DefaultPolicy/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                               "aws:cdk:cloudformation:props": {
@@ -2480,10 +2480,10 @@
                                   ],
                                   "Version": "2012-10-17"
                                 },
-                                "policyName": "apiLambdaPOSTutilServiceRoleDefaultPolicy22DF90EF",
+                                "policyName": "apiLambdaPOSTconversationsServiceRoleDefaultPolicy9997487C",
                                 "roles": [
                                   {
-                                    "Ref": "apiLambdaPOSTutilServiceRole01C23B40"
+                                    "Ref": "apiLambdaPOSTconversationsServiceRoleCD0D14C8"
                                   }
                                 ]
                               }
@@ -2507,11 +2507,11 @@
                   },
                   "Code": {
                     "id": "Code",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util/Code",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--conversations/Code",
                     "children": {
                       "Stage": {
                         "id": "Stage",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util/Code/Stage",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--conversations/Code/Stage",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.72.1"
@@ -2519,7 +2519,7 @@
                       },
                       "AssetBucket": {
                         "id": "AssetBucket",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util/Code/AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--conversations/Code/AssetBucket",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                           "version": "2.72.1"
@@ -2533,7 +2533,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util/Resource",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--conversations/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                       "aws:cdk:cloudformation:props": {
@@ -2543,13 +2543,13 @@
                         },
                         "role": {
                           "Fn::GetAtt": [
-                            "apiLambdaPOSTutilServiceRole01C23B40",
+                            "apiLambdaPOSTconversationsServiceRoleCD0D14C8",
                             "Arn"
                           ]
                         },
                         "environment": {
                           "variables": {
-                            "SST_FUNCTION_ID": "c834b2d7c2f855e469744733c38752823ff2516347",
+                            "SST_FUNCTION_ID": "c86d3d099106305f07e1e524f4a359acf13839f14d",
                             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
                             "SST_APP": "crow",
                             "SST_STAGE": "local",
@@ -2590,16 +2590,16 @@
                   },
                   "EventInvokeConfig": {
                     "id": "EventInvokeConfig",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util/EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--conversations/EventInvokeConfig",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util/EventInvokeConfig/Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--conversations/EventInvokeConfig/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
                           "aws:cdk:cloudformation:props": {
                             "functionName": {
-                              "Ref": "apiLambdaPOSTutil10B97231"
+                              "Ref": "apiLambdaPOSTconversationsE5BCB2DF"
                             },
                             "qualifier": "$LATEST",
                             "maximumRetryAttempts": 0
@@ -2622,17 +2622,17 @@
                   "version": "2.72.1"
                 }
               },
-              "Route_POST_--util": {
-                "id": "Route_POST_--util",
-                "path": "local-crow-AppStack/api/Route_POST_--util",
+              "Route_POST_--conversations": {
+                "id": "Route_POST_--conversations",
+                "path": "local-crow-AppStack/api/Route_POST_--conversations",
                 "children": {
-                  "Integration_POST_--util": {
-                    "id": "Integration_POST_--util",
-                    "path": "local-crow-AppStack/api/Route_POST_--util/Integration_POST_--util",
+                  "Integration_POST_--conversations": {
+                    "id": "Integration_POST_--conversations",
+                    "path": "local-crow-AppStack/api/Route_POST_--conversations/Integration_POST_--conversations",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "local-crow-AppStack/api/Route_POST_--util/Integration_POST_--util/Resource",
+                        "path": "local-crow-AppStack/api/Route_POST_--conversations/Integration_POST_--conversations/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
                           "aws:cdk:cloudformation:props": {
@@ -2642,7 +2642,7 @@
                             "integrationType": "AWS_PROXY",
                             "integrationUri": {
                               "Fn::GetAtt": [
-                                "apiLambdaPOSTutil10B97231",
+                                "apiLambdaPOSTconversationsE5BCB2DF",
                                 "Arn"
                               ]
                             },
@@ -2660,16 +2660,16 @@
                       "version": "2.72.1-alpha.0"
                     }
                   },
-                  "Integration_POST_--util-Permission": {
-                    "id": "Integration_POST_--util-Permission",
-                    "path": "local-crow-AppStack/api/Route_POST_--util/Integration_POST_--util-Permission",
+                  "Integration_POST_--conversations-Permission": {
+                    "id": "Integration_POST_--conversations-Permission",
+                    "path": "local-crow-AppStack/api/Route_POST_--conversations/Integration_POST_--conversations-Permission",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                       "aws:cdk:cloudformation:props": {
                         "action": "lambda:InvokeFunction",
                         "functionName": {
                           "Fn::GetAtt": [
-                            "apiLambdaPOSTutil10B97231",
+                            "apiLambdaPOSTconversationsE5BCB2DF",
                             "Arn"
                           ]
                         },
@@ -2686,7 +2686,7 @@
                               {
                                 "Ref": "apiApiC3C473D0"
                               },
-                              "/*/*/util"
+                              "/*/*/conversations"
                             ]
                           ]
                         }
@@ -2699,14 +2699,14 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "local-crow-AppStack/api/Route_POST_--util/Resource",
+                    "path": "local-crow-AppStack/api/Route_POST_--conversations/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
                       "aws:cdk:cloudformation:props": {
                         "apiId": {
                           "Ref": "apiApiC3C473D0"
                         },
-                        "routeKey": "POST /util",
+                        "routeKey": "POST /conversations",
                         "authorizationType": "NONE",
                         "target": {
                           "Fn::Join": [
@@ -2714,7 +2714,1619 @@
                             [
                               "integrations/",
                               {
-                                "Ref": "apiRoutePOSTutilIntegrationPOSTutilB379E86B"
+                                "Ref": "apiRoutePOSTconversationsIntegrationPOSTconversations1EC96D3C"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Lambda_GET_--conversations--{id}": {
+                "id": "Lambda_GET_--conversations--{id}",
+                "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaGETconversationsidServiceRoleDefaultPolicy17AE5C63",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaGETconversationsidServiceRole191F9CC7"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaGETconversationsidServiceRole191F9CC7",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c897d7d61f71c756f7acc023cdfd16c15692a6b9f0",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 10,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_GET_--conversations--{id}/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaGETconversationsid78952DBC"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_GET_--conversations--{id}": {
+                "id": "Route_GET_--conversations--{id}",
+                "path": "local-crow-AppStack/api/Route_GET_--conversations--{id}",
+                "children": {
+                  "Integration_GET_--conversations--{id}": {
+                    "id": "Integration_GET_--conversations--{id}",
+                    "path": "local-crow-AppStack/api/Route_GET_--conversations--{id}/Integration_GET_--conversations--{id}",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_GET_--conversations--{id}/Integration_GET_--conversations--{id}/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaGETconversationsid78952DBC",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_GET_--conversations--{id}-Permission": {
+                    "id": "Integration_GET_--conversations--{id}-Permission",
+                    "path": "local-crow-AppStack/api/Route_GET_--conversations--{id}/Integration_GET_--conversations--{id}-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaGETconversationsid78952DBC",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/conversations/{id}"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_GET_--conversations--{id}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "GET /conversations/{id}",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRouteGETconversationsidIntegrationGETconversationsid3BE1F8C6"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Lambda_DELETE_--conversations--{id}": {
+                "id": "Lambda_DELETE_--conversations--{id}",
+                "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaDELETEconversationsidServiceRoleDefaultPolicyC59A3673",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaDELETEconversationsidServiceRole8D9CA279"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaDELETEconversationsidServiceRole8D9CA279",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c8f6da887778dd1d58905170ba0f86693a1a843fbf",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 10,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_DELETE_--conversations--{id}/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaDELETEconversationsid184603D6"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_DELETE_--conversations--{id}": {
+                "id": "Route_DELETE_--conversations--{id}",
+                "path": "local-crow-AppStack/api/Route_DELETE_--conversations--{id}",
+                "children": {
+                  "Integration_DELETE_--conversations--{id}": {
+                    "id": "Integration_DELETE_--conversations--{id}",
+                    "path": "local-crow-AppStack/api/Route_DELETE_--conversations--{id}/Integration_DELETE_--conversations--{id}",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_DELETE_--conversations--{id}/Integration_DELETE_--conversations--{id}/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaDELETEconversationsid184603D6",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_DELETE_--conversations--{id}-Permission": {
+                    "id": "Integration_DELETE_--conversations--{id}-Permission",
+                    "path": "local-crow-AppStack/api/Route_DELETE_--conversations--{id}/Integration_DELETE_--conversations--{id}-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaDELETEconversationsid184603D6",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/conversations/{id}"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_DELETE_--conversations--{id}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "DELETE /conversations/{id}",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRouteDELETEconversationsidIntegrationDELETEconversationsidA7E6A9E5"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Lambda_PUT_--conversations--{id}": {
+                "id": "Lambda_PUT_--conversations--{id}",
+                "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaPUTconversationsidServiceRoleDefaultPolicy25E9C2F7",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaPUTconversationsidServiceRole9A43315C"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPUTconversationsidServiceRole9A43315C",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c82e854ace0bc326c63fa5218c24c7cdcb0c108d3e",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 10,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaPUTconversationsid086865A1"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_PUT_--conversations--{id}": {
+                "id": "Route_PUT_--conversations--{id}",
+                "path": "local-crow-AppStack/api/Route_PUT_--conversations--{id}",
+                "children": {
+                  "Integration_PUT_--conversations--{id}": {
+                    "id": "Integration_PUT_--conversations--{id}",
+                    "path": "local-crow-AppStack/api/Route_PUT_--conversations--{id}/Integration_PUT_--conversations--{id}",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_PUT_--conversations--{id}/Integration_PUT_--conversations--{id}/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaPUTconversationsid086865A1",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_PUT_--conversations--{id}-Permission": {
+                    "id": "Integration_PUT_--conversations--{id}-Permission",
+                    "path": "local-crow-AppStack/api/Route_PUT_--conversations--{id}/Integration_PUT_--conversations--{id}-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPUTconversationsid086865A1",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/conversations/{id}"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_PUT_--conversations--{id}/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "PUT /conversations/{id}",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRoutePUTconversationsidIntegrationPUTconversationsidA617F243"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Lambda_POST_--util--seed": {
+                "id": "Lambda_POST_--util--seed",
+                "path": "local-crow-AppStack/api/Lambda_POST_--util--seed",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaPOSTutilseedServiceRoleDefaultPolicy2E909142",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaPOSTutilseedServiceRole5AC03073"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutilseedServiceRole5AC03073",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c80c28ee97c5c06dfb411554479ce879a02ec93f6b",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 10,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaPOSTutilseedDFFDC9CF"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_POST_--util--seed": {
+                "id": "Route_POST_--util--seed",
+                "path": "local-crow-AppStack/api/Route_POST_--util--seed",
+                "children": {
+                  "Integration_POST_--util--seed": {
+                    "id": "Integration_POST_--util--seed",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--seed/Integration_POST_--util--seed",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_POST_--util--seed/Integration_POST_--util--seed/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaPOSTutilseedDFFDC9CF",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_POST_--util--seed-Permission": {
+                    "id": "Integration_POST_--util--seed-Permission",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--seed/Integration_POST_--util--seed-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutilseedDFFDC9CF",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/util/seed"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--seed/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "POST /util/seed",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRoutePOSTutilseedIntegrationPOSTutilseed2C505F60"
                               }
                             ]
                           ]
@@ -4267,17 +5879,17 @@
               "version": "10.1.156"
             }
           },
-          "SSTStackOutputWsApiUrl": {
-            "id": "SSTStackOutputWsApiUrl",
-            "path": "local-crow-AppStack/SSTStackOutputWsApiUrl",
+          "SSTStackOutputAppWsUrl": {
+            "id": "SSTStackOutputAppWsUrl",
+            "path": "local-crow-AppStack/SSTStackOutputAppWsUrl",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.72.1"
             }
           },
-          "SSTStackOutputApiUrl": {
-            "id": "SSTStackOutputApiUrl",
-            "path": "local-crow-AppStack/SSTStackOutputApiUrl",
+          "SSTStackOutputAppApiUrl": {
+            "id": "SSTStackOutputAppApiUrl",
+            "path": "local-crow-AppStack/SSTStackOutputAppApiUrl",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.72.1"

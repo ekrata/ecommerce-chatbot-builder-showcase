@@ -1,17 +1,14 @@
-import { ApiHandler, useJsonBody, useQueryParams } from 'sst/node/api';
+import 'server-only';
+import { ApiHandler, useQueryParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { appDb } from '../../../../../../stacks/AppStack';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (evt) => {
-    const body = useJsonBody();
-    console.log(body);
+    const { orgId } = useQueryParams();
     try {
-      return await appDb.entities.conversations
-        .create({
-          ...body,
-        })
-        .go();
+      const conversations = await appDb.collections.conversationList({ orgId });
+      console.log(conversations);
     } catch (err) {
       Sentry.captureException(err);
     }
