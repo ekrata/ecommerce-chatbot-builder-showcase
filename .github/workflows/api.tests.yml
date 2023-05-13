@@ -29,4 +29,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Run unit tests
-        run: pnpm install --frozen-lockfile && "pnpm run-test-app-api"
+        run: pnpm install --frozen-lockfile && pnpm run run-test-app-api
