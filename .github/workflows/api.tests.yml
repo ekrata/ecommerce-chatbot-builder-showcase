@@ -1,13 +1,13 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Runs All Unit tests
+name: 'Test app api'
 
 on:
   push:
-    branches: [main]
+    branches: [**]
   pull_request:
-    branches: [main]
+    branches: [**]
 
 jobs:
   build:
@@ -30,4 +30,4 @@ jobs:
         run: npm install -g pnpm
 
       - name: Run unit tests
-      - run: pnpm ci && "pnpm run-test-app-api"
+        run: pnpm ci && "pnpm run-test-app-api"
