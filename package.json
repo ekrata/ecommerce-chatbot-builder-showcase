@@ -13,6 +13,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
+    "test-app-storybook": "npm-run-all -p storybook test-storybook",
     "test": "jest --watchAll --coverage",
     "test:ci": "jest --coverage",
     "test:single": "jest --watch --collectCoverage=false",

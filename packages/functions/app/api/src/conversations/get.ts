@@ -22,9 +22,15 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const res = await appDb.entities.conversations
         .get({ orgId, conversationId })
         .go();
+      if (res.data) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify(res?.data),
+        };
+      }
       return {
-        statusCode: 200,
-        body: res?.data,
+        statusCode: 404,
+        body: `No conversation with conversationId: ${conversationId} and orgId: ${orgId} exists. `,
       };
     } catch (err) {
       console.log(err);

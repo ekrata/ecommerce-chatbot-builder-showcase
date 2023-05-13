@@ -1,5 +1,6 @@
 import {
   Api,
+  ApiRouteProps,
   Auth,
   Config,
   NextjsSite,
@@ -85,6 +86,16 @@ export function AppStack({ stack, app }: StackContext) {
     },
   });
 
+  // Only need to be available locally, for seeding and dropping the test db
+  const testRoutes: Record<string, ApiRouteProps<string>> = app.local
+    ? {
+        'POST /util/seed-test-db':
+          'packages/functions/app/api/src/util/seed.handler',
+        'POST /util/wipe-test-db':
+          'packages/functions/app/api/src/util/wipe.handler',
+      }
+    : {};
+
   const api = new Api(stack, 'api', {
     defaults: {
       function: {
@@ -102,9 +113,9 @@ export function AppStack({ stack, app }: StackContext) {
         'packages/functions/app/api/src/conversations/get.handler',
       'DELETE /conversations/{id}':
         'packages/functions/app/api/src/conversations/delete.handler',
-      'PUT /conversations/{id}':
-        'packages/functions/app/api/src/conversations/update.handler',
-      'POST /util/seed': 'packages/functions/app/api/src/util/seed.handler',
+      'PATCH /conversations':
+        'packages/functions/app/api/src/conversations/patch.handler',
+      ...testRoutes,
     },
   });
 

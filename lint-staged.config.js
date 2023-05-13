@@ -6,8 +6,8 @@ module.exports = {
   '**/*.(ts|tsx|js)': (filenames) => [
     `eslint --fix ${filenames.join(' ')}`,
     `turbo prettier -- --write ${filenames.join(' ')}`,
-    // `pnpm run storybook`,
-    `pnpm run test-storybook`
+    // `pnpm test-app-storybook`,
+    `pnpm test-app-api`,
   ],
 
   // this will Format MarkDown and JSON

@@ -72,23 +72,11 @@ export const Message = new Entity({
     primary: {
       pk: {
         field: 'pk',
-        composite: ['messageId'],
+        composite: ['orgId', 'conversationId', 'messageId'],
       },
       sk: {
         field: 'sk',
-        composite: ['conversationId', 'sentAt'],
-      },
-    },
-    messages: {
-      collection: 'conversationList',
-      index: 'gsi2',
-      pk: {
-        field: 'gsi2pk',
-        composite: ['orgId'],
-      },
-      sk: {
-        field: 'gsi2sk',
-        composite: ['conversationId'],
+        composite: ['sentAt'],
       },
     },
   },

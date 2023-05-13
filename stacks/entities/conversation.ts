@@ -5,8 +5,8 @@ export const conversationStatus = ['unassigned', 'open', 'solved'] as const;
 export type ConversationStatus = (typeof conversationStatus)[number];
 
 export const conversationChannel = [
-  'live',
-  'chatbot',
+  'website',
+  'email',
   'facebook',
   'whatsapp',
   'instagram',
@@ -54,19 +54,16 @@ export const Conversation = new Entity({
       required: true,
       default: '',
     },
-
     connectionId: {
       type: 'string',
     },
     type: {
       type: conversationType,
       required: true,
-      readOnly: true,
     },
     channel: {
       type: conversationChannel,
       required: true,
-      readOnly: true,
     },
     status: {
       type: conversationStatus,
@@ -103,8 +100,8 @@ export const Conversation = new Entity({
         composite: [],
       },
     },
-    listByOperator: {
-      index: 'gis1pk-gsi1sk-index',
+    assigned: {
+      index: 'gsi1pk-gsi1sk-index',
       pk: {
         field: 'gsi1pk',
         composite: ['orgId', 'operatorId'],

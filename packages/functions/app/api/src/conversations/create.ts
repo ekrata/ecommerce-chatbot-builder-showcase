@@ -4,25 +4,24 @@ import { appDb } from '../../db';
 import { CreateConversation } from '../../../../../../stacks/entities/entities';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (evt) => {
+  ApiHandler(async () => {
     const body: CreateConversation = useJsonBody();
     try {
-      await appDb.entities.conversations
+      const res = await appDb.entities.conversations
         .create({
           ...body,
         })
         .go();
+      return {
+        statusCode: 200,
+        body: JSON.stringify(res.data),
+      };
     } catch (err) {
-      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,
-        body: evt.requestContext.time,
+        body: JSON.stringify(err),
       };
     }
-    return {
-      statusCode: 200,
-      body: evt.requestContext.time,
-    };
   })
 );

@@ -21,7 +21,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-deploy-role-206508349906-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-cfn-exec-role-206508349906-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/768d917e2f48d0ef18d2fd13dfb5a34900aba7169b23e07b95e69a25334a8aa8.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/70f2fac529eaf8294f08000acbfc6bddf1eb244ed5f2f464469906f0bb0398f5.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -432,88 +432,130 @@
             "data": "apiRouteDELETEconversationsid39318C16"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/ServiceRole/Resource": [
+        "/local-crow-AppStack/api/Lambda_PATCH_--conversations/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPUTconversationsidServiceRole9A43315C"
+            "data": "apiLambdaPATCHconversationsServiceRole48FB244F"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/ServiceRole/DefaultPolicy/Resource": [
+        "/local-crow-AppStack/api/Lambda_PATCH_--conversations/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPUTconversationsidServiceRoleDefaultPolicy25E9C2F7"
+            "data": "apiLambdaPATCHconversationsServiceRoleDefaultPolicy832A7E8D"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/Resource": [
+        "/local-crow-AppStack/api/Lambda_PATCH_--conversations/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPUTconversationsid086865A1"
+            "data": "apiLambdaPATCHconversations91B25A02"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_PUT_--conversations--{id}/EventInvokeConfig/Resource": [
+        "/local-crow-AppStack/api/Lambda_PATCH_--conversations/EventInvokeConfig/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPUTconversationsidEventInvokeConfigFD481A64"
+            "data": "apiLambdaPATCHconversationsEventInvokeConfig889E6ADA"
           }
         ],
-        "/local-crow-AppStack/api/Route_PUT_--conversations--{id}/Integration_PUT_--conversations--{id}/Resource": [
+        "/local-crow-AppStack/api/Route_PATCH_--conversations/Integration_PATCH_--conversations/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiRoutePUTconversationsidIntegrationPUTconversationsidA617F243"
+            "data": "apiRoutePATCHconversationsIntegrationPATCHconversationsF5546235"
           }
         ],
-        "/local-crow-AppStack/api/Route_PUT_--conversations--{id}/Integration_PUT_--conversations--{id}-Permission": [
+        "/local-crow-AppStack/api/Route_PATCH_--conversations/Integration_PATCH_--conversations-Permission": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiRoutePUTconversationsidIntegrationPUTconversationsidPermission18722A6E"
+            "data": "apiRoutePATCHconversationsIntegrationPATCHconversationsPermissionF58BD968"
           }
         ],
-        "/local-crow-AppStack/api/Route_PUT_--conversations--{id}/Resource": [
+        "/local-crow-AppStack/api/Route_PATCH_--conversations/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiRoutePUTconversationsid6D6D1F66"
+            "data": "apiRoutePATCHconversationsD1471741"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_POST_--util--seed/ServiceRole/Resource": [
+        "/local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPOSTutilseedServiceRole5AC03073"
+            "data": "apiLambdaPOSTutilseedtestdbServiceRoleFE5626AD"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_POST_--util--seed/ServiceRole/DefaultPolicy/Resource": [
+        "/local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPOSTutilseedServiceRoleDefaultPolicy2E909142"
+            "data": "apiLambdaPOSTutilseedtestdbServiceRoleDefaultPolicy3B01EA20"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_POST_--util--seed/Resource": [
+        "/local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPOSTutilseedDFFDC9CF"
+            "data": "apiLambdaPOSTutilseedtestdb3CB58FBF"
           }
         ],
-        "/local-crow-AppStack/api/Lambda_POST_--util--seed/EventInvokeConfig/Resource": [
+        "/local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/EventInvokeConfig/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiLambdaPOSTutilseedEventInvokeConfig0E249D12"
+            "data": "apiLambdaPOSTutilseedtestdbEventInvokeConfig070D19C4"
           }
         ],
-        "/local-crow-AppStack/api/Route_POST_--util--seed/Integration_POST_--util--seed/Resource": [
+        "/local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiRoutePOSTutilseedIntegrationPOSTutilseed2C505F60"
+            "data": "apiRoutePOSTutilseedtestdbIntegrationPOSTutilseedtestdb94ECBD75"
           }
         ],
-        "/local-crow-AppStack/api/Route_POST_--util--seed/Integration_POST_--util--seed-Permission": [
+        "/local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db-Permission": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiRoutePOSTutilseedIntegrationPOSTutilseedPermission3C0A55CD"
+            "data": "apiRoutePOSTutilseedtestdbIntegrationPOSTutilseedtestdbPermissionDC19676D"
           }
         ],
-        "/local-crow-AppStack/api/Route_POST_--util--seed/Resource": [
+        "/local-crow-AppStack/api/Route_POST_--util--seed-test-db/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "apiRoutePOSTutilseed58F43CCF"
+            "data": "apiRoutePOSTutilseedtestdb8CBBC114"
+          }
+        ],
+        "/local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiLambdaPOSTutilwipetestdbServiceRole89DBA293"
+          }
+        ],
+        "/local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiLambdaPOSTutilwipetestdbServiceRoleDefaultPolicy19E1F61A"
+          }
+        ],
+        "/local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiLambdaPOSTutilwipetestdb302B45B9"
+          }
+        ],
+        "/local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiLambdaPOSTutilwipetestdbEventInvokeConfig7A146AB0"
+          }
+        ],
+        "/local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiRoutePOSTutilwipetestdbIntegrationPOSTutilwipetestdbD554E257"
+          }
+        ],
+        "/local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiRoutePOSTutilwipetestdbIntegrationPOSTutilwipetestdbPermission8C658EF3"
+          }
+        ],
+        "/local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "apiRoutePOSTutilwipetestdbA19F77F9"
           }
         ],
         "/local-crow-AppStack/api/Parameter_url/Resource": [
