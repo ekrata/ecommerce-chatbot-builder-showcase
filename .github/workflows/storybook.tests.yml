@@ -12,9 +12,9 @@ jobs:
         with:
           node-version: '16.x'
       - name: Install pnpm
-        run: npm install pnpm
+        run: npm install -g pnpm
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm ci
       - name: Install Playwright
         run: npx playwright install --with-deps
       - name: Build Storybook

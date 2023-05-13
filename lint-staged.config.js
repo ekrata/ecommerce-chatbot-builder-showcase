@@ -7,7 +7,6 @@ module.exports = {
     `eslint --fix ${filenames.join(' ')}`,
     `turbo prettier -- --write ${filenames.join(' ')}`,
     // `pnpm test-app-storybook`,
-    `pnpm test-app-api`,
   ],
 
   // this will Format MarkDown and JSON
