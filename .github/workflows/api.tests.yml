@@ -30,4 +30,4 @@ jobs:
         run: npm install -g pnpm
 
       - name: Run unit tests
-        run: pnpm ci && "pnpm run-test-app-api"
+        run: pnpm install --frozen-lockfile && "pnpm run-test-app-api"
