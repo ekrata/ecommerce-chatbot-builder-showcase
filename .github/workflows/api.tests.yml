@@ -21,15 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install pnpm
-        run: curl -fsSL https://get.pnpm.io/install.sh | sh -
+        run: wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      #- run: npm run build --if-present
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Run unit tests
         run: pnpm install --frozen-lockfile && "pnpm run-test-app-api"
