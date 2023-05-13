@@ -26,6 +26,5 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
       - name: Run unit tests
         run: pnpm install --frozen-lockfile && "pnpm run-test-app-api"
