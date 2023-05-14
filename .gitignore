@@ -44,6 +44,9 @@ node_modules
 
 # sst
 .sst
+.sst/*
+.sst/*/*.*
+.sst/**/*.*
 .build
 
 # opennext
