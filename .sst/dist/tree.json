@@ -1926,812 +1926,6 @@
                   "version": "2.72.1"
                 }
               },
-              "Lambda_POST_--util--seed-test-db": {
-                "id": "Lambda_POST_--util--seed-test-db",
-                "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db",
-                "children": {
-                  "ServiceRole": {
-                    "id": "ServiceRole",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole",
-                    "children": {
-                      "ImportServiceRole": {
-                        "id": "ImportServiceRole",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/ImportServiceRole",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.Resource",
-                          "version": "2.72.1"
-                        }
-                      },
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
-                          "aws:cdk:cloudformation:props": {
-                            "assumeRolePolicyDocument": {
-                              "Statement": [
-                                {
-                                  "Action": "sts:AssumeRole",
-                                  "Effect": "Allow",
-                                  "Principal": {
-                                    "Service": "lambda.amazonaws.com"
-                                  }
-                                }
-                              ],
-                              "Version": "2012-10-17"
-                            },
-                            "managedPolicyArns": [
-                              {
-                                "Fn::Join": [
-                                  "",
-                                  [
-                                    "arn:",
-                                    {
-                                      "Ref": "AWS::Partition"
-                                    },
-                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-                                  ]
-                                ]
-                              }
-                            ],
-                            "tags": [
-                              {
-                                "key": "sst:app",
-                                "value": "crow"
-                              },
-                              {
-                                "key": "sst:stage",
-                                "value": "local"
-                              }
-                            ]
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
-                          "version": "2.72.1"
-                        }
-                      },
-                      "DefaultPolicy": {
-                        "id": "DefaultPolicy",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/DefaultPolicy",
-                        "children": {
-                          "Resource": {
-                            "id": "Resource",
-                            "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/DefaultPolicy/Resource",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
-                              "aws:cdk:cloudformation:props": {
-                                "policyDocument": {
-                                  "Statement": [
-                                    {
-                                      "Action": [
-                                        "xray:PutTraceSegments",
-                                        "xray:PutTelemetryRecords"
-                                      ],
-                                      "Effect": "Allow",
-                                      "Resource": "*"
-                                    },
-                                    {
-                                      "Action": "dynamodb:*",
-                                      "Effect": "Allow",
-                                      "Resource": [
-                                        {
-                                          "Fn::GetAtt": [
-                                            "appTable49BA2E06",
-                                            "Arn"
-                                          ]
-                                        },
-                                        {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              {
-                                                "Fn::GetAtt": [
-                                                  "appTable49BA2E06",
-                                                  "Arn"
-                                                ]
-                                              },
-                                              "/*"
-                                            ]
-                                          ]
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Action": "iot:*",
-                                      "Effect": "Allow",
-                                      "Resource": "*"
-                                    },
-                                    {
-                                      "Action": "s3:*",
-                                      "Effect": "Allow",
-                                      "Resource": {
-                                        "Fn::Join": [
-                                          "",
-                                          [
-                                            "arn:",
-                                            {
-                                              "Ref": "AWS::Partition"
-                                            },
-                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
-                                          ]
-                                        ]
-                                      }
-                                    },
-                                    {
-                                      "Action": "ssm:GetParameters",
-                                      "Effect": "Allow",
-                                      "Resource": {
-                                        "Fn::Join": [
-                                          "",
-                                          [
-                                            "arn:",
-                                            {
-                                              "Ref": "AWS::Partition"
-                                            },
-                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
-                                          ]
-                                        ]
-                                      }
-                                    }
-                                  ],
-                                  "Version": "2012-10-17"
-                                },
-                                "policyName": "apiLambdaPOSTutilseedtestdbServiceRoleDefaultPolicy3B01EA20",
-                                "roles": [
-                                  {
-                                    "Ref": "apiLambdaPOSTutilseedtestdbServiceRoleFE5626AD"
-                                  }
-                                ]
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                              "version": "2.72.1"
-                            }
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.Policy",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.Role",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "Code": {
-                    "id": "Code",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Code",
-                    "children": {
-                      "Stage": {
-                        "id": "Stage",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Code/Stage",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.AssetStaging",
-                          "version": "2.72.1"
-                        }
-                      },
-                      "AssetBucket": {
-                        "id": "AssetBucket",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Code/AssetBucket",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "Resource": {
-                    "id": "Resource",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Resource",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
-                      "aws:cdk:cloudformation:props": {
-                        "code": {
-                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
-                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
-                        },
-                        "role": {
-                          "Fn::GetAtt": [
-                            "apiLambdaPOSTutilseedtestdbServiceRoleFE5626AD",
-                            "Arn"
-                          ]
-                        },
-                        "environment": {
-                          "variables": {
-                            "SST_FUNCTION_ID": "c84faf3fe828d73246861fe2b04aa32b737066a268",
-                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-                            "SST_APP": "crow",
-                            "SST_STAGE": "local",
-                            "SST_SSM_PREFIX": "/sst/crow/local/",
-                            "SST_Table_tableName_app": {
-                              "Ref": "appTable49BA2E06"
-                            },
-                            "SST_DEBUG_IS_API_ROUTE": "1",
-                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
-                          }
-                        },
-                        "ephemeralStorage": {
-                          "size": 512
-                        },
-                        "handler": "bridge.handler",
-                        "memorySize": 1024,
-                        "runtime": "nodejs16.x",
-                        "tags": [
-                          {
-                            "key": "sst:app",
-                            "value": "crow"
-                          },
-                          {
-                            "key": "sst:stage",
-                            "value": "local"
-                          }
-                        ],
-                        "timeout": 100,
-                        "tracingConfig": {
-                          "mode": "Active"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "EventInvokeConfig": {
-                    "id": "EventInvokeConfig",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/EventInvokeConfig",
-                    "children": {
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/EventInvokeConfig/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
-                          "aws:cdk:cloudformation:props": {
-                            "functionName": {
-                              "Ref": "apiLambdaPOSTutilseedtestdb3CB58FBF"
-                            },
-                            "qualifier": "$LATEST",
-                            "maximumRetryAttempts": 0
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
-                      "version": "2.72.1"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_lambda.Function",
-                  "version": "2.72.1"
-                }
-              },
-              "Route_POST_--util--seed-test-db": {
-                "id": "Route_POST_--util--seed-test-db",
-                "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db",
-                "children": {
-                  "Integration_POST_--util--seed-test-db": {
-                    "id": "Integration_POST_--util--seed-test-db",
-                    "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db",
-                    "children": {
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
-                          "aws:cdk:cloudformation:props": {
-                            "apiId": {
-                              "Ref": "apiApiC3C473D0"
-                            },
-                            "integrationType": "AWS_PROXY",
-                            "integrationUri": {
-                              "Fn::GetAtt": [
-                                "apiLambdaPOSTutilseedtestdb3CB58FBF",
-                                "Arn"
-                              ]
-                            },
-                            "payloadFormatVersion": "2.0"
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
-                      "version": "2.72.1-alpha.0"
-                    }
-                  },
-                  "Integration_POST_--util--seed-test-db-Permission": {
-                    "id": "Integration_POST_--util--seed-test-db-Permission",
-                    "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db-Permission",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
-                      "aws:cdk:cloudformation:props": {
-                        "action": "lambda:InvokeFunction",
-                        "functionName": {
-                          "Fn::GetAtt": [
-                            "apiLambdaPOSTutilseedtestdb3CB58FBF",
-                            "Arn"
-                          ]
-                        },
-                        "principal": "apigateway.amazonaws.com",
-                        "sourceArn": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "arn:",
-                              {
-                                "Ref": "AWS::Partition"
-                              },
-                              ":execute-api:us-east-1:206508349906:",
-                              {
-                                "Ref": "apiApiC3C473D0"
-                              },
-                              "/*/*/util/seed-test-db"
-                            ]
-                          ]
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "Resource": {
-                    "id": "Resource",
-                    "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Resource",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
-                      "aws:cdk:cloudformation:props": {
-                        "apiId": {
-                          "Ref": "apiApiC3C473D0"
-                        },
-                        "routeKey": "POST /util/seed-test-db",
-                        "authorizationType": "NONE",
-                        "target": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "integrations/",
-                              {
-                                "Ref": "apiRoutePOSTutilseedtestdbIntegrationPOSTutilseedtestdb94ECBD75"
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
-                      "version": "2.72.1"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
-                  "version": "2.72.1-alpha.0"
-                }
-              },
-              "Lambda_POST_--util--wipe-test-db": {
-                "id": "Lambda_POST_--util--wipe-test-db",
-                "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db",
-                "children": {
-                  "ServiceRole": {
-                    "id": "ServiceRole",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole",
-                    "children": {
-                      "ImportServiceRole": {
-                        "id": "ImportServiceRole",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/ImportServiceRole",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.Resource",
-                          "version": "2.72.1"
-                        }
-                      },
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
-                          "aws:cdk:cloudformation:props": {
-                            "assumeRolePolicyDocument": {
-                              "Statement": [
-                                {
-                                  "Action": "sts:AssumeRole",
-                                  "Effect": "Allow",
-                                  "Principal": {
-                                    "Service": "lambda.amazonaws.com"
-                                  }
-                                }
-                              ],
-                              "Version": "2012-10-17"
-                            },
-                            "managedPolicyArns": [
-                              {
-                                "Fn::Join": [
-                                  "",
-                                  [
-                                    "arn:",
-                                    {
-                                      "Ref": "AWS::Partition"
-                                    },
-                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-                                  ]
-                                ]
-                              }
-                            ],
-                            "tags": [
-                              {
-                                "key": "sst:app",
-                                "value": "crow"
-                              },
-                              {
-                                "key": "sst:stage",
-                                "value": "local"
-                              }
-                            ]
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
-                          "version": "2.72.1"
-                        }
-                      },
-                      "DefaultPolicy": {
-                        "id": "DefaultPolicy",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/DefaultPolicy",
-                        "children": {
-                          "Resource": {
-                            "id": "Resource",
-                            "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/DefaultPolicy/Resource",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
-                              "aws:cdk:cloudformation:props": {
-                                "policyDocument": {
-                                  "Statement": [
-                                    {
-                                      "Action": [
-                                        "xray:PutTraceSegments",
-                                        "xray:PutTelemetryRecords"
-                                      ],
-                                      "Effect": "Allow",
-                                      "Resource": "*"
-                                    },
-                                    {
-                                      "Action": "dynamodb:*",
-                                      "Effect": "Allow",
-                                      "Resource": [
-                                        {
-                                          "Fn::GetAtt": [
-                                            "appTable49BA2E06",
-                                            "Arn"
-                                          ]
-                                        },
-                                        {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              {
-                                                "Fn::GetAtt": [
-                                                  "appTable49BA2E06",
-                                                  "Arn"
-                                                ]
-                                              },
-                                              "/*"
-                                            ]
-                                          ]
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Action": "iot:*",
-                                      "Effect": "Allow",
-                                      "Resource": "*"
-                                    },
-                                    {
-                                      "Action": "s3:*",
-                                      "Effect": "Allow",
-                                      "Resource": {
-                                        "Fn::Join": [
-                                          "",
-                                          [
-                                            "arn:",
-                                            {
-                                              "Ref": "AWS::Partition"
-                                            },
-                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
-                                          ]
-                                        ]
-                                      }
-                                    },
-                                    {
-                                      "Action": "ssm:GetParameters",
-                                      "Effect": "Allow",
-                                      "Resource": {
-                                        "Fn::Join": [
-                                          "",
-                                          [
-                                            "arn:",
-                                            {
-                                              "Ref": "AWS::Partition"
-                                            },
-                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
-                                          ]
-                                        ]
-                                      }
-                                    }
-                                  ],
-                                  "Version": "2012-10-17"
-                                },
-                                "policyName": "apiLambdaPOSTutilwipetestdbServiceRoleDefaultPolicy19E1F61A",
-                                "roles": [
-                                  {
-                                    "Ref": "apiLambdaPOSTutilwipetestdbServiceRole89DBA293"
-                                  }
-                                ]
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                              "version": "2.72.1"
-                            }
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.Policy",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.Role",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "Code": {
-                    "id": "Code",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Code",
-                    "children": {
-                      "Stage": {
-                        "id": "Stage",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Code/Stage",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.AssetStaging",
-                          "version": "2.72.1"
-                        }
-                      },
-                      "AssetBucket": {
-                        "id": "AssetBucket",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Code/AssetBucket",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "Resource": {
-                    "id": "Resource",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Resource",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
-                      "aws:cdk:cloudformation:props": {
-                        "code": {
-                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
-                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
-                        },
-                        "role": {
-                          "Fn::GetAtt": [
-                            "apiLambdaPOSTutilwipetestdbServiceRole89DBA293",
-                            "Arn"
-                          ]
-                        },
-                        "environment": {
-                          "variables": {
-                            "SST_FUNCTION_ID": "c803dd58b3bb5c4b0561b3fbb1d15de706211e3f85",
-                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-                            "SST_APP": "crow",
-                            "SST_STAGE": "local",
-                            "SST_SSM_PREFIX": "/sst/crow/local/",
-                            "SST_Table_tableName_app": {
-                              "Ref": "appTable49BA2E06"
-                            },
-                            "SST_DEBUG_IS_API_ROUTE": "1",
-                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
-                          }
-                        },
-                        "ephemeralStorage": {
-                          "size": 512
-                        },
-                        "handler": "bridge.handler",
-                        "memorySize": 1024,
-                        "runtime": "nodejs16.x",
-                        "tags": [
-                          {
-                            "key": "sst:app",
-                            "value": "crow"
-                          },
-                          {
-                            "key": "sst:stage",
-                            "value": "local"
-                          }
-                        ],
-                        "timeout": 100,
-                        "tracingConfig": {
-                          "mode": "Active"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "EventInvokeConfig": {
-                    "id": "EventInvokeConfig",
-                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/EventInvokeConfig",
-                    "children": {
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/EventInvokeConfig/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
-                          "aws:cdk:cloudformation:props": {
-                            "functionName": {
-                              "Ref": "apiLambdaPOSTutilwipetestdb302B45B9"
-                            },
-                            "qualifier": "$LATEST",
-                            "maximumRetryAttempts": 0
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
-                      "version": "2.72.1"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_lambda.Function",
-                  "version": "2.72.1"
-                }
-              },
-              "Route_POST_--util--wipe-test-db": {
-                "id": "Route_POST_--util--wipe-test-db",
-                "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db",
-                "children": {
-                  "Integration_POST_--util--wipe-test-db": {
-                    "id": "Integration_POST_--util--wipe-test-db",
-                    "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db",
-                    "children": {
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
-                          "aws:cdk:cloudformation:props": {
-                            "apiId": {
-                              "Ref": "apiApiC3C473D0"
-                            },
-                            "integrationType": "AWS_PROXY",
-                            "integrationUri": {
-                              "Fn::GetAtt": [
-                                "apiLambdaPOSTutilwipetestdb302B45B9",
-                                "Arn"
-                              ]
-                            },
-                            "payloadFormatVersion": "2.0"
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
-                          "version": "2.72.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
-                      "version": "2.72.1-alpha.0"
-                    }
-                  },
-                  "Integration_POST_--util--wipe-test-db-Permission": {
-                    "id": "Integration_POST_--util--wipe-test-db-Permission",
-                    "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db-Permission",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
-                      "aws:cdk:cloudformation:props": {
-                        "action": "lambda:InvokeFunction",
-                        "functionName": {
-                          "Fn::GetAtt": [
-                            "apiLambdaPOSTutilwipetestdb302B45B9",
-                            "Arn"
-                          ]
-                        },
-                        "principal": "apigateway.amazonaws.com",
-                        "sourceArn": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "arn:",
-                              {
-                                "Ref": "AWS::Partition"
-                              },
-                              ":execute-api:us-east-1:206508349906:",
-                              {
-                                "Ref": "apiApiC3C473D0"
-                              },
-                              "/*/*/util/wipe-test-db"
-                            ]
-                          ]
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
-                      "version": "2.72.1"
-                    }
-                  },
-                  "Resource": {
-                    "id": "Resource",
-                    "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Resource",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
-                      "aws:cdk:cloudformation:props": {
-                        "apiId": {
-                          "Ref": "apiApiC3C473D0"
-                        },
-                        "routeKey": "POST /util/wipe-test-db",
-                        "authorizationType": "NONE",
-                        "target": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "integrations/",
-                              {
-                                "Ref": "apiRoutePOSTutilwipetestdbIntegrationPOSTutilwipetestdbD554E257"
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
-                      "version": "2.72.1"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
-                  "version": "2.72.1-alpha.0"
-                }
-              },
               "Lambda_GET_--orgs--{orgId}--conversations": {
                 "id": "Lambda_GET_--orgs--{orgId}--conversations",
                 "path": "local-crow-AppStack/api/Lambda_GET_--orgs--{orgId}--conversations",
@@ -13193,6 +12387,812 @@
                               "integrations/",
                               {
                                 "Ref": "apiRoutePATCHorgsorgIdsettingsIntegrationPATCHorgsorgIdsettingsA746D7FC"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Lambda_POST_--util--seed-test-db": {
+                "id": "Lambda_POST_--util--seed-test-db",
+                "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaPOSTutilseedtestdbServiceRoleDefaultPolicy3B01EA20",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaPOSTutilseedtestdbServiceRoleFE5626AD"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutilseedtestdbServiceRoleFE5626AD",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c84faf3fe828d73246861fe2b04aa32b737066a268",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 100,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--seed-test-db/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaPOSTutilseedtestdb3CB58FBF"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_POST_--util--seed-test-db": {
+                "id": "Route_POST_--util--seed-test-db",
+                "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db",
+                "children": {
+                  "Integration_POST_--util--seed-test-db": {
+                    "id": "Integration_POST_--util--seed-test-db",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaPOSTutilseedtestdb3CB58FBF",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_POST_--util--seed-test-db-Permission": {
+                    "id": "Integration_POST_--util--seed-test-db-Permission",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Integration_POST_--util--seed-test-db-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutilseedtestdb3CB58FBF",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/util/seed-test-db"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--seed-test-db/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "POST /util/seed-test-db",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRoutePOSTutilseedtestdbIntegrationPOSTutilseedtestdb94ECBD75"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpRoute",
+                  "version": "2.72.1-alpha.0"
+                }
+              },
+              "Lambda_POST_--util--wipe-test-db": {
+                "id": "Lambda_POST_--util--wipe-test-db",
+                "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "crow"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "local"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "xray:PutTraceSegments",
+                                        "xray:PutTelemetryRecords"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "dynamodb:*",
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "appTable49BA2E06",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "appTable49BA2E06",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "Action": "iot:*",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:*",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":s3:::sstbootstrap-useast124d14e4b-1hfi2zvusee82"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "ssm:GetParameters",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":ssm:us-east-1:206508349906:parameter/sst/crow/local/Auth/auth/publicKey"
+                                          ]
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "apiLambdaPOSTutilwipetestdbServiceRoleDefaultPolicy19E1F61A",
+                                "roles": [
+                                  {
+                                    "Ref": "apiLambdaPOSTutilwipetestdbServiceRole89DBA293"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.72.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.72.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": "cdk-hnb659fds-assets-206508349906-us-east-1",
+                          "s3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+                        },
+                        "role": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutilwipetestdbServiceRole89DBA293",
+                            "Arn"
+                          ]
+                        },
+                        "environment": {
+                          "variables": {
+                            "SST_FUNCTION_ID": "c803dd58b3bb5c4b0561b3fbb1d15de706211e3f85",
+                            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+                            "SST_APP": "crow",
+                            "SST_STAGE": "local",
+                            "SST_SSM_PREFIX": "/sst/crow/local/",
+                            "SST_Table_tableName_app": {
+                              "Ref": "appTable49BA2E06"
+                            },
+                            "SST_DEBUG_IS_API_ROUTE": "1",
+                            "SST_Auth_publicKey_auth": "__FETCH_FROM_SSM__"
+                          }
+                        },
+                        "ephemeralStorage": {
+                          "size": 512
+                        },
+                        "handler": "bridge.handler",
+                        "memorySize": 1024,
+                        "runtime": "nodejs16.x",
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "crow"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "local"
+                          }
+                        ],
+                        "timeout": 100,
+                        "tracingConfig": {
+                          "mode": "Active"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "EventInvokeConfig": {
+                    "id": "EventInvokeConfig",
+                    "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/EventInvokeConfig",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Lambda_POST_--util--wipe-test-db/EventInvokeConfig/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
+                          "aws:cdk:cloudformation:props": {
+                            "functionName": {
+                              "Ref": "apiLambdaPOSTutilwipetestdb302B45B9"
+                            },
+                            "qualifier": "$LATEST",
+                            "maximumRetryAttempts": 0
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnEventInvokeConfig",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.EventInvokeConfig",
+                      "version": "2.72.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.72.1"
+                }
+              },
+              "Route_POST_--util--wipe-test-db": {
+                "id": "Route_POST_--util--wipe-test-db",
+                "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db",
+                "children": {
+                  "Integration_POST_--util--wipe-test-db": {
+                    "id": "Integration_POST_--util--wipe-test-db",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "apiApiC3C473D0"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Fn::GetAtt": [
+                                "apiLambdaPOSTutilwipetestdb302B45B9",
+                                "Arn"
+                              ]
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.72.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-apigatewayv2-alpha.HttpIntegration",
+                      "version": "2.72.1-alpha.0"
+                    }
+                  },
+                  "Integration_POST_--util--wipe-test-db-Permission": {
+                    "id": "Integration_POST_--util--wipe-test-db-Permission",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Integration_POST_--util--wipe-test-db-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Fn::GetAtt": [
+                            "apiLambdaPOSTutilwipetestdb302B45B9",
+                            "Arn"
+                          ]
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":execute-api:us-east-1:206508349906:",
+                              {
+                                "Ref": "apiApiC3C473D0"
+                              },
+                              "/*/*/util/wipe-test-db"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.72.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "local-crow-AppStack/api/Route_POST_--util--wipe-test-db/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "apiApiC3C473D0"
+                        },
+                        "routeKey": "POST /util/wipe-test-db",
+                        "authorizationType": "NONE",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "apiRoutePOSTutilwipetestdbIntegrationPOSTutilwipetestdbD554E257"
                               }
                             ]
                           ]

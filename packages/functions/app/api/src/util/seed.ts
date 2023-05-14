@@ -49,15 +49,17 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
           mockOrg.orgId = orgId;
 
-          [...Array(mockOperatorCount)].map(async () => {
-            const operatorId = uuidv4();
-            const createOperator: CreateOperator = {
-              operatorId,
-              email: faker.internet.email(),
-              orgId,
-            };
-            await db.entities.operators.create(createOperator).go();
-          });
+          await Promise.all(
+            [...Array(mockOperatorCount)].map(async () => {
+              const operatorId = uuidv4();
+              const createOperator: CreateOperator = {
+                operatorId,
+                email: faker.internet.email(),
+                orgId,
+              };
+              await db.entities.operators.create(createOperator).go();
+            })
+          );
 
           const operators = await db.entities.operators.query
             .org({ orgId })
@@ -130,6 +132,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(mockOrgIds),
       };
     } catch (err) {
+      console.log(err);
       return {
         statusCode: 500,
         body: JSON.stringify(err),

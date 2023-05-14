@@ -35,7 +35,7 @@ describe.concurrent('messages', async () => {
     expect(res.data?.orgId).toEqual(orgId);
   });
   it('lists messages in a conversation', async () => {
-    const { orgId, customers } = mockOrgIds[0];
+    const { orgId, customers } = mockOrgIds[1];
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
     const res = await http.get(
