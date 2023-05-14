@@ -1,12 +1,12 @@
 import { ApiHandler, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../../db';
+import { appDb } from '../../../db';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, conversationId } = usePathParams();
-    if (!conversationId || !orgId) {
+    const { orgId, conversationId, messageId } = usePathParams();
+    if (!conversationId || !orgId || !messageId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
@@ -14,7 +14,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
     try {
       const res = await appDb(Table.app.tableName)
-        .entities.conversations.get({ orgId, conversationId })
+        .entities.messages.get({ orgId, conversationId, messageId })
         .go();
       if (res.data) {
         return {
@@ -24,7 +24,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       }
       return {
         statusCode: 404,
-        body: `No conversation with conversationId: ${conversationId} and orgId: ${orgId} exists. `,
+        body: `No conversation with conversationId: ${conversationId}, orgId: ${orgId} and messageId: ${messageId} exists.`,
       };
     } catch (err) {
       Sentry.captureException(err);

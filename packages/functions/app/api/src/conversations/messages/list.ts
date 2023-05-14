@@ -1,13 +1,12 @@
-import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
+import { ApiHandler, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../../db';
-import { CreateConversation } from '../../../../../../stacks/entities/entities';
+import { appDb } from '../../../db';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId, conversationId } = usePathParams();
-    const body: CreateConversation = useJsonBody();
+    // const { cursor } = useQueryParams();
     if (!orgId || !conversationId) {
       return {
         statusCode: 422,
@@ -15,16 +14,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const res = await appDb(Table.app.tableName)
-        .entities.conversations.create({
-          ...body,
-          orgId,
-          conversationId,
-        })
+      const data = await appDb(Table.app.tableName)
+        .entities.messages.query.byConversation({ orgId, conversationId })
         .go();
       return {
         statusCode: 200,
-        body: JSON.stringify(res.data),
+        body: JSON.stringify(data),
       };
     } catch (err) {
       Sentry.captureException(err);

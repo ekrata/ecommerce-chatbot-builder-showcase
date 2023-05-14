@@ -45,14 +45,13 @@ export const Message = new Entity({
     content: {
       type: 'string',
       required: true,
+      readOnly: true,
     },
     sentAt: {
       type: 'number',
       required: true,
       readOnly: true,
-    },
-    editedAt: {
-      type: 'string',
+      default: Date.now(),
     },
     createdAt: {
       type: 'number',
@@ -76,7 +75,18 @@ export const Message = new Entity({
       },
       sk: {
         field: 'sk',
-        composite: ['sentAt'],
+        composite: [],
+      },
+    },
+    byConversation: {
+      index: 'gsi1pk-gsi1sk-index',
+      pk: {
+        field: 'gsi1pk',
+        composite: ['orgId', 'conversationId'],
+      },
+      sk: {
+        field: 'gsi1sk',
+        composite: [],
       },
     },
   },

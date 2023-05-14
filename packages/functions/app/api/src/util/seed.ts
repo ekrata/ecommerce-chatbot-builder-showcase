@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ApiHandler } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import * as Sentry from '@sentry/serverless';
+import { Table } from 'sst/node/table';
 import {
   CreateOrg,
   CreateOperator,
@@ -35,14 +36,16 @@ export interface MockOrgIds {
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
+      const db = appDb(Table.app.tableName);
       const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
         [...Array(mockOrgCount)].map(async () => {
           const orgId = uuidv4();
           const createOrg: CreateOrg = {
             orgId,
             name: faker.company.name(),
+            email: faker.internet.email(),
           };
-          await appDb.entities.orgs.create(createOrg).go();
+          await db.entities.orgs.create(createOrg).go();
           const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
           mockOrg.orgId = orgId;
 
@@ -53,10 +56,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               email: faker.internet.email(),
               orgId,
             };
-            await appDb.entities.operators.create(createOperator).go();
+            await db.entities.operators.create(createOperator).go();
           });
 
-          const operators = await appDb.entities.operators.query
+          const operators = await db.entities.operators.query
             .org({ orgId })
             .go();
 
@@ -72,7 +75,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 email: faker.internet.email(),
                 orgId,
               };
-              await appDb.entities.customers.create(createCustomer).go();
+              await db.entities.customers.create(createCustomer).go();
               const conversations = await Promise.all(
                 [...Array(mockConversationCountPerCustomer)].map(async () => {
                   const conversationId = uuidv4();
@@ -87,7 +90,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                     operatorId:
                       status === 'unassigned' ? '' : operator.operatorId,
                   };
-                  await appDb.entities.conversations
+                  await db.entities.conversations
                     .create(createConversation)
                     .go();
                   const messageIds = await Promise.all(
@@ -108,9 +111,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                           sender: faker.helpers.arrayElement(messageSender),
                           operatorId: operator.operatorId,
                         };
-                        await appDb.entities.messages
-                          .create(createMessage)
-                          .go();
+                        await db.entities.messages.create(createMessage).go();
                         return messageId;
                       }
                     )
@@ -129,10 +130,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(mockOrgIds),
       };
     } catch (err) {
-      console.log(err);
       return {
-        statusCode: 200,
-        body: err,
+        statusCode: 500,
+        body: JSON.stringify(err),
       };
     }
   })

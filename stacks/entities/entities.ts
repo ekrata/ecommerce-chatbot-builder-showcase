@@ -9,7 +9,10 @@ export type CreateOrg = CreateEntityItem<typeof Org>;
 export type UpdateOrg = UpdateEntityItem<typeof Org>;
 
 export type CreateConversation = CreateEntityItem<typeof Conversation>;
-export type UpdateConversation = UpdateEntityItem<typeof Conversation>;
+export type UpdateConversation = Omit<
+  UpdateEntityItem<typeof Conversation>,
+  'orgId' | 'conversationId'
+>;
 
 export type CreateMessage = CreateEntityItem<typeof Message>;
 export type UpdateMessage = UpdateEntityItem<typeof Message>;

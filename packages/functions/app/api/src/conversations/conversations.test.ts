@@ -23,7 +23,7 @@ describe.concurrent('/conversations', async () => {
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
     const res = await http.get(
-      `/conversations/${conversationId}?orgId=${orgId}`
+      `/orgs/${orgId}/conversations/${conversationId}?orgId=${orgId}`
     );
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
@@ -35,7 +35,7 @@ describe.concurrent('/conversations', async () => {
     const { orgId, operatorIds } = mockOrgIds[0];
     const operatorId = faker.helpers.arrayElement(operatorIds);
     const res = await http.get(
-      `/conversations?orgId=${orgId}&operatorId=${operatorId}`
+      `/orgs/${orgId}/conversations?operatorId=${operatorId}`
     );
     const conversationsByOperator = res.data;
     expect(res).toBeTruthy();
@@ -65,9 +65,10 @@ describe.concurrent('/conversations', async () => {
     };
 
     // validate creation api
-    const res = await http.post(`/conversations`, data);
-    expect(res).toBeTruthy();
-    expect(res.status).toBe(200);
+    const res = await http.post(
+      `/orgs/${orgId}/conversations/${conversationId}`,
+      data
+    );
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
@@ -86,7 +87,7 @@ describe.concurrent('/conversations', async () => {
 
     // Get prexisting data for patch
     const prepareRes = await http.get(
-      `/conversations/${conversationId}?orgId=${orgId}`
+      `/orgs/${orgId}/conversations/${conversationId}`
     );
     expect(prepareRes).toBeTruthy();
     expect(prepareRes.status).toBe(200);
@@ -94,17 +95,22 @@ describe.concurrent('/conversations', async () => {
     // patch
     const status = 'open';
     const { data } = prepareRes;
-    const res = await http.patch(`/conversations`, {
-      ...data,
-      operatorId,
-      status,
-    });
+    delete data?.conversationId;
+    delete data?.orgId;
+    const res = await http.patch(
+      `/orgs/${orgId}/conversations/${conversationId}`,
+      {
+        ...data,
+        operatorId,
+        status,
+      }
+    );
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
     // Validate patch with get
     const getRes = await http.get(
-      `/conversations/${conversationId}?orgId=${orgId}`
+      `/orgs/${orgId}/conversations/${conversationId}`
     );
 
     expect(getRes).toBeTruthy();
@@ -121,14 +127,14 @@ describe.concurrent('/conversations', async () => {
     const { conversationId } = faker.helpers.arrayElement(conversations);
 
     const res = await http.delete(
-      `/conversations/${conversationId}?orgId=${orgId}`
+      `/orgs/${orgId}/conversations/${conversationId}`
     );
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
     // validate it doesn't exist anymore
     try {
-      await http.get(`/conversations/${conversationId}?orgId=${orgId}`);
+      await http.get(`/orgs/${orgId}/conversations/${conversationId}`);
     } catch (err) {
       expect(err).toBeTruthy();
       expect((err as AxiosError).response?.status).toBe(404);

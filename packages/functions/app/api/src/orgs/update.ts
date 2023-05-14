@@ -1,21 +1,21 @@
-import { ApiHandler, useJsonBody } from 'sst/node/api';
+import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
-import { UpdateConversation } from '../../../../../../stacks/entities/entities';
+import { Table } from 'sst/node/table';
+import { UpdateOrg } from '../../../../../../stacks/entities/entities';
 import { appDb } from '../../db';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
+    const { orgId } = usePathParams();
     const {
-      orgId,
-      conversationId,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       createdAt,
-      ...updateConversation
-    }: UpdateConversation = useJsonBody();
+      ...updateOrg
+    }: UpdateOrg = useJsonBody();
 
-    if (!orgId || !conversationId || !updateConversation) {
+    if (!orgId || !updateOrg) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
@@ -23,16 +23,15 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
-      await appDb.entities.conversations
-        .patch({
+      const res = await appDb(Table.app.tableName)
+        .entities.orgs.patch({
           orgId,
-          conversationId,
         })
-        .set({ ...updateConversation })
+        .set({ ...updateOrg })
         .go();
       return {
         statusCode: 200,
-        body: 'Updated conversation.',
+        body: JSON.stringify(res?.data),
       };
     } catch (err) {
       Sentry.captureException(err);

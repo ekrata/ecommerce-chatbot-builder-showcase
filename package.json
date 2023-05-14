@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "sst-dev": "sst dev",
-    "test-app-api": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run  --threads=false'",
+    "test-app-api": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run --threads=false'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-app-storybook": "test-storybook",

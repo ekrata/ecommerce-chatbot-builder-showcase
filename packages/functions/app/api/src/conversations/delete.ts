@@ -1,11 +1,11 @@
-import { ApiHandler, usePathParam, useQueryParams } from 'sst/node/api';
+import { ApiHandler, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
+import { Table } from 'sst/node/table';
 import { appDb } from '../../db';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const conversationId = usePathParam('id');
-    const { orgId } = useQueryParams();
+    const { orgId, conversationId } = usePathParams();
     if (!conversationId || !orgId) {
       return {
         statusCode: 422,
@@ -13,8 +13,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const data = await appDb.entities.conversations
-        .remove({ orgId, conversationId })
+      const data = await appDb(Table.app.tableName)
+        .entities.conversations.remove({ orgId, conversationId })
         .go();
       return {
         statusCode: 200,

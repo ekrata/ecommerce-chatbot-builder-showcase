@@ -1,14 +1,14 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../../db';
-import { CreateConversation } from '../../../../../../stacks/entities/entities';
+import { CreateMessage } from '../../../../../../../stacks/entities/entities';
+import { appDb } from '../../../db';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, conversationId } = usePathParams();
-    const body: CreateConversation = useJsonBody();
-    if (!orgId || !conversationId) {
+    const { orgId, conversationId, messageId } = usePathParams();
+    const body: CreateMessage = useJsonBody();
+    if (!orgId || !conversationId || !messageId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
@@ -16,10 +16,11 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
     try {
       const res = await appDb(Table.app.tableName)
-        .entities.conversations.create({
+        .entities.messages.create({
           ...body,
           orgId,
           conversationId,
+          messageId,
         })
         .go();
       return {

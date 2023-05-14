@@ -2,21 +2,12 @@ import {
   Api,
   ApiRouteProps,
   Auth,
-  Config,
   NextjsSite,
-  Script,
   StackContext,
   Table,
   WebSocketApi,
 } from 'sst/constructs';
-import { Service } from 'electrodb';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { LayerVersion } from 'aws-cdk-lib/aws-lambda';
-import { Conversation } from './entities/conversation';
-import { Customer } from './entities/customer';
-import { Message } from './entities/message';
-import { Org } from './entities/org';
-import { Operator } from './entities/operator';
 
 export function AppStack({ stack, app }: StackContext) {
   // const APP_API_URL = new Config.Parameter(stack, 'APP_API_URL', {
@@ -105,16 +96,63 @@ export function AppStack({ stack, app }: StackContext) {
       },
     },
     routes: {
-      'GET /conversations':
+      'GET /orgs/{orgId}/conversations':
         'packages/functions/app/api/src/conversations/list.handler',
-      'POST /conversations':
-        'packages/functions/app/api/src/conversations/create.handler',
-      'GET /conversations/{id}':
+      'GET /orgs/{orgId}/conversations/{conversationId}':
         'packages/functions/app/api/src/conversations/get.handler',
-      'DELETE /conversations/{id}':
+      'DELETE /orgs/{orgId}/conversations/{conversationId}':
         'packages/functions/app/api/src/conversations/delete.handler',
-      'PATCH /conversations':
-        'packages/functions/app/api/src/conversations/patch.handler',
+      'POST /orgs/{orgId}/conversations/{conversationId}':
+        'packages/functions/app/api/src/conversations/create.handler',
+      'PATCH /orgs/{orgId}/conversations/{conversationId}':
+        'packages/functions/app/api/src/conversations/update.handler',
+
+      'GET /orgs/{orgId}/conversations/{conversationId}/messages':
+        'packages/functions/app/api/src/conversations/messages/list.handler',
+      'GET /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
+        'packages/functions/app/api/src/conversations/messages/get.handler',
+      'DELETE /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
+        'packages/functions/app/api/src/conversations/messages/delete.handler',
+      'POST /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
+        'packages/functions/app/api/src/conversations/messages/create.handler',
+      // 'PATCH /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
+      //   'packages/functions/app/api/src/conversations/messages/update.handler',
+
+      'GET /orgs': 'packages/functions/app/api/src/orgs/list.handler',
+      'GET /orgs/{orgId}': 'packages/functions/app/api/src/orgs/get.handler',
+      'DELETE /orgs/{orgId}':
+        'packages/functions/app/api/src/orgs/delete.handler',
+      'POST /orgs/{orgId}':
+        'packages/functions/app/api/src/orgs/create.handler',
+      'PATCH /orgs/{orgId}':
+        'packages/functions/app/api/src/orgs/update.handler',
+
+      'GET /orgs/{orgId}/operators':
+        'packages/functions/app/api/src/operators/list.handler',
+      'GET /orgs/{orgId}/operators/{operatorId}':
+        'packages/functions/app/api/src/operators/get.handler',
+      'DELETE /orgs/{orgId}/operators/{operatorId}':
+        'packages/functions/app/api/src/operators/delete.handler',
+      'POST /orgs/{orgId}/operators/{operatorId}':
+        'packages/functions/app/api/src/operators/create.handler',
+      'PATCH /orgs/{orgId}/operators/{operatorId}':
+        'packages/functions/app/api/src/operators/update.handler',
+
+      'GET /orgs/{orgId}/customers':
+        'packages/functions/app/api/src/customers/list.handler',
+      'GET /orgs/{orgId}/customers/{customerId}':
+        'packages/functions/app/api/src/customers/get.handler',
+      'DELETE /orgs/{orgId}/customers/{customerId}':
+        'packages/functions/app/api/src/customers/delete.handler',
+      'POST /orgs/{orgId}/customers/{customerId}':
+        'packages/functions/app/api/src/customers/create.handler',
+      'PATCH /orgs/{orgId}/customers/{customerId}':
+        'packages/functions/app/api/src/customers/update.handler',
+
+      'GET /orgs/{orgId}/settings':
+        'packages/functions/app/api/src/customers/get.handler',
+      'PATCH /orgs/{orgId}/settings':
+        'packages/functions/app/api/src/customers/update.handler',
       ...testRoutes,
     },
   });

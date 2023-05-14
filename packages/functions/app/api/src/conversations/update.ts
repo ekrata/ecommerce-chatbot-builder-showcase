@@ -1,30 +1,39 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
+import { UpdateConversation } from '../../../../../../stacks/entities/entities';
 import { appDb } from '../../db';
-import { CreateConversation } from '../../../../../../stacks/entities/entities';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId, conversationId } = usePathParams();
-    const body: CreateConversation = useJsonBody();
-    if (!orgId || !conversationId) {
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      updatedAt,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      createdAt,
+      ...updateConversation
+    }: UpdateConversation = useJsonBody();
+
+    if (!orgId || !conversationId || !updateConversation) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
       };
     }
+
     try {
       const res = await appDb(Table.app.tableName)
-        .entities.conversations.create({
-          ...body,
+        .entities.conversations.patch({
           orgId,
           conversationId,
         })
+        .set({ ...updateConversation })
         .go();
+
       return {
         statusCode: 200,
-        body: JSON.stringify(res.data),
+        body: JSON.stringify(res?.data),
       };
     } catch (err) {
       Sentry.captureException(err);

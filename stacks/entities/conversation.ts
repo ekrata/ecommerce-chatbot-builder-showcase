@@ -111,5 +111,16 @@ export const Conversation = new Entity({
         composite: ['updatedAt', 'status', 'channel', 'type'],
       },
     },
+    all: {
+      index: 'gsi2pk-gsi2sk-index',
+      pk: {
+        field: 'gsi2pk',
+        composite: ['orgId'],
+      },
+      sk: {
+        field: 'gsi2sk',
+        composite: [],
+      },
+    },
   },
 });
