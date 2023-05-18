@@ -10,13 +10,13 @@ import {
   CreateConversation,
   CreateMessage,
 } from '../../../../../../stacks/entities/entities';
-import { appDb } from '../../db';
+import { appDb } from '../db';
+import { senderType } from '../../../../../../stacks/entities/message';
 import {
   conversationChannel,
   conversationStatus,
   conversationType,
 } from '../../../../../../stacks/entities/conversation';
-import { messageSender } from '../../../../../../stacks/entities/message';
 
 export const mockOrgCount = 3;
 export const mockCustomerCount = 5;
@@ -62,7 +62,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           );
 
           const operators = await db.entities.operators.query
-            .org({ orgId })
+            .byOrg({ orgId })
             .go();
 
           mockOrg.operatorIds = operators.data.map(
@@ -110,7 +110,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                             .between(before, new Date())
                             .getTime(),
                           content: faker.lorem.lines(),
-                          sender: faker.helpers.arrayElement(messageSender),
+                          sender: faker.helpers.arrayElement(senderType),
                           operatorId: operator.operatorId,
                         };
                         await db.entities.messages.create(createMessage).go();
@@ -132,7 +132,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(mockOrgIds),
       };
     } catch (err) {
-      console.log(err);
+      Sentry.captureException(JSON.stringify(err));
       return {
         statusCode: 500,
         body: JSON.stringify(err),

@@ -1,5 +1,6 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+import { rating } from './conversation';
 
 export const Customer = new Entity({
   model: {
@@ -18,6 +19,11 @@ export const Customer = new Entity({
       type: 'string',
       required: true,
       readOnly: true,
+    },
+    currentConnectionId: {
+      type: 'string',
+      required: true,
+      default: '',
     },
     name: {
       type: 'string',
@@ -45,9 +51,8 @@ export const Customer = new Entity({
     phone: {
       type: 'string',
     },
-    starRating: {
-      type: 'set',
-      items: [1, 2, 3, 4, 5] as const,
+    rating: {
+      type: rating,
     },
     userAgent: {
       type: 'string',
@@ -100,23 +105,22 @@ export const Customer = new Entity({
     primary: {
       pk: {
         field: 'pk',
-        composite: ['customerId'],
+        composite: ['orgId', 'customerId'],
       },
       sk: {
         field: 'sk',
         composite: [],
       },
     },
-    customer: {
-      collection: 'conversationList',
-      index: 'gsi2',
+    byOrg: {
+      index: 'gsi1pk-gsi1sk-index',
       pk: {
-        field: 'gsi2pk',
+        field: 'gsi1pk',
         composite: ['orgId'],
       },
       sk: {
-        field: 'gsi2sk',
-        composite: ['customerId', 'createdAt'],
+        field: 'gsi1sk',
+        composite: [],
       },
     },
   },

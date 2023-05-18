@@ -3,20 +3,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker';
 import { EntityItem } from 'electrodb';
 import { AxiosError } from 'axios';
-import { CreateMessage } from '../../../../../../../stacks/entities/entities';
+import { Api } from 'sst/node/api';
+import { Message } from '@/entities/message';
+import { CreateMessage } from '@/entities/entities';
+import { getHttp } from '../../http';
 import { MockOrgIds, mockMessageCountPerConversation } from '../../util/seed';
-import { http } from '../../../http';
-import { Message } from '../../../../../../../stacks/entities/message';
-import { seedBeforeAll } from '../../../seedBeforeAll';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
+const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = await seedBeforeAll();
+  mockOrgIds = (await http.post(`/util/seed-test-db`)).data as MockOrgIds[];
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
 });
+
 describe.concurrent('messages', async () => {
   it('gets a message', async () => {
     const { orgId, customers } = mockOrgIds[0];

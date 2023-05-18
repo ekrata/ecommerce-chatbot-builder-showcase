@@ -24,7 +24,7 @@ export const conversationTopic = [
 ] as const;
 export type ConversationTopic = (typeof conversationTopic)[number];
 
-export const rating = [1, 2, 3, 4, 5] as const;
+export const rating = ['1', '2', '3', '4', '5'] as const;
 export type Rating = (typeof rating)[number];
 
 export const Conversation = new Entity({
@@ -70,8 +70,7 @@ export const Conversation = new Entity({
       required: true,
     },
     rating: {
-      type: 'set',
-      items: rating,
+      type: rating,
     },
     topic: {
       type: conversationTopic,
@@ -111,7 +110,7 @@ export const Conversation = new Entity({
         composite: ['updatedAt', 'status', 'channel', 'type'],
       },
     },
-    all: {
+    byOrg: {
       index: 'gsi2pk-gsi2sk-index',
       pk: {
         field: 'gsi2pk',

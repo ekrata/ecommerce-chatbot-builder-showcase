@@ -14,14 +14,21 @@ declare module "sst/node/table" {
 }import "sst/node/api";
 declare module "sst/node/api" {
   export interface WebSocketApiResources {
-    "ws": {
+    "appWs": {
       url: string;
+    }
+  }
+}import "sst/node/event-bus";
+declare module "sst/node/event-bus" {
+  export interface EventBusResources {
+    "appEventBus": {
+      eventBusName: string;
     }
   }
 }import "sst/node/api";
 declare module "sst/node/api" {
   export interface ApiResources {
-    "api": {
+    "appApi": {
       url: string;
     }
   }

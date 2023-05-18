@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/your-framework';
 import * as PageLayout from './PageLayout.stories';
 import * as DocumentHeader from './DocumentHeader.stories';
 import * as DocumentList from './DocumentList.stories';
-import Page from './chats/page';
+import Page from './conversations/page';
 
 const meta: Meta<typeof Page> = {
   title: 'DocumentScreen',

@@ -4,8 +4,8 @@ module.exports = {
 
   // This will lint and format TypeScript and                                             //JavaScript files
   '**/*.(ts|tsx|js)': (filenames) => [
-    `eslint --fix ${filenames.join(' ')}`,
-    `turbo prettier -- --write ${filenames.join(' ')}`,
+    // `eslint --fix ${filenames.join(' ')}`,
+    // `turbo prettier -- --write ${filenames.join(' ')}`,
     // `pnpm test-app-storybook`,
   ],
 

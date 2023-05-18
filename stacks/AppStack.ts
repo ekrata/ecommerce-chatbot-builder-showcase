@@ -2,12 +2,17 @@ import {
   Api,
   ApiRouteProps,
   Auth,
+  EventBus,
+  EventBusRuleProps,
+  FunctionInlineDefinition,
   NextjsSite,
   StackContext,
   Table,
   WebSocketApi,
+  WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 import { LayerVersion } from 'aws-cdk-lib/aws-lambda';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 export function AppStack({ stack, app }: StackContext) {
   // const APP_API_URL = new Config.Parameter(stack, 'APP_API_URL', {
@@ -49,6 +54,17 @@ export function AppStack({ stack, app }: StackContext) {
         projection: 'all',
       },
     },
+    stream: true,
+    consumers: {
+      consumer1: {
+        function: {
+          handler:
+            'packages/functions/app/api/src/ddb-stream/processBatch.handler',
+          timeout: 10,
+          permissions: [],
+        },
+      },
+    },
   });
 
   if (app.local) {
@@ -64,17 +80,45 @@ export function AppStack({ stack, app }: StackContext) {
   const domain = 'crow.ekrata.com';
 
   // Create the WebSocket API
-  const wsApi = new WebSocketApi(stack, 'ws', {
+  // All are batch operations
+
+  const wsApiRoutes:
+    | Record<string, FunctionInlineDefinition | WebSocketApiFunctionRouteProps>
+    | undefined = {
+    sendNewMesssageToOperator:
+      'packages/functions/app/ws/src/orgs/operators/sendNewMessage.handler',
+    sendUpdateMessageToOperator:
+      'packages/functions/app/ws/src/orgs/operators/conversations/messages/sendUpdateMessage.handler',
+    sendNewMessageToOperator:
+      'packages/functions/app/ws/src/orgs/operators/conversations/sendNewConversation.handler',
+    sendUpdateConversationToOperator:
+      'packages/functions/app/ws/src/orgs/operators/conversations/sendUpdateConversation.handler',
+    sendNewVisitorToOperator:
+      'packages/functions/app/ws/src/orgs/operators/visitors/sendNewVisitor.handler',
+    sendUpdateVisitorToOperator:
+      'packages/functions/app/ws/src/orgs/operators/visitors/sendUpdateVisitor.handler',
+    sendRemoveVisitorToOperator:
+      'packages/functions/app/ws/src/orgs/operators/visitors/sendRemoveVisitor.handler',
+
+    sendNewMessageToCustomer:
+      'packages/functions/app/ws/src/orgs/customers/conversations/messages/sendNewMessage.handler',
+    sendNewConversationToCustomer:
+      'packages/functions/app/ws/src/orgs/customers/conversations/sendNewConversation.handler',
+    sendUpdateConversationToCustomer:
+      'packages/functions/app/ws/src/orgs/customers/conversations/sendUpdateConversation.handler',
+
+    $connect: 'packages/functions/app/ws/src/orgs/operators/$connect.handler',
+    $disconnect:
+      'packages/functions/app/ws/src/orgs/operators/$disconnect.handler',
+  };
+
+  const wsApi = new WebSocketApi(stack, 'appWs', {
     defaults: {
       function: {
         bind: [table],
       },
     },
-    routes: {
-      $connect: 'packages/functions/app/ws/src/connect.main',
-      $disconnect: 'packages/functions/app/ws/src/disconnect.main',
-      sendmessage: 'packages/functions/app/ws/src/sendMessage.main',
-    },
+    routes: wsApiRoutes,
   });
 
   // Only need to be available locally, for seeding and dropping the test db
@@ -87,7 +131,43 @@ export function AppStack({ stack, app }: StackContext) {
       }
     : {};
 
-  const api = new Api(stack, 'api', {
+  // Because the rules of the entire websocket API(Which is responsible for the real time messaging and notifications of the app))
+  // are of the same, shared structure, we can simply build the eventbus rules dynamically from lambda names
+  const rules: Record<string, EventBusRuleProps> = wsApi.routes.reduce(
+    (acc, route) => {
+      const wsFunc = wsApi.getFunction(route);
+      if (wsFunc) {
+        return {
+          ...acc,
+          [`${wsFunc.id.split('$').slice(-1)[0]}`]: {
+            pattern: {
+              source: ['ddbStream'],
+              detailType: [wsFunc.id],
+            },
+            targets: {
+              ws: {
+                cdk: {
+                  function: lambda.Function.fromFunctionArn(
+                    stack,
+                    wsFunc.id,
+                    wsFunc.functionArn
+                  ),
+                },
+              },
+            },
+          },
+        } as Record<string, EventBusRuleProps>;
+      }
+      throw new Error('Failed to get a function from the ws api');
+    },
+    {}
+  );
+
+  const appEventBus = new EventBus(stack, 'appEventBus', {
+    rules,
+  });
+
+  const api = new Api(stack, 'appApi', {
     defaults: {
       function: {
         timeout: app.local ? 100 : 10,

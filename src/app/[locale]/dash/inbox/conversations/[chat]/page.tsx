@@ -9,13 +9,19 @@ import { CurrentChatPanel } from './CurrentChatPanel';
 import { useDashStore } from '../useDashStore';
 import { useParams } from 'next/navigation';
 import { useChat } from '../../useChats';
+import { Api, WebSocketApi } from 'sst/node/api';
+import { io } from "socket.io-client";
+
+
+async function getConversation(orgId: string, ) {
+  const res = await fetch(`${Api.api.url}`); // The result is cached
+  return res.json();
+}
 
 export default async function Page() {
-  const {chat} = useParams();
+  const { conversationId } = useParams();
+  
 
-  const chat = useChat(org, chat);
-  
-  
   return (
     <>
       <div

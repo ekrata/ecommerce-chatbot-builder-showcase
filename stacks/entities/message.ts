@@ -1,8 +1,8 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
-export const messageSender = ['operator', 'customer'] as const;
-export type MessageSender = (typeof messageSender)[number];
+export const senderType = ['operator', 'customer'] as const;
+export type SenderType = (typeof senderType)[number];
 
 export const Message = new Entity({
   model: {
@@ -38,7 +38,7 @@ export const Message = new Entity({
       readOnly: true,
     },
     sender: {
-      type: messageSender,
+      type: senderType,
       required: true,
       readOnly: true,
     },

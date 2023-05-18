@@ -2,20 +2,22 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker';
 import { AxiosError } from 'axios';
-import { CreateOrg } from '../../../../../../stacks/entities/entities';
-import { seedBeforeAll } from '../../seedBeforeAll';
+import { Api } from 'sst/node/api';
+import { CreateOrg } from '@/entities/entities';
+import { getHttp } from '../http';
 import { MockOrgIds, mockOrgCount } from '../util/seed';
-import { http } from '../../http';
 import { orgPlanTier } from '../../../../../../stacks/entities/org';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
+const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = await seedBeforeAll();
+  mockOrgIds = (await http.post(`/util/seed-test-db`)).data as MockOrgIds[];
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
 });
+
 describe.concurrent('/orgs', async () => {
   it('gets a org', async () => {
     const { orgId } = mockOrgIds[0];
