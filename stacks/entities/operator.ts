@@ -28,7 +28,7 @@ export const Operator = new Entity({
       readOnly: true,
       default: () => uuidv4(),
     },
-    currentConnectionId: {
+    connectionId: {
       type: 'string',
       required: true,
       default: '',
@@ -143,6 +143,17 @@ export const Operator = new Entity({
       },
       sk: {
         field: 'gsi1sk',
+        composite: [],
+      },
+    },
+    byConnectionId: {
+      index: 'gsi2pk-gsi2sk-index',
+      pk: {
+        field: 'gsi2pk',
+        composite: ['connectionId'],
+      },
+      sk: {
+        field: 'gsi2sk',
         composite: [],
       },
     },

@@ -21,7 +21,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-deploy-role-206508349906-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-cfn-exec-role-206508349906-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/8d8e8083d682f61152a44c7dcd6f37eb945b7cd20e3d42f63ea74e45bfaaa8d7.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/c19d101e6a3b9966fa3e325a9f37b7e5dc4901faf22c01d19e24486d5c8948f0.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -606,6 +606,48 @@
             "data": "appWsRouteconnectE952A7DB"
           }
         ],
+        "/local-crow-AppStack/appWs/$default/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appWsdefaultServiceRoleB8CDC87D"
+          }
+        ],
+        "/local-crow-AppStack/appWs/$default/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appWsdefaultServiceRoleDefaultPolicy6F862B11"
+          }
+        ],
+        "/local-crow-AppStack/appWs/$default/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appWsdefault6B645F90"
+          }
+        ],
+        "/local-crow-AppStack/appWs/$default/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appWsdefaultEventInvokeConfigDBDAB37B"
+          }
+        ],
+        "/local-crow-AppStack/appWs/Route_$default/Integration_$default-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appWsRoutedefaultIntegrationdefaultPermission2E01FBBD"
+          }
+        ],
+        "/local-crow-AppStack/appWs/Route_$default/Integration_$default/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appWsRoutedefaultIntegrationdefaultB0F09F6F"
+          }
+        ],
+        "/local-crow-AppStack/appWs/Route_$default/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appWsRoutedefaultA2E8A988"
+          }
+        ],
         "/local-crow-AppStack/appWs/$disconnect/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -1065,6 +1107,43 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "appEventBusconnectA42930C6"
+          }
+        ],
+        "/local-crow-AppStack/appEventBus/default": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "Either the Event Rule or target has an unresolved environment. \n           If they are being used in a cross-environment setup you need to specify the environment for both.",
+            "trace": [
+              "Annotations.addMessage (/home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/aws-cdk-lib@2.72.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1071)",
+              "Annotations.addWarning (/home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/aws-cdk-lib@2.72.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:504)",
+              "Rule.sameEnvDimension (/home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/aws-cdk-lib@2.72.1_constructs@10.1.156/node_modules/aws-cdk-lib/aws-events/lib/rule.js:1:7989)",
+              "Rule.addTarget (/home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/aws-cdk-lib@2.72.1_constructs@10.1.156/node_modules/aws-cdk-lib/aws-events/lib/rule.js:1:2926)",
+              "EventBus.addCdkFunctionTarget (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:322:20)",
+              "EventBus.addTarget (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:287:18)",
+              "file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:107:72",
+              "Array.forEach (<anonymous>)",
+              "EventBus.addTargets (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:107:33)",
+              "EventBus.addRule (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:269:14)",
+              "file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:65",
+              "Array.forEach (<anonymous>)",
+              "EventBus.addRules (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
+              "new EventBus (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
+              "EmptyStack.AppStack (/home/sol/Projects/ekrata/crow_apps/crow/stacks/AppStack.ts:166:23)",
+              "stack (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
+              "App.stack (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/constructs/App.js:465:16)",
+              "Object.stacks (/home/sol/Projects/ekrata/crow_apps/crow/sst.config.ts:15:9)",
+              "Module.synth (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/stacks/synth.js:54:20)",
+              "async build (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/cli/commands/dev.js:136:34)",
+              "async file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/cli/commands/dev.js:238:9",
+              "async Promise.all (index 9)",
+              "async Object.handler (file:///home/sol/Projects/ekrata/crow_apps/crow/node_modules/.pnpm/sst@2.8.12_@types+react@18.0.38/node_modules/sst/cli/commands/dev.js:292:5)"
+            ]
+          }
+        ],
+        "/local-crow-AppStack/appEventBus/default/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appEventBusdefault92101064"
           }
         ],
         "/local-crow-AppStack/appEventBus/disconnect": [

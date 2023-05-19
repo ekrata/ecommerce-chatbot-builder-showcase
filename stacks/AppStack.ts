@@ -86,30 +86,30 @@ export function AppStack({ stack, app }: StackContext) {
     | Record<string, FunctionInlineDefinition | WebSocketApiFunctionRouteProps>
     | undefined = {
     sendNewMesssageToOperator:
-      'packages/functions/app/ws/src/orgs/operators/sendNewMessage.handler',
+      'packages/functions/app/ws/src/operators/sendNewMessage.handler',
     sendUpdateMessageToOperator:
-      'packages/functions/app/ws/src/orgs/operators/conversations/messages/sendUpdateMessage.handler',
+      'packages/functions/app/ws/src/operators/conversations/messages/sendUpdateMessage.handler',
     sendNewMessageToOperator:
-      'packages/functions/app/ws/src/orgs/operators/conversations/sendNewConversation.handler',
+      'packages/functions/app/ws/src/operators/conversations/sendNewConversation.handler',
     sendUpdateConversationToOperator:
-      'packages/functions/app/ws/src/orgs/operators/conversations/sendUpdateConversation.handler',
+      'packages/functions/app/ws/src/operators/conversations/sendUpdateConversation.handler',
     sendNewVisitorToOperator:
-      'packages/functions/app/ws/src/orgs/operators/visitors/sendNewVisitor.handler',
+      'packages/functions/app/ws/src/operators/visitors/sendNewVisitor.handler',
     sendUpdateVisitorToOperator:
-      'packages/functions/app/ws/src/orgs/operators/visitors/sendUpdateVisitor.handler',
+      'packages/functions/app/ws/src/operators/visitors/sendUpdateVisitor.handler',
     sendRemoveVisitorToOperator:
-      'packages/functions/app/ws/src/orgs/operators/visitors/sendRemoveVisitor.handler',
+      'packages/functions/app/ws/src/operators/visitors/sendRemoveVisitor.handler',
 
     sendNewMessageToCustomer:
-      'packages/functions/app/ws/src/orgs/customers/conversations/messages/sendNewMessage.handler',
+      'packages/functions/app/ws/src/customers/conversations/messages/sendNewMessage.handler',
     sendNewConversationToCustomer:
-      'packages/functions/app/ws/src/orgs/customers/conversations/sendNewConversation.handler',
+      'packages/functions/app/ws/src/customers/conversations/sendNewConversation.handler',
     sendUpdateConversationToCustomer:
-      'packages/functions/app/ws/src/orgs/customers/conversations/sendUpdateConversation.handler',
+      'packages/functions/app/ws/src/customers/conversations/sendUpdateConversation.handler',
 
-    $connect: 'packages/functions/app/ws/src/orgs/operators/$connect.handler',
-    $disconnect:
-      'packages/functions/app/ws/src/orgs/operators/$disconnect.handler',
+    $connect: 'packages/functions/app/ws/src/connect.handler',
+    $default: 'packages/functions/app/ws/src/connect.handler',
+    $disconnect: 'packages/functions/app/ws/src/disconnect.handler',
   };
 
   const wsApi = new WebSocketApi(stack, 'appWs', {
