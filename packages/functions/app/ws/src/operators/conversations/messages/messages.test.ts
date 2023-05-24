@@ -17,7 +17,7 @@ beforeAll(async () => {
   }
 });
 
-describe.concurrent('/ws', async () => {
+describe('messages', () => {
   it('connects and then disconnects a operator socket', () =>
     new Promise((done) => {
       const { orgId, operatorIds } = mockOrgIds[0];

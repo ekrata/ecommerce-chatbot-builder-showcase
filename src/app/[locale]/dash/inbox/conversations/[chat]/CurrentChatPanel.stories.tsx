@@ -2,7 +2,6 @@ import { expect } from '@storybook/jest';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 import { action } from '@storybook/addon-actions';
-import { MemoryRouterProvider } from 'next-router-mock/MemoryRouterProvider';
 import { ChatListPanel } from '../../ChatListPanel';
 import { createRandomChat, createRandomMessage } from '../../mocks.test';
 import { ChatLog } from '../../ChatLog';
@@ -34,12 +33,7 @@ const renderCheck = 'Render check';
 export const EmptyChatLog: Story = {
   render: () => (
     <>
-      <MemoryRouterProvider
-        url='/dash/inbox/chats/'
-        onPush={action('router.push')}
-      >
-        <CurrentChatPanel chat={unassignedChat} />
-      </MemoryRouterProvider>
+      <CurrentChatPanel />
     </>
   ),
   play: async ({ canvasElement, step }) => {

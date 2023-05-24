@@ -5,7 +5,9 @@
       "trial": "Get started for free"
     }
   },
-
+  "chat-widget": {
+    "start-chat-cta": "Chat with us 👋"
+  },
   "navbar": {
     "products": {
       "title": "Product & Features",

@@ -31,7 +31,7 @@ export const Operator = new Entity({
     connectionId: {
       type: 'string',
       required: true,
-      default: '',
+      default: () => uuidv4(),
     },
     departments: {
       type: 'string',

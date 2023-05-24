@@ -4,6 +4,7 @@ import { Conversation } from './conversation';
 import { Message } from './message';
 import { Operator } from './operator';
 import { Customer } from './customer';
+import { Visitor } from './visitor';
 
 export type CreateOrg = CreateEntityItem<typeof Org>;
 export type UpdateOrg = UpdateEntityItem<typeof Org>;
@@ -22,3 +23,6 @@ export type UpdateOperator = UpdateEntityItem<typeof Operator>;
 
 export type CreateCustomer = CreateEntityItem<typeof Customer>;
 export type UpdateCustomer = UpdateEntityItem<typeof Customer>;
+
+export type CreateVisitor = CreateEntityItem<typeof Visitor>;
+export type UpdateVisitor = UpdateEntityItem<typeof Visitor>;

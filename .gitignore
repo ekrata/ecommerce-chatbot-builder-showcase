@@ -57,3 +57,5 @@ node_modules
 
 # local env files
 .env*.local
+# Sentry Auth Token
+.sentryclirc

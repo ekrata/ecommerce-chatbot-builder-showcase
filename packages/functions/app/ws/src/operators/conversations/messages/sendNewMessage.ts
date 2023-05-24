@@ -7,8 +7,6 @@ import { appDb } from 'packages/functions/app/api/src/db';
 import { EntityItem } from 'electrodb';
 import { Message } from '@/entities/message';
 
-const TableName = Table.app.tableName;
-const dynamoDb = new DynamoDB.DocumentClient();
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event) => {
     const { orgId, customerId, connectionId } = usePathParams();

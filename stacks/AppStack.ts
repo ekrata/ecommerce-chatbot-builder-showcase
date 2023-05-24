@@ -2,6 +2,7 @@ import {
   Api,
   ApiRouteProps,
   Auth,
+  Config,
   EventBus,
   EventBusRuleProps,
   FunctionInlineDefinition,
@@ -22,6 +23,15 @@ export function AppStack({ stack, app }: StackContext) {
   // const APP_WS_URL = new Config.Parameter(stack, 'APP_API_URL', {
   //   value: 'wss://etr95nhzwk.execute-api.us-east-1.amazonaws.com/local',
   // });
+
+  const IS_LOCAL = new Config.Parameter(stack, 'IS_LOCAL', {
+    value: JSON.stringify(app.local),
+  });
+
+  const REGION = new Config.Parameter(stack, 'REGION', {
+    value: app.region,
+  });
+
   if (app.stage !== 'prod') {
     app.setDefaultRemovalPolicy('destroy');
   }
@@ -45,12 +55,26 @@ export function AppStack({ stack, app }: StackContext) {
       sk: 'string',
       gsi1pk: 'string',
       gsi1sk: 'string',
+      gsi2pk: 'string',
+      gsi2sk: 'string',
+      gsi3pk: 'string',
+      gsi3sk: 'string',
     },
     primaryIndex: { partitionKey: 'pk', sortKey: 'sk' },
     globalIndexes: {
       'gsi1pk-gsi1sk-index': {
         partitionKey: 'gsi1pk',
         sortKey: 'gsi1sk',
+        projection: 'all',
+      },
+      'gsi2pk-gsi2sk-index': {
+        partitionKey: 'gsi2pk',
+        sortKey: 'gsi2sk',
+        projection: 'all',
+      },
+      'gsi3pk-gsi3sk-index': {
+        partitionKey: 'gsi3pk',
+        sortKey: 'gsi3sk',
         projection: 'all',
       },
     },
@@ -171,7 +195,7 @@ export function AppStack({ stack, app }: StackContext) {
     defaults: {
       function: {
         timeout: app.local ? 100 : 10,
-        bind: [table],
+        bind: [table, REGION],
         permissions: [table],
       },
     },
@@ -228,6 +252,17 @@ export function AppStack({ stack, app }: StackContext) {
         'packages/functions/app/api/src/customers/create.handler',
       'PATCH /orgs/{orgId}/customers/{customerId}':
         'packages/functions/app/api/src/customers/update.handler',
+
+      'GET /orgs/{orgId}/visitors':
+        'packages/functions/app/api/src/visitors/list.handler',
+      'GET /orgs/{orgId}/visitors/{visitorId}':
+        'packages/functions/app/api/src/visitors/get.handler',
+      'DELETE /orgs/{orgId}/visitors/{visitorId}':
+        'packages/functions/app/api/src/visitors/delete.handler',
+      'POST /orgs/{orgId}/visitors/{visitorId}':
+        'packages/functions/app/api/src/visitors/create.handler',
+      'PATCH /orgs/{orgId}/visitors/{visitorId}':
+        'packages/functions/app/api/src/visitors/update.handler',
 
       'GET /orgs/{orgId}/settings':
         'packages/functions/app/api/src/customers/get.handler',

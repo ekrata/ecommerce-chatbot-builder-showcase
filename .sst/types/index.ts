@@ -4,6 +4,20 @@ declare module "sst/node/config" {
     APP: string;
     STAGE: string;
   }
+}import "sst/node/config";
+declare module "sst/node/config" {
+  export interface ParameterResources {
+    "IS_LOCAL": {
+      value: string;
+    }
+  }
+}import "sst/node/config";
+declare module "sst/node/config" {
+  export interface ParameterResources {
+    "REGION": {
+      value: string;
+    }
+  }
 }import "sst/node/table";
 declare module "sst/node/table" {
   export interface TableResources {
