@@ -3,6 +3,8 @@ import { ApiHandler } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
+import { DefaultTags } from '@/app/[locale]/dash/inbox/Chat.type';
+import { createRandomVisitedList } from '@/app/[locale]/dash/inbox/mocks.test';
 import {
   CreateOrg,
   CreateOperator,
@@ -76,6 +78,16 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 customerId,
                 email: faker.internet.email(),
                 orgId,
+                profilePicture: faker.image.people(),
+                ip: faker.internet.ipv4(),
+                locale: 'en-US',
+                timezone: faker.address.timeZone(),
+                userAgent: faker.internet.userAgent(),
+                online: faker.datatype.boolean(),
+                tags: '',
+                properties: {},
+                phone: faker.phone.number('501-###-###'),
+                createdAt: faker.date.between(twoHoursAgo, now),
               };
               await db.entities.customers.create(createCustomer).go();
               const conversations = await Promise.all(

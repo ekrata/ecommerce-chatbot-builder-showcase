@@ -47,9 +47,18 @@ export const Message = new Entity({
       required: true,
       readOnly: true,
     },
+    typing: {
+      type: 'boolean',
+      default: false,
+    },
     sentAt: {
       type: 'number',
       required: true,
+      readOnly: true,
+      default: Date.now(),
+    },
+    seenAt: {
+      type: 'number',
       readOnly: true,
       default: Date.now(),
     },

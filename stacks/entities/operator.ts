@@ -13,6 +13,7 @@ export const permissionTier = [
   'operator',
 ] as const;
 
+export const presence = 
 const defaultPermission = 'block_permissions';
 
 export const Operator = new Entity({
@@ -33,8 +34,15 @@ export const Operator = new Entity({
       required: true,
       default: () => uuidv4(),
     },
+    profilePicture: {
+      type: 'string',
+    },
     departments: {
       type: 'string',
+    },
+    online: {
+      type: 'boolean',
+      default: false,
     },
     permissionTier: {
       type: permissionTier,

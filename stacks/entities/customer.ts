@@ -60,22 +60,15 @@ export const Customer = new Entity({
     tags: {
       type: 'string',
     },
+    online: {
+      type: 'boolean',
+      default: false,
+    },
     properties: {
       type: 'map',
       properties: {
         key: {
           type: 'string',
-        },
-        value: {
-          type: 'string',
-        },
-      },
-    },
-    visitedPages: {
-      type: 'map',
-      properties: {
-        datetimeAtVist: {
-          type: 'number',
         },
         value: {
           type: 'string',
