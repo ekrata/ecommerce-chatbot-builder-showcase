@@ -22,6 +22,10 @@ const config: StorybookConfig = {
       config.resolve.alias = {
         ...config?.resolve?.alias,
       };
+    config.experiments = {
+      ...config.experiments,
+      topLevelAwait: true,
+    };
     return config;
   },
 };

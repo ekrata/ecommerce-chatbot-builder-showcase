@@ -6,7 +6,9 @@
     }
   },
   "chat-widget": {
-    "start-chat-cta": "Chat with us 👋"
+    "start-chat-cta": "Chat with us 👋",
+    "chat-with": "Chat with",
+    "we-reply": "We reply immediately"
   },
   "navbar": {
     "products": {

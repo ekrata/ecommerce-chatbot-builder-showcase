@@ -1,26 +1,31 @@
+/** @jest-environment setup-polly-jest/jest-environment-node */
 import { expect } from '@storybook/jest';
-import type { Meta, StoryObj } from '@storybook/react';
 import { userEvent, within } from '@storybook/testing-library';
-import { ComponentProps } from 'react';
-import { Polly } from '@pollyjs/core';
-import FetchAdapter from '@pollyjs/adapter-fetch';
-import LocalStoragePersister from '@pollyjs/persister-local-storage';
-import { StartChatButton } from './StartChatButton';
-import { Api } from 'sst/node/api';
+import { EntityItem } from 'electrodb';
+import { Message } from '@/entities/message';
+import { CreateMessage } from '@/entities/entities';
+import { rest } from 'msw';
+import { StoryObj, Meta } from '@storybook/react';
+import { ChatForm } from './ChatForm';
+import { useCustomerChatStore } from '../(actions)/useCustomerChatStore';
+import {
+  createRandomConversation,
+  createRandomCustomer,
+  createRandomMessages,
+  createRandomOperator,
+  createRandomOrg,
+} from '../../dash/inbox/mocks.test';
 
-Polly.register(FetchAdapter);
-Polly.register(LocalStoragePersister);
-
-const meta: Meta<typeof StartChatButton> = {
+const meta: Meta<typeof ChatForm> = {
   /* 👇 The title prop is optional.
    * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
    * to learn how to generate automatic titles
    */
-  component: StartChatButton,
+  component: ChatForm,
 };
 
 export default meta;
-type Story = StoryObj<typeof StartChatButton>;
+type Story = StoryObj<typeof ChatForm>;
 type Canvas = ReturnType<typeof within>;
 
 const checkRender = (canvas: Canvas) => {
@@ -29,37 +34,85 @@ const checkRender = (canvas: Canvas) => {
 
 const renderCheck = 'Render check';
 
+const messageCount = 20;
 // Initial(No Data)
-export const DefaultInfo: Story = {
-  render: (args: ComponentProps<typeof StartChatButton>) => (
-    <StartChatButton {...args} />
-  ),
+export const Default: Story = {
+  render: (args: { backgroundColor: string }) => {
+    const org = createRandomOrg();
+    const customer = createRandomCustomer(org.orgId);
+    const operator = createRandomOperator(org.orgId);
+    const conversation = createRandomConversation(
+      'open',
+      org.orgId,
+      operator.operatorId,
+      customer.customerId
+    );
+    const messages = createRandomMessages(
+      [
+        org.orgId,
+        conversation.conversationId,
+        operator.operatorId,
+        customer.customerId,
+      ],
+      messageCount
+    );
+    const initialStoreState = useCustomerChatStore.getState();
+    useCustomerChatStore.setState({
+      org,
+      customer,
+      operator,
+      conversation,
+      messages,
+    });
+
+    return <ChatForm {...args} />;
+  },
   args: {
-    enableButtonLabel: true,
-    widgetPosition: 'right',
-    backgroundColor:
-      'bg-gradient-to-r from-green-300 via-blue-500 to-purple-600',
+    backgroundColor: 'bg-gradient-to-r from-sky-300 to-cyan-200',
   },
   play: async ({ canvasElement, step }) => {
-        const polly = new Polly('Simple Example', {
-          adapters: ['fetch'], // Hook into `fetch`
-          persister: 'local-storage', // Read/write to/from local-storage
-          logLevel: 'info', // Log requests to console
-        });
-
-        const response = await fetch(`${Api.appApi.url}/conversations`, 'GET')
-        const post = await response.json();
-
-        expect(response.status).to.equal(200);
-        expect(post.id).to.equal(1);
-
-        await polly.stop();
-      });
-    });
     const canvas = within(canvasElement);
     await step(renderCheck, () => checkRender(canvas));
-    await step('Interact with buttons', async () => {
-      await userEvent.click(canvas.getByTestId('start-chat-btn'));
+    await step('Error msg', async () => {
+      // await userEvent.click(canvas.getByTestId('msg-input'));
+      await userEvent.click(canvas.getByTestId('msg-submit'));
+      await canvas.getByTestId('msg-error');
     });
+    await step('Customer sends a new message', async () => {
+      await userEvent.click(canvas.getByTestId('msg-input'));
+      const msg = 'test message';
+      await userEvent.keyboard(msg);
+      await userEvent.click(canvas.getByTestId('msg-submit'));
+      // no error
+      expect(canvas.getByTestId('msg-error')).toBe(undefined);
+      const { messages } = useCustomerChatStore.getState();
+      expect(messages).toHaveLength(messageCount + 1);
+      expect(messages?.slice(-1)[0].content).toEqual(msg);
+    });
+  },
+};
+
+Default.parameters = {
+  msw: {
+    handlers: [
+      // rest.all(`*`, (req, res, ctx) => {
+      //   console.log('hiihihii');
+      // }),
+      rest.post(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations/:conversationId/messages/:messageId`,
+        async (req, res, ctx) => {
+          const { orgId, conversationId, messageId } = req.params;
+          return res(
+            ctx.status(200),
+            ctx.json({
+              ...((await req?.json()) as CreateMessage),
+              conversationId,
+              orgId,
+              messageId,
+            } as EntityItem<typeof Message>)
+          );
+        }
+      ),
+    ],
   },
 };

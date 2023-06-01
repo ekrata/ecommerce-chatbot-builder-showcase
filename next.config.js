@@ -6,7 +6,7 @@ const withNextIntl = require('next-intl/plugin')(
 
 module.exports = withNextIntl({
   // Other Next.js configuration ...
-  experimental: { appDir: true, typedRoutes: true },
+  experimental: { appDir: true, typedRoutes: true, topLevelAwait: true },
 });
 
 // Inected Content via Sentry Wizard Below

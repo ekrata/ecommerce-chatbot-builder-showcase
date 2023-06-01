@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { EntityItem } from 'electrodb';
 import { Conversation } from '@/entities/conversation';
 import chatSkeleton from '../../ChatSkeleton';
-import { ChatLog } from '../../ChatLog';
+import { ChatLog } from '../../OperatorChatLog';
 
 export const CurrentChatPanel: FC = (
   conversation: EntityItem<typeof Conversation>

@@ -294,11 +294,18 @@ export function AppStack({ stack, app }: StackContext) {
   //   },
   // });
 
+  console.log(api.url);
+  process.env.NEXT_PUBLIC_APP_API_URL = api.url;
+
   const site = new NextjsSite(stack, 'site', {
     customDomain: {
       domainName: stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`,
     },
     bind: [api, wsApi],
+    environment: {
+      NEXT_PUBLIC_APP_API_URL: api.url,
+      NEXT_PUBLIC_APP_WS_URL: wsApi.url,
+    },
   });
 
   // const auth = new Auth(stack, "auth", {

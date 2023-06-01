@@ -1,7 +1,7 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
-export const senderType = ['operator', 'customer'] as const;
+export const senderType = ['operator', 'customer', 'context'] as const;
 export type SenderType = (typeof senderType)[number];
 
 export const Message = new Entity({
@@ -47,14 +47,8 @@ export const Message = new Entity({
       required: true,
       readOnly: true,
     },
-    typing: {
-      type: 'boolean',
-      default: false,
-    },
     sentAt: {
       type: 'number',
-      required: true,
-      readOnly: true,
       default: Date.now(),
     },
     seenAt: {

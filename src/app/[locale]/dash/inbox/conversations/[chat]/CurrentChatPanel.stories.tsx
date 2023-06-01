@@ -4,7 +4,7 @@ import { within } from '@storybook/testing-library';
 import { action } from '@storybook/addon-actions';
 import { ChatListPanel } from '../../ChatListPanel';
 import { createRandomChat, createRandomMessage } from '../../mocks.test';
-import { ChatLog } from '../../ChatLog';
+import { ChatLog } from '../../OperatorChatLog';
 import { CurrentChatPanel } from './CurrentChatPanel';
 
 const meta: Meta<typeof ChatLog> = {

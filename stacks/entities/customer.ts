@@ -48,6 +48,9 @@ export const Customer = new Entity({
       required: true,
       default: 'en',
     },
+    timezone: {
+      type: 'string',
+    },
     phone: {
       type: 'string',
     },
@@ -57,8 +60,20 @@ export const Customer = new Entity({
     userAgent: {
       type: 'string',
     },
+    visitedPages: {
+      type: 'map',
+      properties: {
+        datetimeAtVist: {
+          type: 'number',
+        },
+        value: {
+          type: 'string',
+        },
+      },
+    },
     tags: {
-      type: 'string',
+      type: 'set',
+      items: 'string',
     },
     online: {
       type: 'boolean',
@@ -74,9 +89,6 @@ export const Customer = new Entity({
           type: 'string',
         },
       },
-    },
-    timezone: {
-      type: 'string',
     },
     notes: {
       type: 'string',

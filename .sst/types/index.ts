@@ -25,11 +25,12 @@ declare module "sst/node/table" {
       tableName: string;
     }
   }
-}import "sst/node/api";
-declare module "sst/node/api" {
+}import "sst/node/websocket-api";
+declare module "sst/node/websocket-api" {
   export interface WebSocketApiResources {
     "appWs": {
       url: string;
+      httpsUrl: string;
     }
   }
 }import "sst/node/event-bus";

@@ -87,7 +87,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 tags: '',
                 properties: {},
                 phone: faker.phone.number('501-###-###'),
-                createdAt: faker.date.between(twoHoursAgo, now),
               };
               await db.entities.customers.create(createCustomer).go();
               const conversations = await Promise.all(

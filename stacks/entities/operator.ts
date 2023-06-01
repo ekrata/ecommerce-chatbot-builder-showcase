@@ -13,7 +13,6 @@ export const permissionTier = [
   'operator',
 ] as const;
 
-export const presence = 
 const defaultPermission = 'block_permissions';
 
 export const Operator = new Entity({
@@ -47,6 +46,29 @@ export const Operator = new Entity({
     permissionTier: {
       type: permissionTier,
       default: 'operator',
+    },
+    orgId: {
+      type: 'string',
+      readOnly: true,
+      required: true,
+    },
+    name: {
+      type: 'string',
+    },
+    email: {
+      type: 'string',
+    },
+    createdAt: {
+      type: 'number',
+      readOnly: true,
+      default: Date.now(),
+    },
+    updatedAt: {
+      type: 'number',
+      readOnly: true,
+      watch: '*',
+      default: Date.now(),
+      set: () => Date.now(),
     },
     permissions: {
       type: 'map',
@@ -107,29 +129,6 @@ export const Operator = new Entity({
           },
         },
       },
-    },
-    orgId: {
-      type: 'string',
-      readOnly: true,
-      required: true,
-    },
-    name: {
-      type: 'string',
-    },
-    email: {
-      type: 'string',
-    },
-    createdAt: {
-      type: 'number',
-      readOnly: true,
-      default: Date.now(),
-    },
-    updatedAt: {
-      type: 'number',
-      readOnly: true,
-      watch: '*',
-      default: Date.now(),
-      set: () => Date.now(),
     },
   },
   indexes: {

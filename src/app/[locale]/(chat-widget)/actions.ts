@@ -1,12 +1,11 @@
-('use server');
-
 import { ConversationType } from '@/entities/conversation';
 import {
   CreateConversation,
   CreateCustomer,
   CreateMessage,
 } from '@/entities/entities';
-import { SenderType } from '@/entities/message';
+import { Message, SenderType } from '@/entities/message';
+import { EntityItem } from 'electrodb';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -60,7 +59,7 @@ export const createConversation = async (
     channel: 'website',
   };
   const res = await fetch(
-    `${Api.appApi.url}/orgs/${orgId}/conversations/${conversationId}`,
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/conversations/${conversationId}`,
     { method: 'POST', body: JSON.stringify(conversation) }
   );
   if (!res.ok) {
@@ -70,15 +69,14 @@ export const createConversation = async (
   return res.json();
 };
 
-export const createMessage = async (
+export const sendMessage = async (
   orgId: string,
   conversationId: string,
-  senderId: string,
   operatorId: string,
   customerId: string,
   sender: SenderType,
   content: string
-) => {
+): Promise<EntityItem<typeof Message>> => {
   const messageId = uuidv4();
   const message: CreateMessage = {
     conversationId,
@@ -86,12 +84,13 @@ export const createMessage = async (
     customerId,
     operatorId,
     orgId,
+    sentAt: Date.now(),
     sender,
     content,
   };
 
   const res = await fetch(
-    `${Api.appApi.url}/orgs/${orgId}/conversations/${conversationId}/messages/${messageId}`,
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/conversations/${conversationId}/messages/${messageId}`,
     { method: 'POST', body: JSON.stringify(message) }
   );
   if (!res.ok) {
