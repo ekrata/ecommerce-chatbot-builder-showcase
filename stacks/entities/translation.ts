@@ -1,14 +1,9 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
-export const widgetPosition = ['left', 'right'] as const;
-export type WidgetPosition = (typeof widgetPosition)[number];
-
-export const showOnDevices = ['both', 'only mobile', 'only desktop'];
-
-export const Configuration = new Entity({
+export const Translation = new Entity({
   model: {
-    entity: 'org',
+    entity: 'translation',
     version: '1',
     service: 'appDb',
   },

@@ -24,12 +24,10 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 
   socket?.addEventListener('sendNewMessageToCustomer', (event) => {
     const { message } = JSON.parse(event?.data);
-    console.log(message);
     useCustomerChatStore.setState({
       ...useCustomerChatStore.getState(),
       messages: [...(messages ?? []), message],
     });
-    console.log(useCustomerChatStore.getState().messages.length);
   });
 
   socket?.addEventListener('sendNewConversationToCustomer', (event) => {

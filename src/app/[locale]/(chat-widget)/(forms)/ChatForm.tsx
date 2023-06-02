@@ -76,12 +76,8 @@ type Inputs = {
   msg: string;
 };
 
-export const ChatForm: FC<
-  PropsWithChildren<{
-    backgroundColor: string;
-  }>
-> = ({ backgroundColor, children }) => {
-  const { conversation, customer, operator, messages } = useCustomerChatStore();
+export const ChatForm: FC = () => {
+  const { conversation, customer, operator, messages, configuration } = useCustomerChatStore();
   const t = useTranslations('chat-widget');
   const {
     register,
@@ -104,10 +100,13 @@ export const ChatForm: FC<
     });
   };
 
+  console.log(configuration?.channels?.liveChat?.appearance?.widgetAppearance)
+  const {backgroundColor, darkBackgroundColor} = {...configuration?.channels?.liveChat?.appearance?.widgetAppearance}
+  console.log(darkBackgroundColor)
   return (
     <div className="flex flex-col font-sans rounded-lg max-w-xl">
       <div
-        className={`flex place-items-center justify-between p-2 px-6 gap-x-2 ${backgroundColor} border-b-2 border-gray-300 shadow-2xl`}
+        className={`flex place-items-center justify-between p-2 px-6 gap-x-2 ${backgroundColor} dark:${darkBackgroundColor} border-b-2 border-gray-300 shadow-2xl`} 
       >
         <div className="avatar online">
           <div className="w-16 rounded-full ring-2 shadow-2xl">
@@ -168,7 +167,7 @@ export const ChatForm: FC<
               )}
             </div>
             <button
-              className={`btn btn-square text-xl ${backgroundColor} border-0`}
+              className={`btn btn-square text-xl ${backgroundColor} dark:${darkBackgroundColor} border-0`}
               data-testid="msg-send"
               type="submit"
             >

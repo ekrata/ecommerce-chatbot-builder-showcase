@@ -27,12 +27,16 @@ module.exports = {
     },
   },
 
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'vitest', 'jest', 'storybook', 'sonarjs', 'prettier'],
   extends: [
     'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',
+    'plugin:vitest/recommended',
     'airbnb',
+    'jest',
+    'vitest',
     'prettier',
+    'plugin:jest/recommended',
     'plugin:storybook/recommended',
     'plugin:sonarjs/recommended',
     'plugin:security/recommended',

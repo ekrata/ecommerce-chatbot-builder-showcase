@@ -9,6 +9,7 @@ import { StoryObj, Meta } from '@storybook/react';
 import { ChatForm } from './ChatForm';
 import { useCustomerChatStore } from '../(actions)/useCustomerChatStore';
 import {
+  createDefaultConfiguration,
   createRandomConversation,
   createRandomCustomer,
   createRandomMessages,
@@ -37,7 +38,7 @@ const renderCheck = 'Render check';
 const messageCount = 20;
 // Initial(No Data)
 export const Default: Story = {
-  render: (args: { backgroundColor: string }) => {
+  render: () => {
     const org = createRandomOrg();
     const customer = createRandomCustomer(org.orgId);
     const operator = createRandomOperator(org.orgId);
@@ -56,19 +57,22 @@ export const Default: Story = {
       ],
       messageCount
     );
-    const initialStoreState = useCustomerChatStore.getState();
+    const configuration = createDefaultConfiguration(org.orgId)
+    console.log(configuration)
     useCustomerChatStore.setState({
       org,
       customer,
       operator,
       conversation,
+      configuration,
       messages,
     });
 
-    return <ChatForm {...args} />;
+    return <ChatForm  />;
   },
   args: {
-    backgroundColor: 'bg-gradient-to-r from-sky-300 to-cyan-200',
+    // backgroundColor: 'bg-gradient-to-r from-sky-300 to-cyan-200',
+    // darkBackgroundColor: 'bg-gradient-to-r from-sky-600 to-cyan-400',
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

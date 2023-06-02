@@ -231,6 +231,23 @@ export function AppStack({ stack, app }: StackContext) {
       'PATCH /orgs/{orgId}':
         'packages/functions/app/api/src/orgs/update.handler',
 
+
+      'GET /orgs/{orgId}/configuration': 'packages/functions/app/api/src/configuration/get.handler',
+      'DELETE /orgs/{orgId}/configuration':
+        'packages/functions/app/api/src/configuration/delete.handler',
+      'POST /orgs/{orgId}/configuration':
+        'packages/functions/app/api/src/configuration/create.handler',
+      'PATCH /orgs/{orgId}/configuration':
+        'packages/functions/app/api/src/configuration/update.handler',
+
+      'GET /orgs/{orgId}/translation/{locale}': 'packages/functions/app/api/src/translation/get.handler',
+      'DELETE /orgs/{orgId}/translation/{locale}':
+        'packages/functions/app/api/src/translation/delete.handler',
+      'POST /orgs/{orgId}/translation/{locale}':
+        'packages/functions/app/api/src/translation/create.handler',
+      'PATCH /orgs/{orgId}/translation/{locale}':
+        'packages/functions/app/api/src/translation/update.handler',
+
       'GET /orgs/{orgId}/operators':
         'packages/functions/app/api/src/operators/list.handler',
       'GET /orgs/{orgId}/operators/{operatorId}':

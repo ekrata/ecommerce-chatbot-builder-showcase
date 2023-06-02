@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Org, orgPlanTier } from '@/entities/org';
 import { Operator } from '@/entities/operator';
 import { DefaultTags } from './Chat.type';
+import { Configuration } from '@/entities/configuration';
 
 export const createRandomOrg = (): EntityItem<typeof Org> => {
   const twoHoursAgo = new Date();
@@ -83,6 +84,17 @@ export const createRandomMessage = (
     content: faker.lorem.paragraph(),
   };
 };
+
+
+export const createDefaultConfiguration = (orgId: string): EntityItem<typeof Configuration> => {
+  const now = new Date();
+  return {
+    orgId,
+    updatedAt: now.getTime(),
+    createdAt: now.getTime(),
+  }
+
+}
 
 export const createRandomMessages = (
   params: Parameters<typeof createRandomMessage>,
