@@ -1,51 +1,54 @@
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
-import { getWs } from 'packages/functions/app/getWs';
+import { getWsUrl } from '@/app/getWsUrl';
+import { GiConsoleController } from 'react-icons/gi';
 import { AppSocketProvider } from '@/components/AppSocketProvider';
 import { useCustomerChatStore } from './(actions)/useCustomerChatStore';
 import { StartChatButton } from './StartChatButton';
 
-export const ChatWidget: FC = ({ children }: PropsWithChildren) => {
-  const { org, visitor, configuration, customer, messages } =
-    useCustomerChatStore(
-      (state) => ({
-        org: state.org,
-        visitor: state.visitor,
-        customer: state.customer,
-        configuration: state.configuration,
-        chatWindow: 'minimized',
-      }),
-      shallow
-    );
+export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
+  children,
+  mockWsUrl,
+}) => {
+  const { org, configuration, customer, messages } = useCustomerChatStore();
 
-  const socket = useMemo(
+  const socket: WebSocket | undefined = useMemo(
     () =>
       org?.orgId && customer?.customerId
-        ? getWs(org?.orgId, customer?.customerId, 'customer')
-            .on('sendNewMessageToCustomer', (event) => {
-              useCustomerChatStore.setState({
-                ...useCustomerChatStore.getState(),
-                messages: [...(messages ?? []), event.msg],
-              });
-            })
-            .on('sendNewConversationToCustomer', (event) => {
-              useCustomerChatStore.setState({
-                ...useCustomerChatStore.getState(),
-                conversation: event.conversation,
-                widgetState: 'chat',
-              });
-            })
-            .on('sendUpdateConversationToCustomer', (event) => {
-              const { conversation } = event;
-              useCustomerChatStore.setState({
-                ...useCustomerChatStore.getState(),
-                conversation: event.conversation,
-                widgetState: 'chat',
-              });
-            })
+        ? new WebSocket(
+            mockWsUrl ?? getWsUrl(org?.orgId, customer?.customerId, 'customer')
+          )
         : undefined,
     [org, customer]
   );
+
+  socket?.addEventListener('sendNewMessageToCustomer', (event) => {
+    const { message } = JSON.parse(event?.data);
+    console.log(message);
+    useCustomerChatStore.setState({
+      ...useCustomerChatStore.getState(),
+      messages: [...(messages ?? []), message],
+    });
+    console.log(useCustomerChatStore.getState().messages.length);
+  });
+
+  socket?.addEventListener('sendNewConversationToCustomer', (event) => {
+    const { conversation } = JSON.parse(event?.data);
+    useCustomerChatStore.setState({
+      ...useCustomerChatStore.getState(),
+      conversation,
+      widgetState: 'chat',
+    });
+  });
+
+  socket?.addEventListener('sendNewConversationToCustomer', (event) => {
+    const { conversation } = useCustomerChatStore.getState();
+    useCustomerChatStore.setState({
+      ...useCustomerChatStore.getState(),
+      conversation: { ...conversation, ...event?.data?.conversation },
+      widgetState: 'chat',
+    });
+  });
 
   return (
     <>

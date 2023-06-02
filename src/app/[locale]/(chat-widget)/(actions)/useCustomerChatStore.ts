@@ -21,7 +21,7 @@ export type WidgetState =
   | 'minimized'
   | 'home';
 
-interface ChatBoxState {
+interface CustomerChatStoreState {
   org?: EntityItem<typeof Org>;
   visitor?: EntityItem<typeof Visitor>;
   customer?: EntityItem<typeof Customer>;
@@ -32,9 +32,9 @@ interface ChatBoxState {
   widgetState: WidgetState;
 }
 
-export const useCustomerChatStore = create<ChatBoxState>()(
+export const useCustomerChatStore = create<CustomerChatStoreState>()(
   persist((set, get) => ({ widgetState: 'minimized' }), {
-    name: 'chatbox-store', // unique name
-    // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+    name: 'customerChatStore', // unique name
+    storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
   })
 );

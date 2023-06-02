@@ -17,8 +17,7 @@
     "run-test-app-storybook": "npm-run-all -p storybook test-storybook",
     "run-test-app-api": "npm-run-all -p sst-dev test-app-api",
     "run-test-app-ws": "npm-run-all -p sst-dev test-app-ws",
-    "test": "npm-run-all -p run-test-app-api",
-    "test:ci": "jest --coverage",
+    "test:fe": "jest --coverage",
     "test:single": "jest --watch --collectCoverage=false",
     "prepare": "husky install"
   },
@@ -48,6 +47,7 @@
     "eslint-config-next": "13.3.4",
     "http-server": "^14.1.1",
     "locale-code": "^2.0.2",
+    "mock-socket": "^9.2.1",
     "next": "13.3.4",
     "next-intl": "2.14.0-beta.2",
     "postcss": "8.4.23",

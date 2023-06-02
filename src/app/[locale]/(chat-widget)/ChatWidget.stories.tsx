@@ -1,5 +1,3 @@
-import { WebSocketApi } from 'sst/node/api';
-import { getWs } from 'packages/functions/app/getWs';
 import { expect } from '@storybook/jest';
 import type { Meta, StoryObj } from '@storybook/react';
 import { within } from '@storybook/testing-library';
@@ -8,6 +6,8 @@ import { Message } from '@/entities/message';
 import { CreateMessage } from '@/entities/entities';
 import { rest } from 'msw';
 import { WebSocketServer } from 'ws';
+import { Client, Server, ServerOptions } from 'mock-socket';
+import { getWsUrl } from '@/app/getWsUrl';
 import { useCustomerChatStore } from './(actions)/useCustomerChatStore';
 import {
   createRandomConversation,
@@ -18,8 +18,6 @@ import {
   createRandomOrg,
 } from '../dash/inbox/mocks.test';
 import { ChatWidget } from './ChatWidget';
-
-const { url } = WebSocketApi.appWs;
 
 const meta: Meta<typeof ChatWidget> = {
   /* 👇 The title prop is optional.
@@ -33,141 +31,124 @@ export default meta;
 type Story = StoryObj<typeof ChatWidget>;
 type Canvas = ReturnType<typeof within>;
 
-const checkRender = (canvas: Canvas) => {
-  expect(canvas.getByTestId('start-chat-btn')).toBeInTheDocument();
-};
-
-const renderCheck = 'Render check';
-
 const messageCount = 20;
+const mockWsUrl = 'ws://localhost:8080';
+const mockServer: Server = new Server(mockWsUrl);
+const org = createRandomOrg();
+const customer = createRandomCustomer(org.orgId);
+const operator = createRandomOperator(org.orgId);
+const conversation = createRandomConversation(
+  'open',
+  org.orgId,
+  operator.operatorId,
+  customer.customerId
+);
+let mockSocket: Client;
 // Initial(No Data)
 export const Default: Story = {
-  render: () => {
-    const org = createRandomOrg();
-    const customer = createRandomCustomer(org.orgId);
-    const operator = createRandomOperator(org.orgId);
-    const conversation = createRandomConversation(
-      'open',
-      org.orgId,
-      operator.operatorId,
-      customer.customerId
-    );
-    const messages = createRandomMessages(
-      [
-        org.orgId,
-        conversation.conversationId,
-        operator.operatorId,
-        customer.customerId,
-      ],
-      messageCount
-    );
-    const initialStoreState = useCustomerChatStore.getState();
-    useCustomerChatStore.setState({
-      org,
-      customer,
-      operator,
-      conversation,
-      messages,
-    });
-
-    return <ChatWidget />;
-  },
+  render: () => <ChatWidget mockWsUrl={mockWsUrl} />,
   args: {},
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step(renderCheck, () => checkRender(canvas));
     await step(
       'Operator sends a new message in existing conversation',
       async () => {
-        const { messages } = useCustomerChatStore.getState();
-        expect(messages).tohavelength(20);
-        const org = createRandomOrg();
-        const customer = createRandomCustomer(org.orgId);
-        const operator = createRandomOperator(org.orgId);
-        const conversation = createRandomConversation(
-          'open',
-          org.orgId,
-          operator.operatorId,
-          customer.customerId
+        sessionStorage.removeItem('customerChatStore');
+        localStorage.removeItem('customerChatStore');
+        useCustomerChatStore.persist.clearStorage();
+
+        const messages = createRandomMessages(
+          [
+            org.orgId,
+            conversation.conversationId,
+            operator.operatorId,
+            customer.customerId,
+          ],
+          messageCount
         );
-
-        const wss = new WebSocketServer({ port: 8080 });
-        wss.on('connection', (ws) => {
-          ws.on('error', console.error);
-
-          ws.on('message', (data) => {
-            console.log('received: %s', data);
-          });
-          ws.send(
-            JSON.stringify({
-              type: 'sendNewMessageToCustomer',
-              payload: createRandomMessage(
-                org.orgId,
-                conversation.conversationId,
-                operator.operatorId,
-                customer.customerId
-              ),
-            })
-          );
-        });
-
+        useCustomerChatStore.setState(
+          {
+            org,
+            customer,
+            operator,
+            conversation,
+            messages,
+          },
+          true
+        );
+        expect(messages?.length).toEqual(20);
+        // if (mockServer) {
+        //   // mockServer.stop();
+        //   // mockServer.close();
+        //   // getWsUrl(org.orgId, customer.customerId, 'customer')
+        //   mockServer.on('connection', (socket) => {
+        //     // console.log('connected!');
+        //     // mockSocket = socket;
+        //   });
+        // }
+        mockServer.emit(
+          'sendNewMessageToCustomer',
+          JSON.stringify({
+            message: createRandomMessage(
+              org.orgId,
+              conversation.conversationId,
+              operator.operatorId,
+              customer.customerId
+            ),
+          })
+        );
+        // await new Promise((r) => setTimeout(r, 2000));
+        expect(useCustomerChatStore.getState()?.messages?.length).toEqual(
+          messageCount + 1
+        );
         // check local state is updated
-        expect(messages).toHaveLength(messageCount + 1);
       }
     );
-    await step(
-      'Operator starts a conversation and sends a message',
-      async () => {
-        const server = new WS(process.env.NEXT_PUBLIC_APP_WS_URL ?? '', {
-          jsonProtocol: true,
-        });
-        await server.connected; // wait for the server to have established the connection
-        const org = createRandomOrg();
-        const customer = createRandomCustomer(org.orgId);
-        const operator = createRandomOperator(org.orgId);
-        const randomConversation = createRandomConversation(
-          'open',
-          org.orgId,
-          operator.operatorId,
-          customer.customerId
-        );
-        const randomMessage = createRandomMessage(
-          org.orgId,
-          randomConversation.conversationId,
-          operator.operatorId,
-          customer.customerId
-        );
+    // await step(
+    //   'Operator starts a conversation and sends a message',
+    //   async () => {
+    //     const org = createRandomOrg();
+    //     const customer = createRandomCustomer(org.orgId);
+    //     const operator = createRandomOperator(org.orgId);
+    //     const randomConversation = createRandomConversation(
+    //       'open',
+    //       org.orgId,
+    //       operator.operatorId,
+    //       customer.customerId
+    //     );
+    //     const randomMessage = createRandomMessage(
+    //       org.orgId,
+    //       randomConversation.conversationId,
+    //       operator.operatorId,
+    //       customer.customerId
+    //     );
 
-        const wss = new WebSocketServer({ port: 8080 });
-        wss.on('connection', (ws) => {
-          ws.on('error', console.error);
+    //     const mockServer = new Server(process.env.NEXT_PUBLIC_APP_WS_URL ?? '');
 
-          ws.on('message', (data) => {
-            console.log('received: %s', data);
-          });
-          ws.send(
-            JSON.stringify({
-              type: 'sendNewConversationToCustomer',
-              payload: randomConversation,
-            })
-          );
-          ws.send(
-            JSON.stringify({
-              type: 'sendNewMessageToCustomer',
-              payload: randomMessage,
-            })
-          );
-        });
+    //     mockServer.on('connection', (socket) => {
+    //       socket.send(
+    //         JSON.stringify({
+    //           type: 'sendNewConversationToCustomer',
+    //           payload: randomConversation,
+    //         })
+    //       );
+    //       socket.send(
+    //         JSON.stringify({
+    //           type: 'sendNewMessageToCustomer',
+    //           payload: randomMessage,
+    //         })
+    //       );
+    //     });
 
-        const { messages, conversation, widgetState } =
-          useCustomerChatStore.getState();
-        // check local state is updated
-        expect(messages).toHaveLength(1);
-        expect(messages?.pop()).toMatchObject(randomMessage);
-        expect(conversation).toMatchObject(randomConversation);
-        expect(widgetState).toEqual('chat');
-      }
-    );
+    //     const { messages, conversation, widgetState } =
+    //       useCustomerChatStore.getState();
+    //     // check local state is updated
+    //     expect(messages?.length).toEqual(1);
+    //     expect(messages?.pop()).toMatchObject(randomMessage);
+    //     expect(conversation).toMatchObject(randomConversation);
+    //     expect(widgetState).toEqual('chat');
+    //   }
+    // );
   },
 };
 

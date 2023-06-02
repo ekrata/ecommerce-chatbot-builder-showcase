@@ -1,5 +1,5 @@
 import { SenderType } from '@/entities/message';
-import { WebSocketApi } from 'sst/node/api';
+import { WebSocketApi } from 'sst/node/websocket-api';
 import WebSocket from 'ws';
 
 export const getWs = (

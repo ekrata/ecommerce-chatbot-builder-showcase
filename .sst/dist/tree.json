@@ -21952,6 +21952,22 @@
                                     "ApiEndpoint"
                                   ]
                                 },
+                                "NEXT_PUBLIC_APP_WS_URL": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "wss://",
+                                      {
+                                        "Ref": "appWsApi6A784EA4"
+                                      },
+                                      ".execute-api.us-east-1.",
+                                      {
+                                        "Ref": "AWS::URLSuffix"
+                                      },
+                                      "/local"
+                                    ]
+                                  ]
+                                },
                                 "SST_APP": "crow",
                                 "SST_STAGE": "local",
                                 "SST_SSM_PREFIX": "/sst/crow/local/",
