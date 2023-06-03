@@ -1,7 +1,10 @@
 import { ApiHandler, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../db';
+import { getAppDb } from '../db';
+import { Config } from 'sst/node/config';
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName)
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -13,20 +16,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      // await appDb(Table.app.tableName).transaction
-      //   .write(({ orgs, conversations, messages, operators, customers }) => [
-      //    conversations
-      //       .delete({orgId})
-      //       .commit({ response: 'all_old' }),
-
-      //     entity2
-      //       .update({ prop1: 'value1', prop2: 'value2' })
-      //       .set({ prop3: 'value3' })
-      //       .commit({ response: 'all_old' }),
-      //   ])
-      //   .go();
-      const data = await appDb(Table.app.tableName)
-        .entities.orgs.remove({ orgId })
+      const data = await appDb
+        .entities.configurations.remove({ orgId })
         .go();
       return {
         statusCode: 200,

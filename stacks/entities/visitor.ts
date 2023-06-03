@@ -89,16 +89,5 @@ export const Visitor = new Entity({
         composite: [],
       },
     },
-    byCustomerId: {
-      index: 'gsi2pk-gsi2sk-index',
-      pk: {
-        field: 'gsi2pk',
-        composite: ['orgId, customerId'],
-      },
-      sk: {
-        field: 'gsi2sk',
-        composite: ['createdAt'],
-      },
-    },
   },
 });

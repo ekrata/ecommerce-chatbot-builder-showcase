@@ -21,7 +21,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-deploy-role-206508349906-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-cfn-exec-role-206508349906-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/de6999df5ec60c744250013c53a9f16efbe2d20cc039659fad2cadff9b15db40.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/c1d448d833c5385cc77b6ada55675ec878f7bc0fc4c682314aeb925debb3423a.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -38,6 +38,28 @@
       ],
       "metadata": {
         "/local-crow-AppStack": [
+          {
+            "type": "aws:cdk:info",
+            "data": "Number of resources: 442 is approaching allowed maximum of 500",
+            "trace": [
+              "Annotations.addMessage (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1071)",
+              "Annotations.addInfo (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:586)",
+              "EmptyStack._synthesizeTemplate (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/stack.js:1:12888)",
+              "DefaultStackSynthesizer.synthesizeTemplate (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/stack-synthesizer.js:1:1610)",
+              "DefaultStackSynthesizer.synthesize (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/default-synthesizer.js:1:6086)",
+              "/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:3375",
+              "visit (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:4:368)",
+              "visit (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:4:330)",
+              "synthesizeTree (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:3219)",
+              "synthesize (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1083)",
+              "App.synth (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/stage.js:1:2052)",
+              "Module.synth (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/stacks/synth.js:56:30)",
+              "async build (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/cli/commands/dev.js:136:34)",
+              "async file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/cli/commands/dev.js:238:9",
+              "async Promise.all (index 9)",
+              "async Object.handler (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/cli/commands/dev.js:292:5)"
+            ]
+          },
           {
             "type": "aws:cdk:stack-tags",
             "data": [
@@ -1811,6 +1833,342 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "appApiRoutePATCHorgsorgIdE2DC2F0B"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--configuration/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdconfigurationServiceRoleB253DC6F"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--configuration/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdconfigurationServiceRoleDefaultPolicy7C4F721A"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdconfigurationFFD660BB"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--configuration/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdconfigurationEventInvokeConfigB721A7A7"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--configuration/Integration_GET_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdconfigurationIntegrationGETorgsorgIdconfiguration344252ED"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--configuration/Integration_GET_--orgs--{orgId}--configuration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdconfigurationIntegrationGETorgsorgIdconfigurationPermissionF0E168CB"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdconfiguration0228AA8E"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--configuration/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdconfigurationServiceRoleF6AFA335"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--configuration/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdconfigurationServiceRoleDefaultPolicyA539DB55"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdconfigurationCBA92CCC"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--configuration/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdconfigurationEventInvokeConfig83025562"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--configuration/Integration_DELETE_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdconfigurationIntegrationDELETEorgsorgIdconfiguration3DEF7802"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--configuration/Integration_DELETE_--orgs--{orgId}--configuration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdconfigurationIntegrationDELETEorgsorgIdconfigurationPermission70407FE0"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdconfiguration83545DD0"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--configuration/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdconfigurationServiceRole92CD82E4"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--configuration/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdconfigurationServiceRoleDefaultPolicyA45A0F39"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdconfiguration859CCE2F"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--configuration/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdconfigurationEventInvokeConfig3D3A23CB"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--configuration/Integration_POST_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdconfigurationIntegrationPOSTorgsorgIdconfiguration8BD4B8D6"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--configuration/Integration_POST_--orgs--{orgId}--configuration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdconfigurationIntegrationPOSTorgsorgIdconfigurationPermission769AF743"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdconfigurationF130BDE4"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--configuration/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdconfigurationServiceRoleF1068053"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--configuration/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdconfigurationServiceRoleDefaultPolicy8EEA8610"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdconfigurationAC058D3C"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--configuration/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdconfigurationEventInvokeConfig8321FB5B"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--configuration/Integration_PATCH_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdconfigurationIntegrationPATCHorgsorgIdconfiguration46D3BB45"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--configuration/Integration_PATCH_--orgs--{orgId}--configuration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdconfigurationIntegrationPATCHorgsorgIdconfigurationPermissionFB697D1C"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--configuration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdconfigurationD4D5F629"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--translation--{locale}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdtranslationlocaleServiceRoleFDEA841F"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--translation--{locale}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdtranslationlocaleServiceRoleDefaultPolicy85F6F74A"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdtranslationlocale4ED73A0E"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--translation--{locale}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdtranslationlocaleEventInvokeConfig733DEF28"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--translation--{locale}/Integration_GET_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdtranslationlocaleIntegrationGETorgsorgIdtranslationlocaleEF62AE55"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--translation--{locale}/Integration_GET_--orgs--{orgId}--translation--{locale}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdtranslationlocaleIntegrationGETorgsorgIdtranslationlocalePermission79103A2E"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdtranslationlocale3DE24D60"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--translation--{locale}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdtranslationlocaleServiceRole59BD00BE"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--translation--{locale}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdtranslationlocaleServiceRoleDefaultPolicy4209C693"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdtranslationlocale22B2F622"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--translation--{locale}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdtranslationlocaleEventInvokeConfig026851DD"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--translation--{locale}/Integration_DELETE_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdtranslationlocaleIntegrationDELETEorgsorgIdtranslationlocale8E583FAF"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--translation--{locale}/Integration_DELETE_--orgs--{orgId}--translation--{locale}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdtranslationlocaleIntegrationDELETEorgsorgIdtranslationlocalePermissionB154CCB6"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdtranslationlocaleC7990F42"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--translation--{locale}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdtranslationlocaleServiceRoleE382512C"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--translation--{locale}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdtranslationlocaleServiceRoleDefaultPolicy1B416570"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdtranslationlocale9C6DF8F2"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--translation--{locale}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdtranslationlocaleEventInvokeConfigA2C17D22"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--translation--{locale}/Integration_POST_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdtranslationlocaleIntegrationPOSTorgsorgIdtranslationlocale47F8C2A7"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--translation--{locale}/Integration_POST_--orgs--{orgId}--translation--{locale}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdtranslationlocaleIntegrationPOSTorgsorgIdtranslationlocalePermissionB5AEF87C"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdtranslationlocale21F85701"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--translation--{locale}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdtranslationlocaleServiceRoleA8C83498"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--translation--{locale}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdtranslationlocaleServiceRoleDefaultPolicy79B7D1F9"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdtranslationlocaleE365FA25"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--translation--{locale}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdtranslationlocaleEventInvokeConfigBFFB1078"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--translation--{locale}/Integration_PATCH_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdtranslationlocaleIntegrationPATCHorgsorgIdtranslationlocale40E749FA"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--translation--{locale}/Integration_PATCH_--orgs--{orgId}--translation--{locale}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdtranslationlocaleIntegrationPATCHorgsorgIdtranslationlocalePermissionF275B95D"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--translation--{locale}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdtranslationlocale7259B04F"
           }
         ],
         "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--operators/ServiceRole/Resource": [

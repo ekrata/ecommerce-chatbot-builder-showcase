@@ -1,5 +1,6 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+import { widgetPosition } from './configuration';
 
 export const Translation = new Entity({
   model: {
@@ -12,89 +13,11 @@ export const Translation = new Entity({
       type: 'string',
       readOnly: true,
     },
-    channels: {
+    translations: {
       type: 'map',
       default: {},
       properties:{
-        liveChat: {
-          type: 'map',
-          default: {},
-          properties: {
-            appearance: {
-              type: 'map',
-              default: {},
-              properties: {
-                widgetAppearance: {
-                  type: 'map',
-                  properties: {
-                    backgroundColor: {
-                      type: 'string',
-                      default: 'bg-gradient-to-r from-fuchsia-300 via-violet-400 to-green-300',
-                    },
-                    darkBackgroundColor: {
-                      type: 'string',
-                      default: 'bg-gradient-to-r from-fuchsia-600 via-violet-700 to-green-500',
-                    },
-                    onlineStatus: {
-                      type: 'string',
-                      default: 'We reply immediately',
-                    },
-                    widgetPosition: {
-                      type: widgetPosition,
-                      default: 'right',
-                    },
-                    enableButtonLabel: {
-                      type: 'boolean',
-                      default: false,
-                    },
-                    labelText: {
-                      type: 'string',
-                      default: 'Chat with us &#128075;',
-                    },
-                    enableWidgetSounds: {
-                      type: 'boolean',
-                      default: true,
-                    },
-                    brandLogo: {
-                      type: 'string',
-                      default: '',
-                    },
-                  },
-                },
-                getStarted: {
-                  type: 'map',
-                  properties: {
-                    status: {
-                      type: 'string',
-                      default: 'Hi there 👋',
-                    },
-                    message: {
-                      type: 'string',
-                      default: 'Welcome to our website. Ask us anything 🎉',
-                    },
-                    backgroundLink: {
-                      type: 'string',
-                      default: '',
-                    },
-                  },
-                },
-                mobileWidget: {
-                  type: 'map',
-                  properties: {
-                    buttonPosition: {
-                      type: widgetPosition,
-                      default: 'right',
-                    },
-                    buttonSize: {
-                      type: showOnDevices,
-                      default: 'both',
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
+        
       },
     },
     createdAt: {

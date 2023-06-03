@@ -3,6 +3,8 @@ import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
 import { appDb } from '../db';
 
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
+
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId, conversationId } = usePathParams();

@@ -32,15 +32,12 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
   });
  it('creates a configuration with default settings', async () => {
     const orgId = uuidv4();
-    const planTier = faker.helpers.arrayElement(orgPlanTier);
-    const planOperatorSeats = 1;
-    const planChatbotConversations = 50;
     const data: CreateConfiguration = {
       orgId,
     };
 
     // validate configuration creation
-    const res = await http.post(`/orgs/${orgId}`, data);
+    const res = await http.post(`/orgs/${orgId}/configuration`, data);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
@@ -59,38 +56,37 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
     expect(prepareRes.status).toBe(200);
 
     // patch
-    const planTier = 'scale';
-    const planChatbotConversations = 10000;
-    const { data } = prepareRes;
-    delete data?.orgId;
+    const backgroundColor = 'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500'
+    const configuration = prepareRes?.data as EntityItem<typeof Configuration>;
+    if(configuration.channels?.liveChat?.appearance?.widgetAppearance?.backgroundColor) {
+      configuration.channels.liveChat.appearance.widgetAppearance.backgroundColor = backgroundColor
+    }
     const res = await http.patch(`/orgs/${orgId}/configuration`, {
-      ...data,
-      channels?.liveChat?.appearance?.widgetAppearance?.backgroundColor: 
-      
+      ...configuration,
     });
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
     const getRes = await http.get(`/orgs/${orgId}/configuration`)
-    const configuration = getRes.data as EntityItem<typeof Configuration>;
-    expect(configuration.orgId).toEqual(orgId);
-    expect(configuration.channels?.liveChat?.appearance?.widgetAppearance?.backgroundColor).toEqual(planTie);
+    const updatedConfig = getRes.data as EntityItem<typeof Configuration>;
+    expect(updatedConfig.orgId).toEqual(orgId);
+    expect(updatedConfig.channels?.liveChat?.appearance?.widgetAppearance?.backgroundColor).toEqual(backgroundColor);
 
   });
-  it('deletes a org', async () => {
+  it('deletes a configuration', async () => {
     const { orgId, customers } = mockOrgIds?.[2];
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
 
     const res = await http.delete(
-      `/orgs/${orgId}/conversations/${conversationId}`
+      `/orgs/${orgId}/configuration`
     );
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
     // validate it doesn't exist anymore
     try {
-      await http.get(`/orgs/${orgId}`);
+      await http.get(`/orgs/${orgId}/configuration`);
     } catch (err) {
       expect(err).toBeTruthy();
       expect((err as AxiosError).response?.status).toBe(404);
