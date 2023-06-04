@@ -2,7 +2,8 @@ import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
 import { UpdateOrg } from '../../../../../../stacks/entities/entities';
-import { appDb } from '../db';
+import { getAppDb } from '../db';
+import { Config } from 'sst/node/config';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -23,8 +24,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
-      const res = await appDb(Table.app.tableName)
-        .entities.orgs.patch({
+      const appDb = getAppDb(Config.REGION, Table.app.tableName);
+      const res = await appDb.entities.orgs
+        .patch({
           orgId,
         })
         .set({ ...updateOrg })

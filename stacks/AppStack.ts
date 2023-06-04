@@ -231,8 +231,8 @@ export function AppStack({ stack, app }: StackContext) {
       'PATCH /orgs/{orgId}':
         'packages/functions/app/api/src/orgs/update.handler',
 
-
-      'GET /orgs/{orgId}/configuration': 'packages/functions/app/api/src/configuration/get.handler',
+      'GET /orgs/{orgId}/configuration':
+        'packages/functions/app/api/src/configuration/get.handler',
       'DELETE /orgs/{orgId}/configuration':
         'packages/functions/app/api/src/configuration/delete.handler',
       'POST /orgs/{orgId}/configuration':
@@ -240,7 +240,8 @@ export function AppStack({ stack, app }: StackContext) {
       'PATCH /orgs/{orgId}/configuration':
         'packages/functions/app/api/src/configuration/update.handler',
 
-      'GET /orgs/{orgId}/translation/{locale}': 'packages/functions/app/api/src/translation/get.handler',
+      'GET /orgs/{orgId}/translation/{locale}':
+        'packages/functions/app/api/src/translation/get.handler',
       'DELETE /orgs/{orgId}/translation/{locale}':
         'packages/functions/app/api/src/translation/delete.handler',
       'POST /orgs/{orgId}/translation/{locale}':
@@ -311,7 +312,6 @@ export function AppStack({ stack, app }: StackContext) {
   //   },
   // });
 
-  console.log(api.url);
   process.env.NEXT_PUBLIC_APP_API_URL = api.url;
 
   const site = new NextjsSite(stack, 'site', {

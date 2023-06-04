@@ -1,6 +1,5 @@
 import { Service } from 'electrodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { Config } from 'sst/node/config';
 import { Conversation } from '../../../../../stacks/entities/conversation';
 import { Customer } from '../../../../../stacks/entities/customer';
 import { Message } from '../../../../../stacks/entities/message';
@@ -9,7 +8,6 @@ import { Visitor } from '../../../../../stacks/entities/visitor';
 import { Translation } from '../../../../../stacks/entities/translation';
 import { Org } from '../../../../../stacks/entities/org';
 import { Configuration } from '../../../../../stacks/entities/configuration';
-
 
 export const getAppDb = (region: string, tableName: string) =>
   new Service(
@@ -23,5 +21,5 @@ export const getAppDb = (region: string, tableName: string) =>
       messages: Message,
       orgs: Org,
     },
-    { client: new DynamoDBClient(region), table: tableName }
+    { client: new DynamoDBClient({ region }), table: tableName }
   );

@@ -1,8 +1,9 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../db';
+import { getAppDb } from '../db';
 import { CreateOrg } from '../../../../../../stacks/entities/entities';
+import { Config } from 'sst/node/config';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -15,8 +16,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const res = await appDb(Table.app.tableName)
-        .entities.orgs.create({
+      const appDb = getAppDb(Config.REGION, Table.app.tableName);
+      const res = await appDb.entities.orgs
+        .create({
           ...body,
           orgId,
         })

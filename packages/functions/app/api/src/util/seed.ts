@@ -3,8 +3,6 @@ import { ApiHandler } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { DefaultTags } from '@/app/[locale]/dash/inbox/Chat.type';
-import { createRandomVisitedList } from '@/app/[locale]/dash/inbox/mocks.test';
 import {
   CreateOrg,
   CreateOperator,
@@ -12,13 +10,14 @@ import {
   CreateConversation,
   CreateMessage,
 } from '../../../../../../stacks/entities/entities';
-import { appDb } from '../db';
+import { getAppDb } from '../db';
 import { senderType } from '../../../../../../stacks/entities/message';
 import {
   conversationChannel,
   conversationStatus,
   conversationType,
 } from '../../../../../../stacks/entities/conversation';
+import { Config } from 'sst/node/config';
 
 export const mockOrgCount = 3;
 export const mockCustomerCount = 5;
@@ -38,7 +37,8 @@ export interface MockOrgIds {
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
-      const db = appDb(Table.app.tableName);
+      const appDb = getAppDb(Config.REGION, Table.app.tableName);
+      const db = appDb;
       const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
         [...Array(mockOrgCount)].map(async () => {
           const orgId = uuidv4();
@@ -79,13 +79,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 email: faker.internet.email(),
                 orgId,
                 profilePicture: faker.image.people(),
+
                 ip: faker.internet.ipv4(),
                 locale: 'en-US',
                 timezone: faker.address.timeZone(),
                 userAgent: faker.internet.userAgent(),
                 online: faker.datatype.boolean(),
-                tags: '',
-                properties: {},
+                tags: [],
                 phone: faker.phone.number('501-###-###'),
               };
               await db.entities.customers.create(createCustomer).go();

@@ -1,14 +1,18 @@
 import { ApiHandler, useQueryParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../db';
+import { getAppDb } from '../db';
+import { Config } from 'sst/node/config';
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { cursor, createdAfter } = useQueryParams();
     try {
-      const data = await appDb(Table.app.tableName)
-        .entities.orgs.query.all([])
+      const appDb = getAppDb(Config.REGION, Table.app.tableName);
+      const data = await appDb.entities.orgs.query
+        .all([])
         .gt({
           createdAt: createdAfter
             ? new Date(parseInt(createdAfter, 10)).getTime()

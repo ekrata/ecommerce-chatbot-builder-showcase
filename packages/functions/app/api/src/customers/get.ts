@@ -1,7 +1,10 @@
 import { ApiHandler, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../db';
+import { Config } from 'sst/node/config';
+import { getAppDb } from '../db';
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -13,8 +16,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const res = await appDb(Table.app.tableName)
-        .entities.customers.get({ orgId, customerId })
+      const res = await appDb.entities.customers
+        .get({ orgId, customerId })
         .go();
       if (res.data) {
         return {

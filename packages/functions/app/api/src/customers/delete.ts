@@ -1,7 +1,10 @@
 import { ApiHandler, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
-import { appDb } from '../db';
+import { getAppDb } from '../db';
+import { Config } from 'sst/node/config';
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -13,8 +16,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const data = await appDb(Table.app.tableName)
-        .entities.customers.remove({ orgId, customerId })
+      const data = await appDb.entities.customers
+        .remove({ orgId, customerId })
         .go();
       return {
         statusCode: 200,

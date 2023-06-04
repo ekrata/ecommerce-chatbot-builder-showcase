@@ -2,7 +2,10 @@ import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
 import { UpdateConversation } from '../../../../../../stacks/entities/entities';
-import { appDb } from '../db';
+import { getAppDb } from '../db';
+import { Config } from 'sst/node/config';
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -23,8 +26,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
-      const res = await appDb(Table.app.tableName)
-        .entities.conversations.patch({
+      const res = await appDb.entities.conversations
+        .patch({
           orgId,
           conversationId,
         })

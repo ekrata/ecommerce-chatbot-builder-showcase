@@ -1,7 +1,10 @@
 import { ApiHandler, usePathParams, useQueryParams } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
+import { Config } from 'sst/node/config';
+import { getAppDb } from '../db';
 import { Table } from 'sst/node/table';
-import { appDb } from '../db';
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -14,8 +17,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const data = await appDb(Table.app.tableName)
-        .entities.conversations.query.assigned({ orgId, operatorId })
+      const data = await appDb.entities.conversations.query
+        .assigned({ orgId, operatorId })
         .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
       return {
         statusCode: 200,
