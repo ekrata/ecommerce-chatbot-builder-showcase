@@ -21,5 +21,10 @@ export const getAppDb = (region: string, tableName: string) =>
       messages: Message,
       orgs: Org,
     },
-    { client: new DynamoDBClient({ region }), table: tableName }
+    {
+      client: new DynamoDBClient({
+        region,
+      }),
+      table: tableName,
+    }
   );

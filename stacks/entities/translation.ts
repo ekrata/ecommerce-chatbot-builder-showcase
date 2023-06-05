@@ -12,12 +12,29 @@ export const Translation = new Entity({
     orgId: {
       type: 'string',
       readOnly: true,
+      required: true,
     },
+    lang: {
+      type: 'string',
+      required: true,
+      readOnly: true,
+    },
+
     translations: {
       type: 'map',
       default: {},
-      properties:{
-        
+      required: true,
+      properties: {
+        Name: {
+          type: 'string',
+          default: '$orgName',
+          required: true,
+        },
+        "We're online": {
+          type: 'string',
+          default: "We're online",
+          required: true,
+        },
       },
     },
     createdAt: {
@@ -37,10 +54,21 @@ export const Translation = new Entity({
     primary: {
       pk: {
         field: 'pk',
-        composite: ['orgId'],
+        composite: ['orgId', 'lang'],
       },
       sk: {
         field: 'sk',
+        composite: [],
+      },
+    },
+    byOrg: {
+      index: 'gsi1pk-gsi1sk-index',
+      pk: {
+        field: 'gsi1pk',
+        composite: ['orgId'],
+      },
+      sk: {
+        field: 'gsi1sk',
         composite: [],
       },
     },

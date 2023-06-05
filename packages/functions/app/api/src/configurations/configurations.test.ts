@@ -7,7 +7,7 @@ import { CreateConfiguration, CreateOrg } from '@/entities/entities';
 import { getHttp } from '../http';
 import { MockOrgIds, mockOrgCount } from '../util/seed';
 import { orgPlanTier } from '../../../../../../stacks/entities/org';
-import {writeFile} from 'fs'
+import { writeFile } from 'fs';
 import { Configuration } from '@/entities/configuration';
 import { EntityItem } from 'electrodb';
 
@@ -30,7 +30,7 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
     expect(res.data).toBeTruthy();
     expect(res.data?.orgId).toEqual(orgId);
   });
- it('creates a configuration with default settings', async () => {
+  it('creates a configuration with default settings', async () => {
     const orgId = uuidv4();
     const data: CreateConfiguration = {
       orgId,
@@ -44,9 +44,14 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
     expect(res.data?.orgId).toEqual(orgId);
 
     // save a mock configuration object for frontend use
-    await writeFile('../mocks/configuration.json', JSON.stringify(res.data), 'utf8', () => {
-      expect(true).toEqual(true)
-    })
+    await writeFile(
+      '../mocks/configuration.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
+      }
+    );
   });
   it('updates the default background color', async () => {
     const { orgId } = mockOrgIds[1];
@@ -56,31 +61,39 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
     expect(prepareRes.status).toBe(200);
 
     // patch
-    const backgroundColor = 'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500'
+    const backgroundColor =
+      'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500';
     const configuration = prepareRes?.data as EntityItem<typeof Configuration>;
-    if(configuration.channels?.liveChat?.appearance?.widgetAppearance?.backgroundColor) {
-      configuration.channels.liveChat.appearance.widgetAppearance.backgroundColor = backgroundColor
+    if (
+      configuration.channels?.liveChat?.appearance?.widgetAppearance
+        ?.backgroundColor
+    ) {
+      configuration.channels.liveChat.appearance.widgetAppearance.backgroundColor =
+        backgroundColor;
     }
+    console.log(
+      configuration?.channels?.liveChat?.appearance?.widgetAppearance
+    );
     const res = await http.patch(`/orgs/${orgId}/configuration`, {
       ...configuration,
     });
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
-    const getRes = await http.get(`/orgs/${orgId}/configuration`)
+    const getRes = await http.get(`/orgs/${orgId}/configuration`);
     const updatedConfig = getRes.data as EntityItem<typeof Configuration>;
     expect(updatedConfig.orgId).toEqual(orgId);
-    expect(updatedConfig.channels?.liveChat?.appearance?.widgetAppearance?.backgroundColor).toEqual(backgroundColor);
-
+    expect(
+      updatedConfig.channels?.liveChat?.appearance?.widgetAppearance
+        ?.backgroundColor
+    ).toEqual(backgroundColor);
   });
   it('deletes a configuration', async () => {
     const { orgId, customers } = mockOrgIds?.[2];
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
 
-    const res = await http.delete(
-      `/orgs/${orgId}/configuration`
-    );
+    const res = await http.delete(`/orgs/${orgId}/configuration`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 

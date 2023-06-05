@@ -9,6 +9,7 @@ import {
   CreateCustomer,
   CreateConversation,
   CreateMessage,
+  CreateTranslation,
 } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 import { senderType } from '../../../../../../stacks/entities/message';
@@ -18,6 +19,7 @@ import {
   conversationType,
 } from '../../../../../../stacks/entities/conversation';
 import { Config } from 'sst/node/config';
+import { CreateConfiguration } from '../../../../../../stacks/entities/entities';
 
 export const mockOrgCount = 3;
 export const mockCustomerCount = 5;
@@ -41,6 +43,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const db = appDb;
       const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
         [...Array(mockOrgCount)].map(async () => {
+          // org
           const orgId = uuidv4();
           const createOrg: CreateOrg = {
             orgId,
@@ -50,7 +53,22 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           await db.entities.orgs.create(createOrg).go();
           const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
           mockOrg.orgId = orgId;
+          const createConfiguration: CreateConfiguration = {
+            orgId,
+          };
 
+          const createTranslation: CreateTranslation = {
+            orgId,
+            lang: 'en',
+          };
+
+          // config
+          await db.entities.configurations.upsert(createConfiguration).go();
+
+          // translation
+          await db.entities.translations.upsert(createTranslation).go();
+
+          // operators
           await Promise.all(
             [...Array(mockOperatorCount)].map(async () => {
               const operatorId = uuidv4();
@@ -76,18 +94,17 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               const operator = faker.helpers.arrayElement(operators.data);
               const createCustomer: CreateCustomer = {
                 customerId,
-                email: faker.internet.email(),
                 orgId,
+                email: faker.internet.email(),
                 profilePicture: faker.image.people(),
-
                 ip: faker.internet.ipv4(),
                 locale: 'en-US',
                 timezone: faker.address.timeZone(),
                 userAgent: faker.internet.userAgent(),
                 online: faker.datatype.boolean(),
-                tags: [],
                 phone: faker.phone.number('501-###-###'),
               };
+              console.log(createCustomer);
               await db.entities.customers.create(createCustomer).go();
               const conversations = await Promise.all(
                 [...Array(mockConversationCountPerCustomer)].map(async () => {

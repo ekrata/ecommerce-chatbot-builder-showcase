@@ -8,7 +8,7 @@ export const showOnDevices = ['both', 'only mobile', 'only desktop'];
 
 export const Configuration = new Entity({
   model: {
-    entity: 'org',
+    entity: 'configuration',
     version: '1',
     service: 'appDb',
   },
@@ -16,11 +16,12 @@ export const Configuration = new Entity({
     orgId: {
       type: 'string',
       readOnly: true,
+      required: true,
     },
     channels: {
       type: 'map',
       default: {},
-      properties:{
+      properties: {
         liveChat: {
           type: 'map',
           default: {},
@@ -31,14 +32,17 @@ export const Configuration = new Entity({
               properties: {
                 widgetAppearance: {
                   type: 'map',
+                  default: {},
                   properties: {
                     backgroundColor: {
                       type: 'string',
-                      default: 'bg-gradient-to-r from-fuchsia-300 via-violet-400 to-green-300',
+                      default:
+                        'bg-gradient-to-r from-fuchsia-300 via-violet-400 to-green-300',
                     },
                     darkBackgroundColor: {
                       type: 'string',
-                      default: 'bg-gradient-to-r from-fuchsia-600 via-violet-700 to-green-500',
+                      default:
+                        'bg-gradient-to-r from-fuchsia-600 via-violet-700 to-green-500',
                     },
                     onlineStatus: {
                       type: 'string',
@@ -68,6 +72,7 @@ export const Configuration = new Entity({
                 },
                 getStarted: {
                   type: 'map',
+                  default: {},
                   properties: {
                     status: {
                       type: 'string',
@@ -85,6 +90,7 @@ export const Configuration = new Entity({
                 },
                 mobileWidget: {
                   type: 'map',
+                  default: {},
                   properties: {
                     buttonPosition: {
                       type: widgetPosition,
