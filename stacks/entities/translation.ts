@@ -73,13 +73,13 @@ export const Translation = new Entity({
       },
     },
     all: {
-      index: 'gsi1pk-gsi1sk-index',
+      index: 'gsi2pk-gsi2sk-index',
       pk: {
-        field: 'gsi1pk',
+        field: 'gsi2pk',
         composite: [],
       },
       sk: {
-        field: 'gsi1sk',
+        field: 'gsi2sk',
         composite: ['createdAt'],
       },
     },

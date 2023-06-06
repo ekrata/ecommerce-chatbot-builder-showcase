@@ -3,14 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker';
 import { AxiosError } from 'axios';
 import { Api } from 'sst/node/api';
-import {
-  CreateConfiguration,
-  CreateOrg,
-  CreateTranslation,
-} from '@/entities/entities';
+import { CreateTranslation } from '@/entities/entities';
 import { getHttp } from '../http';
 import { MockOrgIds, mockOrgCount } from '../util/seed';
-import { orgPlanTier } from '../../../../../../stacks/entities/org';
 import { writeFile } from 'fs';
 import { Translation } from '@/entities/translation';
 import { EntityItem } from 'electrodb';
@@ -84,7 +79,7 @@ describe.concurrent('orgs/${orgId}/translation/{locale}', async () => {
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
-    const getRes = await http.get(`/orgs/${orgId}/translation`);
+    const getRes = await http.get(`/orgs/${orgId}/translation/${lang}`);
     const updatedConfig = getRes.data as EntityItem<typeof Translation>;
     expect(updatedConfig.orgId).toEqual(orgId);
     expect(translation.translations["We're online"]).toEqual(newTranslation);
@@ -94,7 +89,7 @@ describe.concurrent('orgs/${orgId}/translation/{locale}', async () => {
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
 
-    const res = await http.delete(`/orgs/${orgId}/translation`);
+    const res = await http.delete(`/orgs/${orgId}/translation/${lang}`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
