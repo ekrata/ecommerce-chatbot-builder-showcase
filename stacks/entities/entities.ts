@@ -34,3 +34,6 @@ export type UpdateConfiguration = UpdateEntityItem<typeof Configuration>;
 
 export type CreateTranslation = CreateEntityItem<typeof Translation>;
 export type UpdateTranslation = UpdateEntityItem<typeof Translation>;
+
+export type CreateArticle = CreateEntityItem<typeof Translation>;
+export type UpdateArticle = UpdateEntityItem<typeof Translation>;

@@ -20,11 +20,11 @@ beforeAll(async () => {
   }
 });
 
-describe.concurrent('orgs/${orgId}/translation/{locale}', async () => {
+describe.concurrent('orgs/${orgId}/translations/{lang}', async () => {
   it('gets a translation', async () => {
     const { orgId } = mockOrgIds[0];
     const lang = 'en';
-    const res = await http.get(`/orgs/${orgId}/translation/${lang}`);
+    const res = await http.get(`/orgs/${orgId}/translations/${lang}`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
@@ -40,7 +40,7 @@ describe.concurrent('orgs/${orgId}/translation/{locale}', async () => {
     };
 
     // validate translation creation
-    const res = await http.post(`/orgs/${orgId}/translation/${lang}`, data);
+    const res = await http.post(`/orgs/${orgId}/translations/${lang}`, data);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
@@ -48,8 +48,8 @@ describe.concurrent('orgs/${orgId}/translation/{locale}', async () => {
     expect(res.data?.lang).toEqual(lang);
 
     // save a mock translation object for frontend use
-    await writeFile(
-      '../mocks/translation.json',
+    writeFile(
+      './mocks/translation.json',
       JSON.stringify(res.data),
       'utf8',
       () => {
@@ -61,25 +61,23 @@ describe.concurrent('orgs/${orgId}/translation/{locale}', async () => {
     const { orgId } = mockOrgIds[1];
     const lang = 'en';
     // Get prexisting data for patch
-    const prepareRes = await http.get(`/orgs/${orgId}/translation/${lang}`);
+    const prepareRes = await http.get(`/orgs/${orgId}/translations/${lang}`);
     expect(prepareRes).toBeTruthy();
     expect(prepareRes.status).toBe(200);
 
     // patch
-    const backgroundColor =
-      'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500';
     const translation = prepareRes?.data as EntityItem<typeof Translation>;
     const newTranslation = 'we are online';
     if (translation.translations?.["We're online"]) {
       translation.translations["We're online"] = newTranslation;
     }
-    const res = await http.patch(`/orgs/${orgId}/translation/${lang}`, {
+    const res = await http.patch(`/orgs/${orgId}/translations/${lang}`, {
       ...translation,
     });
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
-    const getRes = await http.get(`/orgs/${orgId}/translation/${lang}`);
+    const getRes = await http.get(`/orgs/${orgId}/translations/${lang}`);
     const updatedConfig = getRes.data as EntityItem<typeof Translation>;
     expect(updatedConfig.orgId).toEqual(orgId);
     expect(translation.translations["We're online"]).toEqual(newTranslation);
@@ -88,14 +86,15 @@ describe.concurrent('orgs/${orgId}/translation/{locale}', async () => {
     const { orgId, customers } = mockOrgIds?.[2];
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
+    const lang = 'en';
 
-    const res = await http.delete(`/orgs/${orgId}/translation/${lang}`);
+    const res = await http.delete(`/orgs/${orgId}/translations/${lang}`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
     // validate it doesn't exist anymore
     try {
-      await http.get(`/orgs/${orgId}/translation`);
+      await http.get(`/orgs/${orgId}/translations/${lang}`);
     } catch (err) {
       expect(err).toBeTruthy();
       expect((err as AxiosError).response?.status).toBe(404);

@@ -1,16 +1,29 @@
-import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import {
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { shallow } from 'zustand/shallow';
 import { getWsUrl } from '@/app/getWsUrl';
 import { GiConsoleController } from 'react-icons/gi';
-import { AppSocketProvider } from '@/components/AppSocketProvider';
 import { useCustomerChatStore } from './(actions)/useCustomerChatStore';
 import { StartChatButton } from './StartChatButton';
+import { ChatForm } from './(screens)/(messages)/ChatScreen';
+import { NavBar } from './NavBar';
+import { HomeScreen } from './(screens)/HomeScreen';
+import { MessageListScreen } from './(screens)/(messages)/MessageListScreen';
+import { HelpScreen } from './(screens)/HelpScreen';
+import { AppSocketProvider } from '@/components/AppSocketProvider';
 
 export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   children,
   mockWsUrl,
 }) => {
-  const { org, configuration, customer, messages } = useCustomerChatStore();
+  const { org, configuration, customer, messages, widgetState } =
+    useCustomerChatStore();
 
   const socket: WebSocket | undefined = useMemo(
     () =>
@@ -48,9 +61,51 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
     });
   });
 
+  let content: ReactNode;
+
+  switch (widgetState) {
+    case 'chat': {
+      content = <ChatForm></ChatForm>;
+    }
+    case 'home': {
+      content = (
+        <>
+          <HomeScreen />
+          <NavBar />
+        </>
+      );
+    }
+    case 'messages': {
+      content = (
+        <>
+          <MessageListScreen />
+          <NavBar />
+        </>
+      );
+    }
+    case 'help': {
+      content = (
+        <>
+          <HelpScreen />
+          <NavBar />
+        </>
+      );
+    }
+    case 'minimized': {
+      content = (
+        <StartChatButton
+          enableButtonLabel={false}
+          widgetPosition={'left'}
+          startChatLabel={''}
+          backgroundColor={''}
+        ></StartChatButton>
+      );
+    }
+  }
+
   return (
     <>
-      <AppSocketProvider appSocket={socket}>{children}</AppSocketProvider>
+      <AppSocketProvider appSocket={socket}>{content}</AppSocketProvider>
     </>
   );
 };

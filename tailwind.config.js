@@ -6,6 +6,13 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'bg-gradient-to-r',
+    'from-green-300',
+    'via-blue-500',
+    'to-purple-600',
+  ],
+
   theme: {
     extend: {},
   },
@@ -14,7 +21,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
-    require('tailwindcss-animate'),
+    require('tailwindcss-animated')
     require('daisyui'),
   ],
 };

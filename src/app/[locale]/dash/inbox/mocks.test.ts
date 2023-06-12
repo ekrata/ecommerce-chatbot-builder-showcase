@@ -14,7 +14,17 @@ import { Org, orgPlanTier } from '@/entities/org';
 import { Operator } from '@/entities/operator';
 import { DefaultTags } from './Chat.type';
 import { Configuration } from '@/entities/configuration';
+import { Translation } from '@/entities/translation';
+import translation from '../../../../../mocks/translation.json';
+import configuration from '../../../../../mocks/configuration.json';
+import { readFile, writeFile } from 'fs';
 
+/**
+ * Description placeholder
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @returns {EntityItem<typeof Org>}
+ */
 export const createRandomOrg = (): EntityItem<typeof Org> => {
   const twoHoursAgo = new Date();
   twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
@@ -32,33 +42,63 @@ export const createRandomOrg = (): EntityItem<typeof Org> => {
   };
 };
 
-// const createContextMessage = (
-//   orgId: string,
-//   conversationId: string,
-//   operator: EntityItem<typeof Message>,
-//   customerId: string,
-//   joiner: SenderType,
-//   context: 'join_chat' | 'leave_chat' | 'to_solved'
-// ): EntityItem<typeof Message> => {
-//   const now = new Date();
-//   const twoHoursAgo = new Date();
-//   twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
-//   const sentAt = faker.date.between(twoHoursAgo, now).getTime();
-//   return {
-//     orgId,
-//     messageId: faker.datatype.uuid(),
-//     conversationId,
-//     operatorId: operator.operatorId,
-//     customerId,
-//     sender: 'context',
-//     sentAt,
-//     seenAt: sentAt,
-//     updatedAt: now.getTime(),
-//     createdAt: now.getTime(),
-//     content: context,
-//   };
-// };
+/**
+ * Loads a configuration object mock resembeling a GET/ configuration response from the API
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @param {string} orgId
+ * @returns {EntityItem<typeof Configuration>}
+ */
+export const loadConfiguration = (
+  orgId: string
+): EntityItem<typeof Configuration> => {
+  return {
+    ...(configuration as EntityItem<typeof Configuration>),
+    orgId,
+  };
+};
 
+/**
+ * Copies mock translation api object to respective local translation json for use with next-intl(i18n)
+ * @param orgId
+ * @param lang
+ */
+export const setupTranslation = (orgId: string, lang: string) => {
+  const messages = readFile(`./messages/${lang}.json`, 'utf8', (err, data) => {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+    writeFile(
+      `./messages/${lang}.json`,
+      JSON.stringify({
+        ...JSON.parse(data),
+        'chat-widget': {
+          ...(translation as EntityItem<typeof Translation>),
+          orgId,
+        },
+      }),
+      'utf8',
+      (err) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+      }
+    );
+  });
+};
+
+/**
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @param {string} orgId
+ * @param {string} conversationId
+ * @param {string} operatorId
+ * @param {string} customerId
+ * @param {?number} [typing]
+ * @returns {EntityItem<typeof Message>}
+ */
 export const createRandomMessage = (
   orgId: string,
   conversationId: string,
@@ -76,6 +116,7 @@ export const createRandomMessage = (
     conversationId,
     operatorId,
     customerId,
+    context: 'message',
     sender: faker.helpers.arrayElement(['operator', 'customer']),
     sentAt: typing ? undefined : sentAt,
     seenAt: sentAt,
@@ -85,17 +126,14 @@ export const createRandomMessage = (
   };
 };
 
-
-export const createDefaultConfiguration = (orgId: string): EntityItem<typeof Configuration> => {
-  const now = new Date();
-  return {
-    orgId,
-    updatedAt: now.getTime(),
-    createdAt: now.getTime(),
-  }
-
-}
-
+/**
+ * Creates random messages of count
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @param {Parameters<typeof createRandomMessage>} params
+ * @param {number} count
+ * @returns {*}
+ */
 export const createRandomMessages = (
   params: Parameters<typeof createRandomMessage>,
   count: number
@@ -109,6 +147,12 @@ export const createRandomMessages = (
   );
 };
 
+/**
+ * Description placeholder
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @returns {{ [date: string]: string; }}
+ */
 export const createRandomVisitedList = () => {
   const dates = faker.date.betweens(faker.date.recent(60), new Date(), 20);
   const visited: { [date: string]: string } = {};
@@ -119,6 +163,16 @@ export const createRandomVisitedList = () => {
   return visited;
 };
 
+/**
+ * Creates a random conversation
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @param {ConversationStatus} status
+ * @param {string} orgId
+ * @param {string} operatorId
+ * @param {string} customerId
+ * @returns {EntityItem<typeof Conversation>}
+ */
 export const createRandomConversation = (
   status: ConversationStatus,
   orgId: string,
@@ -144,6 +198,12 @@ export const createRandomConversation = (
   };
 };
 
+/**
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @param {string} orgId
+ * @returns {EntityItem<typeof Customer>}
+ */
 export const createRandomCustomer = (
   orgId: string
 ): EntityItem<typeof Customer> => {
@@ -172,6 +232,12 @@ export const createRandomCustomer = (
   };
 };
 
+/**
+ * @date 11/06/2023 - 16:42:31
+ *
+ * @param {string} orgId
+ * @returns {EntityItem<typeof Operator>}
+ */
 export const createRandomOperator = (
   orgId: string
 ): EntityItem<typeof Operator> => {

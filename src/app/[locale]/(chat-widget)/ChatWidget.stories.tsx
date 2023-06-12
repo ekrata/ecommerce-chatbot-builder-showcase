@@ -8,7 +8,10 @@ import { rest } from 'msw';
 import { WebSocketServer } from 'ws';
 import { Client, Server, ServerOptions } from 'mock-socket';
 import { getWsUrl } from '@/app/getWsUrl';
-import { useCustomerChatStore } from './(actions)/useCustomerChatStore';
+import {
+  WidgetState,
+  useCustomerChatStore,
+} from './(actions)/useCustomerChatStore';
 import {
   createRandomConversation,
   createRandomCustomer,
@@ -16,14 +19,13 @@ import {
   createRandomMessages,
   createRandomOperator,
   createRandomOrg,
+  loadConfiguration,
+  setupTranslation,
 } from '../dash/inbox/mocks.test';
 import { ChatWidget } from './ChatWidget';
+import { FC } from 'react';
 
 const meta: Meta<typeof ChatWidget> = {
-  /* 👇 The title prop is optional.
-   * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
-   * to learn how to generate automatic titles
-   */
   component: ChatWidget,
 };
 
@@ -43,11 +45,93 @@ const conversation = createRandomConversation(
   operator.operatorId,
   customer.customerId
 );
+const configuration = loadConfiguration(org.orgId);
+const lang = 'en';
+setupTranslation(org.orgId, lang);
 let mockSocket: Client;
-// Initial(No Data)
-export const Default: Story = {
-  render: () => <ChatWidget mockWsUrl={mockWsUrl} />,
-  args: {},
+
+meta.parameters = {
+  msw: {
+    handlers: [
+      // rest.all(`*`, (req, res, ctx) => {
+      //   console.log('hiihihii');
+      // }),
+      rest.post(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations/:conversationId/messages/:messageId`,
+        async (req, res, ctx) => {
+          const { orgId, conversationId, messageId } = req.params;
+          return res(
+            ctx.status(200),
+            ctx.json({
+              ...((await req?.json()) as CreateMessage),
+              conversationId,
+              orgId,
+              messageId,
+            } as EntityItem<typeof Message>)
+          );
+        }
+      ),
+    ],
+  },
+};
+
+export const IntegratedForms: Story = {
+  render: () => {
+    useCustomerChatStore.setState(
+      {
+        ...useCustomerChatStore(),
+        widgetState: 'minimized',
+      },
+      true
+    );
+    return <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step(
+      'Customer sends a message asking for help finding an item.',
+      async () => {
+        sessionStorage.removeItem('customerChatStore');
+        localStorage.removeItem('customerChatStore');
+        useCustomerChatStore.persist.clearStorage();
+
+        // const messages = createRandomMessages(
+        //   [
+        //     org.orgId,
+        //     conversation.conversationId,
+        //     operator.operatorId,
+        //     customer.customerId,
+        //   ],
+        //   messageCount
+        // );
+        useCustomerChatStore.setState(
+          {
+            org,
+            customer,
+            operator,
+            conversation,
+            configuration,
+          },
+          true
+        );
+        (await canvas.findByTestId('start-chat-btn')).click();
+        expect(useCustomerChatStore().widgetState).toEqual('');
+      }
+    );
+  },
+};
+
+export const ChatFormWidget: Story = {
+  render: () => {
+    useCustomerChatStore.setState(
+      {
+        ...useCustomerChatStore(),
+        widgetState: 'chat',
+      },
+      true
+    );
+    return <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>;
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step(
@@ -66,6 +150,8 @@ export const Default: Story = {
           ],
           messageCount
         );
+        const configuration = loadConfiguration(org.orgId);
+        setupTranslation(org.orgId, lang);
         useCustomerChatStore.setState(
           {
             org,
@@ -73,6 +159,7 @@ export const Default: Story = {
             operator,
             conversation,
             messages,
+            configuration,
           },
           true
         );
@@ -104,75 +191,63 @@ export const Default: Story = {
         // check local state is updated
       }
     );
-    // await step(
-    //   'Operator starts a conversation and sends a message',
-    //   async () => {
-    //     const org = createRandomOrg();
-    //     const customer = createRandomCustomer(org.orgId);
-    //     const operator = createRandomOperator(org.orgId);
-    //     const randomConversation = createRandomConversation(
-    //       'open',
-    //       org.orgId,
-    //       operator.operatorId,
-    //       customer.customerId
-    //     );
-    //     const randomMessage = createRandomMessage(
-    //       org.orgId,
-    //       randomConversation.conversationId,
-    //       operator.operatorId,
-    //       customer.customerId
-    //     );
+    await step(
+      'Operator starts a conversation and sends a message',
+      async () => {
+        const org = createRandomOrg();
+        const customer = createRandomCustomer(org.orgId);
+        const operator = createRandomOperator(org.orgId);
+        const randomConversation = createRandomConversation(
+          'open',
+          org.orgId,
+          operator.operatorId,
+          customer.customerId
+        );
+        const randomMessage = createRandomMessage(
+          org.orgId,
+          randomConversation.conversationId,
+          operator.operatorId,
+          customer.customerId
+        );
 
-    //     const mockServer = new Server(process.env.NEXT_PUBLIC_APP_WS_URL ?? '');
+        const mockServer = new Server(process.env.NEXT_PUBLIC_APP_WS_URL ?? '');
 
-    //     mockServer.on('connection', (socket) => {
-    //       socket.send(
-    //         JSON.stringify({
-    //           type: 'sendNewConversationToCustomer',
-    //           payload: randomConversation,
-    //         })
-    //       );
-    //       socket.send(
-    //         JSON.stringify({
-    //           type: 'sendNewMessageToCustomer',
-    //           payload: randomMessage,
-    //         })
-    //       );
-    //     });
+        mockServer.on('connection', (socket) => {
+          socket.send(
+            JSON.stringify({
+              type: 'sendNewConversationToCustomer',
+              payload: randomConversation,
+            })
+          );
+          socket.send(
+            JSON.stringify({
+              type: 'sendNewMessageToCustomer',
+              payload: randomMessage,
+            })
+          );
+        });
 
-    //     const { messages, conversation, widgetState } =
-    //       useCustomerChatStore.getState();
-    //     // check local state is updated
-    //     expect(messages?.length).toEqual(1);
-    //     expect(messages?.pop()).toMatchObject(randomMessage);
-    //     expect(conversation).toMatchObject(randomConversation);
-    //     expect(widgetState).toEqual('chat');
-    //   }
-    // );
+        const { messages, conversation, widgetState } =
+          useCustomerChatStore.getState();
+        // check local state is updated
+        expect(messages?.length).toEqual(1);
+        expect(messages?.pop()).toMatchObject(randomMessage);
+        expect(conversation).toMatchObject(randomConversation);
+        expect(widgetState).toEqual('chat');
+      }
+    );
   },
 };
 
-Default.parameters = {
-  msw: {
-    handlers: [
-      // rest.all(`*`, (req, res, ctx) => {
-      //   console.log('hiihihii');
-      // }),
-      rest.post(
-        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations/:conversationId/messages/:messageId`,
-        async (req, res, ctx) => {
-          const { orgId, conversationId, messageId } = req.params;
-          return res(
-            ctx.status(200),
-            ctx.json({
-              ...((await req?.json()) as CreateMessage),
-              conversationId,
-              orgId,
-              messageId,
-            } as EntityItem<typeof Message>)
-          );
-        }
-      ),
-    ],
+export const PresurveyFormWidget: Story = {
+  render: () => {
+    useCustomerChatStore.setState(
+      {
+        ...useCustomerChatStore(),
+        widgetState: 'prechat_survey',
+      },
+      true
+    );
+    return <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>;
   },
 };

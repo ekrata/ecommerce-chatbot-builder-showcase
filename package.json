@@ -61,6 +61,7 @@
     "storybook-addon-next-router": "^4.0.2",
     "swr": "^2.1.5",
     "tailwindcss": "3.3.1",
+    "tailwindcss-animated": "^1.0.1",
     "testing-library": "link:@types/@storybook/testing-library",
     "typescript": "5.0.4",
     "uuid": "^9.0.0",

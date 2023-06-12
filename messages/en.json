@@ -8,7 +8,16 @@
   "chat-widget": {
     "start-chat-cta": "Chat with us 👋",
     "chat-with": "Chat with",
-    "we-reply": "We reply immediately"
+    "we-reply": "We reply immediately",
+    "help": "help",
+    "search for help": "Search for help",
+    "collections": "{count} collections",
+    "General Information": "General Information",
+    "Orders & Delivery": "Orders & Delivery",
+    "Returns & Refunds": "Returns & Refunds",
+    "Payments & Promotions": "Payments & Promotions",
+    "Technical": "Technical",
+    "Product": "Product"
   },
   "navbar": {
     "products": {

@@ -1,9 +1,43 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
+/**
+ * Type of sender
+ * @date 12/06/2023 - 10:43:10
+ *
+ * @type {readonly ["operator", "customer", "context"]}
+ */
 export const senderType = ['operator', 'customer', 'context'] as const;
+/**
+ * senderType as a union
+ * @date 12/06/2023 - 10:43:10
+ *
+ * @export
+ * @typedef {SenderType}
+ */
 export type SenderType = (typeof senderType)[number];
 
+/**
+ * Messages have multiple contexts; default is messages,
+ * other contexts such as prompts may trigger the chatbot to send a input form.
+ * @date 12/06/2023 - 11:19:18
+ *
+ * @type {readonly ["message", "email-prompt", "question-prompt", "order-number-prompt", "name-prompt"]}
+ */
+export const contextType = [
+  'message',
+  'email-prompt',
+  'question-prompt',
+  'order-number-prompt',
+  'name-prompt',
+] as const;
+
+/**
+ * Entity that describes a message sent during a conversation.
+ * @date 12/06/2023 - 10:43:10
+ *
+ * @type {*}
+ */
 export const Message = new Entity({
   model: {
     entity: 'message',
@@ -34,6 +68,12 @@ export const Message = new Entity({
     },
     customerId: {
       type: 'string',
+      required: true,
+      readOnly: true,
+    },
+    context: {
+      type: contextType,
+      default: 'message',
       required: true,
       readOnly: true,
     },

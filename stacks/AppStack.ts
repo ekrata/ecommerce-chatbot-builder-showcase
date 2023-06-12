@@ -240,14 +240,14 @@ export function AppStack({ stack, app }: StackContext) {
       'PATCH /orgs/{orgId}/configuration':
         'packages/functions/app/api/src/configuration/update.handler',
 
-      'GET /orgs/{orgId}/translation/{locale}':
-        'packages/functions/app/api/src/translation/get.handler',
-      'DELETE /orgs/{orgId}/translation/{locale}':
-        'packages/functions/app/api/src/translation/delete.handler',
-      'POST /orgs/{orgId}/translation/{locale}':
-        'packages/functions/app/api/src/translation/create.handler',
-      'PATCH /orgs/{orgId}/translation/{locale}':
-        'packages/functions/app/api/src/translation/update.handler',
+      'GET /orgs/{orgId}/translations/{lang}':
+        'packages/functions/app/api/src/translations/get.handler',
+      'DELETE /orgs/{orgId}/translations/{lang}':
+        'packages/functions/app/api/src/translations/delete.handler',
+      'POST /orgs/{orgId}/translations/{lang}':
+        'packages/functions/app/api/src/translations/create.handler',
+      'PATCH /orgs/{orgId}/translations/{lang}':
+        'packages/functions/app/api/src/translations/update.handler',
 
       'GET /orgs/{orgId}/operators':
         'packages/functions/app/api/src/operators/list.handler',

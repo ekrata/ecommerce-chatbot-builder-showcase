@@ -8,17 +8,15 @@ import { Org } from '@/entities/org';
 import { Configuration } from '@/entities/configuration';
 import { Visitor } from '@/entities/visitor';
 import { Operator } from '@/entities/operator';
+import { Translation } from '@/entities/translation';
 
 export type WidgetState =
   | 'online'
   | 'closed'
-  | 'prechat_survey'
-  | 'operators_offline'
-  | 'create_ticket_form'
-  | 'getting_started'
-  | 'info'
+  | 'help'
   | 'chat'
   | 'minimized'
+  | 'messages'
   | 'home';
 
 interface CustomerChatStoreState {

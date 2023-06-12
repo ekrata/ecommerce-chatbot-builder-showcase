@@ -37,12 +37,12 @@ export const Configuration = new Entity({
                     backgroundColor: {
                       type: 'string',
                       default:
-                        'bg-gradient-to-r from-fuchsia-300 via-violet-400 to-green-300',
+                        'linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))',
                     },
                     darkBackgroundColor: {
                       type: 'string',
                       default:
-                        'bg-gradient-to-r from-fuchsia-600 via-violet-700 to-green-500',
+                        'linear-gradient(to right, rgb(14, 165, 233), rgb(107, 33, 168), rgb(21, 128, 61))',
                     },
                     onlineStatus: {
                       type: 'string',
