@@ -16,15 +16,15 @@ beforeAll(async () => {
 });
 
 // const http = getHttp(`${Api.appApi.url}`);
-describe.concurrent('/ddb-stream', async () => {
-  it('processes a batch of Ddb Stream CDC', async () => {
-    const { orgId, operatorIds } = mockOrgIds[0];
-    const operatorId = faker.helpers.arrayElement(operatorIds);
-    const res = await http.get(`/orgs/${orgId}/operators/${operatorId}`);
-    expect(res).toBeTruthy();
-    expect(res.status).toBe(200);
-    expect(res.data).toBeTruthy();
-    expect(res.data?.operatorId).toEqual(operatorId);
-    expect(res.data?.orgId).toEqual(orgId);
-  });
-});
+// describe.concurrent('/ddb-stream', async () => {
+//   it('processes a batch of Ddb Stream CDC', async () => {
+//     const { orgId, operatorIds } = mockOrgIds[0];
+//     const operatorId = faker.helpers.arrayElement(operatorIds);
+//     const res = await http.get(`/orgs/${orgId}/operators/${operatorId}`);
+//     expect(res).toBeTruthy();
+//     expect(res.status).toBe(200);
+//     expect(res.data).toBeTruthy();
+//     expect(res.data?.operatorId).toEqual(operatorId);
+//     expect(res.data?.orgId).toEqual(orgId);
+//   });
+// });

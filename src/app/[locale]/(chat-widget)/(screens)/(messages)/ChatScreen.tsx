@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useContext, useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
 import { EntityItem } from 'electrodb';
 import { Message, SenderType } from '@/entities/message';
@@ -11,18 +11,23 @@ import { IoMdSend } from 'react-icons/io';
 import { Conversation } from '@/entities/conversation';
 import { Api } from 'sst/node/api';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { CustomerChatLog } from '../CustomerChatLog';
-import { sendMessage } from '../../actions';
-import { useCustomerChatStore } from '../../(actions)/useCustomerChatStore';
+import { CustomerChatLog } from './CustomerChatLog';
+import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { ChatWidget } from '../../ChatWidget';
+import { DynamicBackground } from '../../DynamicBackground';
+import { v4 as uuidv4 } from 'uuid';
+import { CreateMessage } from '@/entities/entities';
+import { ConversationsContext } from './MessagesScreen';
 
 type Inputs = {
   msg: string;
 };
 
-export const ChatScreen: FC = () => {
-  const { conversation, customer, operator, messages, configuration } =
-    useCustomerChatStore();
+export const ChatScreen: FC = ({}) => {
+  const { chatWidget: {conversations, customer, configuration, sendMessage} } =
+    useChatWidgetStore();
+  const [conversationsState] = useContext(ConversationsContext);
+  const {conversation, operator, messages} = conversations?.[conversationsState?.selectedConversationId ?? ''];
   const t = useTranslations('chat-widget');
   const {
     register,
@@ -31,40 +36,25 @@ export const ChatScreen: FC = () => {
     formState: { errors },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async ({ msg }) => {
-    const sentMessage = await sendMessage(
-      conversation?.orgId ?? '',
-      conversation?.conversationId ?? '',
-      customer?.customerId ?? '',
-      operator?.operatorId ?? '',
-      'customer',
-      msg
-    );
-    useCustomerChatStore.setState({
-      ...useCustomerChatStore.getState(),
-      messages: [...(messages ?? []), sentMessage],
-    });
+    const createMessage: CreateMessage = {
+      messageId: uuidv4(),
+      conversationId: conversation.conversationId,
+      orgId: conversation.orgId,
+      customerId: conversation.customerId,
+      operatorId: conversation.operatorId,
+      content: msg,
+      sender: 'customer' 
+    }
+    const sentMessage = await sendMessage(createMessage)
+    
   };
 
-  console.log(configuration?.channels?.liveChat?.appearance?.widgetAppearance);
-  const { backgroundColor, darkBackgroundColor } = {
-    ...configuration?.channels?.liveChat?.appearance?.widgetAppearance,
-  };
-  console.log(darkBackgroundColor);
-  const background = `
-    .background {
-      background: ${backgroundColor}
-    }
-    .dark-mode x.background {
-      background: ${darkBackgroundColor}
-    }
-      
-  `;
   return (
     <div className="flex flex-col font-sans rounded-lg max-w-xl dark:bg-gray-800">
       <div
         className={`background flex place-items-center justify-between p-2 px-6 gap-x-2 border-b-2 border-gray-300 dark:border-gray-700 shadow-2xl`}
       >
-        <style>{background}</style>
+        <DynamicBackground />
         <div className="avatar online">
           <div className="w-16 rounded-full ring-2 shadow-2xl">
             <Image
@@ -124,11 +114,11 @@ export const ChatScreen: FC = () => {
               )}
             </div>
             <button
-              className={`background btn btn-square  text-xl ${backgroundColor} dark:${darkBackgroundColor} border-0`}
+              className={`background btn btn-square  text-xl border-0`}
               data-testid="msg-send"
               type="submit"
             >
-              <style>{background}</style>
+              <DynamicBackground />
               <IoMdSend className="text-neutral dark:text-white" />
             </button>
           </div>

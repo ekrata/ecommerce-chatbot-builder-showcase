@@ -25,6 +25,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
 
+    delete updateConversation.orgId;
+    delete updateConversation.conversationId;
     try {
       const res = await appDb.entities.conversations
         .patch({

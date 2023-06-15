@@ -24,7 +24,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/entities/*": ["./stacks/entities/*"],
-      "@/components/*": ["./src/components"]
+      "@/components/*": ["./src/components/*"]
     }
   },
   "include": [
@@ -34,7 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "jest.setup.js",
-    "src/app/[locale]/dash/inbox/conversations/[chat]/ConversationSocket.tsX",
+    "src/app/[locale]/dash/inbox/conversations/[chat]/ConversationSocket.tsx",
     "src/app/[locale]/(chat-widget)/ChatWidgetCard.dtsx"
   ],
   "exclude": ["node_modules"]

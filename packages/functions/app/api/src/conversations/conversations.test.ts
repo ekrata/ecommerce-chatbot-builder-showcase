@@ -9,6 +9,7 @@ import { CreateConversation } from '../../../../../../stacks/entities/entities';
 import { Conversation } from '../../../../../../stacks/entities/conversation';
 import { getHttp } from '../http';
 import { MockOrgIds } from '../util/seed';
+import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -48,6 +49,15 @@ describe.concurrent('/conversations', async () => {
       (conversation: EntityItem<typeof Conversation>) => {
         expect(conversation.orgId).toEqual(orgId);
         expect(conversation.operatorId).toEqual(operatorId);
+      }
+    );
+    // save a mock article object for frontend use
+    writeFile(
+      './mocks/conversations.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
       }
     );
   });

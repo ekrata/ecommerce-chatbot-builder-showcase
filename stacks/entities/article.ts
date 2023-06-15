@@ -55,9 +55,10 @@ export const Article = new Entity({
       type: 'string',
       required: true,
     },
-    operatorId: {
+    lang: {
       type: 'string',
       required: true,
+      default: 'en',
     },
     category: {
       type: articleCategory,
@@ -67,6 +68,18 @@ export const Article = new Entity({
       type: articleStatus,
       required: true,
     },
+    author: {
+      type: 'map',
+      properties: {
+        name: {
+          type: 'string',
+          required: true,
+        },
+        avatar: {
+          type: 'string',
+        },
+      },
+    },
     rating: {
       type: 'number',
     },
@@ -74,7 +87,7 @@ export const Article = new Entity({
       type: 'string',
       required: true,
     },
-    content: {
+    url: {
       type: 'string',
       required: true,
     },
@@ -95,29 +108,18 @@ export const Article = new Entity({
     get: {
       pk: {
         field: 'pk',
-        composite: ['orgId', 'articleId'],
+        composite: ['orgId', 'articleId', 'lang'],
       },
       sk: {
         field: 'sk',
         composite: [],
       },
     },
-    // assigned: {
-    //   index: 'gsi1pk-gsi1sk-index',
-    //   pk: {
-    //     field: 'gsi1pk',
-    //     composite: ['orgId', 'operatorId'],
-    //   },
-    //   sk: {
-    //     field: 'gsi1sk',
-    //     composite: ['updatedAt', 'status', 'channel', 'type'],
-    //   },
-    // },
     byOrg: {
       index: 'gsi2pk-gsi2sk-index',
       pk: {
         field: 'gsi2pk',
-        composite: ['orgId'],
+        composite: ['orgId', 'lang'],
       },
       sk: {
         field: 'gsi2sk',

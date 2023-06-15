@@ -2,6 +2,7 @@ import {
   Api,
   ApiRouteProps,
   Auth,
+  Bucket,
   Config,
   EventBus,
   EventBusRuleProps,
@@ -109,27 +110,14 @@ export function AppStack({ stack, app }: StackContext) {
   const wsApiRoutes:
     | Record<string, FunctionInlineDefinition | WebSocketApiFunctionRouteProps>
     | undefined = {
-    sendNewMesssageToOperator:
-      'packages/functions/app/ws/src/operators/sendNewMessage.handler',
-    sendUpdateMessageToOperator:
-      'packages/functions/app/ws/src/operators/conversations/messages/sendUpdateMessage.handler',
-    sendNewMessageToOperator:
-      'packages/functions/app/ws/src/operators/conversations/sendNewConversation.handler',
-    sendUpdateConversationToOperator:
-      'packages/functions/app/ws/src/operators/conversations/sendUpdateConversation.handler',
-    sendNewVisitorToOperator:
-      'packages/functions/app/ws/src/operators/visitors/sendNewVisitor.handler',
-    sendUpdateVisitorToOperator:
-      'packages/functions/app/ws/src/operators/visitors/sendUpdateVisitor.handler',
-    sendRemoveVisitorToOperator:
-      'packages/functions/app/ws/src/operators/visitors/sendRemoveVisitor.handler',
-
-    sendNewMessageToCustomer:
-      'packages/functions/app/ws/src/customers/conversations/messages/sendNewMessage.handler',
-    sendNewConversationToCustomer:
-      'packages/functions/app/ws/src/customers/conversations/sendNewConversation.handler',
-    sendUpdateConversationToCustomer:
-      'packages/functions/app/ws/src/customers/conversations/sendUpdateConversation.handler',
+    eventNewMessage:
+      'packages/functions/app/ws/src/conversations/messages/eventNewMessage.handler',
+    eventUpdateMessage:
+      'packages/functions/app/ws/src/conversations/messages/sendUpdateMessage.handler',
+    eventNewConversation:
+      'packages/functions/app/ws/src/conversations/eventNewConversation.handler',
+    eventUpdateConversation:
+      'packages/functions/app/ws/src/conversations/eventUpdateConversation.handler',
 
     $connect: 'packages/functions/app/ws/src/connect.handler',
     $default: 'packages/functions/app/ws/src/connect.handler',
@@ -186,6 +174,26 @@ export function AppStack({ stack, app }: StackContext) {
     },
     {}
   );
+
+  new Bucket(stack, 'Bucket', {
+    defaults: {
+      function: {
+        timeout: 20,
+        environment: { tableName: table.tableName },
+        permissions: [table],
+      },
+    },
+    // notifications: {
+    //   myNotification1: {
+    //     function: 'src/notification1.main',
+    //     events: ['object_created'],
+    //   },
+    //   myNotification2: {
+    //     function: 'src/notification2.main',
+    //     events: ['object_removed'],
+    //   },
+    // },
+  });
 
   const appEventBus = new EventBus(stack, 'appEventBus', {
     rules,
@@ -248,6 +256,17 @@ export function AppStack({ stack, app }: StackContext) {
         'packages/functions/app/api/src/translations/create.handler',
       'PATCH /orgs/{orgId}/translations/{lang}':
         'packages/functions/app/api/src/translations/update.handler',
+
+      'GET /orgs/{orgId}/{lang}/articles/{articleId}':
+        'packages/functions/app/api/src/articles/get.handler',
+      'GET /orgs/{orgId}/{lang}/articles':
+        'packages/functions/app/api/src/articles/list.handler',
+      'DELETE /orgs/{orgId}/{lang}/articles/{articleId}':
+        'packages/functions/app/api/src/articles/delete.handler',
+      'POST /orgs/{orgId}/{lang}/articles/{articleId}':
+        'packages/functions/app/api/src/articles/create.handler',
+      'PATCH /orgs/{orgId}/{lang}/articles/{articleId}':
+        'packages/functions/app/api/src/articles/update.handler',
 
       'GET /orgs/{orgId}/operators':
         'packages/functions/app/api/src/operators/list.handler',

@@ -8,6 +8,7 @@ import { Visitor } from '../../../../../stacks/entities/visitor';
 import { Translation } from '../../../../../stacks/entities/translation';
 import { Org } from '../../../../../stacks/entities/org';
 import { Configuration } from '../../../../../stacks/entities/configuration';
+import { Article } from '../../../../../stacks/entities/article';
 
 export const getAppDb = (region: string, tableName: string) =>
   new Service(
@@ -20,6 +21,7 @@ export const getAppDb = (region: string, tableName: string) =>
       operators: Operator,
       messages: Message,
       orgs: Org,
+      articles: Article,
     },
     {
       client: new DynamoDBClient({

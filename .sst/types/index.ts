@@ -33,6 +33,13 @@ declare module "sst/node/websocket-api" {
       httpsUrl: string;
     }
   }
+}import "sst/node/bucket";
+declare module "sst/node/bucket" {
+  export interface BucketResources {
+    "Bucket": {
+      bucketName: string;
+    }
+  }
 }import "sst/node/event-bus";
 declare module "sst/node/event-bus" {
   export interface EventBusResources {

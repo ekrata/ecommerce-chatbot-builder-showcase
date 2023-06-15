@@ -1,0 +1,60 @@
+{
+  "data": [
+    {
+      "status": "published",
+      "createdAt": 1686726209785,
+      "url": "https://short-term-llama.org",
+      "lang": "en",
+      "articleId": "0dcc2e27-0ce6-4040-9a22-4958506a6c3f",
+      "updatedAt": 1686726245763,
+      "orgId": "011d6001-e375-4f05-a752-23f73e3a7d5a",
+      "category": "Technical",
+      "title": "Intelligent Frozen Chicken"
+    },
+    {
+      "status": "published",
+      "createdAt": 1686726209785,
+      "url": "http://growling-pliers.com",
+      "lang": "en",
+      "articleId": "4014dd91-99d0-462f-8746-c8b836f561ec",
+      "updatedAt": 1686726245764,
+      "orgId": "011d6001-e375-4f05-a752-23f73e3a7d5a",
+      "category": "General Information",
+      "title": "Tasty Bronze Fish"
+    },
+    {
+      "status": "draft",
+      "createdAt": 1686726209785,
+      "url": "https://beloved-paintwork.com",
+      "lang": "en",
+      "articleId": "82555664-0836-41e0-aaca-32f03b1b34b8",
+      "updatedAt": 1686726245762,
+      "orgId": "011d6001-e375-4f05-a752-23f73e3a7d5a",
+      "category": "Product",
+      "title": "Awesome Granite Keyboard"
+    },
+    {
+      "status": "in review",
+      "createdAt": 1686726209785,
+      "url": "http://classic-moonlight.net",
+      "lang": "en",
+      "articleId": "6968c808-5fee-411a-b973-93aebeb64c85",
+      "updatedAt": 1686726245761,
+      "orgId": "011d6001-e375-4f05-a752-23f73e3a7d5a",
+      "category": "Technical",
+      "title": "Small Metal Pizza"
+    },
+    {
+      "status": "draft",
+      "createdAt": 1686726209785,
+      "url": "https://aged-samovar.com",
+      "lang": "en",
+      "articleId": "ebc436cc-541b-44a0-8695-64c78a77e024",
+      "updatedAt": 1686726245759,
+      "orgId": "011d6001-e375-4f05-a752-23f73e3a7d5a",
+      "category": "Product",
+      "title": "Oriental Soft Soap"
+    }
+  ],
+  "cursor": null
+}

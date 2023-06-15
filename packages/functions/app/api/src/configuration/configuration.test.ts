@@ -71,9 +71,6 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
       configuration.channels.liveChat.appearance.widgetAppearance.backgroundColor =
         backgroundColor;
     }
-    console.log(
-      configuration?.channels?.liveChat?.appearance?.widgetAppearance
-    );
     const res = await http.patch(`/orgs/${orgId}/configuration`, {
       ...configuration,
     });

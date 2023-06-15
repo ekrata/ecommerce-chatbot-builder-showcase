@@ -8,6 +8,7 @@ import { CreateOperator } from '../../../../../../stacks/entities/entities';
 import { Operator } from '../../../../../../stacks/entities/operator';
 import { getHttp } from '../http';
 import { MockOrgIds } from '../util/seed';
+import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -40,6 +41,15 @@ describe.concurrent('/operators', async () => {
     data.forEach((operator: EntityItem<typeof Operator>) => {
       expect(operator.orgId).toEqual(orgId);
     });
+    // save a mock operators object for frontend use
+    writeFile(
+      './mocks/customers.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
+      }
+    );
   });
   it('creates a operator', async () => {
     const { orgId } = mockOrgIds?.[0];

@@ -8,6 +8,7 @@ import { Message } from '@/entities/message';
 import { CreateMessage } from '@/entities/entities';
 import { getHttp } from '../../http';
 import { MockOrgIds, mockMessageCountPerConversation } from '../../util/seed';
+import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -37,7 +38,7 @@ describe.concurrent('messages', async () => {
     expect(res.data?.orgId).toEqual(orgId);
   });
   it('lists messages in a conversation', async () => {
-    const { orgId, customers } = mockOrgIds[1];
+    const { orgId, customers } = mockOrgIds[0];
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
     const res = await http.get(
@@ -50,6 +51,10 @@ describe.concurrent('messages', async () => {
     data.forEach((message: EntityItem<typeof Message>) => {
       expect(message.orgId).toEqual(orgId);
       expect(message.conversationId).toEqual(conversationId);
+    });
+    // save mock messages object for frontend use
+    writeFile('./mocks/messages.json', JSON.stringify(res.data), 'utf8', () => {
+      expect(true).toEqual(true);
     });
   });
   it('handles when a customer sends a message', async () => {

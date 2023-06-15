@@ -10,6 +10,7 @@ import {
   CreateConversation,
   CreateMessage,
   CreateTranslation,
+  CreateArticle,
 } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 import { senderType } from '../../../../../../stacks/entities/message';
@@ -20,15 +21,21 @@ import {
 } from '../../../../../../stacks/entities/conversation';
 import { Config } from 'sst/node/config';
 import { CreateConfiguration } from '../../../../../../stacks/entities/entities';
+import {
+  articleCategory,
+  articleStatus,
+} from '../../../../../../stacks/entities/article';
 
 export const mockOrgCount = 3;
 export const mockCustomerCount = 5;
 export const mockOperatorCount = 2;
+export const mockArticleCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockMessageCountPerConversation = 10;
 
 export interface MockOrgIds {
   orgId: string;
+  articleIds: string[];
   operatorIds: string[];
   customers: {
     customerId: string;
@@ -67,6 +74,23 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
           // translation
           await db.entities.translations.upsert(createTranslation).go();
+
+          // articles
+          mockOrg.articleIds = await Promise.all(
+            [...Array(mockArticleCount)].map(async () => {
+              const articleId = uuidv4();
+              const createArticle: CreateArticle = {
+                articleId,
+                orgId,
+                status: faker.helpers.arrayElement(articleStatus),
+                category: faker.helpers.arrayElement(articleCategory),
+                title: faker.commerce.productName(),
+                url: faker.internet.url(),
+              };
+              await db.entities.articles.create(createArticle).go();
+              return articleId;
+            })
+          );
 
           // operators
           await Promise.all(
@@ -116,6 +140,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                     type: faker.helpers.arrayElement(conversationType),
                     status,
                     customerId,
+                    read: false,
+                    dismissed: false,
                     orgId,
                     operatorId:
                       status === 'unassigned' ? '' : operator.operatorId,

@@ -8,8 +8,11 @@
   "chat-widget": {
     "start-chat-cta": "Chat with us 👋",
     "chat-with": "Chat with",
+    "hi": "Hi",
+    "How can we help?": "How can we help?",
     "we-reply": "We reply immediately",
     "help": "help",
+    "Recent message": "Recent message",
     "search for help": "Search for help",
     "collections": "{count} collections",
     "General Information": "General Information",

@@ -7,15 +7,13 @@ import { Customer } from './customer';
 import { Visitor } from './visitor';
 import { Configuration } from './configuration';
 import { Translation } from './translation';
+import { Article } from './article';
 
 export type CreateOrg = CreateEntityItem<typeof Org>;
 export type UpdateOrg = UpdateEntityItem<typeof Org>;
 
 export type CreateConversation = CreateEntityItem<typeof Conversation>;
-export type UpdateConversation = Omit<
-  UpdateEntityItem<typeof Conversation>,
-  'orgId' | 'conversationId'
->;
+export type UpdateConversation = UpdateEntityItem<typeof Conversation>;
 
 export type CreateMessage = CreateEntityItem<typeof Message>;
 export type UpdateMessage = UpdateEntityItem<typeof Message>;
@@ -35,5 +33,5 @@ export type UpdateConfiguration = UpdateEntityItem<typeof Configuration>;
 export type CreateTranslation = CreateEntityItem<typeof Translation>;
 export type UpdateTranslation = UpdateEntityItem<typeof Translation>;
 
-export type CreateArticle = CreateEntityItem<typeof Translation>;
-export type UpdateArticle = UpdateEntityItem<typeof Translation>;
+export type CreateArticle = CreateEntityItem<typeof Article>;
+export type UpdateArticle = UpdateEntityItem<typeof Article>;

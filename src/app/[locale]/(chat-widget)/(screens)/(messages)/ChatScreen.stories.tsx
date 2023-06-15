@@ -6,8 +6,7 @@ import { Message } from '@/entities/message';
 import { CreateMessage } from '@/entities/entities';
 import { rest } from 'msw';
 import { StoryObj, Meta } from '@storybook/react';
-import { ChatForm } from './ChatScreen';
-import { useCustomerChatStore } from '../(actions)/useCustomerChatStore';
+import { ChatScreen } from './ChatScreen';
 import {
   createRandomConversation,
   createRandomCustomer,
@@ -15,19 +14,20 @@ import {
   createRandomOperator,
   createRandomOrg,
   loadConfiguration,
-  loadTranslation,
-} from '../../dash/inbox/mocks.test';
+  setupTranslation,
+} from '../../../dash/inbox/mocks.test';
+import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 
-const meta: Meta<typeof ChatForm> = {
+const meta: Meta<typeof ChatScreen> = {
   /* 👇 The title prop is optional.
    * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
    * to learn how to generate automatic titles
    */
-  component: ChatForm,
+  component: ChatScreen,
 };
 
 export default meta;
-type Story = StoryObj<typeof ChatForm>;
+type Story = StoryObj<typeof ChatScreen>;
 type Canvas = ReturnType<typeof within>;
 
 const checkRender = (canvas: Canvas) => {
@@ -37,40 +37,42 @@ const checkRender = (canvas: Canvas) => {
 const renderCheck = 'Render check';
 
 const messageCount = 20;
+const org = createRandomOrg();
+const customer = createRandomCustomer(org.orgId);
+const operator = createRandomOperator(org.orgId);
+const conversation = createRandomConversation(
+  'open',
+  org.orgId,
+  operator.operatorId,
+  customer.customerId
+);
+const messages = createRandomMessages(
+  [
+    org.orgId,
+    conversation.conversationId,
+    operator.operatorId,
+    customer.customerId,
+  ],
+  messageCount
+);
+const configuration = loadConfiguration(org.orgId);
+setupTranslation(org.orgId, 'en');
 // Initial(No Data)
 export const Default: Story = {
   render: () => {
-    const org = createRandomOrg();
-    const customer = createRandomCustomer(org.orgId);
-    const operator = createRandomOperator(org.orgId);
-    const conversation = createRandomConversation(
-      'open',
-      org.orgId,
-      operator.operatorId,
-      customer.customerId
-    );
-    const messages = createRandomMessages(
-      [
-        org.orgId,
-        conversation.conversationId,
-        operator.operatorId,
-        customer.customerId,
-      ],
-      messageCount
-    );
-    const configuration = loadConfiguration(org.orgId);
-    const translation = loadTranslation(org.orgId);
-    useCustomerChatStore.setState({
+    useChatWidgetStore.setState({chatWidget: {
+      ...useChatWidgetStore().chatWidget,
       org,
       customer,
-      operator,
-      conversation,
+      conversations: {[conversation.conversationId]: {
+        operator,
+        conversation,
+        messages,
+      }},
       configuration,
-      messages,
-      translation,
-    });
+    }});
 
-    return <ChatForm />;
+    return <ChatScreen />;
   },
   args: {
     // backgroundColor: 'bg-gradient-to-r from-sky-300 to-cyan-200',
@@ -91,7 +93,7 @@ export const Default: Story = {
       await userEvent.click(canvas.getByTestId('msg-submit'));
       // no error
       expect(canvas.getByTestId('msg-error')).toBe(undefined);
-      const { messages } = useCustomerChatStore.getState();
+      const { messages } = useChatWidgetStore().chatWidget.conversations[conversation.conversationId];
       expect(messages).toHaveLength(messageCount + 1);
       expect(messages?.slice(-1)[0].content).toEqual(msg);
     });

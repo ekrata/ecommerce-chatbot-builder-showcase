@@ -6,24 +6,24 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { shallow } from 'zustand/shallow';
 import { getWsUrl } from '@/app/getWsUrl';
-import { GiConsoleController } from 'react-icons/gi';
-import { useCustomerChatStore } from './(actions)/useCustomerChatStore';
+import { useChatWidgetStore } from './(actions)/useChatWidgetStore';
 import { StartChatButton } from './StartChatButton';
-import { ChatForm } from './(screens)/(messages)/ChatScreen';
 import { NavBar } from './NavBar';
 import { HomeScreen } from './(screens)/HomeScreen';
-import { MessageListScreen } from './(screens)/(messages)/MessageListScreen';
 import { HelpScreen } from './(screens)/HelpScreen';
 import { AppSocketProvider } from '@/components/AppSocketProvider';
+import { EntityItem } from 'electrodb';
+import { Conversation } from '@/entities/conversation';
+import { Message } from '@/entities/message';
+import { MessagesScreen } from './(screens)/(messages)/MessagesScreen';
 
 export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   children,
   mockWsUrl,
 }) => {
-  const { org, configuration, customer, messages, widgetState } =
-    useCustomerChatStore();
+  const { chatWidget: {org, configuration, customer, widgetState, eventNewMessage, eventNewConversation, eventUpdateConversation} } =
+    useChatWidgetStore();
 
   const socket: WebSocket | undefined = useMemo(
     () =>
@@ -35,38 +35,24 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
     [org, customer]
   );
 
-  socket?.addEventListener('sendNewMessageToCustomer', (event) => {
-    const { message } = JSON.parse(event?.data);
-    useCustomerChatStore.setState({
-      ...useCustomerChatStore.getState(),
-      messages: [...(messages ?? []), message],
-    });
+  socket?.addEventListener('eventNewMessage', (event) => {
+    const { message } = JSON.parse(event?.data) as { message: EntityItem<typeof Message> }
+    eventNewMessage(message)
   });
 
-  socket?.addEventListener('sendNewConversationToCustomer', (event) => {
-    const { conversation } = JSON.parse(event?.data);
-    useCustomerChatStore.setState({
-      ...useCustomerChatStore.getState(),
-      conversation,
-      widgetState: 'chat',
-    });
+  socket?.addEventListener('eventUpdatedConversation', (event) => {
+    const { conversation } = JSON.parse(event?.data) as { conversation: EntityItem<typeof Conversation> }
+    eventUpdateConversation(conversation)
   });
 
-  socket?.addEventListener('sendNewConversationToCustomer', (event) => {
-    const { conversation } = useCustomerChatStore.getState();
-    useCustomerChatStore.setState({
-      ...useCustomerChatStore.getState(),
-      conversation: { ...conversation, ...event?.data?.conversation },
-      widgetState: 'chat',
-    });
+  socket?.addEventListener('eventNewConversation', (event) => {
+    const { conversation } = JSON.parse(event?.data) as { conversation: EntityItem<typeof Conversation> }
+    eventNewConversation(conversation)
   });
 
   let content: ReactNode;
 
   switch (widgetState) {
-    case 'chat': {
-      content = <ChatForm></ChatForm>;
-    }
     case 'home': {
       content = (
         <>
@@ -75,10 +61,15 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
         </>
       );
     }
+    case 'chat': {
+        <>
+          <MessagesScreen />
+        </>
+    }
     case 'messages': {
       content = (
         <>
-          <MessageListScreen />
+          <MessagesScreen />
           <NavBar />
         </>
       );

@@ -75,6 +75,29 @@ export const Conversation = new Entity({
     topic: {
       type: conversationTopic,
     },
+    read: {
+      type: 'boolean',
+      required: true,
+      default: false,
+    },
+    readAt: {
+      type: 'number',
+    },
+    dismissed: {
+      type: 'boolean',
+      required: true,
+      default: false,
+    },
+    archived: {
+      type: 'boolean',
+      required: true,
+      default: false,
+    },
+    preventCustomerReplies: {
+      type: 'boolean',
+      required: true,
+      default: false,
+    },
     createdAt: {
       type: 'number',
       readOnly: true,
@@ -118,6 +141,17 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi2sk',
+        composite: [],
+      },
+    },
+    byCustomer: {
+      index: 'gsi3pk-gsi3sk-index',
+      pk: {
+        field: 'gsi3pk',
+        composite: ['orgId', 'customerId'],
+      },
+      sk: {
+        field: 'gsi3sk',
         composite: [],
       },
     },

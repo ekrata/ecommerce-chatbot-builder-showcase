@@ -9,21 +9,31 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId } = usePathParams();
-    const { operatorId, cursor } = useQueryParams();
-    if (!orgId || !operatorId) {
+    const { operatorId, cursor, customerId } = useQueryParams();
+    if (!orgId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
       };
     }
     try {
-      const data = await appDb.entities.conversations.query
-        .assigned({ orgId, operatorId })
-        .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
-      return {
-        statusCode: 200,
-        body: JSON.stringify(data),
-      };
+      if (operatorId) {
+        const data = await appDb.entities.conversations.query
+          .assigned({ orgId, operatorId })
+          .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
+        return {
+          statusCode: 200,
+          body: JSON.stringify(data),
+        };
+      } else if (customerId) {
+        const data = await appDb.entities.conversations.query
+          .byCustomer({ orgId, customerId })
+          .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
+        return {
+          statusCode: 200,
+          body: JSON.stringify(data),
+        };
+      }
     } catch (err) {
       Sentry.captureException(err);
       return {

@@ -9,9 +9,8 @@ import { WebSocketServer } from 'ws';
 import { Client, Server, ServerOptions } from 'mock-socket';
 import { getWsUrl } from '@/app/getWsUrl';
 import {
-  WidgetState,
-  useCustomerChatStore,
-} from './(actions)/useCustomerChatStore';
+  WidgetState, useChatWidgetStore,
+} from './(actions)/useChatWidgetStore';
 import {
   createRandomConversation,
   createRandomCustomer,
@@ -23,7 +22,6 @@ import {
   setupTranslation,
 } from '../dash/inbox/mocks.test';
 import { ChatWidget } from './ChatWidget';
-import { FC } from 'react';
 
 const meta: Meta<typeof ChatWidget> = {
   component: ChatWidget,
@@ -75,61 +73,15 @@ meta.parameters = {
   },
 };
 
-export const IntegratedForms: Story = {
+export const Default: Story = {
   render: () => {
-    useCustomerChatStore.setState(
-      {
-        ...useCustomerChatStore(),
-        widgetState: 'minimized',
-      },
-      true
-    );
-    return <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>;
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step(
-      'Customer sends a message asking for help finding an item.',
-      async () => {
-        sessionStorage.removeItem('customerChatStore');
-        localStorage.removeItem('customerChatStore');
-        useCustomerChatStore.persist.clearStorage();
-
-        // const messages = createRandomMessages(
-        //   [
-        //     org.orgId,
-        //     conversation.conversationId,
-        //     operator.operatorId,
-        //     customer.customerId,
-        //   ],
-        //   messageCount
-        // );
-        useCustomerChatStore.setState(
-          {
-            org,
-            customer,
-            operator,
-            conversation,
-            configuration,
-          },
-          true
-        );
-        (await canvas.findByTestId('start-chat-btn')).click();
-        expect(useCustomerChatStore().widgetState).toEqual('');
-      }
-    );
-  },
-};
-
-export const ChatFormWidget: Story = {
-  render: () => {
-    useCustomerChatStore.setState(
-      {
-        ...useCustomerChatStore(),
-        widgetState: 'chat',
-      },
-      true
-    );
+    // useChatWidgetStore.setState(
+    //   {chatWidget: 
+    //     {
+    //       ...useChatWidgetStore(),
+    //       widgetState: 'chat',
+    //     }
+    // }
     return <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>;
   },
   play: async ({ canvasElement, step }) => {
@@ -139,7 +91,7 @@ export const ChatFormWidget: Story = {
       async () => {
         sessionStorage.removeItem('customerChatStore');
         localStorage.removeItem('customerChatStore');
-        useCustomerChatStore.persist.clearStorage();
+        useChatWidgetStore.persist.clearStorage();
 
         const messages = createRandomMessages(
           [
@@ -150,17 +102,19 @@ export const ChatFormWidget: Story = {
           ],
           messageCount
         );
+
+    
         const configuration = loadConfiguration(org.orgId);
         setupTranslation(org.orgId, lang);
-        useCustomerChatStore.setState(
-          {
+        useChatWidgetStore.setState({
+          chatWidget: {
+            ...useChatWidgetStore().chatWidget,
             org,
             customer,
-            operator,
-            conversation,
-            messages,
+            conversations: {[conversation.conversationId]: {conversation, operator, messages}},
             configuration,
           },
+          }, 
           true
         );
         expect(messages?.length).toEqual(20);
@@ -185,7 +139,7 @@ export const ChatFormWidget: Story = {
           })
         );
         // await new Promise((r) => setTimeout(r, 2000));
-        expect(useCustomerChatStore.getState()?.messages?.length).toEqual(
+        expect(useChatWidgetStore()?.chatWidget.conversations?.[conversation.conversationId]?.messages?.length).toEqual(
           messageCount + 1
         );
         // check local state is updated
@@ -194,7 +148,7 @@ export const ChatFormWidget: Story = {
     await step(
       'Operator starts a conversation and sends a message',
       async () => {
-        const org = createRandomOrg();
+        const org = createRandomOrg()
         const customer = createRandomCustomer(org.orgId);
         const operator = createRandomOperator(org.orgId);
         const randomConversation = createRandomConversation(
@@ -215,20 +169,22 @@ export const ChatFormWidget: Story = {
         mockServer.on('connection', (socket) => {
           socket.send(
             JSON.stringify({
-              type: 'sendNewConversationToCustomer',
+              type: 'eventNewConversation',
               payload: randomConversation,
             })
           );
           socket.send(
             JSON.stringify({
-              type: 'sendNewMessageToCustomer',
+              type: 'eventNewCustomer',
               payload: randomMessage,
             })
           );
         });
 
-        const { messages, conversation, widgetState } =
-          useCustomerChatStore.getState();
+        const { widgetState, conversations  } =
+          useChatWidgetStore?.().chatWidget
+
+        const {conversation, messages} = conversations[randomConversation.conversationId];
         // check local state is updated
         expect(messages?.length).toEqual(1);
         expect(messages?.pop()).toMatchObject(randomMessage);
@@ -239,15 +195,3 @@ export const ChatFormWidget: Story = {
   },
 };
 
-export const PresurveyFormWidget: Story = {
-  render: () => {
-    useCustomerChatStore.setState(
-      {
-        ...useCustomerChatStore(),
-        widgetState: 'prechat_survey',
-      },
-      true
-    );
-    return <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>;
-  },
-};

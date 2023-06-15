@@ -4,8 +4,6 @@ import {
   CreateCustomer,
   CreateMessage,
 } from '@/entities/entities';
-import { Message, SenderType } from '@/entities/message';
-import { EntityItem } from 'electrodb';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -65,37 +63,6 @@ export const createConversation = async (
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to create a conversation');
-  }
-  return res.json();
-};
-
-export const sendMessage = async (
-  orgId: string,
-  conversationId: string,
-  operatorId: string,
-  customerId: string,
-  sender: SenderType,
-  content: string
-): Promise<EntityItem<typeof Message>> => {
-  const messageId = uuidv4();
-  const message: CreateMessage = {
-    conversationId,
-    messageId,
-    customerId,
-    operatorId,
-    orgId,
-    sentAt: Date.now(),
-    sender,
-    content,
-  };
-
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/conversations/${conversationId}/messages/${messageId}`,
-    { method: 'POST', body: JSON.stringify(message) }
-  );
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to create a message');
   }
   return res.json();
 };
