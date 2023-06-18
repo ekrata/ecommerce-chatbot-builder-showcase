@@ -12,7 +12,6 @@ module.exports = {
     'via-blue-500',
     'to-purple-600',
   ],
-
   theme: {
     extend: {},
   },
@@ -21,7 +20,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
-    require('tailwindcss-animated')
+    require('tailwindcss-animated'),
     require('daisyui'),
   ],
 };

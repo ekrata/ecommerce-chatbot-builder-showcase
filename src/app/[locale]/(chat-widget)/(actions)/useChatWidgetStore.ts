@@ -9,15 +9,6 @@ import { Configuration } from '@/entities/configuration';
 import { Operator } from '@/entities/operator';
 import { immer } from 'zustand/middleware/immer';
 
-export type WidgetState =
-  | 'online'
-  | 'closed'
-  | 'help'
-  | 'chat'
-  | 'minimized'
-  | 'messages'
-  | 'home';
-
 import type { CombinedState } from './types';
 import { createChatWidgetState } from './ChatWidgetState';
 

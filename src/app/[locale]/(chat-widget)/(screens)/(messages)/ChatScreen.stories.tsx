@@ -14,7 +14,6 @@ import {
   createRandomOperator,
   createRandomOrg,
   loadConfiguration,
-  setupTranslation,
 } from '../../../dash/inbox/mocks.test';
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 
@@ -56,7 +55,6 @@ const messages = createRandomMessages(
   messageCount
 );
 const configuration = loadConfiguration(org.orgId);
-setupTranslation(org.orgId, 'en');
 // Initial(No Data)
 export const Default: Story = {
   render: () => {

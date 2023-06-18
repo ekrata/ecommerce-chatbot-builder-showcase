@@ -1,33 +1,27 @@
-'use client';
-
 import { FC, useId, useState } from 'react';
-import { BsChatLeftFill, BsPencilSquare } from 'react-icons/bs';
+import { BsChatLeftFill, BsChevronDown, BsPencilSquare } from 'react-icons/bs';
 import { WidgetPosition } from '@/entities/configuration';
 import { useTranslations } from 'next-intl';
+import { useChatWidgetStore } from './(actions)/useChatWidgetStore';
+import { DynamicBackground } from './DynamicBackground';
 
-export const StartChatButton: FC<{
-  enableButtonLabel: boolean;
-  widgetPosition: WidgetPosition;
-  startChatLabel: string;
-  backgroundColor: string;
-}> = ({
-  enableButtonLabel,
-  widgetPosition,
-  startChatLabel,
-  backgroundColor,
-}) => {
+export const StartChatButton: FC = () => {
   const t = useTranslations('chat-widget');
   const [hover, setHover] = useState(false);
+  const {setWidgetState, setWidgetVisibility, widgetVisibility, configuration, widgetState}  = useChatWidgetStore().chatWidget
+  const {widgetPosition, enableButtonLabel, labelText  } = {...configuration?.channels?.liveChat?.appearance?.widgetAppearance};
 
+  const handleClick = () => widgetVisibility === 'minimized' ? setWidgetVisibility('open') : setWidgetVisibility('minimized')
+  
   return (
-    <div className="flex place-items-center break-keep">
+    <div className={`flex place-items-center break-keep ${widgetPosition === 'left' ? 'justify-start' : 'justify-end'}`} onClick={() => handleClick() }>
       {widgetPosition === 'left' && enableButtonLabel ? (
-        <h5>{startChatLabel}</h5>
+        <h5>{labelText}</h5>
       ) : (
         <></>
       )}
       <button
-        className={`btn btn-circle border-0 ${backgroundColor} shadow-2xl`}
+        className={`background btn btn-circle border-0  shadow-2xl`}
         type="submit"
         id={useId()}
         data-testid="start-chat-btn"
@@ -38,11 +32,17 @@ export const StartChatButton: FC<{
           setHover(false);
         }}
       >
-        {hover ? (
-          <BsPencilSquare className="text-black dark:text-white text-2xl animate-in zoom-in animate-out zoom-out" />
+        <DynamicBackground></DynamicBackground>
+        {widgetVisibility === 'minimized' && (hover ? (
+          <BsPencilSquare className="text-black dark:text-white text-2xl animate-jump-in animate-once" />
         ) : (
-          <BsChatLeftFill className="text-black dark:text-white text-xl animate-in zoom-in animate-out zoom-out" />
-        )}
+          <BsChatLeftFill className="text-black dark:text-white text-xl animate-jump-in animate-once" />
+        ))}
+        {widgetVisibility === 'open' && 
+          <BsChevronDown className="text-black dark:text-white text-2xl" />
+        }
+
+
       </button>
       {widgetPosition === 'right' && enableButtonLabel ? (
         <div className="chat chat-start">
@@ -55,4 +55,4 @@ export const StartChatButton: FC<{
       )}
     </div>
   );
-};
+}

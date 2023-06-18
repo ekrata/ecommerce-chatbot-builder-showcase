@@ -1,33 +1,27 @@
-import { FC, PropsWithChildren, useContext, useState } from 'react';
-import { useFormatter, useTranslations } from 'next-intl';
-import { EntityItem } from 'electrodb';
-import { Message, SenderType } from '@/entities/message';
-import { Operator } from '@/entities/operator';
+import { FC, useContext } from 'react';
+import {  useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { Customer } from '@/entities/customer';
-import { FaWindowMinimize } from 'react-icons/fa';
 import { BsChevronDown, BsThreeDotsVertical } from 'react-icons/bs';
 import { IoMdSend } from 'react-icons/io';
-import { Conversation } from '@/entities/conversation';
-import { Api } from 'sst/node/api';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { CustomerChatLog } from './CustomerChatLog';
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
-import { ChatWidget } from '../../ChatWidget';
 import { DynamicBackground } from '../../DynamicBackground';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateMessage } from '@/entities/entities';
 import { ConversationsContext } from './MessagesScreen';
+import React from 'react';
 
 type Inputs = {
   msg: string;
 };
 
 export const ChatScreen: FC = ({}) => {
-  const { chatWidget: {conversations, customer, configuration, sendMessage} } =
+  const { chatWidget: {conversations,  configuration, sendMessage} } =
     useChatWidgetStore();
   const [conversationsState] = useContext(ConversationsContext);
-  const {conversation, operator, messages} = conversations?.[conversationsState?.selectedConversationId ?? ''];
+  const {conversation, messages} = conversations?.[conversationsState?.selectedConversationId ?? ''];
+  const {customer, operator } = conversation
   const t = useTranslations('chat-widget');
   const {
     register,
@@ -40,8 +34,8 @@ export const ChatScreen: FC = ({}) => {
       messageId: uuidv4(),
       conversationId: conversation.conversationId,
       orgId: conversation.orgId,
-      customerId: conversation.customerId,
-      operatorId: conversation.operatorId,
+      customerId: conversation.customer.customerId,
+      operatorId: conversation.operator.operatorId,
       content: msg,
       sender: 'customer' 
     }

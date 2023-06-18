@@ -10,7 +10,7 @@ import { ConversationsContext } from "./MessagesScreen";
 import { useContext } from "react";
 
 interface Props {
-  conversation: ConversationItem
+  conversation?: ConversationItem
 }
 
 /**

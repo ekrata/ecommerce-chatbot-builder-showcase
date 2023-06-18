@@ -1,5 +1,37 @@
-import { Entity } from 'electrodb';
+import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+import { Operator } from './operator';
+import { Message } from './message';
+import { Customer } from './customer';
+
+/**
+ * Replaces customerId and operatorId fields with their respective expanded EntityItem<T> objects
+ * @date 17/06/2023 - 13:12:45
+ *
+ * @export
+ * @typedef {ExpandedConversation}
+ */
+export type ExpandedConversation = Omit<
+  EntityItem<typeof Conversation>,
+  'customerId' | 'operatorId'
+> & {
+  customer: EntityItem<typeof Customer>;
+  operator: EntityItem<typeof Operator>;
+};
+
+/**
+ * Describes a conversation with expanded customer and operator fields.
+ * Useful for rendering and accessing conversations from a list style access pattern.
+ * @date 17/06/2023 - 13:14:13
+ *
+ * @export
+ * @interface ConversationItem
+ * @typedef {ConversationItem}
+ */
+export interface ConversationItem {
+  conversation: ExpandedConversation;
+  messages?: EntityItem<typeof Message>[];
+}
 
 export const conversationStatus = ['unassigned', 'open', 'solved'] as const;
 export type ConversationStatus = (typeof conversationStatus)[number];

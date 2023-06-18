@@ -1,20 +1,16 @@
 import { Configuration } from '@/entities/configuration';
-import { Conversation } from '@/entities/conversation';
+import { Conversation, ConversationItem } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
 import { Org } from '@/entities/org';
 import { EntityItem } from 'electrodb';
 import { StateCreator } from 'zustand';
-import { WidgetState } from './useChatWidgetStore';
 import { Message } from '@/entities/message';
 import { CreateCustomer, CreateMessage } from '@/entities/entities';
 import { Article } from '@/entities/article';
 
-export interface ConversationItem {
-  conversation: EntityItem<typeof Conversation>;
-  operator?: EntityItem<typeof Operator>;
-  messages?: EntityItem<typeof Message>[];
-}
+export type WidgetState = 'help' | 'chat' | 'messages' | 'home' | 'article';
+export type WidgetVisibility = 'open' | 'minimized';
 
 export interface ChatWidgetStateDefinition {
   loading: boolean;
@@ -22,11 +18,10 @@ export interface ChatWidgetStateDefinition {
   // visitor?: EntityItem<typeof Visitor>;
   articles?: EntityItem<typeof Article>[];
   customer?: EntityItem<typeof Customer>;
-  conversations: {
-    [conversationId: string]: ConversationItem;
-  };
+  conversations: Record<string, ConversationItem>;
   configuration?: EntityItem<typeof Configuration>;
   widgetState: WidgetState;
+  widgetVisibility: WidgetVisibility;
 }
 
 export interface ChatWidgetStateActions {
@@ -61,15 +56,12 @@ export interface ChatWidgetStateActions {
   fetchOrg: (orgId: string) => void;
   /**
    * Fetches and updates operator field on a ConversationItem
-   * @date 13/06/2023 - 12:02:41
+   * @date 18/06/2023 - 21:18:01
    *
-   * @type {(
-      conversation: EntityItem<typeof Conversation>
-    ) => void}
+   * @type {(conversationId: string) => void}
    */
-  fetchOperatorForConversation: (
-    conversation: EntityItem<typeof Conversation>
-  ) => void;
+  fetchOperatorForConversation: (conversationId: string) => void;
+  fetchConversationItems: () => Promise<void>;
   /**
    * Creates a customer through in-chat form flow.
    * @date 13/06/2023 - 12:03:29
@@ -91,6 +83,13 @@ export interface ChatWidgetStateActions {
    * @type {(widgetState: WidgetState) => void}
    */
   setWidgetState: (widgetState: WidgetState) => void;
+  /**
+   * Sets the visibility of the widget
+   * @date 18/06/2023 - 21:20:11
+   *
+   * @type {(widgetVisibility: WidgetVisibility) => void}
+   */
+  setWidgetVisibility: (widgetVisibility: WidgetVisibility) => void;
 }
 
 export interface ChatWidgetStateSocketActions {
@@ -109,16 +108,12 @@ export interface ChatWidgetStateSocketActions {
    */
   eventNewConversation: (conversation: EntityItem<typeof Conversation>) => void;
   /**
-   * Handle a update to a conversation. Examples: when a new operator is assigned a conversation.  
-   * @date 13/06/2023 - 12:05:55
+   * Handle a update to a conversationItem. Examples: when a new operator is assigned a conversation.
+   * @date 18/06/2023 - 21:17:14
    *
-   * @type {(
-      conversation: EntityItem<typeof Conversation>
-    ) => void}
+   * @type {(conversationItem: ConversationItem) => void}
    */
-  eventUpdateConversation: (
-    conversation: EntityItem<typeof Conversation>
-  ) => void;
+  eventUpdateConversation: (conversationItem: ConversationItem) => void;
 }
 
 export type ChatWidgetStateType = ChatWidgetStateDefinition &

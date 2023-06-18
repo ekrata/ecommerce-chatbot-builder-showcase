@@ -21,6 +21,7 @@ import {
   loadConfiguration,
   setupTranslation,
 } from '../dash/inbox/mocks.test';
+import customerConversationItems from 'mocks/customer-conversation-items.json'
 import { ChatWidget } from './ChatWidget';
 
 const meta: Meta<typeof ChatWidget> = {
@@ -45,7 +46,6 @@ const conversation = createRandomConversation(
 );
 const configuration = loadConfiguration(org.orgId);
 const lang = 'en';
-setupTranslation(org.orgId, lang);
 let mockSocket: Client;
 
 meta.parameters = {
@@ -69,20 +69,31 @@ meta.parameters = {
           );
         }
       ),
+      rest.get(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations*`,
+        async (req, res, ctx) => {
+          console.log('matched conversations')
+          return res(
+            ctx.status(200),
+            ctx.json(customerConversationItems)
+          );
+        }
+      ),
     ],
   },
 };
 
 export const Default: Story = {
   render: () => {
-    // useChatWidgetStore.setState(
-    //   {chatWidget: 
-    //     {
-    //       ...useChatWidgetStore(),
-    //       widgetState: 'chat',
-    //     }
-    // }
-    return <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>;
+    useChatWidgetStore.setState(
+      {chatWidget: 
+        {
+          ...useChatWidgetStore().chatWidget,
+        }
+    })
+    return (<div className='h-screen'>
+      <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>
+      </div>);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

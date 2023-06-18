@@ -6,9 +6,12 @@ import { AxiosError } from 'axios';
 
 import { Api } from 'sst/node/api';
 import { CreateConversation } from '../../../../../../stacks/entities/entities';
-import { Conversation } from '../../../../../../stacks/entities/conversation';
+import {
+  Conversation,
+  ConversationItem,
+} from '../../../../../../stacks/entities/conversation';
 import { getHttp } from '../http';
-import { MockOrgIds } from '../util/seed';
+import { MockOrgIds, mockMessageCountPerConversation } from '../util/seed';
 import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
@@ -51,9 +54,68 @@ describe.concurrent('/conversations', async () => {
         expect(conversation.operatorId).toEqual(operatorId);
       }
     );
-    // save a mock article object for frontend use
+    // save a mock operator-conversations response for frontend use
     writeFile(
-      './mocks/conversations.json',
+      './mocks/operator-conversations.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
+      }
+    );
+  });
+  it('lists conversations by customer', async () => {
+    const { orgId, operatorIds, customers } = mockOrgIds[0];
+    const { customerId } = faker.helpers.arrayElement(customers);
+    const res = await http.get(
+      `/orgs/${orgId}/conversations?customerId=${customerId}`
+    );
+    const { data, cursor } = res.data;
+    const conversationsByCustomer = res.data;
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(conversationsByCustomer?.data).toBeTruthy();
+    conversationsByCustomer.data.forEach(
+      (conversation: EntityItem<typeof Conversation>) => {
+        expect(conversation.orgId).toEqual(orgId);
+        expect(conversation.customerId).toEqual(customerId);
+      }
+    );
+    // save a mock customer-conversations response for frontend use
+    writeFile(
+      './mocks/customer-conversations.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
+      }
+    );
+  });
+  it('ConversationItem: lists conversations by customer, with customer and operator expanded, as well as conversation messages joined to the response.', async () => {
+    const { orgId, customers } = mockOrgIds[0];
+    const { customerId } = faker.helpers.arrayElement(customers);
+    const res = await http.get(
+      `/orgs/${orgId}/conversations?customerId=${customerId}&includeMessages=true&expansionFields=${encodeURIComponent(
+        JSON.stringify(['customerId', 'operatorId'])
+      )}`
+    );
+    const { data, cursor } = res.data;
+    const conversationsByCustomer = res.data;
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(conversationsByCustomer?.data).toBeTruthy();
+    conversationsByCustomer.data.forEach((conversation: ConversationItem) => {
+      expect(conversation.conversation.orgId).toEqual(orgId);
+      expect(conversation.conversation.customer.customerId).toEqual(customerId);
+      expect(conversation.conversation.operator.operatorId).toBeTruthy();
+      expect(conversation?.messages?.length).toEqual(
+        mockMessageCountPerConversation
+      );
+    });
+
+    // save a mock customer-conversation-items for frontend use
+    writeFile(
+      './mocks/customer-conversation-items.json',
       JSON.stringify(res.data),
       'utf8',
       () => {

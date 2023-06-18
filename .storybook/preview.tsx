@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 import messages from '../messages/en.json';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
+import { mswLoader } from 'msw-storybook-addon';
 
 // Initialize MSW
 initialize({
@@ -14,7 +15,6 @@ initialize({
 
 const preview: Preview = {
   decorators: [
-    mswDecorator,
     (Story) => (
       <html lang={'en'} className={`${inter.className}`}>
         <NextIntlClientProvider locale={'en'} messages={messages}>
@@ -25,6 +25,7 @@ const preview: Preview = {
       </html>
     ),
   ],
+  loaders: [mswLoader],
 };
 
 export default preview;

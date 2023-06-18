@@ -42,37 +42,5 @@ export const Default: Story = {
 
     return <MessageCard conversation={conversationItem}/> 
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step(
-      'Customer sends a message asking for help finding an item.',
-      async () => {
-        // sessionStorage.removeItem('customerChatStore');
-        // localStorage.removeItem('customerChatStore');
-        // useCustomerChatStore.persist.clearStorage();
-
-        // const messages = createRandomMessages(
-        //   [
-        //     org.orgId,
-        //     conversation.conversationId,
-        //     operator.operatorId,
-        //     customer.customerId,
-        //   ],
-        //   messageCount
-        // );
-        // useCustomerChatStore.setState(
-        //   {
-        //     org,
-        //     customer,
-        //     operator,
-        //     conversation,
-        //     configuration,
-        //   },
-        //   true
-        // );
-        // (await canvas.findByTestId('start-chat-btn')).click();
-        // expect(useCustomerChatStore().widgetState).toEqual('');
-      }
-    );
-  },
+  
 };

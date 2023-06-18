@@ -22,8 +22,10 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   children,
   mockWsUrl,
 }) => {
-  const { chatWidget: {org, configuration, customer, widgetState, eventNewMessage, eventNewConversation, eventUpdateConversation} } =
+  const { chatWidget: {org, configuration, widgetVisibility, customer, widgetState, eventNewMessage, eventNewConversation, eventUpdateConversation} } =
     useChatWidgetStore();
+
+  const {widgetPosition} = {...configuration?.channels?.liveChat?.appearance?.widgetAppearance}
 
   const socket: WebSocket | undefined = useMemo(
     () =>
@@ -50,53 +52,56 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
     eventNewConversation(conversation)
   });
 
-  let content: ReactNode;
 
-  switch (widgetState) {
-    case 'home': {
-      content = (
-        <>
-          <HomeScreen />
-          <NavBar />
-        </>
-      );
-    }
-    case 'chat': {
-        <>
-          <MessagesScreen />
-        </>
-    }
-    case 'messages': {
-      content = (
-        <>
-          <MessagesScreen />
-          <NavBar />
-        </>
-      );
-    }
-    case 'help': {
-      content = (
-        <>
-          <HelpScreen />
-          <NavBar />
-        </>
-      );
-    }
-    case 'minimized': {
-      content = (
-        <StartChatButton
-          enableButtonLabel={false}
-          widgetPosition={'left'}
-          startChatLabel={''}
-          backgroundColor={''}
-        ></StartChatButton>
-      );
-    }
-  }
+  const content = useMemo(() => {
+        switch (widgetState) {
+          case 'home': {
+            return (
+              <>
+                <HomeScreen />
+                <NavBar />
+              </>
+            );
+          }
+          case 'chat': {
+            return (
+              <>
+                <MessagesScreen />
+              </>
+            )
+          }
+          case 'messages': {
+            return (
+              <>
+                <MessagesScreen />
+                <NavBar />
+              </>
+            );
+          }
+          case 'help': {
+            return (
+              <>
+                <HelpScreen />
+                <NavBar />
+              </>
+            );
+          }
+        }
+      }, [widgetState])
 
   return (
-    <>
-      <AppSocketProvider appSocket={socket}>{content}</AppSocketProvider>
-    </>
+    <div className={`${widgetPosition === 'left' ? 'md:absolute md:left-20 md:bottom-20' : 'md:absolute md:right-20 md:bottom-20'}`}>
+      <AppSocketProvider appSocket={socket}>
+        {widgetVisibility === 'open' &&
+        (
+          <div className="flex flex-col font-sans h-full w-full md:w-[27rem] md:h-[40rem] rounded-xl max-w-xl dark:bg-gray-800 animate-fade-up">
+            {content}
+          </div>
+          )}
+          <div className='mt-10' >
+            <StartChatButton></StartChatButton>
+          </div>
+      </AppSocketProvider>
+    </div>
   );
 };

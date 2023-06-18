@@ -9,6 +9,7 @@ import { MockOrgIds, mockOrgCount } from '../util/seed';
 import { writeFile } from 'fs';
 import { Translation } from '@/entities/translation';
 import { EntityItem } from 'electrodb';
+import { setupTranslation } from './helpers';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -47,17 +48,9 @@ describe.concurrent('orgs/${orgId}/translations/{lang}', async () => {
     expect(res.data?.orgId).toEqual(orgId);
     expect(res.data?.lang).toEqual(lang);
 
-    // save a mock translation object for frontend use
-    writeFile(
-      './mocks/translation.json',
-      JSON.stringify(res.data),
-      'utf8',
-      () => {
-        expect(true).toEqual(true);
-      }
-    );
+    setupTranslation(res.data);
   });
-  it('updates the name property', async () => {
+  it(`updates the "We're Online" translation property`, async () => {
     const { orgId } = mockOrgIds[1];
     const lang = 'en';
     // Get prexisting data for patch
@@ -68,8 +61,8 @@ describe.concurrent('orgs/${orgId}/translations/{lang}', async () => {
     // patch
     const translation = prepareRes?.data as EntityItem<typeof Translation>;
     const newTranslation = 'we are online';
-    if (translation.translations?.["We're online"]) {
-      translation.translations["We're online"] = newTranslation;
+    if (translation.translations?.chatWidget["We're online"]) {
+      translation.translations.chatWidget["We're online"] = newTranslation;
     }
     const res = await http.patch(`/orgs/${orgId}/translations/${lang}`, {
       ...translation,
@@ -80,7 +73,9 @@ describe.concurrent('orgs/${orgId}/translations/{lang}', async () => {
     const getRes = await http.get(`/orgs/${orgId}/translations/${lang}`);
     const updatedConfig = getRes.data as EntityItem<typeof Translation>;
     expect(updatedConfig.orgId).toEqual(orgId);
-    expect(translation.translations["We're online"]).toEqual(newTranslation);
+    expect(translation.translations.chatWidget["We're online"]).toEqual(
+      newTranslation
+    );
   });
   it('deletes a translation', async () => {
     const { orgId, customers } = mockOrgIds?.[2];
