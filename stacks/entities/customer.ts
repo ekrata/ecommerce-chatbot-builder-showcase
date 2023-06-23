@@ -30,7 +30,6 @@ export const Customer = new Entity({
     },
     email: {
       type: 'string',
-      required: true,
     },
     profilePicture: {
       type: 'string',

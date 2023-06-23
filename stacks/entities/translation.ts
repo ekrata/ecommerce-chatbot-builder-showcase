@@ -53,12 +53,21 @@ export const Translation = new Entity({
               default: 'Chat with us 👋',
               required: true,
             },
-            'Replies within': {
+            'We typically reply in under': {
               type: 'string',
-              default: 'Replies within',
+              default: 'We typically reply in under',
               required: true,
             },
-            help: {
+            Messages: {
+              type: 'string',
+              default: 'Messages',
+            },
+            'Send us a message': {
+              type: 'string',
+              default: 'Send us a message',
+              required: true,
+            },
+            Help: {
               type: 'string',
               default: 'help',
               required: true,

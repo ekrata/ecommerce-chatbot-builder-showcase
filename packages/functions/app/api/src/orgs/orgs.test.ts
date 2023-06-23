@@ -7,6 +7,7 @@ import { CreateOrg } from '@/entities/entities';
 import { getHttp } from '../http';
 import { MockOrgIds, mockOrgCount } from '../util/seed';
 import { orgPlanTier } from '../../../../../../stacks/entities/org';
+import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -30,10 +31,15 @@ describe.concurrent('/orgs', async () => {
   it('lists orgs', async () => {
     const res = await http.get(`/orgs`);
     const { data } = res.data;
+
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(data).toBeTruthy();
     expect(data.length).toBeGreaterThanOrEqual(mockOrgCount);
+    // save a mock customer-conversation-items for frontend use
+    writeFile('./mocks/orgs.json', JSON.stringify(res.data), 'utf8', () => {
+      expect(true).toEqual(true);
+    });
   });
   it('creates a org with of a random plan, operator seats and chatbot conversations', async () => {
     const orgId = uuidv4();

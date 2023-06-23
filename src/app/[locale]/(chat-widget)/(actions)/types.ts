@@ -13,69 +13,11 @@ export type WidgetState = 'help' | 'chat' | 'messages' | 'home' | 'article';
 export type WidgetVisibility = 'open' | 'minimized';
 
 export interface ChatWidgetStateDefinition {
-  loading: boolean;
-  org?: EntityItem<typeof Org>;
-  // visitor?: EntityItem<typeof Visitor>;
-  articles?: EntityItem<typeof Article>[];
-  customer?: EntityItem<typeof Customer>;
-  conversations: Record<string, ConversationItem>;
-  configuration?: EntityItem<typeof Configuration>;
   widgetState: WidgetState;
   widgetVisibility: WidgetVisibility;
 }
 
 export interface ChatWidgetStateActions {
-  /**
-   * When customer starts a chat with a bot/operator 
-   * @date 13/06/2023 - 12:01:04
-   *
-   * @type {(
-      conversation: EntityItem<typeof Conversation>
-    ) => Promise<void>}
-   */
-  createConversation: (
-    conversation: EntityItem<typeof Conversation>
-  ) => Promise<void>;
-  /**
-   * When the customer sends a message to the operator 
-   * @date 13/06/2023 - 12:01:36
-   *
-   * @type {(
-      conversationId: string,
-      message: CreateMessage
-    ) => Promise<void>}
-   */
-  sendMessage: (message: CreateMessage) => Promise<void>;
-  // fetchConversations: (customerId: string) => void;
-  /**
-   * Fetch org.
-   * @date 13/06/2023 - 12:02:29
-   *
-   * @type {(orgId: string) => void}
-   */
-  fetchOrg: (orgId: string) => void;
-  /**
-   * Fetches and updates operator field on a ConversationItem
-   * @date 18/06/2023 - 21:18:01
-   *
-   * @type {(conversationId: string) => void}
-   */
-  fetchOperatorForConversation: (conversationId: string) => void;
-  fetchConversationItems: () => Promise<void>;
-  /**
-   * Creates a customer through in-chat form flow.
-   * @date 13/06/2023 - 12:03:29
-   *
-   * @type {(customer: CreateCustomer) => void}
-   */
-  createCustomer: (customer: CreateCustomer) => void;
-  /**
-   * Fetches configuration
-   * @date 13/06/2023 - 12:04:07
-   *
-   * @type {(orgId: string) => void}
-   */
-  fetchConfiguration: (orgId: string) => void;
   /**
    * Sets the chat widget state
    * @date 13/06/2023 - 12:04:21
@@ -117,8 +59,7 @@ export interface ChatWidgetStateSocketActions {
 }
 
 export type ChatWidgetStateType = ChatWidgetStateDefinition &
-  ChatWidgetStateActions &
-  ChatWidgetStateSocketActions;
+  ChatWidgetStateActions;
 
 export interface CombinedState {
   chatWidget: ChatWidgetStateType;

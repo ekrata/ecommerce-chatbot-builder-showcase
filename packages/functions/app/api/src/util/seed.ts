@@ -29,7 +29,8 @@ import {
 export const mockOrgCount = 3;
 export const mockCustomerCount = 5;
 export const mockOperatorCount = 2;
-export const mockArticleCount = 5;
+export const mockArticleCount = 15;
+export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockMessageCountPerConversation = 10;
 
@@ -77,7 +78,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
           // articles
           mockOrg.articleIds = await Promise.all(
-            [...Array(mockArticleCount)].map(async () => {
+            [...Array(mockArticleCount)].map(async (_, i) => {
               const articleId = uuidv4();
               const createArticle: CreateArticle = {
                 articleId,
@@ -86,6 +87,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 category: faker.helpers.arrayElement(articleCategory),
                 title: faker.commerce.productName(),
                 url: faker.internet.url(),
+                highlight: i < mockArticleHighlightCount,
               };
               await db.entities.articles.create(createArticle).go();
               return articleId;

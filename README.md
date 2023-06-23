@@ -29,6 +29,12 @@ pnpm sst dev
 turbo dev
 ```
 
+# Adding new next-intl translations
+
+First, navigate to the translations entity.
+Then, add the new translation,
+Finally execute `pnpm run-test-app-api` to copy the new translations to the /messsages translation folder.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

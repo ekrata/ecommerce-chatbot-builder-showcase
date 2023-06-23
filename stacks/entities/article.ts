@@ -80,6 +80,10 @@ export const Article = new Entity({
         },
       },
     },
+    highlight: {
+      type: 'boolean',
+      default: false,
+    },
     rating: {
       type: 'number',
     },

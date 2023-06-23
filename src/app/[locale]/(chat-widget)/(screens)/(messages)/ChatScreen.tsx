@@ -11,18 +11,38 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateMessage } from '@/entities/entities';
 import { ConversationsContext } from './MessagesScreen';
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { EntityItem } from 'electrodb';
+import { Org } from '@/entities/org';
+import { Customer } from '@/entities/customer';
+import { Article } from '@/entities/article';
+import { ConversationItem } from '@/entities/conversation';
+import { getConversationItems } from '../../(actions)/conversations/getConversationItems';
+import { getOrg } from '../../(actions)/orgs/getOrg';
+import { getArticles } from '../../(actions)/orgs/articles/getArticles';
+import { Configuration } from '@/entities/configuration';
 
 type Inputs = {
   msg: string;
 };
 
 export const ChatScreen: FC = ({}) => {
-  const { chatWidget: {conversations,  configuration, sendMessage} } =
+  const { chatWidget: {widgetState,  setWidgetState} } =
     useChatWidgetStore();
   const [conversationsState] = useContext(ConversationsContext);
-  const {conversation, messages} = conversations?.[conversationsState?.selectedConversationId ?? ''];
-  const {customer, operator } = conversation
   const t = useTranslations('chat-widget');
+  const orgId = process.env.NEXT_PUBLIC_AP_ORG_ID ?? ''
+  const org = useQuery<EntityItem<typeof Org>>([orgId, 'org'], async () => getOrg(orgId));
+  const customer = useQuery<EntityItem<typeof Customer>>([orgId, 'customer'])
+  const conversationItems = useQuery<ConversationItem[]>([orgId, 'conversationItems'], async () => {
+    if(orgId && customer?.data?.customerId) {
+      return await getConversationItems(orgId, customer?.data.customerId)
+    }
+    return []
+  });
+  const mostRecentConversationItem = conversationItems?.data?.slice(-1)[0]
+  const configuration = useQuery<EntityItem<typeof Configuration>>([org.data?.orgId, 'configuration'], async () => getConfiguration(process.env.NEXT_PUBLIC_AP_ORG_ID ?? ''));
+  const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const {
     register,
     handleSubmit,
@@ -30,17 +50,18 @@ export const ChatScreen: FC = ({}) => {
     formState: { errors },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async ({ msg }) => {
-    const createMessage: CreateMessage = {
-      messageId: uuidv4(),
-      conversationId: conversation.conversationId,
-      orgId: conversation.orgId,
-      customerId: conversation.customer.customerId,
-      operatorId: conversation.operator.operatorId,
-      content: msg,
-      sender: 'customer' 
+    if(conversation?.conversationId && conversation.customer.customerId) {
+      const createMessage: CreateMessage = {
+        messageId: uuidv4(),
+        conversationId: conversation?.conversationId,
+        orgId: conversation?.orgId,
+        customerId: conversation?.customer.customerId,
+        operatorId: conversation?.operator.operatorId ?? '',
+        content: msg,
+        sender: 'customer' 
+      }
+      // const sentMessage = await sendMessage(createMessage)
     }
-    const sentMessage = await sendMessage(createMessage)
-    
   };
 
   return (
@@ -48,12 +69,12 @@ export const ChatScreen: FC = ({}) => {
       <div
         className={`background flex place-items-center justify-between p-2 px-6 gap-x-2 border-b-2 border-gray-300 dark:border-gray-700 shadow-2xl`}
       >
-        <DynamicBackground />
+        {configuration.data && <DynamicBackground configuration={configuration.data} />}
         <div className="avatar online">
           <div className="w-16 rounded-full ring-2 shadow-2xl">
             <Image
               src={
-                operator?.profilePicture ??
+                conversation?.operator?.profilePicture ??
                 'https://www.nicepng.com/ourpic/u2y3a9e6t4o0a9w7_profile-picture-default-png/'
               }
               data-testid="operator-img"
@@ -64,9 +85,9 @@ export const ChatScreen: FC = ({}) => {
           </div>
         </div>
         <div className="flex flex-col justify-start">
-          <div>{t('chat-with')}</div>
+          <div>{t('Chat with')}</div>
           <h5 className="text-2xl" data-testid="operator-title">
-            {operator?.name ?? operator?.email}
+            {conversation?.operator?.name ?? conversation?.operator?.email}
           </h5>
         </div>
 
@@ -112,7 +133,7 @@ export const ChatScreen: FC = ({}) => {
               data-testid="msg-send"
               type="submit"
             >
-              <DynamicBackground />
+              {configuration.data && <DynamicBackground configuration={configuration.data} />}
               <IoMdSend className="text-neutral dark:text-white" />
             </button>
           </div>

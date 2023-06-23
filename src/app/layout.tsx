@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { FC, PropsWithChildren } from 'react';
 import { notFound } from 'next/navigation';
 import './globals.css';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,6 +14,10 @@ export const metadata = {
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   const locale = useLocale();
+  const queryClient = new QueryClient({defaultOptions: {queries: {
+    cacheTime: Infinity,
+    staleTime: Infinity,
+  }}})
   let messages;
   try {
     messages = (await import(`../../messages/${locale}.json`)).default;
@@ -23,7 +28,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang={locale} className={`${inter.className}`}>
       <NextIntlClientProvider locale={locale} messages={messages}>
-        <body>{children}</body>
+        <QueryClientProvider client={queryClient}>
+          <body>{children}</body>
+        </QueryClientProvider>
       </NextIntlClientProvider>
     </html>
   );

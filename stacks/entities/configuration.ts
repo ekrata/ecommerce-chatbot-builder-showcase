@@ -34,6 +34,16 @@ export const Configuration = new Entity({
                   type: 'map',
                   default: {},
                   properties: {
+                    logo: {
+                      type: 'string',
+                      default:
+                        'https://upload.wikimedia.org/wikipedia/commons/c/c5/Gymshark_logo.svg',
+                    },
+                    botLogo: {
+                      type: 'string',
+                      default:
+                        'https://seeklogo.com/images/G/gymshark-logo-3F1E7A14A4-seeklogo.com.png',
+                    },
                     backgroundColor: {
                       type: 'string',
                       default:
@@ -63,10 +73,6 @@ export const Configuration = new Entity({
                     enableWidgetSounds: {
                       type: 'boolean',
                       default: true,
-                    },
-                    brandLogo: {
-                      type: 'string',
-                      default: '',
                     },
                   },
                 },

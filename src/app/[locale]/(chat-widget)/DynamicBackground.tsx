@@ -1,13 +1,18 @@
-import { useChatWidgetStore } from './(actions)/useChatWidgetStore';
+import { EntityItem } from 'electrodb';
+import { Configuration } from '@/entities/configuration';
 
-/**
+interface Props {
+  configuration: EntityItem<typeof Configuration>
+}
+
+export /**
  * Place inside a element that contains the 'background' class to apply.
- * @date 12/06/2023 - 19:14:24
+ * @date 21/06/2023 - 21:05:38
  *
+ * @param {{ configuration: EntityItem<typeof Configuration>; }} {configuration}
  * @returns {*}
  */
-export const DynamicBackground = () => {
-  const { chatWidget: {configuration} } = useChatWidgetStore();
+const DynamicBackground: React.FC<Props> = ({configuration}) => {
   const { backgroundColor, darkBackgroundColor } = {
     ...configuration?.channels?.liveChat?.appearance?.widgetAppearance,
   };

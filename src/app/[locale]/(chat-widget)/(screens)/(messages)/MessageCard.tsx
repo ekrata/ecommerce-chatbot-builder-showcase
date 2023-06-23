@@ -68,7 +68,7 @@ export const MessageCard: React.FC<Props> = ({conversation}) => {
               <p>{conversation.operator?.name}</p>
               <p>
                 {relativeTime(
-                  conversation?.messages?.slice(-1)[0]?.sentAt ?? 0
+                  conversation?.messages?.slice(-1)[0]?.sentAt
                 )}
               </p>
             </div>

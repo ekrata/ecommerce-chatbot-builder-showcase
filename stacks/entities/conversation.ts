@@ -78,13 +78,10 @@ export const Conversation = new Entity({
     },
     customerId: {
       type: 'string',
-      required: true,
     },
     // Current Operator
     operatorId: {
       type: 'string',
-      required: true,
-      default: '',
     },
     connectionId: {
       type: 'string',
