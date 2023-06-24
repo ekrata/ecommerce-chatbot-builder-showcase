@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
  * Type of sender
  * @date 12/06/2023 - 10:43:10
  *
- * @type {readonly ["operator", "customer", "context"]}
+ * @type {readonly ["operator", "customer"]}
  */
-export const senderType = ['operator', 'customer', 'context'] as const;
+export const senderType = ['operator', 'customer', 'bot'] as const;
 /**
  * senderType as a union
  * @date 12/06/2023 - 10:43:10

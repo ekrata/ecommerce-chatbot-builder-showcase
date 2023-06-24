@@ -32,9 +32,12 @@ export const createChatWidgetState: StateSlice<ChatWidgetStateType> = (
     set((state) => {
       state.chatWidget.widgetState = widgetState;
     }),
-  setWidgetVisibility: (widgetVisibility: WidgetVisibility) => {
+  setWidgetVisibility: (widgetVisibility: WidgetVisibility) =>
     set((state) => {
       state.chatWidget.widgetVisibility = widgetVisibility;
-    });
-  },
+    }),
+  setSelectedConversationId: (selectedConversationId?: string) =>
+    set((state) => {
+      state.chatWidget.selectedConversationId = selectedConversationId;
+    }),
 });

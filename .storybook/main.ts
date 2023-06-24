@@ -20,7 +20,7 @@ const config: StorybookConfig = {
   },
   env: (config) => ({
     ...config,
-    NEXT_PUBLIC_AP_ORG_ID: '160bb0e3-bfef-419e-bed0-43c2d06b84d4',
+    NEXT_PUBLIC_CW_ORG_ID: '160bb0e3-bfef-419e-bed0-43c2d06b84d4',
     // Object.entries(process.env).map(([key, value]) => key))
   }),
   webpackFinal: async (config, { configType }) => {

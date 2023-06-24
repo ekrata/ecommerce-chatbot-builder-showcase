@@ -3,7 +3,6 @@
 import { useChatWidgetStore } from "../../(actions)/useChatWidgetStore";
 import { ConversationItem } from "@/entities/conversation";
 import { useFormatter, useTranslations } from "next-intl";
-import { ConversationsContext } from "./MessagesScreen";
 import { useContext } from "react";
 import { EntityItem } from "electrodb";
 import { getOrg } from "../../(actions)/orgs/getOrg";
@@ -16,10 +15,8 @@ import {BiSend, BiUserCircle} from 'react-icons/bi';
 import { getConfiguration } from "../../(actions)/orgs/configurations/getConfiguration";
 import { Configuration } from "@/entities/configuration";
 import { DynamicBackground } from "../../DynamicBackground";
-
-interface Props {
-  conversation?: ConversationItem
-}
+import { useCreateConversationMut } from "../../(hooks)/mutations";
+import { useConfigurationQuery, useCustomerQuery } from "../../(hooks)/queries";
 
 /**
  * Renders a button in place to present the opportunity for a user to start a new conversation. 
@@ -27,27 +24,23 @@ interface Props {
  *
  * @returns {*}
  */
-export const StartConversationCard: React.FC<Props> = () => {
-  const {chatWidget: {setWidgetState}} = useChatWidgetStore()
-  const orgId = process.env.NEXT_PUBLIC_AP_ORG_ID ?? ''
-  const [_, setConversationsState] = useContext(ConversationsContext)
+export const StartConversationCard: React.FC = () => {
+  const {chatWidget: {setWidgetState, setSelectedConversationId}} = useChatWidgetStore()
+  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
   const t = useTranslations('chat-widget');
-  const org = useQuery<EntityItem<typeof Org>>([orgId, 'org'], async () => getOrg(orgId ?? ''));
-  const mutation = useMutation({
-    mutationKey: [orgId, 'createConversation'],
-    mutationFn: async(params: Parameters<typeof createConversation>) => await createConversation(...params)
-    })
+  const customer = useCustomerQuery(orgId, '');
+  const createConversationMut = useCreateConversationMut(orgId, customer.data?.customerId ?? '');
   const { relativeTime } = useFormatter()
-  const configuration = useQuery<EntityItem<typeof Configuration>>([orgId, 'configuration'], async () => getConfiguration(process.env.NEXT_PUBLIC_AP_ORG_ID ?? ''));
+  const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   var halfAnHourAgo = new Date(Date.now())
   halfAnHourAgo.setMinutes ( halfAnHourAgo.getMinutes() - 30 );
   return (
-      <button className="btn btn-ghost block font-light justify-between h-full normal-case place-items-center animate-fade-left w-full  p-1 py-4  text-sm " onClick={async() => {
-        const conversationId = uuidv4()
-        const res = await mutation.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'chat', channel: 'website', status: 'unassigned' }])
-        setConversationsState?.({selectedConversationId:  res.conversationId})
+      <button className="btn btn-ghost block font-light justify-between h-20 normal-case place-items-center animate-fade-left animate-once w-full  p-1 py-4  text-sm " onClick={async() => {
         setWidgetState('chat')
+        const conversationId = uuidv4()
+        setSelectedConversationId(conversationId);
+        const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'chat', channel: 'website', status: 'unassigned' }])
       }} > 
         <div className="flex place-items-center justify-around">
           <div className="avatar w-12 h-12 background rounded-full p-2 ring-2 ring-primary online">

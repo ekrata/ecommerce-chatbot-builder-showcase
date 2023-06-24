@@ -5,7 +5,7 @@ import { useChatWidgetStore } from './(actions)/useChatWidgetStore';
 export const NavBar: FC = () => {
   const { chatWidget: {widgetState, setWidgetState} } = useChatWidgetStore();
   return (
-    <div className="btm-nav rounded-b-lg animate-fade-left">
+    <div className="btm-nav rounded-b-lg sticky">
         <button className={`rounded-bl-lg ${widgetState === 'home' && 'active'}`} onClick={() => setWidgetState('home')}>
           <BiHomeSmile className='text-2xl'/>
           <h4>Home</h4>

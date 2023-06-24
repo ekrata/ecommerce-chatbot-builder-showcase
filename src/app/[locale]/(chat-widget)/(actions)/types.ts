@@ -15,6 +15,7 @@ export type WidgetVisibility = 'open' | 'minimized';
 export interface ChatWidgetStateDefinition {
   widgetState: WidgetState;
   widgetVisibility: WidgetVisibility;
+  selectedConversationId?: string;
 }
 
 export interface ChatWidgetStateActions {
@@ -32,6 +33,13 @@ export interface ChatWidgetStateActions {
    * @type {(widgetVisibility: WidgetVisibility) => void}
    */
   setWidgetVisibility: (widgetVisibility: WidgetVisibility) => void;
+  /**
+   * Sets the current conversation id, which toggles between the chat and conversations screen.
+   * @date 24/06/2023 - 13:32:41
+   *
+   * @type {(selectedConversationId: string) => void}
+   */
+  setSelectedConversationId: (selectedConversationId?: string) => void;
 }
 
 export interface ChatWidgetStateSocketActions {

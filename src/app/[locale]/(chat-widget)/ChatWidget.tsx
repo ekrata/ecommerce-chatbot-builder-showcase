@@ -1,7 +1,9 @@
 import {
+  Dispatch,
   FC,
   PropsWithChildren,
   ReactNode,
+  createContext,
   useEffect,
   useMemo,
   useState,
@@ -12,12 +14,20 @@ import { NavBar } from './NavBar';
 import { HomeScreen } from './(screens)/HomeScreen';
 import { HelpScreen } from './(screens)/HelpScreen';
 import { EntityItem } from 'electrodb';
-import { MessagesScreen } from './(screens)/(messages)/MessagesScreen';
+import { ConversationsScreen } from './(screens)/(messages)/ConversationsScreen';
 import { Org } from '@/entities/org';
 import { getOrg } from './(actions)/orgs/getOrg';
 import { Customer } from '@/entities/customer';
 import { useQuery } from '@tanstack/react-query';
 import { Configuration } from '@/entities/configuration';
+import { useConfigurationQuery, useCustomerQuery, useOrgQuery } from './(hooks)/queries';
+import { ChatScreen } from './(screens)/(messages)/ChatScreen';
+
+export interface ConversationsState {
+  selectedConversationId?: string
+}
+
+export const ConversationsContext = createContext<[ConversationsState?, Dispatch<ConversationsState>?]>([]);
 
 export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   children,
@@ -25,14 +35,13 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 }) => {
   const { chatWidget: {widgetVisibility, widgetState } } =
     useChatWidgetStore();
+  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const configuration = useConfigurationQuery(orgId);
+  const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
+  const org = useOrgQuery(orgId)
+  const customer = useCustomerQuery(orgId, '')
+  const [conversationsState, setConversationsState] = useState<ConversationsState>({})
 
-  const orgId = process.env.NEXT_PUBLIC_AP_ORG_ID ?? ''
-  const org = useQuery<EntityItem<typeof Org>>('org', async () => getOrg(orgId ?? ''));
-  const configuration = useQuery<EntityItem<typeof Configuration>>([orgId, 'configuration']);
-
-  // only load from persistence.
-  const customer = useQuery<EntityItem<typeof Customer>>([orgId, 'customer']);
-  const { widgetPosition } = {...configuration.data?.channels?.liveChat?.appearance?.widgetAppearance}
 
   const content = useMemo(() => {
     switch (widgetState) {
@@ -44,20 +53,14 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
           </div>
         );
       }
-      case 'chat': {
-        return (
-          <>
-            <MessagesScreen />
-          </>
-        )
-      }
+      case 'chat':
       case 'messages': {
         return (
-          <div className=''>
-            <MessagesScreen />
-            <NavBar />
-          </div>
-        );
+          <>
+            {widgetState === 'chat' && (<><ChatScreen /></>)}
+            {widgetState === 'messages' && (<><ConversationsScreen /><NavBar /></>)}
+          </>
+        )
       }
       case 'help': {
         return (
@@ -71,10 +74,10 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   }, [widgetState])
 
   return (
-    <div className={`${widgetPosition === 'left' ? 'md:absolute md:left-20 md:bottom-20' : 'md:absolute md:right-20 md:bottom-20'}`}>
+    <div className={`${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-20 md:bottom-20' : 'md:absolute md:right-20 md:bottom-20'}`}>
         {widgetVisibility === 'open' &&
         (
-          <div className="flex flex-col font-sans h-full w-full md:w-[27rem] md:h-[40rem] rounded-xl max-w-xl dark:bg-gray-900 bg-white animate-fade-up">
+          <div className="flex flex-col h-full w-full md:w-[27rem] md:h-[40rem] rounded-xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left overflow-y-scroll mb-20">
             {content}
           </div>
           )}

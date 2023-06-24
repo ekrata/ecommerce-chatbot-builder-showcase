@@ -134,6 +134,7 @@ describe.concurrent('/conversations', async () => {
       conversationId,
       orgId,
       customerId,
+      operatorId: '',
       status,
       type,
       channel,
@@ -148,6 +149,36 @@ describe.concurrent('/conversations', async () => {
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
     expect(res.data?.conversationId).toEqual(conversationId);
+    expect(res.data?.orgId).toEqual(orgId);
+    expect(res.data?.status).toEqual(status);
+    expect(res.data?.channel).toEqual(channel);
+    expect(res.data?.type).toEqual(type);
+  });
+  it.skip('creates a conversation item', async () => {
+    const { orgId, customers } = mockOrgIds?.[0];
+    const { customerId } = faker.helpers.arrayElement(customers);
+    const conversationId = uuidv4();
+    const status = 'unassigned';
+    const channel = 'website';
+    const type = 'chat';
+    const data: CreateConversation = {
+      conversationId,
+      orgId,
+      customerId,
+      status,
+      type,
+      channel,
+    };
+
+    // validate creation api
+    const res = await http.post(
+      `/orgs/${orgId}/conversations/${conversationId}`,
+      data
+    );
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data).toBeTruthy();
+    expect(res.data?.operator).toEqual(conversationId);
     expect(res.data?.orgId).toEqual(orgId);
     expect(res.data?.status).toEqual(status);
     expect(res.data?.channel).toEqual(channel);

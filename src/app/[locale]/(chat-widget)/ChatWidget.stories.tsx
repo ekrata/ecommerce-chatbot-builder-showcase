@@ -51,22 +51,7 @@ const existingConversationRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] 
 )]
 
 const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
-      rest.post(
-        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations/:conversationId/messages/:messageId`,
-        async (req, res, ctx) => {
-          const { orgId, conversationId, messageId } = req.params;
-          return res(
-            ctx.status(200),
-            ctx.delay(2000),
-            ctx.json({
-              ...((await req?.json()) as CreateMessage),
-              conversationId,
-              orgId,
-              messageId,
-            } as EntityItem<typeof Message>)
-          );
-        }
-      ),
+
       rest.get(
         `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId`,
         async (req, res, ctx) => {
@@ -107,6 +92,23 @@ const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
             ctx.delay(2000),
             ctx.json(({...customerConversations.data[0], ...createConversation, orgId, conversationId, }))
           )
+        }
+      ),
+      rest.post(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations/:conversationId/messages/:messageId`,
+        async (req, res, ctx) => {
+          console.log('createMessage')
+          const { orgId, conversationId, messageId } = req.params;
+          return res(
+            ctx.status(200),
+            ctx.delay(2000),
+            ctx.json({
+              ...((await req?.json()) as CreateMessage),
+              conversationId,
+              orgId,
+              messageId,
+            } as EntityItem<typeof Message>)
+          );
         }
       ),
     ]

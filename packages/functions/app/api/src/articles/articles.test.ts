@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import { Api } from 'sst/node/api';
 import { CreateArticle } from '@/entities/entities';
 import { getHttp } from '../http';
-import { MockOrgIds } from '../util/seed';
+import { MockOrgIds, mockArticleSearchPhrase } from '../util/seed';
 import { writeFile } from 'fs';
 import { EntityItem } from 'electrodb';
 import { Article } from '@/entities/article';
@@ -30,6 +30,19 @@ describe.concurrent('orgs/{orgId}/{lang}/articles/', async () => {
     const { orgId, articleIds } = mockOrgIds[0];
     const articleId = faker.helpers.arrayElement(articleIds);
     const res = await http.get(`/orgs/${orgId}/${lang}/articles/${articleId}`);
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data).toBeTruthy();
+    expect(res.data?.orgId).toEqual(orgId);
+    expect(res.data?.articleId).toEqual(articleId);
+    expect(res.data?.lang).toEqual(lang);
+  });
+  it(`full text searches for an article that contains the searchPhrase: ${mockArticleSearchPhrase}`, async () => {
+    const { orgId, articleIds } = mockOrgIds[0];
+    const articleId = faker.helpers.arrayElement(articleIds);
+    const res = await http.get(
+      `/orgs/${orgId}/${lang}/articles/search?phrase=${mockArticleSearchPhrase}`
+    );
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();

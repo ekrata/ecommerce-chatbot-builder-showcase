@@ -33,6 +33,7 @@ export const mockArticleCount = 15;
 export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockMessageCountPerConversation = 10;
+export const mockArticleSearchPhrase = `30-Day returns`;
 
 export interface MockOrgIds {
   orgId: string;
@@ -86,7 +87,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 status: faker.helpers.arrayElement(articleStatus),
                 category: faker.helpers.arrayElement(articleCategory),
                 title: faker.commerce.productName(),
-                url: faker.internet.url(),
+                content: `${faker.lorem.paragraphs(2)}${
+                  i % 3 === 0 && mockArticleSearchPhrase
+                }${faker.lorem.paragraphs(1)}`,
                 highlight: i < mockArticleHighlightCount,
               };
               await db.entities.articles.create(createArticle).go();

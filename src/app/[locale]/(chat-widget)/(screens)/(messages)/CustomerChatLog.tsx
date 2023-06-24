@@ -1,8 +1,12 @@
-import Image from 'next/image';
-import { FC, useContext } from 'react';
-import { useFormatter } from 'next-intl';
+import { FC,  useMemo, useEffect } from 'react';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
-import { ConversationsContext } from './MessagesScreen';
+import { useCustomerQuery, useConfigurationQuery, useConversationItemsQuery } from '../../(hooks)/queries';
+import { useCreateMessageMut } from '../../(hooks)/mutations';
+import { MessageTimeLabel } from './MessageTimeLabel';
+import { Avatar } from './Avatar';
+import { getItem } from '../../(helpers)/helpers';
+import { createMessage } from '../../(actions)/conversations/messages/createMessage';
 
 interface Props  {
   conversationId: string
@@ -12,41 +16,33 @@ interface Props  {
  * Renders a chat log from the perspective of a customer, in the chat widget.
  * @date 13/06/2023 - 12:09:16
  *
- * @param {{ conversationId: string; }} {conversationId}
  * @returns {*}
  */
-export const CustomerChatLog: FC = ({}) => 
-{ const { relativeTime } = useFormatter();
-  const [conversationState, setConversationsState] = useContext(ConversationsContext);
-  const {chatWidget: {conversations}} = useChatWidgetStore();
-  const {messages, operator, conversation } = conversations[conversationState?.selectedConversationId ?? ''];
-  return (
+export const CustomerChatLog: FC = ({}) => {
+    const t = useTranslations('chat-widget')
+    const {chatWidget: {selectedConversationId}} = useChatWidgetStore();
+    const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+    const customer = useCustomerQuery(orgId, '');
+    const conversationItems = useConversationItemsQuery(orgId, customer?.data?.customerId ?? '')
+    const conversationItem = getItem(conversationItems.data ?? [], selectedConversationId ?? '');
+    const configuration = useConfigurationQuery(orgId);
+    const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
+
+    // Observing message creation/sending state
+    const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '' )
+    const { relativeTime } = useFormatter()
+
+
+    return (
     <div
-      className="flex flex-col gap-y-8 pb-8 w-full bg-white dark:bg-gray-800 overflow-y-scroll h-[30rem]"
+      className="flex flex-col gap-y-1 pb-8 py-2 text-sm w-full bg-base-100 dark:bg-gray-800 overflow-y-scroll h-[30rem]"
       data-testid="chat-log"
     >
-      {messages
-        ?.sort((a, b) => (a?.sentAt ?? 0) - (b?.sentAt ?? 0))
-        ?.map((message) => (
+      {conversationItem?.messages
+        ?.map((message, i) => (
           <div className="px-4">
-            {message.sender === 'operator' ? (
-              <div className="flex place-items-center justify-start ">
-                <h4 className="text-default p-2">
-                  {operator?.name ?? operator?.email}
-                </h4>
-                <p className="text-xs p-2 right-0">
-                  {message?.sentAt && relativeTime(message?.sentAt, new Date())}
-                </p>
-              </div>
-            ) : (
-              <div className="flex place-items-center justify-end">
-                <p className="text-xs p-2 right-0">
-                  {message?.sentAt && relativeTime(message?.sentAt, new Date())}
-                </p>
-              </div>
-            )}
-            {message.sender === 'operator' && (
-              <div className="flex gap-x-2 w-full justify-start">
+            {(message.sender === 'operator' || message.sender === 'bot') && (
+              <div className="flex gap-x-2 w-full justify-start flex-col" >
                 <div className="w-30 h-30 flex-none">
                   <div className="indicator">
                     <span
@@ -59,40 +55,37 @@ export const CustomerChatLog: FC = ({}) =>
                     >
                       {!message.sentAt ? '...' : ''}
                     </span>
-                    <Image
-                      src={operator?.profilePicture ?? ''}
-                      alt="profile-picture"
-                      width={50}
-                      height={50}
-                      className="rounded-full ring-2 m-0 p-0 "
-                    />
+                    <Avatar conversationItem={conversationItem} message={message}/>
                   </div>
-                </div>
-                <p
-                  className={`text-default p-2 rounded-xl flex-initial dark:bg-gray-600 bg-gray-100 ${
+                  <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${
                     !message.sentAt && 'animate-pulse'
-                  }`}
+                  } tooltip-bottom z-10`}
+                  data-tip={<MessageTimeLabel conversationItem={conversationItem} message={message}/>}
                 >
                   {message.content}
                 </p>
               </div>
+              {i+1 === conversationItem?.messages?.length && (
+                <div className="flex place-items-center justify-start ">
+                  <MessageTimeLabel conversationItem={conversationItem} message={message}/>
+                </div>
+              )}
+              </div>
             )}
             {message.sender === 'customer' && (
-              <div className="pl-20 flex justify-end gap-x-2">
-                <p className="p-2 rounded-xl bg-gray-200 dark:bg-gray-700">
+              <div className="chat chat-end flex flex-col">
+                <div className="min-h-0 rounded-lg p-2 bg-gray-900 text-base-100"> 
                   {message.content}
-                </p>
+                </div>
+                {i+1 === conversationItem?.messages?.length && (
+                  <div className="flex place-items-center justify-end">
+                    {createMessageMut.isLoading ? 'Sending...' : <MessageTimeLabel conversationItem={conversationItem} message={message}/>}
+                  </div>
+                )}
               </div>
-            )}
-            {message.sender === 'context' && (
-              <div className="flex justify-center gap-x-2">
-                <p className="p-2 rounded-xl text-xs text-base-200">
-                  {message.content}
-                </p>
-              </div>
-            )}
+              )}
           </div>
         ))}
     </div>
-  );
+    )
 };

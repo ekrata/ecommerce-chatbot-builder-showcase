@@ -91,9 +91,10 @@ export const Article = new Entity({
       type: 'string',
       required: true,
     },
-    url: {
+    content: {
       type: 'string',
       required: true,
+      default: '',
     },
     createdAt: {
       type: 'number',

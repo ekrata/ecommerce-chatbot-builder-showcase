@@ -30,7 +30,12 @@ export const Translation = new Entity({
           properties: {
             Name: {
               type: 'string',
-              default: '',
+              default: 'Staff',
+              required: true,
+            },
+            orgName: {
+              type: 'string',
+              default: 'Gymshark',
               required: true,
             },
             'Recent message': {
@@ -65,6 +70,21 @@ export const Translation = new Entity({
             'Send us a message': {
               type: 'string',
               default: 'Send us a message',
+              required: true,
+            },
+            'just now': {
+              type: 'string',
+              default: 'just now',
+              required: true,
+            },
+            Bot: {
+              type: 'string',
+              default: 'Bot',
+              required: true,
+            },
+            You: {
+              type: 'string',
+              default: 'You',
               required: true,
             },
             Help: {

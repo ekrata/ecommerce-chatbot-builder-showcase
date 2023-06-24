@@ -259,6 +259,8 @@ export function AppStack({ stack, app }: StackContext) {
 
       'GET /orgs/{orgId}/{lang}/articles/{articleId}':
         'packages/functions/app/api/src/articles/get.handler',
+      'GET /orgs/{orgId}/{lang}/articles/search':
+        'packages/functions/app/api/src/articles/search.handler',
       'GET /orgs/{orgId}/{lang}/articles':
         'packages/functions/app/api/src/articles/list.handler',
       'DELETE /orgs/{orgId}/{lang}/articles/{articleId}':

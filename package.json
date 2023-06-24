@@ -47,6 +47,7 @@
     "daisyui": "^2.52.0",
     "electrodb": "^2.6.1",
     "eslint-config-next": "13.3.4",
+    "fuse.js": "^6.6.2",
     "http-server": "^14.1.1",
     "immer": "^10.0.2",
     "locale-code": "^2.0.2",

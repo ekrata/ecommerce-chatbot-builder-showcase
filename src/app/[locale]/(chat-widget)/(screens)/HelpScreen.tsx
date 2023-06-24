@@ -8,8 +8,6 @@ import { Customer } from '@/entities/customer';
 import { FaWindowMinimize } from 'react-icons/fa';
 import { BsChevronDown, BsThreeDotsVertical } from 'react-icons/bs';
 import { IoMdSend } from 'react-icons/io';
-import { Conversation } from '@/entities/conversation';
-import { Api } from 'sst/node/api';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { BiSearch } from 'react-icons/bi';
 import { DynamicBackground } from '../DynamicBackground';
@@ -29,7 +27,7 @@ export const HelpScreen: FC = () => {
 
   return (
     <>
-      <div className="flex flex-col font-sans rounded-lg max-w-xl dark:bg-gray-800">
+      <div className="flex flex-col rounded-lg max-w-xl dark:bg-gray-800">
         <div
           className={`background h-20 flex place-items-center justify-between p-2 px-6 gap-x-2 border-b-2 border-gray-300 dark:border-gray-700 shadow-2xl`}
         >
