@@ -55,7 +55,7 @@ export const ArticleContent = new Entity({
     get: {
       pk: {
         field: 'pk',
-        composite: ['orgId', 'articleContentId', 'lang'],
+        composite: ['orgId', 'lang', 'articleContentId'],
       },
       sk: {
         field: 'sk',

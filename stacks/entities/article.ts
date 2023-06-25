@@ -32,6 +32,22 @@ export const articleCategory = [
   'Product',
 ] as const;
 
+export type ArticleCategory = (typeof articleCategory)[number];
+/**
+ * Expands the articleContentId into the
+ * @date 17/06/2023 - 13:12:45
+ *
+ * @export
+ * @typedef {ExpandedConversation}
+ */
+export type ExpandedConversation = Omit<
+  EntityItem<typeof Conversation>,
+  'customerId' | 'operatorId'
+> & {
+  customer: EntityItem<typeof Customer>;
+  operator: EntityItem<typeof Operator>;
+};
+
 /**
  * Basic Article Entity that stores Rich Text Format data
  * @date 12/06/2023 - 17:08:29
@@ -65,6 +81,10 @@ export const Article = new Entity({
       required: true,
       default: 'en',
     },
+    title: {
+      type: 'string',
+      required: true,
+    },
     category: {
       type: articleCategory,
       required: true,
@@ -91,10 +111,6 @@ export const Article = new Entity({
     },
     rating: {
       type: 'number',
-    },
-    title: {
-      type: 'string',
-      required: true,
     },
     createdAt: {
       type: 'number',

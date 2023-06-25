@@ -23,6 +23,7 @@ import {
 import { Config } from 'sst/node/config';
 import { CreateConfiguration } from '../../../../../../stacks/entities/entities';
 import {
+  ArticleCategory,
   articleCategory,
   articleStatus,
 } from '../../../../../../stacks/entities/article';
@@ -44,6 +45,30 @@ export const mockArticleSearchPhrase = `30-Day returns`;
 export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockMessageCountPerConversation = 10;
+export const mockArticleTitles: Record<ArticleCategory, string[]> = {
+  'General Information': [],
+  Technical: [],
+  Product: [],
+  'Orders & Delivery': [
+    'I want to change my order',
+    'Customs & Import Fees',
+    'How do I track my order?',
+    'My order is wrong',
+  ],
+  'Returns & Refunds': [
+    'Received a faulty item?',
+    "I still haven't received my refund",
+    'How do I return my items?',
+    "Where's the swing tag on my item?",
+    'Can I exchange my item?',
+  ],
+  'Payments & Promotions': [
+    'Price changes',
+    'Afterpay',
+    'Discounts',
+    'Payment Queries',
+  ],
+};
 
 export interface MockOrgIds {
   orgId: string;
@@ -53,8 +78,7 @@ export interface MockOrgIds {
    *
    * @type {string[]}
    */
-  articleIds: string[];
-  articleContentIds: string[];
+  articleIds: [articleId: string, articleContentId: string][];
   lang: string;
   operatorIds: string[];
   customers: {
@@ -98,11 +122,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
           // articles
           mockOrg.articleIds = await Promise.all(
-            [...Array(mockArticleCount)].map(async (_, i) => {
+            Object.entries(mockArticleTitles).map(async (_, i) => {
               const articleId = uuidv4();
               const articleContentId = uuidv4();
               const createArticle: CreateArticle = {
                 articleId,
+                articleContentId,
                 orgId,
                 lang: mockLang,
                 status: faker.helpers.arrayElement(articleStatus),
@@ -111,21 +136,21 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 highlight: i < mockArticleHighlightCount,
               };
               await db.entities.articles.create(createArticle).go();
-              return articleId;
+              return [articleId, articleContentId];
             })
           );
 
           // article contents
-          mockOrg.articleContentIds = await Promise.all(
-            mockOrg.articleIds.map(async (articleId, i) => {
-              const articleContentId = uuidv4();
+          await Promise.all(
+            mockOrg.articleIds.map(async ([articleId, articleContentId], i) => {
               const createArticleContent: CreateArticleContent = {
                 articleContentId,
                 articleId,
                 orgId,
                 lang: mockLang,
                 content: `${faker.lorem.paragraphs(2)}${
-                  i < mockArticleSearchPhraseFreq && mockArticleSearchPhrase
+                  i < mockArticleSearchPhraseFreq &&
+                  ` ${mockArticleSearchPhrase} `
                 }${faker.lorem.paragraphs(1)}`,
               };
               await db.entities.articleContents

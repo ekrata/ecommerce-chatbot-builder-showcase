@@ -45,14 +45,14 @@ export const conversationChannel = [
 ] as const;
 export type ConversationChannel = (typeof conversationChannel)[number];
 
-export const conversationType = ['chat', 'ticket'] as const;
+export const conversationType = ['botChat', 'chat', 'ticket'] as const;
 export type ConversationType = (typeof conversationType)[number];
 
 export const conversationTopic = [
   'products',
-  'order_status',
-  'order_issues',
-  'shipping_policy',
+  'orderStatus',
+  'orderIssues',
+  'shippingPolicy',
 ] as const;
 export type ConversationTopic = (typeof conversationTopic)[number];
 

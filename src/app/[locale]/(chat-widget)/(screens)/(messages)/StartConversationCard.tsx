@@ -36,11 +36,11 @@ export const StartConversationCard: React.FC = () => {
   var halfAnHourAgo = new Date(Date.now())
   halfAnHourAgo.setMinutes ( halfAnHourAgo.getMinutes() - 30 );
   return (
-      <button className="btn btn-ghost block font-light justify-between h-20 normal-case place-items-center animate-fade-left animate-once w-full  p-1 py-4  text-sm " onClick={async() => {
+      <button className="btn btn-ghost animate-ping rounded-3xl block font-light justify-between h-20 normal-case place-items-center animate-fade-left animate-once w-full  p-2 py-4  text-sm " onClick={async() => {
         setWidgetState('chat')
         const conversationId = uuidv4()
         setSelectedConversationId(conversationId);
-        const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'chat', channel: 'website', status: 'unassigned' }])
+        const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])
       }} > 
         <div className="flex place-items-center justify-around">
           <div className="avatar w-12 h-12 background rounded-full p-2 ring-2 ring-primary online">
@@ -58,7 +58,7 @@ export const StartConversationCard: React.FC = () => {
               </p>
             </div>
           </div>
-            <BiSend className="text-2xl justify-self-end ml-1 text-gray-400 justify-right "/>
+            <BiSend className="text-2xl justify-self-end ml-1 animate-pulse animate-infinite justify-right "/>
         </div>
       </button>
       )

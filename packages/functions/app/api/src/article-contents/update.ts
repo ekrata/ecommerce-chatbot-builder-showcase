@@ -33,11 +33,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       delete updateArticle?.orgId;
       delete updateArticle?.lang;
       delete updateArticle?.articleContentId;
+      delete updateArticle?.articleId;
       const res = await appDb.entities.articleContents
         .patch({
-          articleContentId,
           orgId,
           lang,
+          articleContentId,
         })
         .set({ ...updateArticle })
         .go();

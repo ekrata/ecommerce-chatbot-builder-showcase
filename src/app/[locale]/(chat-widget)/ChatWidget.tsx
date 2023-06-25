@@ -47,18 +47,19 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
     switch (widgetState) {
       case 'home': {
         return (
-          <div className='flex flex-col'>
-            <HomeScreen />
-            <NavBar />
-          </div>
+          <HomeScreen />
         );
       }
       case 'chat':
+        return (
+          <>
+            <ChatScreen />
+          </>
+        )
       case 'messages': {
         return (
           <>
-            {widgetState === 'chat' && (<><ChatScreen /></>)}
-            {widgetState === 'messages' && (<><ConversationsScreen /><NavBar /></>)}
+            <ConversationsScreen />
           </>
         )
       }
@@ -66,7 +67,6 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
         return (
           <>
             <HelpScreen />
-            <NavBar />
           </>
         );
       }
@@ -77,8 +77,13 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
     <div className={`${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-20 md:bottom-20' : 'md:absolute md:right-20 md:bottom-20'}`}>
         {widgetVisibility === 'open' &&
         (
-          <div className="flex flex-col h-full w-full md:w-[27rem] md:h-[40rem] rounded-xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left overflow-y-scroll mb-20">
-            {content}
+          <div className="flex flex-col h-full w-full md:w-[26rem] md:h-[40rem] shadow-2xl  rounded-3xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left  mb-20 ">
+            <div className='overflow-y-scroll rounded-3xl h-full w-full '>
+              {content}
+            </div>
+            {(widgetState !== 'chat') && 
+              <NavBar/>
+            }
           </div>
           )}
           <div className='mt-10' >

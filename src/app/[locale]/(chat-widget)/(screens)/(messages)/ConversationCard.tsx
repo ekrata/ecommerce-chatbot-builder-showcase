@@ -16,6 +16,8 @@ import { getItem } from "../../(helpers)/helpers";
   
   interface Props {
     conversationId?: string 
+    rounded?: boolean
+    showRecentLabel?: boolean
   }
   
   /**
@@ -24,7 +26,7 @@ import { getItem } from "../../(helpers)/helpers";
    *
    * @returns {*}
    */
-  export const ConversationCard: React.FC<Props> = ({conversationId}) => {
+  export const ConversationCard: React.FC<Props> = ({conversationId, rounded = false, showRecentLabel}) => {
     const {chatWidget: {setWidgetState, setSelectedConversationId}} = useChatWidgetStore()
     const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
     const t = useTranslations('chat-widget');
@@ -43,11 +45,14 @@ import { getItem } from "../../(helpers)/helpers";
 
 
     return (
-        <button className="btn btn-ghost block font-light justify-between h-20  normal-case place-items-center animate-fade-left w-full  p-1 py-4  text-sm" 
+        <button className={`btn btn-ghost block ${rounded && 'rounded-3xl'} font-light justify-between h-[7rem]  normal-case place-items-center animate-fade-left w-full  text-sm`} 
         onClick={() => {
           setSelectedConversationId(conversationItem?.conversation.conversationId)
           setWidgetState('chat');
         }}> 
+        {showRecentLabel && <div className="flex font-semibold pl-2 pb-2 mb-2">
+          {t('Recent message')}
+        </div>}
         {conversationItems?.fetchStatus !== 'idle' && conversationItems?.isLoading && (
         <div className="flex items-center mt-4 space-x-3 animate-pulse animate-fade-left">
           <svg
@@ -76,12 +81,12 @@ import { getItem } from "../../(helpers)/helpers";
               <img src={widgetAppearance?.botLogo}></img>
             </div>
             <div className="flex flex-col place-items-start gap-y-1 w-3/5">
-              <h5 className='font-semibold justify-start w-full text-base justify-self-start truncate break-all'>{`${lastMessage?.content}aasjdksahdjshadhjsdahdsjasahdjasdhsajhdjasnasdjnsamdansjsdanbjadsbsjadsdhjsdhajasd`}</h5>
+              <h5 className='font-base justify-start w-full text-base justify-self-start truncate break-all'>{`${lastMessage?.content}aasjdksahdjshadhjsdahdsjasahdjasdhsajhdjasnasdjnsamdansjsdanbjadsbsjadsdhjsdhajasd`}</h5>
               <div className="flex text-xs text-neutral-400 gap-x-1 ">
                 <MessageTimeLabel conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]}/>
               </div>
             </div>
-            <BiSend className="text-2xl shrink-0 justify-self-end text-gray-400 justify-right "/>
+            <BiSend className="text-2xl shrink-0 justify-self-end   justify-right "/>
           </div>
         )}
         </button>

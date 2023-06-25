@@ -8,8 +8,8 @@ import { BiSend } from 'react-icons/bi';
 import { DynamicBackground } from '../../DynamicBackground';
 import { useConfigurationQuery, useOrgQuery, useCustomerQuery, useArticlesQuery, useConversationItemsQuery } from '../../(hooks)/queries';
 import { StartConversationCard } from './StartConversationCard';
-
-
+import { v4 as uuidv4} from 'uuid'
+import { useCreateConversationMut } from '../../(hooks)/mutations';
 
 type Inputs = {
   msg: string;
@@ -18,8 +18,7 @@ type Inputs = {
 
 
 export const ConversationsScreen: FC = () => {
-  const { chatWidget: {setWidgetState} } = useChatWidgetStore();
-  const t = useTranslations('chat-widget');
+  const { chatWidget: {setWidgetState, setSelectedConversationId} } = useChatWidgetStore(); const t = useTranslations('chat-widget');
   const {
     register,
     handleSubmit,
@@ -31,6 +30,7 @@ export const ConversationsScreen: FC = () => {
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const org = useOrgQuery(orgId)
   const customer = useCustomerQuery(orgId, '')
+  const createConversationMut = useCreateConversationMut(orgId, customer.data?.customerId ?? '');
   const conversationItems = useConversationItemsQuery(orgId, customer.data?.customerId ?? '')
 
   return (
@@ -56,7 +56,13 @@ export const ConversationsScreen: FC = () => {
             <StartConversationCard/>
           )}
         </div>
-        <button className="btn gap-x-2 border-0 justify-center normal-case background rounded-3xl shadow-lg  fixed bottom-16">{t('Send us a message')}
+        <button onClick={async() => {
+            setWidgetState('chat')
+            const conversationId = uuidv4()
+            setSelectedConversationId(conversationId);
+            const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])
+        }}
+        className="btn gap-x-2 border-0 justify-center normal-case background rounded-3xl shadow-lg  sticky bottom-16">{t('Send us a message')} 
           {configuration.data && <DynamicBackground configuration={configuration.data}/>}
             <BiSend className='text-xl'/>
           </button>

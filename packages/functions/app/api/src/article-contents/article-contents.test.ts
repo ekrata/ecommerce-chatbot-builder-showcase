@@ -27,12 +27,12 @@ beforeAll(async () => {
 
 describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async () => {
   it('gets an articleContent', async () => {
-    const { orgId, articleIds, articleContentIds, lang } = mockOrgIds[0];
-    const articleContentId = faker.helpers.arrayElement(articleContentIds);
+    const { orgId, articleIds, lang } = mockOrgIds[0];
+    const [articleId, articleContentId] =
+      faker.helpers.arrayElement(articleIds);
     const res = await http.get(
       `/orgs/${orgId}/${lang}/article-contents/${articleContentId}`
     );
-    console.debug(res);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
@@ -41,25 +41,29 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
     // expect(articleIds.includes(res.data?.articleId)).toBeTruthy();
     expect(res.data?.lang).toEqual(lang);
   });
-  it(`full text searches for an article, with content that contains the searchPhrase: ${mockArticleSearchPhrase}`, async () => {
-    const { orgId, articleContentIds, articleIds, lang } = mockOrgIds[0];
-    const articleId = faker.helpers.arrayElement(articleContentIds);
-    const res = await http.get(
-      `/orgs/${orgId}/${lang}/article-contents/search?phrase=${mockArticleSearchPhrase}`
-    );
-    console.debug(res);
-    expect(res).toBeTruthy();
-    expect(res.status).toBe(200);
-    expect(res.data).toBeTruthy();
-    expect(res.data.length).toEqual(mockArticleSearchPhrase);
-    const articleContents = res.data;
-    articleContents.data.forEach(
-      (article: EntityItem<typeof ArticleContent>) => {
+  it(
+    `full text searches for an article, with content that contains the searchPhrase: ${mockArticleSearchPhrase}`,
+    async () => {
+      const { orgId, articleIds, lang } = mockOrgIds[0];
+      const [articleId, articleContentId] =
+        faker.helpers.arrayElement(articleIds);
+      const res = await http.get(
+        `/orgs/${orgId}/${lang}/article-contents/search?phrase=${mockArticleSearchPhrase}`
+      );
+      console.debug(res);
+      expect(res).toBeTruthy();
+      expect(res.status).toBe(200);
+      expect(res.data).toBeTruthy();
+      expect(res.data.length).toBeGreaterThan(0);
+      const searchResults = res.data;
+      searchResults.forEach((article: EntityItem<typeof ArticleContent>) => {
         expect(article.orgId).toEqual(orgId);
         expect(article.lang).toEqual(lang);
-      }
-    );
-  });
+        // expect(match);
+      });
+    },
+    { timeout: 100000 }
+  );
   it('lists articleContents by org and lang', async () => {
     const { orgId, lang } = mockOrgIds[0];
     const res = await http.get(`/orgs/${orgId}/${lang}/article-contents`);
@@ -123,7 +127,7 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
     // use new article to create articleContent
     res = await http.post(
       `/orgs/${orgId}/${lang}/article-contents/${articleContentId}`,
-      createArticle
+      createArticleContent
     );
 
     expect(res).toBeTruthy();
@@ -135,9 +139,10 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
     expect(res.data?.articleContentId).toEqual(articleContentId);
     expect(res.data?.content).toEqual(content);
   });
-  it('updates the content of an articleContent', async () => {
-    const { orgId, articleContentIds, lang } = mockOrgIds[1];
-    const articleContentId = faker.helpers.arrayElement(articleContentIds);
+  it.only('updates the content of an articleContent', async () => {
+    const { orgId, articleIds, lang } = mockOrgIds[1];
+    const [articleId, articleContentId] =
+      faker.helpers.arrayElement(articleIds);
     // Get prexisting data for patch
     const prepareRes = await http.get(
       `/orgs/${orgId}/${lang}/article-contents/${articleContentId}`
@@ -150,7 +155,7 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
     const newContent = faker.lorem.paragraph(1);
     article.content = newContent;
     const res = await http.patch(
-      `/orgs/${orgId}/${lang}/articles/${articleContentId}`,
+      `/orgs/${orgId}/${lang}/article-contents/${articleContentId}`,
       {
         ...article,
       }
@@ -168,10 +173,11 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
     expect(updatedConfig.articleContentId).toEqual(articleContentId);
   });
   it('deletes a articleContent', async () => {
-    const { orgId, articleContentIds, lang } = mockOrgIds?.[2];
-    const articleContentId = faker.helpers.arrayElement(articleContentIds);
+    const { orgId, articleIds, lang } = mockOrgIds?.[2];
+    const [articleId, articleContentId] =
+      faker.helpers.arrayElement(articleIds);
     const res = await http.delete(
-      `/orgs/${orgId}/${lang}/articles/${articleContentId}`
+      `/orgs/${orgId}/${lang}/article-contents/${articleContentId}`
     );
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);

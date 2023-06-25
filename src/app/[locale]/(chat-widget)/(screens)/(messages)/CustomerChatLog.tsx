@@ -40,7 +40,7 @@ export const CustomerChatLog: FC = ({}) => {
     >
       {conversationItem?.messages
         ?.map((message, i) => (
-          <div className="px-4">
+          <div className="px-4" key={message.messageId}>
             {(message.sender === 'operator' || message.sender === 'bot') && (
               <div className="flex gap-x-2 w-full justify-start flex-col" >
                 <div className="w-30 h-30 flex-none">
