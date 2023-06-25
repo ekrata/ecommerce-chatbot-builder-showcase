@@ -1,5 +1,26 @@
-import { Entity } from 'electrodb';
+import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+import { Conversation } from './conversation';
+import { Customer } from './customer';
+import { Operator } from './operator';
+
+/**
+ * Contains data about a search result match.
+ * @date 26/06/2023 - 09:32:32
+ *
+ * @export
+ * @typedef {ArticleSearchRes}
+ */
+export type ArticleSearchRes = {
+  item: EntityItem<typeof Article> & { content: string };
+  refIndex: number;
+  matches: {
+    indicies: [number, number];
+    key: string;
+    value: string;
+  }[];
+  score: number;
+};
 
 /**
  * Status of article

@@ -41,29 +41,7 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
     // expect(articleIds.includes(res.data?.articleId)).toBeTruthy();
     expect(res.data?.lang).toEqual(lang);
   });
-  it(
-    `full text searches for an article, with content that contains the searchPhrase: ${mockArticleSearchPhrase}`,
-    async () => {
-      const { orgId, articleIds, lang } = mockOrgIds[0];
-      const [articleId, articleContentId] =
-        faker.helpers.arrayElement(articleIds);
-      const res = await http.get(
-        `/orgs/${orgId}/${lang}/article-contents/search?phrase=${mockArticleSearchPhrase}`
-      );
-      console.debug(res);
-      expect(res).toBeTruthy();
-      expect(res.status).toBe(200);
-      expect(res.data).toBeTruthy();
-      expect(res.data.length).toBeGreaterThan(0);
-      const searchResults = res.data;
-      searchResults.forEach((article: EntityItem<typeof ArticleContent>) => {
-        expect(article.orgId).toEqual(orgId);
-        expect(article.lang).toEqual(lang);
-        // expect(match);
-      });
-    },
-    { timeout: 100000 }
-  );
+
   it('lists articleContents by org and lang', async () => {
     const { orgId, lang } = mockOrgIds[0];
     const res = await http.get(`/orgs/${orgId}/${lang}/article-contents`);
@@ -77,7 +55,6 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
         expect(article.lang).toEqual(lang);
       }
     );
-
     // save a mock articles object for frontend use
     writeFile(
       './mocks/articleContents.json',

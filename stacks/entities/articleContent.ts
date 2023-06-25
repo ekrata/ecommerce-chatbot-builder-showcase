@@ -1,5 +1,6 @@
-import { Entity } from 'electrodb';
+import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+import { Article } from './article';
 
 /**
  * Stores the actual content of an article.

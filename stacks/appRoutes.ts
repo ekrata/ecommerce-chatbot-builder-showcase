@@ -51,6 +51,8 @@ export const appRoutes: Record<string, ApiRouteProps<string>> = {
     'packages/functions/app/api/src/articles/get.handler',
   'GET /orgs/{orgId}/{lang}/articles':
     'packages/functions/app/api/src/articles/list.handler',
+  'GET /orgs/{orgId}/{lang}/articles/search':
+    'packages/functions/app/api/src/articles/search.handler',
   'DELETE /orgs/{orgId}/{lang}/articles/{articleId}':
     'packages/functions/app/api/src/articles/delete.handler',
   'POST /orgs/{orgId}/{lang}/articles/{articleId}':
@@ -60,8 +62,6 @@ export const appRoutes: Record<string, ApiRouteProps<string>> = {
 
   'GET /orgs/{orgId}/{lang}/article-contents/{articleContentId}':
     'packages/functions/app/api/src/article-contents/get.handler',
-  'GET /orgs/{orgId}/{lang}/article-contents/search':
-    'packages/functions/app/api/src/article-contents/search.handler',
   'GET /orgs/{orgId}/{lang}/article-contents':
     'packages/functions/app/api/src/article-contents/list.handler',
   'DELETE /orgs/{orgId}/{lang}/article-contents/{articleContentId}':
