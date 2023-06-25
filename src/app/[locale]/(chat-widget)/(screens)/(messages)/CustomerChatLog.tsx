@@ -74,7 +74,7 @@ export const CustomerChatLog: FC = ({}) => {
             )}
             {message.sender === 'customer' && (
               <div className="chat chat-end flex flex-col">
-                <div className="min-h-0 rounded-lg p-2 bg-gray-900 text-base-100"> 
+                <div className="min-h-0 rounded-3xl p-2 bg-gray-900 text-base-100"> 
                   {message.content}
                 </div>
                 {i+1 === conversationItem?.messages?.length && (

@@ -44,16 +44,16 @@ export const HomeScreen: FC = () => {
           {configuration.data && <DynamicBackground configuration={configuration.data} />}
           <div className='justify-left animate-fade-left'>{<img src={widgetAppearance?.logo} className='w-2/3' />   ?? (<h1>{org?.data?.name ?? 'RadCorp'}</h1>)}</div>
         </div>
-        <div className=" dark:bg-gray-900 bg-white border-gray-700  shadow-md shadow-primary/10  border-2 text-normal    rounded-lg mx-4 gap-y-4 animate-fade-left">
+        <div className=" dark:bg-gray-900 bg-white border-gray-700  shadow-md shadow-primary/10  border-2 text-normal    rounded-3xl mx-4 gap-y-4 animate-fade-left">
           <div className="flex place-items-center">
               <input type="button" value={t('Search for help')} className="btn btn-ghost border-0 px-2 text-normal font-semibold rounded-b-none justify-start normal-case input input-bordered w-full rounded-r-none" placeholder={t('Search for help')}/>
-              <div className="btn btn-ghost rounded-lg rounded-l-none rounded-b-none bg-white">
+              <div className="btn btn-ghost rounded-3xl rounded-l-none rounded-b-none bg-white">
                 <BsSearch/>
               </div>
           </div>
             {
             articles.isLoading ? (
-                <div className="flex flex-col w-full animate-pulse  rounded-lg p-2 gap-y-2 my-2">
+                <div className="flex flex-col w-full animate-pulse  rounded-3xl p-2 gap-y-2 my-2">
                   <div className="flex w-full place-items-center">
                     <div className='flex flex-col w-full gap-y-2'>
                       <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-full"/>
@@ -95,7 +95,7 @@ export const HomeScreen: FC = () => {
               })}
             </ul>)}
       </div>
-      <div className="border-gray-700 shadow-md shadow-secondary/10 border-2 h-20   rounded-lg mx-4 gap-y-4 animate-fade-left animate-once">
+      <div className="border-gray-700 shadow-md shadow-secondary/10 border-2 h-20   rounded-3xl mx-4 gap-y-4 animate-fade-left animate-once">
           {conversationItems.fetchStatus === 'idle' && 
             (<StartConversationCard/>)}
           {conversationItems.fetchStatus !== 'idle' &&  conversationItems.isLoading && (
@@ -115,7 +115,7 @@ export const HomeScreen: FC = () => {
             </div>
           )}
       </div>
-      <div className="border-gray-700 shadow-md shadow-secondary/10 border-2 h-20 mb-10 rounded-lg mx-4 gap-y-4 animate-fade-left animate-once">
+      <div className="border-gray-700 shadow-md shadow-secondary/10 border-2 h-20 mb-10 rounded-3xl mx-4 gap-y-4 animate-fade-left animate-once">
         {mostRecentConversationItem && !conversationItems.isLoading && (
           <ConversationCard conversationId={mostRecentConversationItem.conversation.conversationId} />
         )}

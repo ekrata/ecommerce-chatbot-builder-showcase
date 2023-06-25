@@ -9,6 +9,7 @@ import { Translation } from '../../../../../stacks/entities/translation';
 import { Org } from '../../../../../stacks/entities/org';
 import { Configuration } from '../../../../../stacks/entities/configuration';
 import { Article } from '../../../../../stacks/entities/article';
+import { ArticleContent } from '../../../../../stacks/entities/articleContent';
 
 export const getAppDb = (region: string, tableName: string) =>
   new Service(
@@ -22,6 +23,7 @@ export const getAppDb = (region: string, tableName: string) =>
       messages: Message,
       orgs: Org,
       articles: Article,
+      articleContents: ArticleContent,
     },
     {
       client: new DynamoDBClient({

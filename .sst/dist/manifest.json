@@ -21,7 +21,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-deploy-role-206508349906-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-cfn-exec-role-206508349906-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/a98f2290b8c27f038662d967873694f7e7b70d0b009a8fc999480b2e83acb7f9.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/517f2b3b68c7000ef610cb24134e2072c3f2147bb46d5f6cb21b8564b79401c9.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -40,7 +40,7 @@
         "/local-crow-AppStack": [
           {
             "type": "aws:cdk:info",
-            "data": "Number of resources: 435 is approaching allowed maximum of 500",
+            "data": "Number of resources: 477 is approaching allowed maximum of 500",
             "trace": [
               "Annotations.addMessage (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1071)",
               "Annotations.addInfo (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:586)",
@@ -533,7 +533,7 @@
               "Array.forEach (<anonymous>)",
               "EventBus.addRules (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
               "new EventBus (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
-              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:198:23)",
+              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:199:23)",
               "stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
               "App.stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/App.js:467:16)",
               "Object.stacks (/Users/xyz.ekrata/Projects/crow/sst.config.ts:15:9)",
@@ -570,7 +570,7 @@
               "Array.forEach (<anonymous>)",
               "EventBus.addRules (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
               "new EventBus (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
-              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:198:23)",
+              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:199:23)",
               "stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
               "App.stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/App.js:467:16)",
               "Object.stacks (/Users/xyz.ekrata/Projects/crow/sst.config.ts:15:9)",
@@ -607,7 +607,7 @@
               "Array.forEach (<anonymous>)",
               "EventBus.addRules (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
               "new EventBus (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
-              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:198:23)",
+              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:199:23)",
               "stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
               "App.stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/App.js:467:16)",
               "Object.stacks (/Users/xyz.ekrata/Projects/crow/sst.config.ts:15:9)",
@@ -644,7 +644,7 @@
               "Array.forEach (<anonymous>)",
               "EventBus.addRules (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
               "new EventBus (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
-              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:198:23)",
+              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:199:23)",
               "stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
               "App.stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/App.js:467:16)",
               "Object.stacks (/Users/xyz.ekrata/Projects/crow/sst.config.ts:15:9)",
@@ -681,7 +681,7 @@
               "Array.forEach (<anonymous>)",
               "EventBus.addRules (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
               "new EventBus (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
-              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:198:23)",
+              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:199:23)",
               "stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
               "App.stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/App.js:467:16)",
               "Object.stacks (/Users/xyz.ekrata/Projects/crow/sst.config.ts:15:9)",
@@ -718,7 +718,7 @@
               "Array.forEach (<anonymous>)",
               "EventBus.addRules (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
               "new EventBus (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
-              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:198:23)",
+              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:199:23)",
               "stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
               "App.stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/App.js:467:16)",
               "Object.stacks (/Users/xyz.ekrata/Projects/crow/sst.config.ts:15:9)",
@@ -755,7 +755,7 @@
               "Array.forEach (<anonymous>)",
               "EventBus.addRules (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:87:31)",
               "new EventBus (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/EventBus.js:45:14)",
-              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:198:23)",
+              "EmptyStack.AppStack (/Users/xyz.ekrata/Projects/crow/stacks/AppStack.ts:199:23)",
               "stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/FunctionalStack.js:20:35)",
               "App.stack (file:///Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/sst@2.10.4_@types+react@18.0.38/node_modules/sst/constructs/App.js:467:16)",
               "Object.stacks (/Users/xyz.ekrata/Projects/crow/sst.config.ts:15:9)",
@@ -1929,6 +1929,258 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "appApiRoutePATCHorgsorgIdlangarticlesarticleIdF23E8FE6"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentsarticleContentIdServiceRole9F19DA3C"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentsarticleContentIdServiceRoleDefaultPolicy198B47BD"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentsarticleContentId015E560C"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentsarticleContentIdEventInvokeConfig352704A7"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentsarticleContentIdIntegrationGETorgsorgIdlangarticlecontentsarticleContentId1A722CCA"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentsarticleContentIdIntegrationGETorgsorgIdlangarticlecontentsarticleContentIdPermissionF5E699A9"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentsarticleContentId29A77D22"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--search/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentssearchServiceRole5941ED14"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--search/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentssearchServiceRoleDefaultPolicy7A28535F"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--search/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentssearchB8F6B1A5"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents--search/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentssearchEventInvokeConfig6E703139"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents--search/Integration_GET_--orgs--{orgId}--{lang}--article-contents--search/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentssearchIntegrationGETorgsorgIdlangarticlecontentssearchB976F5ED"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents--search/Integration_GET_--orgs--{orgId}--{lang}--article-contents--search-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentssearchIntegrationGETorgsorgIdlangarticlecontentssearchPermission882F0D56"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents--search/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentssearch398606C7"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentsServiceRoleBAD5933E"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentsServiceRoleDefaultPolicyE2E91599"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontents39CE1641"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--article-contents/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlecontentsEventInvokeConfigC3DF95A7"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents/Integration_GET_--orgs--{orgId}--{lang}--article-contents/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentsIntegrationGETorgsorgIdlangarticlecontentsB852912C"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents/Integration_GET_--orgs--{orgId}--{lang}--article-contents-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontentsIntegrationGETorgsorgIdlangarticlecontentsPermission6A02FED9"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--article-contents/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlecontents6A06FEF3"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdlangarticlecontentsarticleContentIdServiceRole67879389"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdlangarticlecontentsarticleContentIdServiceRoleDefaultPolicyFC93A3FD"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdlangarticlecontentsarticleContentIdF222D141"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaDELETEorgsorgIdlangarticlecontentsarticleContentIdEventInvokeConfigC051A6AE"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdlangarticlecontentsarticleContentIdIntegrationDELETEorgsorgIdlangarticlecontentsarticleContentId07C148B4"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdlangarticlecontentsarticleContentIdIntegrationDELETEorgsorgIdlangarticlecontentsarticleContentIdPermission24C8AEA0"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_DELETE_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteDELETEorgsorgIdlangarticlecontentsarticleContentIdB9AEE409"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdlangarticlecontentsarticleContentIdServiceRole95812BF2"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdlangarticlecontentsarticleContentIdServiceRoleDefaultPolicy2934DBAC"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdlangarticlecontentsarticleContentId6B19ABCD"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPOSTorgsorgIdlangarticlecontentsarticleContentIdEventInvokeConfig2254BE7F"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdlangarticlecontentsarticleContentIdIntegrationPOSTorgsorgIdlangarticlecontentsarticleContentId1A238279"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdlangarticlecontentsarticleContentIdIntegrationPOSTorgsorgIdlangarticlecontentsarticleContentIdPermission21617AA6"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_POST_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePOSTorgsorgIdlangarticlecontentsarticleContentId067424CD"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdlangarticlecontentsarticleContentIdServiceRole07BB42F9"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdlangarticlecontentsarticleContentIdServiceRoleDefaultPolicy1D839B75"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdlangarticlecontentsarticleContentId9C59CA72"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaPATCHorgsorgIdlangarticlecontentsarticleContentIdEventInvokeConfigE9009C92"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdlangarticlecontentsarticleContentIdIntegrationPATCHorgsorgIdlangarticlecontentsarticleContentIdF3BE09E0"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Integration_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdlangarticlecontentsarticleContentIdIntegrationPATCHorgsorgIdlangarticlecontentsarticleContentIdPermissionFF305374"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_PATCH_--orgs--{orgId}--{lang}--article-contents--{articleContentId}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRoutePATCHorgsorgIdlangarticlecontentsarticleContentId8BEDD4BB"
           }
         ],
         "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--operators/ServiceRole/Resource": [

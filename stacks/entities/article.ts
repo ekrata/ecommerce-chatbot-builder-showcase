@@ -55,6 +55,11 @@ export const Article = new Entity({
       type: 'string',
       required: true,
     },
+    articleContentId: {
+      type: 'string',
+      required: true,
+      default: '',
+    },
     lang: {
       type: 'string',
       required: true,
@@ -90,11 +95,6 @@ export const Article = new Entity({
     title: {
       type: 'string',
       required: true,
-    },
-    content: {
-      type: 'string',
-      required: true,
-      default: '',
     },
     createdAt: {
       type: 'number',

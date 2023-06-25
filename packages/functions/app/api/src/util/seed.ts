@@ -11,6 +11,7 @@ import {
   CreateMessage,
   CreateTranslation,
   CreateArticle,
+  CreateArticleContent,
 } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 import { senderType } from '../../../../../../stacks/entities/message';
@@ -26,18 +27,35 @@ import {
   articleStatus,
 } from '../../../../../../stacks/entities/article';
 
+export const mockLang = 'en';
 export const mockOrgCount = 3;
 export const mockCustomerCount = 5;
 export const mockOperatorCount = 2;
 export const mockArticleCount = 15;
+/**
+ * Must always be less than mockArticleCount.
+ * Describes how many articles contain the search phrase
+ * @date 25/06/2023 - 13:14:06
+ *
+ * @type {4}
+ */
+export const mockArticleSearchPhraseFreq = 4;
+export const mockArticleSearchPhrase = `30-Day returns`;
 export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockMessageCountPerConversation = 10;
-export const mockArticleSearchPhrase = `30-Day returns`;
 
 export interface MockOrgIds {
   orgId: string;
+  /**
+   * Index corresponds to articleContentIds
+   * @date 25/06/2023 - 13:00:19
+   *
+   * @type {string[]}
+   */
   articleIds: string[];
+  articleContentIds: string[];
+  lang: string;
   operatorIds: string[];
   customers: {
     customerId: string;
@@ -62,13 +80,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           await db.entities.orgs.create(createOrg).go();
           const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
           mockOrg.orgId = orgId;
+          mockOrg.lang = mockLang;
           const createConfiguration: CreateConfiguration = {
             orgId,
           };
 
           const createTranslation: CreateTranslation = {
             orgId,
-            lang: 'en',
+            lang: mockLang,
           };
 
           // config
@@ -81,19 +100,38 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           mockOrg.articleIds = await Promise.all(
             [...Array(mockArticleCount)].map(async (_, i) => {
               const articleId = uuidv4();
+              const articleContentId = uuidv4();
               const createArticle: CreateArticle = {
                 articleId,
                 orgId,
+                lang: mockLang,
                 status: faker.helpers.arrayElement(articleStatus),
                 category: faker.helpers.arrayElement(articleCategory),
                 title: faker.commerce.productName(),
-                content: `${faker.lorem.paragraphs(2)}${
-                  i % 3 === 0 && mockArticleSearchPhrase
-                }${faker.lorem.paragraphs(1)}`,
                 highlight: i < mockArticleHighlightCount,
               };
               await db.entities.articles.create(createArticle).go();
               return articleId;
+            })
+          );
+
+          // article contents
+          mockOrg.articleContentIds = await Promise.all(
+            mockOrg.articleIds.map(async (articleId, i) => {
+              const articleContentId = uuidv4();
+              const createArticleContent: CreateArticleContent = {
+                articleContentId,
+                articleId,
+                orgId,
+                lang: mockLang,
+                content: `${faker.lorem.paragraphs(2)}${
+                  i < mockArticleSearchPhraseFreq && mockArticleSearchPhrase
+                }${faker.lorem.paragraphs(1)}`,
+              };
+              await db.entities.articleContents
+                .create(createArticleContent)
+                .go();
+              return articleContentId;
             })
           );
 

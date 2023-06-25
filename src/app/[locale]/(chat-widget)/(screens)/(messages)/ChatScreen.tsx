@@ -29,7 +29,7 @@ export const ChatScreen: FC = ({}) => {
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
 
   return (
-    <div className="flex rounded-lg justify-between w-full h-full animate-fade-left">
+    <div className="flex rounded-3xl justify-between w-full h-full animate-fade-left">
       <div className="flex flex-col justify-stretch w-full h-full">
         <div
           className={`background flex place-items-center w-full justify-start rounded-t-lg text-xl font-semibold p-2 gap-x-2    text-white`}

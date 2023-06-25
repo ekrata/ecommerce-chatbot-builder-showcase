@@ -1,6 +1,6 @@
 {
   "local-crow-AppStack": {
-    "AppApiUrl": "https://u9puc6v8ag.execute-api.us-east-1.amazonaws.com",
-    "AppWsUrl": "wss://bhwj0eopc4.execute-api.us-east-1.amazonaws.com/local"
+    "AppApiUrl": "https://9b48pwett5.execute-api.us-east-1.amazonaws.com",
+    "AppWsUrl": "wss://9j8z012a8h.execute-api.us-east-1.amazonaws.com/local"
   }
 }

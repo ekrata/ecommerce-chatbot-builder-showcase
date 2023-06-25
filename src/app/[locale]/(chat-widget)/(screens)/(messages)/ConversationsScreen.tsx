@@ -34,7 +34,7 @@ export const ConversationsScreen: FC = () => {
   const conversationItems = useConversationItemsQuery(orgId, customer.data?.customerId ?? '')
 
   return (
-    <div className="flex rounded-lg justify-between w-full h-full">
+    <div className="flex rounded-3xl justify-between w-full h-full">
       <div className="flex flex-col  place-items-center w-full h-full">
         <div
           className={`background text-white flex place-items-center w-full justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
@@ -56,7 +56,7 @@ export const ConversationsScreen: FC = () => {
             <StartConversationCard/>
           )}
         </div>
-        <button className="btn gap-x-2 border-0 justify-center normal-case background rounded-lg shadow-lg  fixed bottom-16">{t('Send us a message')}
+        <button className="btn gap-x-2 border-0 justify-center normal-case background rounded-3xl shadow-lg  fixed bottom-16">{t('Send us a message')}
           {configuration.data && <DynamicBackground configuration={configuration.data}/>}
             <BiSend className='text-xl'/>
           </button>

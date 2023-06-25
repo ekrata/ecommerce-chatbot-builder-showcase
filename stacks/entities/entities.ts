@@ -8,6 +8,7 @@ import { Visitor } from './visitor';
 import { Configuration } from './configuration';
 import { Translation } from './translation';
 import { Article } from './article';
+import { ArticleContent } from './articleContent';
 
 export type CreateOrg = CreateEntityItem<typeof Org>;
 export type UpdateOrg = UpdateEntityItem<typeof Org>;
@@ -35,3 +36,6 @@ export type UpdateTranslation = UpdateEntityItem<typeof Translation>;
 
 export type CreateArticle = CreateEntityItem<typeof Article>;
 export type UpdateArticle = UpdateEntityItem<typeof Article>;
+
+export type CreateArticleContent = CreateEntityItem<typeof ArticleContent>;
+export type UpdateArticleContent = UpdateEntityItem<typeof ArticleContent>;
