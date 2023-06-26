@@ -39,7 +39,7 @@ export enum QueryKey {
  * @param {string} orgId
  * @returns {*}
  */
-export const useConfigurationQuery = (orgId: string) => useQuery<EntityItem<typeof Configuration>>([orgId, QueryKey.configuration], async () => getConfiguration(orgId), {enabled: !!orgId});
+export const useConfigurationQuery = (orgId: string) => useQuery<EntityItem<typeof Configuration>>([orgId, QueryKey.configuration], async () => getConfiguration(orgId));
 /**
  * Returns org query 
  * @date 24/06/2023 - 10:45:39
@@ -77,7 +77,14 @@ export const useArticlesQuery = (orgId: string, locale: string) => useQuery<Enti
  * @param {string} phrase
  * @returns {*}
  */
-export const useSearchArticlesQuery = (orgId: string, locale: string, phrase: string) => useQuery<ArticleSearchRes[]>([orgId, phrase, QueryKey.articles], async() => await searchArticles(orgId, locale, phrase));
+export const useSearchArticlesQuery = (orgId: string, locale: string, phrase: string) => useQuery<ArticleSearchRes[]>([orgId, phrase, QueryKey.articles], 
+  async() => {
+  if(phrase.length > 3) {
+    return await searchArticles(orgId, locale, phrase);
+  } else {
+    return []
+  } 
+})
 
 /**
  * Returns conversationItems query 

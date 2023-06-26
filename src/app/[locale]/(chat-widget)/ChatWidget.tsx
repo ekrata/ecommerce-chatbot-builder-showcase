@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Configuration } from '@/entities/configuration';
 import { useConfigurationQuery, useCustomerQuery, useOrgQuery } from './(hooks)/queries';
 import { ChatScreen } from './(screens)/(messages)/ChatScreen';
+import { useLocale } from 'next-intl';
 
 export interface ConversationsState {
   selectedConversationId?: string
@@ -40,7 +41,6 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const org = useOrgQuery(orgId)
   const customer = useCustomerQuery(orgId, '')
-  const [conversationsState, setConversationsState] = useState<ConversationsState>({})
 
 
   const content = useMemo(() => {
@@ -78,7 +78,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
         {widgetVisibility === 'open' &&
         (
           <div className="flex flex-col h-full w-full md:w-[26rem] md:h-[40rem] shadow-2xl  rounded-3xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left  mb-20 ">
-            <div className='overflow-y-scroll rounded-3xl h-full w-full '>
+            <div className='w-full h-full overflow-y-scroll rounded-3xl '>
               {content}
             </div>
             {(widgetState !== 'chat') && 

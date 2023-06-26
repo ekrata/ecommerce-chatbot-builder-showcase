@@ -89,7 +89,7 @@ export const Translation = new Entity({
             },
             Help: {
               type: 'string',
-              default: 'help',
+              default: 'Help',
               required: true,
             },
             'Search for help': {
@@ -130,6 +130,32 @@ export const Translation = new Entity({
             Product: {
               type: 'string',
               default: 'Product',
+              required: true,
+            },
+            articles: {
+              type: 'string',
+              default: `{count, plural, 
+              =0 {No articles found}
+              =1 {One article}
+              other {# articles}
+            }`,
+            },
+            categories: {
+              type: 'string',
+              default: `{count, plural, 
+              =0 {No categories found}
+              =1 {One category}
+              other {# categories}
+              }`,
+            },
+            'No results for': {
+              type: 'string',
+              default: 'No results for',
+              required: true,
+            },
+            'Try again': {
+              type: 'string',
+              default: 'Try again',
               required: true,
             },
           },

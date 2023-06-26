@@ -36,19 +36,19 @@ export const StartConversationCard: React.FC = () => {
   var halfAnHourAgo = new Date(Date.now())
   halfAnHourAgo.setMinutes ( halfAnHourAgo.getMinutes() - 30 );
   return (
-      <button className="btn btn-ghost animate-ping rounded-3xl block font-light justify-between h-20 normal-case place-items-center animate-fade-left animate-once w-full  p-2 py-4  text-sm " onClick={async() => {
+      <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light normal-case btn btn-ghost animate-ping rounded-3xl text-base-100 place-items-center animate-fade-left animate-once " onClick={async() => {
         setWidgetState('chat')
         const conversationId = uuidv4()
         setSelectedConversationId(conversationId);
         const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])
       }} > 
-        <div className="flex place-items-center justify-around">
-          <div className="avatar w-12 h-12 background rounded-full p-2 ring-2 ring-primary online">
+        <div className="flex justify-around place-items-center">
+          <div className="w-12 h-12 p-2 rounded-full avatar background ring-2 ring-primary online">
             {configuration.data && <DynamicBackground configuration={configuration.data}/>}
             <img src={widgetAppearance?.botLogo}></img>
           </div>
-          <div className="flex flex-col place-items-start  gap-y-1 ">
-            <h5 className='font-semibold justify-start text-base justify-self-start '>{t('Send us a message')}</h5>
+          <div className="flex flex-col place-items-start gap-y-1 ">
+            <h5 className='justify-start text-base font-semibold justify-self-start '>{t('Send us a message')}</h5>
             <div className="flex text-xs dark:text-neutral-400 gap-x-1 ">
               <p>{`${t('We typically reply in under')} `}</p>
               <p className="">
@@ -58,7 +58,7 @@ export const StartConversationCard: React.FC = () => {
               </p>
             </div>
           </div>
-            <BiSend className="text-2xl justify-self-end ml-1 animate-pulse animate-infinite justify-right "/>
+            <BiSend className="ml-1 text-2xl justify-self-end animate-pulse animate-infinite justify-right "/>
         </div>
       </button>
       )

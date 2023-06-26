@@ -34,10 +34,10 @@ export const ConversationsScreen: FC = () => {
   const conversationItems = useConversationItemsQuery(orgId, customer.data?.customerId ?? '')
 
   return (
-    <div className="flex rounded-3xl justify-between w-full h-full">
-      <div className="flex flex-col  place-items-center w-full h-full">
+    <div className="flex justify-between w-full h-full rounded-3xl">
+      <div className="flex flex-col w-full h-full place-items-center">
         <div
-          className={`background text-white flex place-items-center w-full justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
+          className={`background text-white flex place-items-center w-full animated-flip-up justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
         >
           {configuration.data && <DynamicBackground configuration={configuration.data}/>}
           {t('Messages')}
@@ -45,11 +45,11 @@ export const ConversationsScreen: FC = () => {
         <div
           className={`flex flex-col place-items-center  w-full  overflow-y-scroll `}
         >
-          {conversationItems.isLoading && [...Array(3)].map(() => <ConversationCard/>)}
+          {conversationItems.isLoading && [...Array(3)].map(() => <ConversationCard height={'16'}/>)}
           {conversationItems.isSuccess &&  
             conversationItems.data.map((conversationItem) => (
-              <div key={conversationItem.conversation.conversationId} className="divide-y-2 border-b-2 w-full">
-                <ConversationCard conversationId={conversationItem.conversation.conversationId}/>
+              <div key={conversationItem.conversation.conversationId} className="w-full border-b-2 divide-y-2">
+                <ConversationCard height={'16'} conversationId={conversationItem.conversation.conversationId}/>
               </div>
           ))}
           {(conversationItems.isSuccess && !conversationItems.data.length &&  
@@ -62,7 +62,7 @@ export const ConversationsScreen: FC = () => {
             setSelectedConversationId(conversationId);
             const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])
         }}
-        className="btn gap-x-2 border-0 justify-center normal-case background rounded-3xl shadow-lg  sticky bottom-16">{t('Send us a message')} 
+        className="fixed z-10 justify-center normal-case border-0 shadow-lg btn gap-x-2 background rounded-3xl bottom-20">{t('Send us a message')} 
           {configuration.data && <DynamicBackground configuration={configuration.data}/>}
             <BiSend className='text-xl'/>
           </button>

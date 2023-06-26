@@ -7,22 +7,17 @@ import { CreateConversation, CreateMessage } from '@/entities/entities';
 import { DefaultBodyType, MockedRequest, RestHandler, rest } from 'msw';
 import { WebSocketServer } from 'ws';
 import { Client, Server, ServerOptions } from 'mock-socket';
+
 import customerConversationItems from 'mocks/customer-conversation-items.json'
 import customerConversations from 'mocks/customer-conversations.json'
 import orgs from 'mocks/orgs.json'
 import articles from 'mocks/articles.json'
 import configuration from 'mocks/configuration.json'
-import conversations from 'mocks/conversations.json'
+import articleSearchResponse from 'mocks/articleSearchResponse.json'
+
 // import customerConversationItems from 'mocks/'
 import { ChatWidget } from './ChatWidget';
-import { useEffect } from 'react';
-import { useChatWidgetStore } from './(actions)/useChatWidgetStore';
-import { Org } from '@/entities/org';
 import Layout from './layout';
-
-import { createRandomConversation } from '../dash/inbox/mocks.test';
-import { ConversationItem } from '@/entities/conversation';
-import { createConversation } from './(actions)/conversations/createConversation';
 
 const meta: Meta<typeof ChatWidget> = {
   component: ChatWidget,
@@ -51,7 +46,6 @@ const existingConversationRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] 
 )]
 
 const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
-
       rest.get(
         `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId`,
         async (req, res, ctx) => {
@@ -77,11 +71,20 @@ const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
         async (req, res, ctx) => {
           return res(
             ctx.status(200),
+            ctx.delay(2000),
             ctx.json(configuration)
           );
         }
       ),
-      
+      rest.get(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/${lang}/articles/search*`,
+        async(req,res,ctx) => {
+          return res(
+            ctx.status(200),
+            ctx.delay(2000),
+            ctx.json({articleSearchResponse})
+          )
+        }),
       rest.post(
         `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations/:conversationId`,
         async (req, res, ctx) => {

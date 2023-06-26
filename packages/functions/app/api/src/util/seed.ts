@@ -133,6 +133,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 status: faker.helpers.arrayElement(articleStatus),
                 category: faker.helpers.arrayElement(articleCategory),
                 title: faker.commerce.productName(),
+                subtitle: 'This is a subtitle for this article.',
                 highlight: i < mockArticleHighlightCount,
               };
               await db.entities.articles.create(createArticle).go();

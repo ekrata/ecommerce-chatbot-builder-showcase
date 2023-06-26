@@ -15,7 +15,7 @@ export type ArticleSearchRes = {
   item: EntityItem<typeof Article> & { content: string };
   refIndex: number;
   matches: {
-    indicies: [number, number];
+    indicies: [number, number][];
     key: string;
     value: string;
   }[];
@@ -105,6 +105,9 @@ export const Article = new Entity({
     title: {
       type: 'string',
       required: true,
+    },
+    subtitle: {
+      type: 'string',
     },
     category: {
       type: articleCategory,

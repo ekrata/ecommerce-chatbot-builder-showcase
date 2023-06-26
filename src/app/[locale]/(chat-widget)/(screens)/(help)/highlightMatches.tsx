@@ -13,7 +13,7 @@ export const highlightMatches = (
         inputText
           .substring(nextUnhighlightedRegionStartingIndex, region[0])
           .replace(' ', '\u00A0'),
-        <span key={region + ' ' + i} className="fuse-highlight">
+        <span key={region + ' ' + i} className="font-semibold">
           {inputText
             .substring(region[0], lastRegionNextIndex)
             .replace(' ', '\u00A0')}
