@@ -45,7 +45,7 @@ export const mockArticleSearchPhrase = `30-Day returns`;
 export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockMessageCountPerConversation = 10;
-export const mockArticleTitles: Record<ArticleCategory, string[]> = {
+export const mockArticleTitles: { [key in ArticleCategory]: string[] } = {
   'General Information': [],
   Technical: [],
   Product: [],
@@ -61,6 +61,9 @@ export const mockArticleTitles: Record<ArticleCategory, string[]> = {
     'How do I return my items?',
     "Where's the swing tag on my item?",
     'Can I exchange my item?',
+    'Returns Policy',
+    'Returns Information',
+    'How can I return something if I bought it at your event?`',
   ],
   'Payments & Promotions': [
     'Price changes',
@@ -78,7 +81,7 @@ export interface MockOrgIds {
    *
    * @type {string[]}
    */
-  articleIds: [articleId: string, articleContentId: string][];
+  articleIds: { articleId: string; articleContentId: string }[];
   lang: string;
   operatorIds: string[];
   customers: {
@@ -121,44 +124,54 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           await db.entities.translations.upsert(createTranslation).go();
 
           // articles
-          mockOrg.articleIds = await Promise.all(
-            Object.entries(mockArticleTitles).map(async (_, i) => {
-              const articleId = uuidv4();
-              const articleContentId = uuidv4();
-              const createArticle: CreateArticle = {
-                articleId,
-                articleContentId,
-                orgId,
-                lang: mockLang,
-                status: faker.helpers.arrayElement(articleStatus),
-                category: faker.helpers.arrayElement(articleCategory),
-                title: faker.commerce.productName(),
-                subtitle: 'This is a subtitle for this article.',
-                highlight: i < mockArticleHighlightCount,
-              };
-              await db.entities.articles.create(createArticle).go();
-              return [articleId, articleContentId];
-            })
-          );
+          mockOrg.articleIds = (
+            await Promise.all(
+              Object.entries(mockArticleTitles).map(
+                async ([category, articleTitles], i) => {
+                  return await Promise.all(
+                    articleTitles.map(async (title, j) => {
+                      const articleId = uuidv4();
+                      const articleContentId = uuidv4();
+                      const createArticle: CreateArticle = {
+                        articleId,
+                        articleContentId,
+                        orgId,
+                        lang: mockLang,
+                        status: faker.helpers.arrayElement(articleStatus),
+                        category: category as ArticleCategory,
+                        title: title,
+                        subtitle: 'This is a subtitle for this article.',
+                        highlight: i < mockArticleHighlightCount,
+                      };
+                      await db.entities.articles.create(createArticle).go();
+                      return { articleId, articleContentId };
+                    })
+                  );
+                }
+              )
+            )
+          ).flat();
 
           // article contents
           await Promise.all(
-            mockOrg.articleIds.map(async ([articleId, articleContentId], i) => {
-              const createArticleContent: CreateArticleContent = {
-                articleContentId,
-                articleId,
-                orgId,
-                lang: mockLang,
-                content: `${faker.lorem.paragraphs(2)}${
-                  i < mockArticleSearchPhraseFreq &&
-                  ` ${mockArticleSearchPhrase} `
-                }${faker.lorem.paragraphs(1)}`,
-              };
-              await db.entities.articleContents
-                .create(createArticleContent)
-                .go();
-              return articleContentId;
-            })
+            mockOrg.articleIds.map(
+              async ({ articleId, articleContentId }, i) => {
+                const createArticleContent: CreateArticleContent = {
+                  articleContentId,
+                  articleId,
+                  orgId,
+                  lang: mockLang,
+                  content: `${faker.lorem.paragraphs(2)}${
+                    i < mockArticleSearchPhraseFreq &&
+                    ` ${mockArticleSearchPhrase} `
+                  }${faker.lorem.paragraphs(1)}`,
+                };
+                await db.entities.articleContents
+                  .create(createArticleContent)
+                  .go();
+                return articleContentId;
+              }
+            )
           );
 
           // operators

@@ -99,8 +99,8 @@ export const HomeScreen: FC = () => {
             <ul className="animate-fade-left">
               {articles?.data?.map((article) => {
                 if(article.highlight) {
-                  return <li key={article.title} className="flex first:border-gray-300 first:border-t-[1px] place-items-center last:rounded-b-3xl font-light py-0 my-0 justify-between btn btn-ghost text-normal gap-y-0 normal-case  rounded-none border-0  px-2">
-                    <p>{article.title}</p>
+                  return <li key={article.title} className="flex first:border-gray-300 first:border-t-[1px] place-items-center last:rounded-b-3xl font-light py-0 my-0 flex-wrap justify-between btn btn-ghost text-normal gap-y-0 normal-case  rounded-none border-0  px-2">
+                    <p className='flex-wrap'>{article.title}</p>
                     <BiChevronRight className="text-3xl justify-right"/>
                     </li>
                 }

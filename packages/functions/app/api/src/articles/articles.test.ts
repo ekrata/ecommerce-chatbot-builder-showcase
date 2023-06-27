@@ -30,7 +30,7 @@ describe.concurrent(
   async () => {
     it('gets a article', async () => {
       const { orgId, articleIds } = mockOrgIds[0];
-      const [articleId, articleContentId] =
+      const { articleId, articleContentId } =
         faker.helpers.arrayElement(articleIds);
       const res = await http.get(
         `/orgs/${orgId}/${lang}/articles/${articleId}`
@@ -116,7 +116,7 @@ describe.concurrent(
     });
     it('updates the status of an article to published', async () => {
       const { orgId, articleIds } = mockOrgIds[1];
-      const [articleId, articleContentId] =
+      const { articleId, articleContentId } =
         faker.helpers.arrayElement(articleIds);
       // Get prexisting data for patch
       const prepareRes = await http.get(
@@ -151,7 +151,7 @@ describe.concurrent(
       const { orgId, customers, articleIds } = mockOrgIds?.[2];
       const { conversations } = faker.helpers.arrayElement(customers);
       const { conversationId } = faker.helpers.arrayElement(conversations);
-      const [articleId, articleContentId] =
+      const { articleId, articleContentId } =
         faker.helpers.arrayElement(articleIds);
       const lang = 'en';
       const res = await http.delete(

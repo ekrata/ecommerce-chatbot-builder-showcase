@@ -42,12 +42,12 @@ async function buildIndex(orgIdParam: string, langParam: string) {
   const options = {
     isCaseSensitive: false,
     shouldSort: true,
-    threshold: 0.4,
-    ignoreLocation: true,
+    threshold: 0.6,
     includeScore: true,
-    minMatchCharLength: 3,
+    distance: 100000,
+    minMatchCharLength: 4,
     includeMatches: true,
-    keys: ['title', 'category', 'content', 'author.name'],
+    keys: ['title', 'subtitle', 'category', 'content', 'author.name'],
   };
 
   console.info('REFRESHING THE INDEX');
@@ -145,8 +145,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         await buildIndex(orgId, lang);
       }
 
-      const searchResult = scanResult.search(phrase);
-      console.log('SEARCH RESULT', searchResult);
+      const searchResult = scanResult.search(`=${phrase}`);
       return {
         statusCode: 200,
         body: JSON.stringify(searchResult),

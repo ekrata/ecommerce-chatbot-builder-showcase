@@ -28,7 +28,7 @@ beforeAll(async () => {
 describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async () => {
   it('gets an articleContent', async () => {
     const { orgId, articleIds, lang } = mockOrgIds[0];
-    const [articleId, articleContentId] =
+    const { articleId, articleContentId } =
       faker.helpers.arrayElement(articleIds);
     const res = await http.get(
       `/orgs/${orgId}/${lang}/article-contents/${articleContentId}`
@@ -118,7 +118,7 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
   });
   it.only('updates the content of an articleContent', async () => {
     const { orgId, articleIds, lang } = mockOrgIds[1];
-    const [articleId, articleContentId] =
+    const { articleId, articleContentId } =
       faker.helpers.arrayElement(articleIds);
     // Get prexisting data for patch
     const prepareRes = await http.get(
@@ -151,7 +151,7 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
   });
   it('deletes a articleContent', async () => {
     const { orgId, articleIds, lang } = mockOrgIds?.[2];
-    const [articleId, articleContentId] =
+    const { articleId, articleContentId } =
       faker.helpers.arrayElement(articleIds);
     const res = await http.delete(
       `/orgs/${orgId}/${lang}/article-contents/${articleContentId}`

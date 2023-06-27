@@ -15,7 +15,7 @@ export type ArticleSearchRes = {
   item: EntityItem<typeof Article> & { content: string };
   refIndex: number;
   matches: {
-    indicies: [number, number][];
+    indices: [number, number][];
     key: string;
     value: string;
   }[];
