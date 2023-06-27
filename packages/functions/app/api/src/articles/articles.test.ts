@@ -8,7 +8,7 @@ import { getHttp } from '../http';
 import { MockOrgIds, mockArticleSearchPhrase } from '../util/seed';
 import { writeFile } from 'fs';
 import { EntityItem } from 'electrodb';
-import { Article } from '@/entities/article';
+import { Article, ArticleWithContent } from '@/entities/article';
 import {
   articleCategory,
   articleStatus,
@@ -42,6 +42,36 @@ describe.concurrent(
       expect(res.data?.articleId).toEqual(articleId);
       expect(res.data?.lang).toEqual(lang);
     });
+    it('gets an article with content', async () => {
+      const { orgId, articleIds } = mockOrgIds[0];
+      const { articleId, articleContentId } =
+        faker.helpers.arrayElement(articleIds);
+      const res = await http.get(
+        `/orgs/${orgId}/${lang}/articles/${articleId}/with-content`
+      );
+      expect(res).toBeTruthy();
+      expect(res.status).toBe(200);
+      expect(res.data).toBeTruthy();
+      const article: ArticleWithContent = res.data;
+      expect(res.data?.orgId).toEqual(orgId);
+      expect(res.data?.articleId).toEqual(articleId);
+      expect(res.data?.lang).toEqual(lang);
+      expect(article.articleContent.articleContentId).toEqual(
+        article.articleContentId
+      );
+      expect(article?.articleContent.content.length).toEqual(
+        article.articleContent.content.length
+      );
+
+      writeFile(
+        './mocks/articleWithContent.json',
+        JSON.stringify(res.data),
+        'utf8',
+        () => {
+          expect(true).toEqual(true);
+        }
+      );
+    });
     it('lists articles by org and lang', async () => {
       const { orgId } = mockOrgIds[0];
       const res = await http.get(`/orgs/${orgId}/${lang}/articles`);
@@ -54,7 +84,6 @@ describe.concurrent(
         expect(article.lang).toEqual(lang);
       });
 
-      // save a mock articles object for frontend use
       writeFile(
         './mocks/articles.json',
         JSON.stringify(res.data),

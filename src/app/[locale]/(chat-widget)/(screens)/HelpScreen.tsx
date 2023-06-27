@@ -10,9 +10,9 @@ import { CgSpinner } from 'react-icons/cg';
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { EntityItem } from 'electrodb';
 import { highlightMatches } from './(help)/highlightMatches';
-import { useDebounce } from "use-hooks";
+import { useDebounce } from "usehooks-ts";
 import { useQuery } from '@tanstack/react-query';
-import { searchArticles } from '../(actions)/articles/searchArticles';
+import { searchArticles } from '../(actions)/orgs/articles/searchArticles';
 import matchers from '@testing-library/jest-dom/matchers';
 
 type Inputs = {
@@ -38,24 +38,25 @@ export type CategoryArticles ={ [key in ArticleCategory]: EntityItem<typeof Arti
 
 export const HelpScreen: FC = () => {
   const t = useTranslations('chat-widget');
+  const { chatWidget: {setWidgetState, setSelectedArticleId} } = useChatWidgetStore();
 const listCategories = (categoryArticles: CategoryArticles) => 
-              (<ul className="w-full animate-fade-left">
-                <li  className="flex justify-between w-full h-16 hover:bg-transparent  px-4 font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal">{t('categories', {count: Object.entries(categoryArticles ?? {}).filter((category) => category.length).length})}</li> 
+              (<ul className="w-full mb-10 animate-fade-left">
+                <li  className="flex justify-between w-full  h-16 hover:bg-transparent  px-4 font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal">{t('categories', {count: Object.entries(categoryArticles ?? {}).filter((category) => category.length).length})}</li> 
                 {Object.entries(categoryArticles ?? {})?.map(([category, articles]) => {
                     return  (
                     <li key={category} onClick={() => setCurrentCategory(category as ArticleCategory)} className="flex justify-between w-full h-16 font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal">
-                      <div className='flex flex-col place-items-start gap-y-1'>
-                        <h5 className='flex font-semibold'>{category}</h5>
-                        <p className='flex text-xs text-neutral-400'>{t('articles', {count: articles?.length})}</p>
+                      <div className='flex flex-col place-items-start gap-y-1 basis-5/6'>
+                        <h5 className='flex font-semibold text-start'>{category}</h5>
+                        <p className='flex text-xs text-neutral-400 text-start'>{t('articles', {count: articles?.length})}</p>
                       </div>
-                      <BiChevronRight className="text-3xl justify-right"/>
+                      <BiChevronRight className="text-3xl justify-right basis-1/6"/>
                       </li>)
                   })
                 }
               </ul>)
 
   const listCategoryArticles = (category: string, articles: EntityItem<typeof Article>[]) => 
-              (<ul className="w-full animate-fade-left">
+              (<ul className="w-full mb-10 animate-fade-left">
                 <li key={category} className="flex justify-between place-items-center w-full h-16 px-4 font-light normal-case border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none text-normal">
                   <div className='flex flex-col place-items-start '>
                     <h5 className='flex font-semibold'>{category}</h5> 
@@ -63,12 +64,12 @@ const listCategories = (categoryArticles: CategoryArticles) =>
                   </div>
                   </li>
                 {articles?.map((article) => {
-                    return  (<li key={category} className="flex justify-between w-full h-16 font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal">
-                      <div className='flex flex-col place-items-start gap-y-1'>
-                        <h5 className='flex font-semibold'>{article.title}</h5> 
-                        {article?.subtitle && <p className='flex text-xs text-neutral-400'>{article?.subtitle}</p>}
+                    return  (<li key={article.title} onClick={() => setSelectedArticleId(article.articleId)} className="flex justify-between w-full h-16 font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal">
+                      <div className='flex flex-col justify-start place-items-start basis-5/6 gap-y-1'>
+                        <h5 className='font-semibold text-start'>{article.title}</h5> 
+                        {article?.subtitle && <p className='text-xs text-neutral-400'>{article?.subtitle}</p>}
                       </div>
-                      <BiChevronRight className="text-3xl justify-right"/>
+                      <BiChevronRight className="text-3xl justify-right basis-1/6"/>
                       </li>)
                   })
                 }
@@ -87,18 +88,15 @@ const listSearchMatches = (responses: ArticleSearchRes[]) => {
                       const category = matchKeys.includes('category') && categoryIndicies?.length ? highlightMatches(response.item.category, categoryIndicies ) : ''
                       const subtitle = response.item?.subtitle && contentIndicies && matchKeys.includes('subtitle') ? highlightMatches(response.item?.subtitle, subtitleIndicies) : ''
                       const content = matchKeys.includes('content') && highlightMatches(response.item.content, contentIndicies)
-                      console.log(title)
-                      console.log(subtitle)
-                      console.log(content)
                       return  (
-                        <li key={response.refIndex} className={`flex  justify-between w-full ${content && content?.length ? 'h-28' : 'h-20'} font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal`}>
-                          <div className='flex flex-col justify-start overflow-y-clip basis-3/4 shrink place-items-start gap-y-1'>
+                        <li key={response.refIndex} onClick={() => setSelectedArticleId(response.item.articleId)} className={`flex  justify-between w-full ${content && content?.length ? 'h-28' : 'h-20'} font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal`}>
+                          <div className='flex flex-col justify-start w-5/6 overflow-y-clip basis-3/4 place-items-start gap-y-1'>
                             <h5 className='justify-start text-base text-start'>{title.length ? title : response.item.title}</h5> 
                             <h5 className='text-sm'>{category.length ? category : response.item.category }</h5> 
                             {/* <p className='text-sm text-neutral-400'>{subtitle.length ? subtitle : response.item?.subtitle}</p> */}
                             {content && <p className='justify-start text-xs text-start text-neutral-400'>{content.map((child) => (<>{child}</>))}</p>}
                           </div>
-                          <BiChevronRight className="text-3xl basis-1/4 shrink-0 justify-right"/>
+                          <BiChevronRight className="flex text-3xl basis-1/6 shrink-0 justify-right"/>
                         </li>
                         )
                     })
@@ -106,7 +104,6 @@ const listSearchMatches = (responses: ArticleSearchRes[]) => {
                 </ul>)
 };
 
-  const { chatWidget: {setWidgetState} } = useChatWidgetStore();
   const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
   const locale = useLocale();
   const [phrase, setPhrase] = useState('');

@@ -9,13 +9,14 @@ import { Message } from '@/entities/message';
 import { CreateCustomer, CreateMessage } from '@/entities/entities';
 import { Article } from '@/entities/article';
 
-export type WidgetState = 'help' | 'chat' | 'messages' | 'home' | 'article';
-export type WidgetVisibility = 'open' | 'minimized';
+export type WidgetState = 'help' | 'conversations' | 'home';
+export type WidgetVisibility = 'expanded' | 'open' | 'minimized';
 
 export interface ChatWidgetStateDefinition {
   widgetState: WidgetState;
   widgetVisibility: WidgetVisibility;
   selectedConversationId?: string;
+  selectedArticleId?: string;
 }
 
 export interface ChatWidgetStateActions {
@@ -40,6 +41,13 @@ export interface ChatWidgetStateActions {
    * @type {(selectedConversationId: string) => void}
    */
   setSelectedConversationId: (selectedConversationId?: string) => void;
+  /**
+   * Sets the current article id, which toggles between the help and the article screen.
+   * @date 24/06/2023 - 13:32:41
+   *
+   * @type {(selectedConversationId: string) => void}
+   */
+  setSelectedArticleId: (selectedArticleId?: string) => void;
 }
 
 export interface ChatWidgetStateSocketActions {

@@ -57,7 +57,6 @@ export const ConversationsScreen: FC = () => {
           )}
         </div>
         <button onClick={async() => {
-            setWidgetState('chat')
             const conversationId = uuidv4()
             setSelectedConversationId(conversationId);
             const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])

@@ -40,4 +40,8 @@ export const createChatWidgetState: StateSlice<ChatWidgetStateType> = (
     set((state) => {
       state.chatWidget.selectedConversationId = selectedConversationId;
     }),
+  setSelectedArticleId: (selectedArticleId?: string) =>
+    set((state) => {
+      state.chatWidget.selectedArticleId = selectedArticleId;
+    }),
 });

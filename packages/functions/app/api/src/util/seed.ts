@@ -161,10 +161,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                   articleId,
                   orgId,
                   lang: mockLang,
-                  content: `${faker.lorem.paragraphs(2)}${
+                  content: `${faker.lorem.paragraphs(5)}${
                     i < mockArticleSearchPhraseFreq &&
                     ` ${mockArticleSearchPhrase} `
-                  }${faker.lorem.paragraphs(1)}`,
+                  }${faker.lorem.paragraphs(4)}`,
                 };
                 await db.entities.articleContents
                   .create(createArticleContent)

@@ -21,7 +21,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-deploy-role-206508349906-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::206508349906:role/cdk-hnb659fds-cfn-exec-role-206508349906-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/9d262a06f28cb58710624ebb9c202df3fee53c7da0b2294bbc77112c66cf49c1.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-206508349906-us-east-1/5d11e549b412822eca0a535e57b39080151df01aff535fb1e88413ee17aed3f8.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -40,7 +40,7 @@
         "/local-crow-AppStack": [
           {
             "type": "aws:cdk:info",
-            "data": "Number of resources: 477 is approaching allowed maximum of 500",
+            "data": "Number of resources: 484 is approaching allowed maximum of 500",
             "trace": [
               "Annotations.addMessage (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1071)",
               "Annotations.addInfo (/Users/xyz.ekrata/Projects/crow/node_modules/.pnpm/aws-cdk-lib@2.79.1_constructs@10.1.156/node_modules/aws-cdk-lib/core/lib/annotations.js:1:586)",
@@ -1761,6 +1761,48 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "appApiRouteGETorgsorgIdlangarticlesarticleId25ABB749"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlesarticleIdwithcontentServiceRoleEAEE5340"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlesarticleIdwithcontentServiceRoleDefaultPolicy0B9AA76F"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlesarticleIdwithcontent7C3AA056"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiLambdaGETorgsorgIdlangarticlesarticleIdwithcontentEventInvokeConfigE4C9B4BE"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/Integration_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlesarticleIdwithcontentIntegrationGETorgsorgIdlangarticlesarticleIdwithcontent2FED83CF"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/Integration_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlesarticleIdwithcontentIntegrationGETorgsorgIdlangarticlesarticleIdwithcontentPermissionD8B07378"
+          }
+        ],
+        "/local-crow-AppStack/appApi/Route_GET_--orgs--{orgId}--{lang}--articles--{articleId}--with-content/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appApiRouteGETorgsorgIdlangarticlesarticleIdwithcontentDB744F89"
           }
         ],
         "/local-crow-AppStack/appApi/Lambda_GET_--orgs--{orgId}--{lang}--articles/ServiceRole/Resource": [

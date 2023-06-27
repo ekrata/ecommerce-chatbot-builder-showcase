@@ -158,6 +158,11 @@ export const Translation = new Entity({
               default: 'Try again',
               required: true,
             },
+            Updated: {
+              type: 'string',
+              default: 'Updated',
+              required: true,
+            },
           },
         },
       },

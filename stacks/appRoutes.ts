@@ -49,6 +49,8 @@ export const appRoutes: Record<string, ApiRouteProps<string>> = {
 
   'GET /orgs/{orgId}/{lang}/articles/{articleId}':
     'packages/functions/app/api/src/articles/get.handler',
+  'GET /orgs/{orgId}/{lang}/articles/{articleId}/with-content':
+    'packages/functions/app/api/src/articles/getWithContent.handler',
   'GET /orgs/{orgId}/{lang}/articles':
     'packages/functions/app/api/src/articles/list.handler',
   'GET /orgs/{orgId}/{lang}/articles/search':

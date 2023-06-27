@@ -10,7 +10,7 @@ import { Org } from "@/entities/org";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { BsPencilSquare } from "react-icons/bs";
 import { v4 as uuidv4} from 'uuid'
-import { createConversation } from "../../(actions)/conversations/createConversation";
+import { createConversation } from "../../(actions)/orgs/conversations/createConversation";
 import {BiSend, BiUserCircle} from 'react-icons/bi';
 import { getConfiguration } from "../../(actions)/orgs/configurations/getConfiguration";
 import { Configuration } from "@/entities/configuration";
@@ -37,7 +37,7 @@ export const StartConversationCard: React.FC = () => {
   halfAnHourAgo.setMinutes ( halfAnHourAgo.getMinutes() - 30 );
   return (
       <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light normal-case btn btn-ghost animate-ping rounded-3xl text-base-100 place-items-center animate-fade-left animate-once " onClick={async() => {
-        setWidgetState('chat')
+        setWidgetState('conversations')
         const conversationId = uuidv4()
         setSelectedConversationId(conversationId);
         const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])

@@ -60,4 +60,7 @@ node_modules
 # Sentry Auth Token
 .sentryclirc
 mocks
+mocks/*
+
 src/app/[locale]/(chat-widget)/(actions)
+mocks/article.json

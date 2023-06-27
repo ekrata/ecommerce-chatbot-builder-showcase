@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Conversation } from './conversation';
 import { Customer } from './customer';
 import { Operator } from './operator';
+import { ArticleContent } from './articleContent';
 
 /**
  * Contains data about a search result match.
@@ -20,6 +21,10 @@ export type ArticleSearchRes = {
     value: string;
   }[];
   score: number;
+};
+
+export type ArticleWithContent = EntityItem<typeof Article> & {
+  articleContent: EntityItem<typeof ArticleContent>;
 };
 
 /**
@@ -54,20 +59,6 @@ export const articleCategory = [
 ] as const;
 
 export type ArticleCategory = (typeof articleCategory)[number];
-/**
- * Expands the articleContentId into the
- * @date 17/06/2023 - 13:12:45
- *
- * @export
- * @typedef {ExpandedConversation}
- */
-export type ExpandedConversation = Omit<
-  EntityItem<typeof Conversation>,
-  'customerId' | 'operatorId'
-> & {
-  customer: EntityItem<typeof Customer>;
-  operator: EntityItem<typeof Operator>;
-};
 
 /**
  * Basic Article Entity that stores Rich Text Format data
@@ -153,7 +144,7 @@ export const Article = new Entity({
     get: {
       pk: {
         field: 'pk',
-        composite: ['orgId', 'articleId', 'lang'],
+        composite: ['orgId', 'lang', 'articleId'],
       },
       sk: {
         field: 'sk',

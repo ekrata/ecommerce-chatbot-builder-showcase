@@ -8,9 +8,9 @@ import { getArticles } from "../(actions)/orgs/articles/getArticles";
 import { getOrg } from "../(actions)/orgs/getOrg";
 import { Article, ArticleSearchRes } from "@/entities/article";
 import { ConversationItem } from "@/entities/conversation";
-import { getConversationItems } from "../(actions)/conversations/getConversationItems";
-import { getCustomer } from "../(actions)/customers/getCustomer";
-import { searchArticles } from "../(actions)/articles/searchArticles";
+import { getConversationItems } from "../(actions)/orgs/conversations/getConversationItems";
+import { searchArticles } from "../(actions)/orgs/articles/searchArticles";
+import { getCustomer } from "../(actions)/orgs/customers/getCustomer";
 
 /**
  * Contains the values used for query keys. This should always be used. 
@@ -26,6 +26,7 @@ export enum QueryKey {
   configuration = 'configuration',
   customer = 'customer',
   articles = 'articles',
+  articleWithContent = 'articleWithContent',
   articlesSearch = 'articlesSearch'
 }
 

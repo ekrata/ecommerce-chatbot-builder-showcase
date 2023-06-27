@@ -14,6 +14,7 @@ import orgs from 'mocks/orgs.json'
 import articles from 'mocks/articles.json'
 import configuration from 'mocks/configuration.json'
 import articleSearchResponse from 'mocks/articleSearchResponse.json'
+import articleWithContent from 'mocks/articleWithContent.json'
 
 // import customerConversationItems from 'mocks/'
 import { ChatWidget } from './ChatWidget';
@@ -77,12 +78,21 @@ const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
         }
       ),
       rest.get(
-        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/${lang}/articles/search*`,
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/:lang/articles/search*`,
         async(req,res,ctx) => {
           return res(
             ctx.status(200),
             ctx.delay(2000),
             ctx.json({articleSearchResponse})
+          )
+        }),
+      rest.get(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/:lang/articles/:articleId/with-content`,
+        async(req,res,ctx) => {
+          return res(
+            ctx.status(200),
+            ctx.delay(2000),
+            ctx.json({articleWithContent})
           )
         }),
       rest.post(

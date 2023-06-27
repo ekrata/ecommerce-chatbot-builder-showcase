@@ -6,7 +6,7 @@ import { useCreateMessageMut } from '../../(hooks)/mutations';
 import { MessageTimeLabel } from './MessageTimeLabel';
 import { Avatar } from './Avatar';
 import { getItem } from '../../(helpers)/helpers';
-import { createMessage } from '../../(actions)/conversations/messages/createMessage';
+import { createMessage } from '../../(actions)/orgs/conversations/messages/createMessage';
 
 interface Props  {
   conversationId: string

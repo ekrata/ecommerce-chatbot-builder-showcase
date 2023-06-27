@@ -10,7 +10,7 @@ export const NavBar: FC = () => {
           <BiHomeSmile className='text-2xl'/>
           <h4>Home</h4>
         </button>
-        <button className={`${widgetState === 'messages' && 'active'}`} onClick={() => setWidgetState('messages') }>
+        <button className={`${widgetState === 'conversations' && 'active'}`} onClick={() => setWidgetState('conversations') }>
           <BiMessageDetail className='text-2xl' />
           <h4>Messages</h4>
         </button>

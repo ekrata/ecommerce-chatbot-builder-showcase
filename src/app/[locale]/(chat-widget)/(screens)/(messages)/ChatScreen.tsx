@@ -16,7 +16,7 @@ type Inputs = {
 };
 
 export const ChatScreen: FC = ({}) => {
-  const { chatWidget: {widgetState,  setWidgetState, selectedConversationId} } =
+  const { chatWidget: {widgetState,  setWidgetState, setSelectedConversationId, selectedConversationId} } =
     useChatWidgetStore();
   const [conversationsState] = useContext(ConversationsContext);
   const t = useTranslations('chat-widget');
@@ -29,13 +29,13 @@ export const ChatScreen: FC = ({}) => {
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
 
   return (
-    <div className="flex rounded-3xl justify-between w-full h-full animate-fade-left">
-      <div className="flex flex-col justify-stretch w-full h-full">
+    <div className="flex justify-between w-full h-full rounded-3xl animate-fade-left">
+      <div className="flex flex-col w-full h-full justify-stretch">
         <div
           className={`background flex place-items-center w-full justify-start rounded-t-lg text-xl font-semibold p-2 gap-x-2    text-white`}
         >
           {configuration.data && <DynamicBackground configuration={configuration.data}/>}
-          <button><BiChevronLeft className='text-5xl' onClick={() => setWidgetState('messages')}></BiChevronLeft></button>
+          <button><BiChevronLeft className='text-5xl' onClick={() => setSelectedConversationId()}></BiChevronLeft></button>
           {conversationItem?.conversation?.operator && (
             <>
               <Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]}/> 
@@ -46,17 +46,17 @@ export const ChatScreen: FC = ({}) => {
           {!conversationItem?.conversation?.operator && (<>
             <div className=''><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]}/> </div>
             <div className='-ml-4'><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]}/> </div>
-            <div className='-ml-4 mr-4'><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]}/> </div>
+            <div className='mr-4 -ml-4'><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]}/> </div>
             {`${t('orgName') ?? ''} ${t('Bot') ?? 'Bot'}`}
           </>)}
         </div>
         <div
-          className="flex flex-col w-full h-full bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-700 "
+          className="flex flex-col w-full h-full bg-white border-b-2 border-gray-300 dark:bg-gray-800 dark:border-gray-700 "
           data-testid="chat-log"
         >
           <CustomerChatLog />
         </div>
-        <div className='justify-end bottom-0 w-full'>
+        <div className='bottom-0 justify-end w-full'>
           <ChatInput/>
         </div>
       </div>

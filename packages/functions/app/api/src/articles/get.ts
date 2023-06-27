@@ -8,8 +8,8 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, articleId, lang } = usePathParams();
-    if (!orgId || !articleId || !lang) {
+    const { orgId, lang, articleId } = usePathParams();
+    if (!orgId || !lang || !articleId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
@@ -17,7 +17,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
     try {
       const res = await appDb.entities.articles
-        .get({ orgId, articleId, lang })
+        .get({ orgId, lang, articleId })
         .go();
       if (res.data) {
         return {
@@ -27,7 +27,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       }
       return {
         statusCode: 404,
-        body: `No configuration with orgId: ${orgId} exists. `,
+        body: `No article with orgId: ${orgId}, lang: ${lang}, or articleId: ${articleId} exists. `,
       };
     } catch (err) {
       Sentry.captureException(err);

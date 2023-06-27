@@ -23,6 +23,7 @@ import { Configuration } from '@/entities/configuration';
 import { useConfigurationQuery, useCustomerQuery, useOrgQuery } from './(hooks)/queries';
 import { ChatScreen } from './(screens)/(messages)/ChatScreen';
 import { useLocale } from 'next-intl';
+import { ArticleScreen } from './(screens)/ArticleScreen';
 
 export interface ConversationsState {
   selectedConversationId?: string
@@ -34,7 +35,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   children,
   mockWsUrl,
 }) => {
-  const { chatWidget: {widgetVisibility, widgetState } } =
+  const { chatWidget: {widgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
   const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
   const configuration = useConfigurationQuery(orgId);
@@ -43,6 +44,8 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   const customer = useCustomerQuery(orgId, '')
 
 
+  const hideNavbar = (widgetState === 'conversations' && selectedConversationId) || (widgetState === 'help' && selectedArticleId)
+
   const content = useMemo(() => {
     switch (widgetState) {
       case 'home': {
@@ -50,28 +53,22 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
           <HomeScreen />
         );
       }
-      case 'chat':
+      case 'conversations': {
         return (
-          <>
-            <ChatScreen />
-          </>
-        )
-      case 'messages': {
-        return (
-          <>
+          selectedConversationId ?
+            <ChatScreen/> :
             <ConversationsScreen />
-          </>
         )
       }
       case 'help': {
         return (
-          <>
-            <HelpScreen />
-          </>
+          selectedArticleId ?
+            <ArticleScreen/> :
+            <HelpScreen /> 
         );
       }
     }
-  }, [widgetState])
+  }, [widgetState, selectedConversationId, selectedArticleId])
 
   return (
     <div className={`${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-20 md:bottom-20' : 'md:absolute md:right-20 md:bottom-20'}`}>
@@ -81,7 +78,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
             <div className='w-full h-full overflow-y-scroll rounded-3xl '>
               {content}
             </div>
-            {(widgetState !== 'chat') && 
+            {!hideNavbar && 
               <NavBar/>
             }
           </div>

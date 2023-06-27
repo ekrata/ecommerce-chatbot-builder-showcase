@@ -48,8 +48,8 @@ import { getItem } from "../../(helpers)/helpers";
     return (
         <button className={`btn btn-ghost block ${rounded && 'rounded-3xl'} font-light justify-between h-${height}  normal-case place-items-center animate-fade-left w-full  text-sm`} 
         onClick={() => {
+          setWidgetState('conversations');
           setSelectedConversationId(conversationItem?.conversation.conversationId)
-          setWidgetState('chat');
         }}> 
         {showRecentLabel && <div className="flex pb-2 pl-2 mb-2 font-semibold">
           {t('Recent message')}

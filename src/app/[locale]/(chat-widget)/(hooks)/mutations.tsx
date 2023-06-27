@@ -1,8 +1,8 @@
 import { Configuration } from "@/entities/configuration";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createConversation } from "../(actions)/conversations/createConversation";
+import { createConversation } from "../(actions)/orgs/conversations/createConversation";
 import { QueryKey } from "./queries";
-import { createMessage } from "../(actions)/conversations/messages/createMessage";
+import { createMessage } from "../(actions)/orgs/conversations/messages/createMessage";
 import { ConversationItem } from "@/entities/conversation";
 import { sortConversationItems } from "../(helpers)/sortConversationItems";
 
