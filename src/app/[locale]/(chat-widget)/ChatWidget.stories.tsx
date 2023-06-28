@@ -1,6 +1,6 @@
 import { expect } from '@storybook/jest';
 import type { Meta, StoryObj } from '@storybook/react';
-import { within } from '@storybook/testing-library';
+import { fireEvent, within } from '@storybook/testing-library';
 import { EntityItem } from 'electrodb';
 import { Message } from '@/entities/message';
 import { CreateConversation, CreateMessage } from '@/entities/entities';
@@ -19,6 +19,14 @@ import articleWithContent from 'mocks/articleWithContent.json'
 // import customerConversationItems from 'mocks/'
 import { ChatWidget } from './ChatWidget';
 import Layout from './layout';
+import { getWsUrl } from '@/app/getWsUrl';
+import { createRandomConversation, createRandomCustomer, createRandomMessage, createRandomOperator } from '../dash/inbox/mocks.test';
+import { useCustomerQuery } from './(hooks)/queries/useCustomerQuery';
+import { QueryClient } from '@tanstack/react-query';
+import { WidgetProvider } from './WidgetProvider';
+import { QueryKey } from './(hooks)/queries';
+import { Customer } from '@/entities/customer';
+import { ConversationItem, ExpandedConversation } from '@/entities/conversation';
 
 const meta: Meta<typeof ChatWidget> = {
   component: ChatWidget,
@@ -45,6 +53,14 @@ const existingConversationRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] 
     );
   }
 )]
+
+const queryClient = new QueryClient({defaultOptions: {queries: {
+  cacheTime: Infinity,
+  staleTime: Infinity,
+}}});
+
+const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+const customer = queryClient.getQueryData<EntityItem<typeof Customer>>([orgId, '', QueryKey.customer]);
 
 const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
       rest.get(
@@ -142,7 +158,7 @@ export const NewCustomer: Story = {
   }
 }
 
-export const PreviousCustomerWithConversations: Story = {
+export const story: Story = {
   parameters: {
     msw: {
       handlers: [...defaultRoutes, ...existingConversationRoutes]
@@ -150,75 +166,87 @@ export const PreviousCustomerWithConversations: Story = {
   },
   render: () => {
     // useChatWidgetStore.setState({chatWidget: {...useChatWidgetStore().chatWidget, org: orgs.data[0] as EntityItem<typeof Org>}})
+    console.log('hi')
+    const props ={overrideQueryProvider: queryClient};
     return (
       <div className='h-screen'>
-        <Layout>
+        <WidgetProvider {...props}>
           <ChatWidget mockWsUrl={mockWsUrl}></ChatWidget>
-        </Layout>
+        </WidgetProvider>
       </div>
       );
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step(
+      'Operator starts a conversation, and both operator and customer sends messages',
+      async () => {
+          console.log('hi')
+          const mockServer = new Server(mockWsUrl);
+          if (mockServer) {
+            mockServer.stop();
+            mockServer.close();
+            mockServer.on('connection', (socket) => {
+              console.log('test connected!');
+              mockSocket = socket;
+            });
+          }
 
-  // play: async ({ canvasElement, step }) => {
-  //   const canvas = within(canvasElement);
-  //   await step(
-  //     'Operator sends a new message in existing conversation',
-  //     async () => {
-  //       sessionStorage.removeItem('customerChatStore');
-  //       localStorage.removeItem('customerChatStore');
-  //       useChatWidgetStore.persist.clearStorage();
+          const operator = createRandomOperator(orgId);
+          const customer = createRandomCustomer(orgId);
+          const conversation = createRandomConversation('unassigned', orgId, operator.operatorId, customer.customerId);
+          const expandedConversation: ExpandedConversation = {...conversation, operator, customer};
+          const conversationItem: ConversationItem = {conversation: expandedConversation, messages: []};
 
-  //       const messages = createRandomMessages(
-  //         [
-  //           org.orgId,
-  //           conversation.conversationId,
-  //           operator.operatorId,
-  //           customer.customerId,
-  //         ],
-  //         messageCount
-  //       );
+          mockServer.emit(
+            'createNewConversationItem',
+            JSON.stringify(conversationItem)
+          );
 
-    
-  //       const configuration = loadConfiguration(org.orgId);
-  //       setupTranslation(org.orgId, lang);
-  //       useChatWidgetStore.setState({
-  //         chatWidget: {
-  //           ...useChatWidgetStore().chatWidget,
-  //           org,
-  //           customer,
-  //           conversations: {[conversation.conversationId]: {conversation, operator, messages}},
-  //           configuration,
-  //         },
-  //         }, 
-  //         true
-  //       );
-  //       expect(messages?.length).toEqual(20);
-  //       // if (mockServer) {
-  //       //   // mockServer.stop();
-  //       //   // mockServer.close();
-  //       //   // getWsUrl(org.orgId, customer.customerId, 'customer')
-  //       //   mockServer.on('connection', (socket) => {
-  //       //     // console.log('connected!');
-  //       //     // mockSocket = socket;
-  //       //   });
-  //       // }
-  //       mockServer.emit(
-  //         'sendNewMessageToCustomer',
-  //         JSON.stringify({
-  //           message: createRandomMessage(
-  //             org.orgId,
-  //             conversation.conversationId,
-  //             operator.operatorId,
-  //             customer.customerId
-  //           ),
-  //         })
-  //       );
+          const conversationItems = queryClient.getQueryData<ConversationItem[]>([orgId, customer.customerId, QueryKey.conversationItems]);
+          expect(conversationItems?.length).toEqual(1)
+          expect(conversationItems?.[0]).toStrictEqual(conversationItem)
+            
+          
+          const message = createRandomMessage(
+            orgId,
+            conversation.conversationId,
+            operator.operatorId,
+            customer.customerId
+          )
+
+          mockServer.emit(
+            'sendNewMessage',
+            JSON.stringify(message)
+          );
+
+          expect(conversationItems?.[0].messages?.[0]).toStrictEqual(message);
+
+
+          // navbar rendered
+          (await canvas.findByTestId('navbar-conversations')).click();
+
+          // conversation created and rendered
+          (await canvas.findByTestId(conversationItem.conversation.conversationId)).click();
+
+          // conversation has operator's and is rendered
+          expect(await canvas.findByTestId(`operator-message-content-${message.messageId}`)).toBeInTheDocument();
+
+          // user responds
+          const inputMsg = (await canvas.findByTestId('msg-input'))
+          const customerMsgContent = 'Hi, do you sell socks?'
+          fireEvent.change(inputMsg, {target: {value: customerMsgContent}});
+          (await canvas.findByTestId('sendMsg')).click()
+
+          // conversation has operator's and is rendered
+          expect(await canvas.findByTestId(`operator-message-content-${message.messageId}`)).toBeInTheDocument()
+          expect(await canvas.findByTestId(`operator-message-content-${message.messageId}`)).toHaveTextContent(customerMsgContent)
+          expect(conversationItems?.[0].messages?.length).toEqual(2);
+
   //       // await new Promise((r) => setTimeout(r, 2000));
-  //       expect(useChatWidgetStore()?.chatWidget.conversations?.[conversation.conversationId]?.messages?.length).toEqual(
-  //         messageCount + 1
-  //       );
-  //       // check local state is updated
-  //     }
+        // check local state is updated
+      }
+    )}
   //   );
   //   await step(
   //     'Operator starts a conversation and sends a message',

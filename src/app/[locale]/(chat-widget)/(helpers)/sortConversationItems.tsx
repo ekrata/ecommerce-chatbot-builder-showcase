@@ -14,5 +14,5 @@ const sortConversationItems = (conversationItems: ConversationItem[]) => {
     });
 
     // sort conversations by comparing last message sentAt
-    conversationItems.sort((a,b) => a?.messages?.slice(-1)?.[0]?.sentAt ?? 0 - (a?.messages?.slice(-1)[0].sentAt ?? 0 )).reverse()
+    conversationItems.sort((a,b) => a?.messages?.slice(-1)?.[0]?.sentAt ?? 0 - (a?.messages?.slice(-1)[0]?.sentAt ?? 0 )).reverse()
   }

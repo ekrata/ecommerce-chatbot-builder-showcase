@@ -16,14 +16,13 @@ import { HelpScreen } from './(screens)/HelpScreen';
 import { EntityItem } from 'electrodb';
 import { ConversationsScreen } from './(screens)/(messages)/ConversationsScreen';
 import { Org } from '@/entities/org';
-import { getOrg } from './(actions)/orgs/getOrg';
-import { Customer } from '@/entities/customer';
-import { useQuery } from '@tanstack/react-query';
-import { Configuration } from '@/entities/configuration';
-import { useConfigurationQuery, useCustomerQuery, useOrgQuery } from './(hooks)/queries';
+import { useConfigurationQuery,  useOrgQuery } from './(hooks)/queries';
 import { ChatScreen } from './(screens)/(messages)/ChatScreen';
 import { useLocale } from 'next-intl';
 import { ArticleScreen } from './(screens)/ArticleScreen';
+import { useCreateCustomerMut } from './(hooks)/mutations';
+import {v4 as uuidv4} from 'uuid';
+import { useCustomerQuery } from './(hooks)/queries/useCustomerQuery';
 
 export interface ConversationsState {
   selectedConversationId?: string
@@ -40,9 +39,17 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
-  const org = useOrgQuery(orgId)
-  const customer = useCustomerQuery(orgId, '')
+  const customerQuery = useCustomerQuery(orgId);
+  const createCustomerMut = useCreateCustomerMut(orgId, uuidv4())
 
+  // create customer and assign to conversation if no customer currently found.
+  useEffect(() => {
+    (async () => {
+      if(!customerQuery?.data?.customerId && customerQuery.fetchStatus === 'idle' && customerQuery.status === 'error') {
+        const res = await createCustomerMut.mutateAsync([orgId, '', false])
+      }
+    })()
+  }, [customerQuery.fetchStatus, customerQuery.status, customerQuery?.data?.customerId])
 
   const hideNavbar = (widgetState === 'conversations' && selectedConversationId) || (widgetState === 'help' && selectedArticleId)
 

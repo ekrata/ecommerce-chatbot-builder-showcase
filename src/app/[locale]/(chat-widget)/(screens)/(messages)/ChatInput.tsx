@@ -3,13 +3,14 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useCreateConversationMut, useCreateMessageMut } from "../../(hooks)/mutations";
 import { useTranslations } from "next-intl";
 import { CreateMessage } from "@/entities/entities";
-import { useOrgQuery, useCustomerQuery, useConfigurationQuery, useConversationItemsQuery } from "../../(hooks)/queries";
+import { useOrgQuery,  useConfigurationQuery, useConversationItemsQuery } from "../../(hooks)/queries";
 import {v4 as uuidv4} from 'uuid'
 import { BiSend } from "react-icons/bi";
 import { CgSpinner } from "react-icons/cg";
 import { DynamicBackground } from "../../DynamicBackground";
 import { useChatWidgetStore } from "../../(actions)/useChatWidgetStore";
 import { getItem } from "../../(helpers)/helpers";
+import { useCustomerQuery } from "../../(hooks)/queries/useCustomerQuery";
 
 type Inputs = {
   msg: string 
@@ -20,7 +21,7 @@ export const ChatInput: FC = () => {
   const t = useTranslations('chat-widget');
   const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
   const org = useOrgQuery(orgId);
-  const customer = useCustomerQuery(orgId, '');
+  const customer = useCustomerQuery(orgId);
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const conversationItems = useConversationItemsQuery(orgId, customer?.data?.customerId ?? '')
@@ -48,13 +49,13 @@ export const ChatInput: FC = () => {
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='w-full'>
-      <div className="form-control rounded-b-lg">
-        <div className="input-group gap-x-1 rounded-b-lg">
+      <div className="rounded-b-lg form-control">
+        <div className="rounded-b-lg input-group gap-x-1">
           <div className="flex flex-col w-full rounded-b-lg">
             <input
               type="text"
               placeholder="Enter your message..."
-              className="input hover:outline-0 hover:ring-0 focus:ring-0 focus:outline-0 w-full rounded-xs rounded-b-lg "
+              className="w-full rounded-b-lg input hover:outline-0 hover:ring-0 focus:ring-0 focus:outline-0 rounded-xs "
               data-testid="msg-input"
               {...register('msg', { required: true })}
             />

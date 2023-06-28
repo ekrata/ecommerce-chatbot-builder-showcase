@@ -5,7 +5,7 @@ import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsSearch, BsX } from 'react-icons/bs';
 import { DynamicBackground } from '../DynamicBackground';
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
-import { useConfigurationQuery, useOrgQuery, useCustomerQuery, useArticlesQuery, useSearchArticlesQuery } from '../(hooks)/queries';
+import { useConfigurationQuery, useOrgQuery,  useArticlesQuery, useSearchArticlesQuery } from '../(hooks)/queries';
 import { CgSpinner } from 'react-icons/cg';
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { EntityItem } from 'electrodb';
@@ -123,7 +123,6 @@ const listSearchMatches = (responses: ArticleSearchRes[]) => {
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const org = useOrgQuery(orgId)
-  const customer = useCustomerQuery(orgId, '')
   const articles = useArticlesQuery(orgId, locale)
 
   const categoryArticles: CategoryArticles | undefined  = articles?.data?.reduce((prev, curr) => {

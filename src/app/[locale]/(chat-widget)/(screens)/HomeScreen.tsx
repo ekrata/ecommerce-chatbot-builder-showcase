@@ -5,10 +5,11 @@ import { useForm } from 'react-hook-form';
 import { DynamicBackground } from '../DynamicBackground';
 import { BiChevronRight } from 'react-icons/bi';
 import { StartConversationCard } from './(messages)/StartConversationCard';
-import { useArticlesQuery, useConfigurationQuery, useConversationItemsQuery, useCustomerQuery, useOrgQuery } from '../(hooks)/queries';
+import { useArticlesQuery, useConfigurationQuery, useConversationItemsQuery, useOrgQuery } from '../(hooks)/queries';
 import { ConversationCard } from './(messages)/ConversationCard';
 import { Avatar } from './(messages)/Avatar';
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
+import { useCustomerQuery } from '../(hooks)/queries/useCustomerQuery';
 
 type Inputs = {
   msg: string;
@@ -32,7 +33,7 @@ export const HomeScreen: FC = () => {
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const org = useOrgQuery(orgId)
-  const customer = useCustomerQuery(orgId, '')
+  const customer = useCustomerQuery(orgId)
   const articles = useArticlesQuery(orgId, locale); 
   const conversationItems = useConversationItemsQuery(orgId, customer.data?.customerId ?? '')
   const mostRecentConversationItem = conversationItems?.data?.[0]
@@ -45,17 +46,18 @@ export const HomeScreen: FC = () => {
         className={`dark:bg-gray-900 bg-white flex flex-col justify-start  rounded-l gap-x-2 gap-y-4`}
       >
         <div className="sticky flex p-4 -mb-40 background pb-60 rounded-t-3xl animate-fade-left">
-          {configuration.data && <DynamicBackground configuration={configuration.data} />}
+          {configuration.data && <DynamicBackground  configuration={configuration.data} />}
           <div className='mr-6 justify-left animate-fade-left'>{<img src={widgetAppearance?.logo} className='object-cover h-10 mt-10' />   ?? (<h1>{org?.data?.name ?? 'RadCorp'}</h1>)}</div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[0]} message={conversationItems.data?.[0].messages?.slice(-1)[0]}/> </div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[1]} message={conversationItems.data?.[1]?.messages?.slice(-1)[0]}/> </div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[2]} message={conversationItems.data?.[2]?.messages?.slice(-1)[0]}/> </div>
         </div>
+
+        {mostRecentConversationItem && (
         <div className=" bg-white shadow-md border-[1px] border-gray-300 h-30  rounded-3xl mx-4 gap-y-4 animate-fade-left animate-once">
-          {mostRecentConversationItem && (
             <ConversationCard height='28' conversationId={mostRecentConversationItem.conversation.conversationId} rounded showRecentLabel />
-          )}
         </div>
+        )}
         <div className=" dark:bg-gray-900 bg-white border-gray-300  shadow-md border-[1px] text-normal    rounded-3xl mx-4 gap-y-4 animate-fade-left">
           <div className="flex place-items-center">
               <button onClick={() => setWidgetState('help')}  className="justify-between w-full px-2 m-2 font-semibold normal-case bg-gray-200 border-0 rounded-b-none btn btn-ghost rounded-3xl text-normal input input-bordered " >

@@ -26,7 +26,7 @@ export const MessageTimeLabel: React.FC<Props> = ({conversationItem, message, up
   }
   return (
     <div className='flex place-items-center'>
-      <p className="text-xs place-items-center">
+      <p className="text-xs text-neutral-400 place-items-center">
         {message?.sender === 'operator' && conversationItem?.conversation?.operator?.name}
         {message?.sender === 'customer' && `${t('You')}`}
         {message?.sender === 'bot' && `${t('Bot')}`}

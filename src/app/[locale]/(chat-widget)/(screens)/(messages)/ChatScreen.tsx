@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useEffect } from 'react';
 import {  useTranslations } from 'next-intl';
 import { CustomerChatLog } from './CustomerChatLog';
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
@@ -6,10 +6,13 @@ import { DynamicBackground } from '../../DynamicBackground';
 import React from 'react';
 import { ChatInput } from './ChatInput';
 import { ConversationsContext } from '../../ChatWidget';
-import { useConfigurationQuery, useConversationItemsQuery, useCustomerQuery, useOrgQuery } from '../../(hooks)/queries';
+import { useConfigurationQuery, useConversationItemsQuery, useOrgQuery } from '../../(hooks)/queries';
 import { Avatar } from './Avatar';
 import { BiChevronLeft } from 'react-icons/bi';
 import { getItem } from '../../(helpers)/helpers';
+import { useCreateCustomerMut } from '../../(hooks)/mutations';
+import {v4 as uuidv4 } from 'uuid'
+import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
 
 type Inputs = {
   msg: string;
@@ -18,13 +21,23 @@ type Inputs = {
 export const ChatScreen: FC = ({}) => {
   const { chatWidget: {widgetState,  setWidgetState, setSelectedConversationId, selectedConversationId} } =
     useChatWidgetStore();
-  const [conversationsState] = useContext(ConversationsContext);
   const t = useTranslations('chat-widget');
   const orgId = process.env.NEXT_PUBLIC_AP_ORG_ID ?? ''
   const org = useOrgQuery(orgId);
-  const customer = useCustomerQuery(orgId, '');
+  const customer = useCustomerQuery(orgId);
   const conversationItems = useConversationItemsQuery(orgId, customer?.data?.customerId ?? '')
   const conversationItem = getItem(conversationItems.data ?? [], selectedConversationId ?? '');
+  const createCustomerMut = useCreateCustomerMut(orgId, uuidv4())
+
+  // create customer and assign to conversation if no customer currently found .
+  useEffect(() => {
+    (async () => {
+      if(!conversationItem?.conversation?.customer?.customerId) {
+        const res = await createCustomerMut.mutateAsync([orgId, '', false])
+      }
+    })()
+  }, [conversationItems.isSuccess, conversationItem?.conversation?.customer?.customerId])
+
   const configuration =  useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
 

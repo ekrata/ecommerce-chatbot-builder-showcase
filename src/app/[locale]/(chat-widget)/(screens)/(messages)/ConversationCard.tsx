@@ -8,11 +8,12 @@ import {BiSend} from 'react-icons/bi';
 import { getConfiguration } from "../../(actions)/orgs/configurations/getConfiguration";
 import { Configuration } from "@/entities/configuration";
 import { DynamicBackground } from "../../DynamicBackground";
-import { useConfigurationQuery, useConversationItemsQuery, useCustomerQuery, useOrgQuery } from "../../(hooks)/queries";
+import { useConfigurationQuery, useConversationItemsQuery,  useOrgQuery } from "../../(hooks)/queries";
 import { useCreateConversationMut } from "../../(hooks)/mutations";
 import { ConversationsContext } from "../../ChatWidget";
 import { MessageTimeLabel } from "./MessageTimeLabel";
 import { getItem } from "../../(helpers)/helpers";
+import { useCustomerQuery } from "../../(hooks)/queries/useCustomerQuery";
   
   interface Props {
     conversationId?: string 
@@ -31,7 +32,7 @@ import { getItem } from "../../(helpers)/helpers";
     const {chatWidget: {setWidgetState, setSelectedConversationId}} = useChatWidgetStore()
     const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
     const t = useTranslations('chat-widget');
-    const customer = useCustomerQuery(orgId, '');
+    const customer = useCustomerQuery(orgId);
     const conversationItems = useConversationItemsQuery(orgId, customer?.data?.customerId ?? '')
     const conversationItem = getItem(conversationItems.data ?? [], conversationId ?? '');
     const configuration = useConfigurationQuery(orgId);

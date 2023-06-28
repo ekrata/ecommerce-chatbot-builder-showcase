@@ -15,8 +15,9 @@ import {BiSend, BiUserCircle} from 'react-icons/bi';
 import { getConfiguration } from "../../(actions)/orgs/configurations/getConfiguration";
 import { Configuration } from "@/entities/configuration";
 import { DynamicBackground } from "../../DynamicBackground";
-import { useCreateConversationMut } from "../../(hooks)/mutations";
-import { useConfigurationQuery, useCustomerQuery } from "../../(hooks)/queries";
+import { useCreateConversationMut, useCreateCustomerMut } from "../../(hooks)/mutations";
+import { useConfigurationQuery } from "../../(hooks)/queries";
+import { useCustomerQuery } from "../../(hooks)/queries/useCustomerQuery";
 
 /**
  * Renders a button in place to present the opportunity for a user to start a new conversation. 
@@ -28,20 +29,26 @@ export const StartConversationCard: React.FC = () => {
   const {chatWidget: {setWidgetState, setSelectedConversationId}} = useChatWidgetStore()
   const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
   const t = useTranslations('chat-widget');
-  const customer = useCustomerQuery(orgId, '');
+  const customer = useCustomerQuery(orgId);
   const createConversationMut = useCreateConversationMut(orgId, customer.data?.customerId ?? '');
+  const newCustomerId = uuidv4()
+  const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId);
   const { relativeTime } = useFormatter()
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   var halfAnHourAgo = new Date(Date.now())
   halfAnHourAgo.setMinutes ( halfAnHourAgo.getMinutes() - 30 );
+
+  const onClick = async() => {
+    setWidgetState('conversations')
+    const conversationId = uuidv4()
+    setSelectedConversationId(conversationId);
+    await createCustomerMut.mutateAsync([orgId, '', false])
+    await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, customerId: customer?.data?.customerId, type: 'botChat', channel: 'website', status: 'unassigned' }]) 
+  }
+
   return (
-      <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light normal-case btn btn-ghost animate-ping rounded-3xl text-base-100 place-items-center animate-fade-left animate-once " onClick={async() => {
-        setWidgetState('conversations')
-        const conversationId = uuidv4()
-        setSelectedConversationId(conversationId);
-        const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, {orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])
-      }} > 
+      <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light normal-case btn btn-ghost animate-ping rounded-3xl text-base-100 place-items-center animate-fade-left animate-once " onClick={async() => await onClick()} > 
         <div className="flex justify-around place-items-center">
           <div className="w-12 h-12 p-2 rounded-full avatar background ring-2 ring-primary online">
             {configuration.data && <DynamicBackground configuration={configuration.data}/>}

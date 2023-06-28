@@ -1,5 +1,5 @@
 import { Configuration } from "@/entities/configuration";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { EntityItem } from "electrodb";
 import { getConfiguration } from "../(actions)/orgs/configurations/getConfiguration";
 import { Org } from "@/entities/org";
@@ -49,16 +49,6 @@ export const useConfigurationQuery = (orgId: string) => useQuery<EntityItem<type
  * @returns {*}
  */
 export const useOrgQuery = (orgId: string) => useQuery<EntityItem<typeof Org>>([orgId, QueryKey.org], async () => await getOrg(orgId), {enabled: !!orgId});
-/**
- * Returns customer query 
- * @date 24/06/2023 - 10:45:39
- *
- * @param {string} orgId
- * @param {string} customerId
- * @returns {*}
- */
-export const useCustomerQuery = (orgId: string, customerId: string) => useQuery<EntityItem<typeof Customer>>([orgId, QueryKey.customer], async () => getCustomer(orgId, customerId), {enabled: !!customerId})
-
 /**
  * Returns articles query 
  * @date 24/06/2023 - 10:45:39

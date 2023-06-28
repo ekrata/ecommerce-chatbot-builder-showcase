@@ -5,6 +5,7 @@ import { QueryKey } from "./queries";
 import { createMessage } from "../(actions)/orgs/conversations/messages/createMessage";
 import { ConversationItem } from "@/entities/conversation";
 import { sortConversationItems } from "../(helpers)/sortConversationItems";
+import { createCustomer } from "../actions";
 
 /**
  * Description placeholder
@@ -15,7 +16,8 @@ import { sortConversationItems } from "../(helpers)/sortConversationItems";
  */
 export enum MutationKey  {
   'createConversation',
-  'createMessage'
+  'createMessage',
+  'createCustomer',
 }
 
 
@@ -26,7 +28,7 @@ export enum MutationKey  {
  * @param {string} orgId
  * @returns {*}
  */
-export const useCreateConversationMut = (orgId: string, customerId:string) => {
+export const useCreateConversationMut = (orgId: string, customerId: string) => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationKey: [orgId, MutationKey.createConversation],
@@ -38,37 +40,23 @@ export const useCreateConversationMut = (orgId: string, customerId:string) => {
   }
 
 /**
- * Creates a message, 
- * then assigns the new message response
- * to the end of the conversationItem's messages array. 
+ * Creates a customer. 
  * @date 24/06/2023 - 12:33:18
  *
  * @param {string} orgId
- * @param {string} customerId
- * @param {string} conversationId
  * @returns {*}
  */
-export const useCreateMessageMut = (orgId: string, customerId: string, conversationId: string) => {
+export const useCreateCustomerMut = (orgId: string, customerId:string) => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationKey: [orgId, MutationKey.createMessage],
-        mutationFn: async(params: Parameters<typeof createMessage>) => await createMessage(...params),
-        onSuccess: (data) => {
-          queryClient.setQueryData([orgId, customerId, QueryKey.conversationItems], () => {
-            const conversationItems: ConversationItem[] | undefined = queryClient.getQueryData([orgId, customerId, QueryKey.conversationItems]) 
-            const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem.conversation.conversationId !== conversationId) ?? []
-            const conversationItem = conversationItems?.find(conversationItem => conversationItem.conversation.conversationId === conversationId)
-            if(conversationItem?.conversation) {
-              console.log('herez')
-              const newConversationItem: ConversationItem = {...conversationItem, messages: [...(conversationItem?.messages ?? []), data]} 
-              const items = [newConversationItem, ...oldConversationItems.map((item) => ({...item}))]
-              sortConversationItems(items)
-              console.log(items)
-              return items 
-            }
-            return oldConversationItems
-          })
+        mutationKey: [orgId, MutationKey.createCustomer],
+        mutationFn: async(params: Parameters<typeof createCustomer>) => await createCustomer(...params),
+        onSuccess: data => {
+          queryClient.setQueryData([orgId, customerId, QueryKey.customer], () => data)
         }
     })
   }
+
+
+
 
