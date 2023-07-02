@@ -164,5 +164,16 @@ export const Operator = new Entity({
         composite: [],
       },
     },
+    byOnline: {
+      index: 'gsi3pk-gsi3sk-index',
+      pk: {
+        field: 'gsi3pk',
+        composite: ['orgId', 'online'],
+      },
+      sk: {
+        field: 'gsi3sk',
+        composite: [],
+      },
+    },
   },
 });

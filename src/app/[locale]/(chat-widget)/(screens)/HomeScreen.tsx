@@ -18,7 +18,7 @@ type Inputs = {
 
 export const HomeScreen: FC = () => {
   const { relativeTime } = useFormatter();
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const { chatWidget: { setWidgetState } } =
     useChatWidgetStore();
   const t = useTranslations('chat-widget');

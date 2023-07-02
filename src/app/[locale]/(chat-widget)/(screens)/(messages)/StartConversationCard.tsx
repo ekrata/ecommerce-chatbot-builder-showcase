@@ -27,7 +27,7 @@ import { useCustomerQuery } from "../../(hooks)/queries/useCustomerQuery";
  */
 export const StartConversationCard: React.FC = () => {
   const {chatWidget: {setWidgetState, setSelectedConversationId}} = useChatWidgetStore()
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const t = useTranslations('chat-widget');
   const customer = useCustomerQuery(orgId);
   const createConversationMut = useCreateConversationMut(orgId, customer.data?.customerId ?? '');

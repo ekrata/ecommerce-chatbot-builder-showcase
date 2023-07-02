@@ -11,7 +11,11 @@ import {
   ConversationItem,
 } from '../../../../../../stacks/entities/conversation';
 import { getHttp } from '../http';
-import { MockOrgIds, mockMessageCountPerConversation } from '../util/seed';
+import {
+  MockOrgIds,
+  mockMessageCountPerConversation,
+  mockSearchPhrase,
+} from '../util/seed';
 import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
@@ -37,6 +41,68 @@ describe.concurrent('/conversations', async () => {
     expect(res.data).toBeTruthy();
     expect(res.data?.conversationId).toEqual(conversationId);
     expect(res.data?.orgId).toEqual(orgId);
+  });
+  it('gets a conversation with operator and customer expanded', async () => {
+    const { orgId, customers } = mockOrgIds[0];
+    const { conversations } = faker.helpers.arrayElement(customers);
+    const { conversationId } = faker.helpers.arrayElement(conversations);
+    const res = await http.get(
+      `/orgs/${orgId}/conversations/${conversationId}&expansionFields=${encodeURIComponent(
+        JSON.stringify(['customerId', 'operatorId'])
+      )}`
+    );
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data).toBeTruthy();
+    expect(res.data?.conversationId).toEqual(conversationId);
+    expect(res.data?.orgId).toEqual(orgId);
+    expect(res.data?.operator.operatorId).toBeTruthy();
+    expect(res.data?.customer.customerId).toBeTruthy();
+  });
+  it('gets a conversation with operator and customer expanded, and with messages included', async () => {
+    const { orgId, customers } = mockOrgIds[0];
+    const { conversations } = faker.helpers.arrayElement(customers);
+    const { conversationId } = faker.helpers.arrayElement(conversations);
+    const res = await http.get(
+      `/orgs/${orgId}/conversations/${conversationId}&includeMessages=true&expansionFields=${encodeURIComponent(
+        JSON.stringify(['customerId', 'operatorId'])
+      )}`
+    );
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data).toBeTruthy();
+    expect(res.data?.conversationId).toEqual(conversationId);
+    expect(res.data?.orgId).toEqual(orgId);
+    expect(res.data?.operator.operatorId).toBeTruthy();
+    expect(res.data?.customer.customerId).toBeTruthy();
+    expect(res.data?.messages).toBeTruthy();
+    expect(res.data?.messages.length).toBeGreaterThan(0);
+  });
+  it('lists conversations by operator', async () => {
+    const { orgId, operatorIds } = mockOrgIds[0];
+    const operatorId = faker.helpers.arrayElement(operatorIds);
+    const res = await http.get(
+      `/orgs/${orgId}/conversations?operatorId=${operatorId}`
+    );
+    const conversationsByOperator = res.data;
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(conversationsByOperator?.data).toBeTruthy();
+    conversationsByOperator.data.forEach(
+      (conversation: EntityItem<typeof Conversation>) => {
+        expect(conversation.orgId).toEqual(orgId);
+        expect(conversation.operatorId).toEqual(operatorId);
+      }
+    );
+    // save a mock operator-conversations response for frontend use
+    writeFile(
+      './mocks/operator-conversations.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
+      }
+    );
   });
   it('lists conversations by operator', async () => {
     const { orgId, operatorIds } = mockOrgIds[0];
@@ -123,6 +189,30 @@ describe.concurrent('/conversations', async () => {
       }
     );
   });
+  it(`Full text searches for a conversationItem with a message containing text ${mockSearchPhrase}`, async () => {
+    const { orgId, customers } = mockOrgIds[0];
+    const { customerId } = faker.helpers.arrayElement(customers);
+    const res = await http.get(
+      `/orgs/${orgId}/conversations/search?phrase=${mockSearchPhrase}&includeMessages=true&expansionFields=${encodeURIComponent(
+        JSON.stringify(['customerId', 'operatorId'])
+      )}`
+    );
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res?.data).toBeTruthy();
+    console.log(res.data);
+    // has matches
+    expect(res?.data.length).toEqual(5);
+
+    writeFile(
+      './mocks/conversationsOrgSearch.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
+      }
+    );
+  }, 100000);
   it('creates a conversation', async () => {
     const { orgId, customers } = mockOrgIds?.[0];
     const { customerId } = faker.helpers.arrayElement(customers);
@@ -154,7 +244,7 @@ describe.concurrent('/conversations', async () => {
     expect(res.data?.channel).toEqual(channel);
     expect(res.data?.type).toEqual(type);
   });
-  it.skip('creates a conversation item', async () => {
+  it('creates a conversation item', async () => {
     const { orgId, customers } = mockOrgIds?.[0];
     const { customerId } = faker.helpers.arrayElement(customers);
     const conversationId = uuidv4();

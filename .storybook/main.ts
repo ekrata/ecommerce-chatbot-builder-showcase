@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/nextjs';
+import path from 'path';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -20,14 +21,24 @@ const config: StorybookConfig = {
   },
   env: (config) => ({
     ...config,
-    NEXT_PUBLIC_CW_ORG_ID: '160bb0e3-bfef-419e-bed0-43c2d06b84d4',
+    NEXT_PUBLIC_ORG_ID: '160bb0e3-bfef-419e-bed0-43c2d06b84d4',
     // Object.entries(process.env).map(([key, value]) => key))
   }),
   webpackFinal: async (config, { configType }) => {
-    if (config?.resolve)
+    if (config?.resolve) {
       config.resolve.alias = {
         ...config?.resolve?.alias,
+        '@next/font/google': require.resolve('./nextFontGoogle'),
       };
+      /**
+       * Fixes font import with /
+       * @see https://github.com/storybookjs/storybook/issues/12844#issuecomment-867544160
+       */
+      config.resolve.roots = [
+        path.resolve(__dirname, '../public'),
+        'node_modules',
+      ];
+    }
     config.experiments = {
       ...config.experiments,
       topLevelAwait: true,

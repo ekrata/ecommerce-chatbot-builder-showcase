@@ -30,9 +30,18 @@ export function AppStack({ stack, app }: StackContext) {
     value: JSON.stringify(app.local),
   });
 
+  const domain = 'crow.ekrata.com';
+
   const REGION = new Config.Parameter(stack, 'REGION', {
     value: app.region,
   });
+
+  const DASH_AUTH_REDIRECT = new Config.Parameter(stack, 'DASH_AUTH_REDIRECT', {
+    value: stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`,
+  });
+
+  const STRIPE_KEY = new Config.Secret(stack, 'STRIPE_KEY');
+  const OAUTH_GOOGLE_KEY = new Config.Secret(stack, 'OAUTH_GOOGLE_KEY');
 
   if (app.stage !== 'prod') {
     app.setDefaultRemovalPolicy('destroy');
@@ -103,7 +112,6 @@ export function AppStack({ stack, app }: StackContext) {
     //   onCreate: "packages/functions/api/src/seed.handler",
     // });
   }
-  const domain = 'crow.ekrata.com';
 
   // Create the WebSocket API
   // All are batch operations
@@ -201,10 +209,17 @@ export function AppStack({ stack, app }: StackContext) {
   });
 
   const api = new Api(stack, 'appApi', {
+    cors: {
+      allowCredentials: true,
+      allowHeaders: ['content-type'],
+      allowMethods: ['ANY'],
+      allowOrigins: ['http://localhost:3000', 'https://INSERT_PROD_URL'],
+    },
     defaults: {
       function: {
         timeout: app.local ? 100 : 10,
         bind: [table, REGION],
+        // bind: [table, REGION, OAUTH_GOOGLE_KEY, STRIPE_KEY],
         permissions: [table],
       },
     },

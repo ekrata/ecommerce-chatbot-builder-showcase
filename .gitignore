@@ -57,6 +57,7 @@ node_modules
 
 # local env files
 .env*.local
+.env
 # Sentry Auth Token
 .sentryclirc
 mocks

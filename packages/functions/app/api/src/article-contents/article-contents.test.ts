@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import { Api } from 'sst/node/api';
 import { CreateArticle, CreateArticleContent } from '@/entities/entities';
 import { getHttp } from '../http';
-import { MockOrgIds, mockArticleSearchPhrase, mockLang } from '../util/seed';
+import { MockOrgIds } from '../util/seed';
 import { writeFile } from 'fs';
 import { EntityItem } from 'electrodb';
 import { Article } from '@/entities/article';
@@ -116,7 +116,7 @@ describe.only('/article-contents: orgs/{orgId}/{lang}/article-contents', async (
     expect(res.data?.articleContentId).toEqual(articleContentId);
     expect(res.data?.content).toEqual(content);
   });
-  it.only('updates the content of an articleContent', async () => {
+  it('updates the content of an articleContent', async () => {
     const { orgId, articleIds, lang } = mockOrgIds[1];
     const { articleId, articleContentId } =
       faker.helpers.arrayElement(articleIds);

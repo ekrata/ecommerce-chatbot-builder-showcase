@@ -1,36 +1,40 @@
-import { Link, useTranslations } from 'next-intl';
+'use client';
+
+import {  useLocale, useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { IoMdChatboxes } from 'react-icons/io';
 import { MdOutlineDashboard } from 'react-icons/md';
 
 export default function DashNavbar() {
+  const locale = useLocale()
   const t = useTranslations('app.layout');
   const unreadMessages = 5;
 
   return (
-    <ul className=''>
+    <ul className='text-gray-500'>
       <li>
         <Link
-          href={{ pathname: '/dash' }}
+          href="/dash"
           key='dash'
-          className='flex items-center p-2 text-gray-900 rounded-3xl dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+          className='flex btn btn-ghost'
         >
           <div className='tooltip lg:tooltip-right' data-tip={t('home')}>
-            <MdOutlineDashboard className='h-6 w-6 text-gray-500' />
+            <MdOutlineDashboard className='w-6 h-6' />
           </div>
         </Link>
       </li>
       <li>
         <Link
-          href={{ pathname: '/dash/inbox' }}
+          href="/dash"
           key='dash'
-          className=' flex items-center p-2 text-gray-900 rounded-3xl dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+          className='flex btn btn-ghost'
         >
           <div className='tooltip lg:tooltip-right' data-tip={t('inbox')}>
             <div className='indicator'>
-              <span className='indicator-item badge badge-primary text-xs'>
+              <span className='text-xs indicator-item badge badge-primary'>
                 {unreadMessages}
               </span>
-              <IoMdChatboxes className='text-gray-500 h-6 w-6' />
+              <IoMdChatboxes className='w-6 h-6' />
             </div>
           </div>
         </Link>

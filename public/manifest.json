@@ -1,0 +1,9 @@
+{
+  "theme_color": "#7435f6",
+  "background_color": "red",
+  "display": "browser",
+  "scope": "/dash",
+  "start_url": "/dash",
+  "name": "CrowChat",
+  "short_name": "CrowChat"
+}

@@ -2,7 +2,7 @@ import { FC,  useMemo, useEffect } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { useConfigurationQuery, useConversationItemsQuery } from '../../(hooks)/queries';
-import { useCreateMessageMut } from '../../(hooks)/mutations';
+import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
 import { MessageTimeLabel } from './MessageTimeLabel';
 import { Avatar } from './Avatar';
 import { getItem } from '../../(helpers)/helpers';
@@ -22,7 +22,7 @@ interface Props  {
 export const CustomerChatLog: FC = ({}) => {
     const t = useTranslations('chat-widget')
     const {chatWidget: {selectedConversationId}} = useChatWidgetStore();
-    const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+    const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
     const customer = useCustomerQuery(orgId);
     const conversationItems = useConversationItemsQuery(orgId, customer?.data?.customerId ?? '')
     const conversationItem = getItem(conversationItems.data ?? [], selectedConversationId ?? '');

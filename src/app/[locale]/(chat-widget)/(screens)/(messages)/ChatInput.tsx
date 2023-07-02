@@ -1,6 +1,6 @@
 import { FC, useContext } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useCreateConversationMut, useCreateMessageMut } from "../../(hooks)/mutations";
+import { useCreateMessageMut } from "../../(hooks)/mutations/useCreateMessageMut";
 import { useTranslations } from "next-intl";
 import { CreateMessage } from "@/entities/entities";
 import { useOrgQuery,  useConfigurationQuery, useConversationItemsQuery } from "../../(hooks)/queries";
@@ -19,14 +19,15 @@ type Inputs = {
 export const ChatInput: FC = () => {
   const {chatWidget: {selectedConversationId}} = useChatWidgetStore()
   const t = useTranslations('chat-widget');
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const org = useOrgQuery(orgId);
   const customer = useCustomerQuery(orgId);
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
-  const conversationItems = useConversationItemsQuery(orgId, customer?.data?.customerId ?? '')
+  const conversationItems = useConversationItemsQuery(orgId, customer?.data?.customerId ?? '');
   const conversationItem = getItem(conversationItems.data ?? [], selectedConversationId ?? '');
-  const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '' )
+  const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '' );
+
   const {
     register,
     handleSubmit,

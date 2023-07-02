@@ -3,6 +3,8 @@ import { ApiRouteProps } from 'sst/constructs';
 export const appRoutes: Record<string, ApiRouteProps<string>> = {
   'GET /orgs/{orgId}/conversations':
     'packages/functions/app/api/src/conversations/list.handler',
+  'GET /orgs/{orgId}/conversations/search':
+    'packages/functions/app/api/src/conversations/search.handler',
   'GET /orgs/{orgId}/conversations/{conversationId}':
     'packages/functions/app/api/src/conversations/get.handler',
   'DELETE /orgs/{orgId}/conversations/{conversationId}':
@@ -13,15 +15,15 @@ export const appRoutes: Record<string, ApiRouteProps<string>> = {
     'packages/functions/app/api/src/conversations/update.handler',
 
   'GET /orgs/{orgId}/conversations/{conversationId}/messages':
-    'packages/functions/app/api/src/conversations/messages/list.handler',
+    'packages/functions/app/api/src/messages/list.handler',
   'GET /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
-    'packages/functions/app/api/src/conversations/messages/get.handler',
+    'packages/functions/app/api/src/messages/get.handler',
   'DELETE /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
-    'packages/functions/app/api/src/conversations/messages/delete.handler',
+    'packages/functions/app/api/src/messages/delete.handler',
   'POST /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
-    'packages/functions/app/api/src/conversations/messages/create.handler',
+    'packages/functions/app/api/src/messages/create.handler',
   // 'PATCH /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
-  //   'packages/functions/app/api/src/conversations/messages/update.handler',
+  //   'packages/functions/app/api/src/messages/update.handler',
 
   'GET /orgs': 'packages/functions/app/api/src/orgs/list.handler',
   'GET /orgs/{orgId}': 'packages/functions/app/api/src/orgs/get.handler',

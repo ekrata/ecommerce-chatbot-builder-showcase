@@ -1,6 +1,6 @@
 import Image from 'next/image';
 // import { MegaMenu, MenuItemData } from '../MegaMenu';
-import logoImage from '../../../../public/logo.png';
+import logoImage from 'public/logo.png';
 import SearchBar from './SearchBar';
 import ActionBar from './ActionBar';
 
@@ -8,7 +8,7 @@ import ActionBar from './ActionBar';
 
 export default function DashHeader() {
   return (
-    <div className='bg-white dark:bg-black  flex items-center text-black w-screen'>
+    <div className='flex items-center w-screen bg-gray-900'>
       <Image
         src={logoImage}
         alt='Logo'

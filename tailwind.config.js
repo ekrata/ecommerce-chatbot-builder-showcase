@@ -13,7 +13,12 @@ module.exports = {
     'to-purple-600',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+        mono: ['var(--font-roboto-mono)'],
+      },
+    },
   },
   daisyui: {
     themes: ['corporate', 'dark'],

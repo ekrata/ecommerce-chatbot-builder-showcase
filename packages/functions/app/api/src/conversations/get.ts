@@ -1,14 +1,24 @@
-import { ApiHandler, usePathParams } from 'sst/node/api';
+import { ApiHandler, usePathParams, useQueryParam } from 'sst/node/api';
 import * as Sentry from '@sentry/serverless';
 import { Table } from 'sst/node/table';
 import { getAppDb } from '../db';
 import { Config } from 'sst/node/config';
+import { expandObjects } from '../util/expandObjects';
+import {
+  Conversation,
+  ConversationItem,
+  ExpandedConversation,
+} from '@/entities/conversation';
+import { EntityItem } from 'electrodb';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, conversationId } = usePathParams();
+    const { orgId, conversationId, includeMessages } = usePathParams();
+    const expansionFields = JSON.parse(
+      useQueryParam('expansionFields') ?? '[]'
+    );
     if (!conversationId || !orgId) {
       return {
         statusCode: 422,
@@ -19,15 +29,46 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const res = await appDb.entities.conversations
         .get({ orgId, conversationId })
         .go();
-      if (res.data) {
+
+      if (!res.data) {
+        return {
+          statusCode: 404,
+          body: `No conversation with conversationId: ${conversationId} and orgId: ${orgId} exists. `,
+        };
+      }
+      if (expansionFields) {
+        const expandedData = (
+          await expandObjects(
+            appDb,
+            [res.data ?? {}],
+            ['customerId', 'operatorId']
+          )
+        )[0] as ExpandedConversation;
+        if (includeMessages) {
+          const messagesRes = await appDb.entities.messages.query
+            .byConversation({
+              orgId,
+              conversationId: expandedData.conversationId,
+            })
+            .go();
+
+          const conversationItem: ConversationItem = {
+            conversation: expandedData as ExpandedConversation,
+            messages: messagesRes.data,
+          };
+          return {
+            statusCode: 200,
+            body: JSON.stringify(conversationItem),
+          };
+        }
         return {
           statusCode: 200,
-          body: JSON.stringify(res?.data),
+          body: JSON.stringify(expandedData),
         };
       }
       return {
-        statusCode: 404,
-        body: `No conversation with conversationId: ${conversationId} and orgId: ${orgId} exists. `,
+        statusCode: 200,
+        body: JSON.stringify(res?.data),
       };
     } catch (err) {
       Sentry.captureException(err);

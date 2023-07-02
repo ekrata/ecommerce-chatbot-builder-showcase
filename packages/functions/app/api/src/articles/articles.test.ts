@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import { Api } from 'sst/node/api';
 import { CreateArticle } from '@/entities/entities';
 import { getHttp } from '../http';
-import { MockOrgIds, mockArticleSearchPhrase } from '../util/seed';
+import { MockOrgIds, mockSearchPhrase } from '../util/seed';
 import { writeFile } from 'fs';
 import { EntityItem } from 'electrodb';
 import { Article, ArticleWithContent } from '@/entities/article';
@@ -94,12 +94,12 @@ describe.concurrent(
       );
     });
     it(
-      `full text searches for an article, with title, category or content that contains the searchPhrase: ${mockArticleSearchPhrase}`,
+      `full text searches for an article, with title, category or content that contains the searchPhrase: ${mockSearchPhrase}`,
       async () => {
         const { orgId, articleIds, lang } = mockOrgIds[0];
 
         const res = await http.get(
-          `/orgs/${orgId}/${lang}/articles/search?phrase=${mockArticleSearchPhrase}`
+          `/orgs/${orgId}/${lang}/articles/search?phrase=${mockSearchPhrase}`
         );
         expect(res).toBeTruthy();
         expect(res.status).toBe(200);
@@ -116,7 +116,6 @@ describe.concurrent(
           }
         );
       },
-
       { timeout: 100000 }
     );
     it('creates a article', async () => {

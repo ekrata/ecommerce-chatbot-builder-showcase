@@ -9,11 +9,8 @@ import { useConfigurationQuery, useOrgQuery,  useArticlesQuery, useSearchArticle
 import { CgSpinner } from 'react-icons/cg';
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { EntityItem } from 'electrodb';
-import { highlightMatches } from './(help)/highlightMatches';
+import { highlightMatches } from '../../(helpers)/highlightMatches';
 import { useDebounce } from "usehooks-ts";
-import { useQuery } from '@tanstack/react-query';
-import { searchArticles } from '../(actions)/orgs/articles/searchArticles';
-import matchers from '@testing-library/jest-dom/matchers';
 
 type Inputs = {
   phrase: string;
@@ -39,7 +36,7 @@ export type CategoryArticles ={ [key in ArticleCategory]: EntityItem<typeof Arti
 export const HelpScreen: FC = () => {
   const t = useTranslations('chat-widget');
   const { chatWidget: {setWidgetState, setSelectedArticleId} } = useChatWidgetStore();
-const listCategories = (categoryArticles: CategoryArticles) => 
+  const listCategories = (categoryArticles: CategoryArticles) => 
               (<ul className="w-full mb-10 animate-fade-left">
                 <li  className="flex justify-between w-full  h-16 hover:bg-transparent  px-4 font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal">{t('categories', {count: Object.entries(categoryArticles ?? {}).filter((category) => category.length).length})}</li> 
                 {Object.entries(categoryArticles ?? {})?.map(([category, articles]) => {
@@ -104,7 +101,7 @@ const listSearchMatches = (responses: ArticleSearchRes[]) => {
                 </ul>)
 };
 
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const locale = useLocale();
   const [phrase, setPhrase] = useState('');
   const debouncedSearchPhrase = useDebounce(phrase, 150);

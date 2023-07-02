@@ -11,7 +11,7 @@ interface Props {
 
 
 export const Avatar: React.FC<Props> = ({conversationItem, message}) => {
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   return (

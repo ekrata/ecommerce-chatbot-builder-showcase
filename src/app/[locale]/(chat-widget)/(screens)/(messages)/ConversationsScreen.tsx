@@ -42,7 +42,7 @@ export const ConversationsScreen: FC = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const org = useOrgQuery(orgId)

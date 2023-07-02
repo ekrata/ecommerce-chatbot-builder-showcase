@@ -36,7 +36,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 }) => {
   const { chatWidget: {widgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
   const customerQuery = useCustomerQuery(orgId);

@@ -11,7 +11,7 @@ import { getConfiguration } from './(actions)/orgs/configurations/getConfigurati
 export const StartChatButton: FC = () => {
   const t = useTranslations('chat-widget');
   const [hover, setHover] = useState(false);
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const {chatWidget: { widgetState, widgetVisibility, setWidgetVisibility}} = useChatWidgetStore();
   const configuration = useQuery<EntityItem<typeof Configuration>>([orgId, 'configuration'], async () => getConfiguration(orgId));
   const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}

@@ -11,10 +11,7 @@ import { Customer } from './customer';
  * @export
  * @typedef {ExpandedConversation}
  */
-export type ExpandedConversation = Omit<
-  EntityItem<typeof Conversation>,
-  'customerId' | 'operatorId'
-> & {
+export type ExpandedConversation = EntityItem<typeof Conversation> & {
   customer: EntityItem<typeof Customer>;
   operator: EntityItem<typeof Operator>;
 };
@@ -32,6 +29,25 @@ export interface ConversationItem {
   conversation: ExpandedConversation;
   messages?: EntityItem<typeof Message>[];
 }
+
+/**
+ * Contains matches against one ConversationItem for a search query.
+ * @date 01/07/2023 - 20:19:11
+ *
+ * @export
+ * @typedef {ConversationItemSearchRes}
+ */
+export type ConversationItemSearchRes = {
+  item: ConversationItem;
+  refIndex: number;
+  matches: {
+    indices: [number, number][];
+    key: string;
+    value: string;
+    refIndex?: number;
+  }[];
+  score: number;
+};
 
 export const conversationStatus = ['unassigned', 'open', 'solved'] as const;
 export type ConversationStatus = (typeof conversationStatus)[number];
@@ -54,6 +70,7 @@ export const conversationTopic = [
   'orderIssues',
   'shippingPolicy',
 ] as const;
+
 export type ConversationTopic = (typeof conversationTopic)[number];
 
 export const rating = ['1', '2', '3', '4', '5'] as const;
@@ -170,7 +187,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi2sk',
-        composite: [],
+        composite: ['updatedAt', 'status', 'channel', 'type'],
       },
     },
     byCustomer: {
@@ -181,7 +198,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi3sk',
-        composite: [],
+        composite: ['updatedAt', 'status', 'channel', 'type'],
       },
     },
   },

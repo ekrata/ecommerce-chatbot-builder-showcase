@@ -59,7 +59,7 @@ const queryClient = new QueryClient({defaultOptions: {queries: {
   staleTime: Infinity,
 }}});
 
-const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
 const customer = queryClient.getQueryData<EntityItem<typeof Customer>>([orgId, '', QueryKey.customer]);
 
 const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [

@@ -26,6 +26,16 @@ var lastScanDate = 0;
  */
 var scanResult: Fuse<any>;
 
+export const articleSearchKeys = [
+  'title',
+  'subtitle',
+  'category',
+  'content',
+  'author.name',
+];
+
+export type ArticleSearchKeys = (typeof articleSearchKeys)[number];
+
 /**
  * Builds the search index
  *
@@ -47,7 +57,7 @@ async function buildIndex(orgIdParam: string, langParam: string) {
     distance: 100000,
     minMatchCharLength: 4,
     includeMatches: true,
-    keys: ['title', 'subtitle', 'category', 'content', 'author.name'],
+    keys: articleSearchKeys,
   };
 
   console.info('REFRESHING THE INDEX');
@@ -145,7 +155,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         await buildIndex(orgId, lang);
       }
 
-      const searchResult = scanResult.search(`=${phrase}`);
+      const searchResult = scanResult.search(`${phrase}`);
       return {
         statusCode: 200,
         body: JSON.stringify(searchResult),

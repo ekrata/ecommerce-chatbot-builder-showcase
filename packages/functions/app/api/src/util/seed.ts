@@ -41,7 +41,7 @@ export const mockArticleCount = 15;
  * @type {4}
  */
 export const mockArticleSearchPhraseFreq = 4;
-export const mockArticleSearchPhrase = `30-Day returns`;
+export const mockSearchPhrase = `30-Day returns`;
 export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockMessageCountPerConversation = 10;
@@ -162,8 +162,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                   orgId,
                   lang: mockLang,
                   content: `${faker.lorem.paragraphs(5)}${
-                    i < mockArticleSearchPhraseFreq &&
-                    ` ${mockArticleSearchPhrase} `
+                    i < mockArticleSearchPhraseFreq && ` ${mockSearchPhrase} `
                   }${faker.lorem.paragraphs(4)}`,
                 };
                 await db.entities.articleContents
@@ -213,49 +212,55 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               console.log(createCustomer);
               await db.entities.customers.create(createCustomer).go();
               const conversations = await Promise.all(
-                [...Array(mockConversationCountPerCustomer)].map(async () => {
-                  const conversationId = uuidv4();
-                  const status = faker.helpers.arrayElement(conversationStatus);
-                  const createConversation: CreateConversation = {
-                    conversationId,
-                    channel: faker.helpers.arrayElement(conversationChannel),
-                    type: faker.helpers.arrayElement(conversationType),
-                    status,
-                    customerId,
-                    read: false,
-                    dismissed: false,
-                    orgId,
-                    operatorId:
-                      status === 'unassigned' ? '' : operator.operatorId,
-                  };
-                  await db.entities.conversations
-                    .create(createConversation)
-                    .go();
-                  const messageIds = await Promise.all(
-                    [...Array(mockMessageCountPerConversation)].map(
-                      async () => {
-                        const messageId = uuidv4();
-                        const before = new Date();
-                        before.setHours(before.getHours() - 2);
-                        const createMessage: CreateMessage = {
-                          messageId,
-                          conversationId,
-                          orgId,
-                          customerId,
-                          sentAt: faker.date
-                            .between(before, new Date())
-                            .getTime(),
-                          content: faker.lorem.lines(),
-                          sender: faker.helpers.arrayElement(senderType),
-                          operatorId: operator.operatorId,
-                        };
-                        await db.entities.messages.create(createMessage).go();
-                        return messageId;
-                      }
-                    )
-                  );
-                  return { conversationId, messageIds };
-                })
+                [...Array(mockConversationCountPerCustomer)].map(
+                  async (_, conversationIndex) => {
+                    const conversationId = uuidv4();
+                    const status =
+                      faker.helpers.arrayElement(conversationStatus);
+                    const createConversation: CreateConversation = {
+                      conversationId,
+                      channel: faker.helpers.arrayElement(conversationChannel),
+                      type: faker.helpers.arrayElement(conversationType),
+                      status,
+                      customerId,
+                      read: false,
+                      dismissed: false,
+                      orgId,
+                      operatorId:
+                        status === 'unassigned' ? '' : operator.operatorId,
+                    };
+                    await db.entities.conversations
+                      .create(createConversation)
+                      .go();
+                    const messageIds = await Promise.all(
+                      [...Array(mockMessageCountPerConversation)].map(
+                        async (_, messageIndex) => {
+                          const messageId = uuidv4();
+                          const before = new Date();
+                          before.setHours(before.getHours() - 2);
+                          const createMessage: CreateMessage = {
+                            messageId,
+                            conversationId,
+                            orgId,
+                            customerId,
+                            sentAt: faker.date
+                              .between(before, new Date())
+                              .getTime(),
+                            content:
+                              conversationIndex === 0 && messageIndex === 0
+                                ? `${mockSearchPhrase} ${faker.lorem.lines()}`
+                                : faker.lorem.lines(),
+                            sender: faker.helpers.arrayElement(senderType),
+                            operatorId: operator.operatorId,
+                          };
+                          await db.entities.messages.create(createMessage).go();
+                          return messageId;
+                        }
+                      )
+                    );
+                    return { conversationId, messageIds };
+                  }
+                )
               );
               return { customerId, conversations };
             })

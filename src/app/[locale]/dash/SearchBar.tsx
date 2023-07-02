@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { HiOutlineSearch } from 'react-icons/hi';
 
 export default function SearchBar() {
   // const currentSearchTerm = useDashStore((state) => state.currentSearchTerm);
@@ -17,7 +16,7 @@ export default function SearchBar() {
         <input
           type='text'
           placeholder='Search…'
-          className='input input-bordered input-sm'
+          className='bg-gray-200 input input-bordered input-sm'
         />
         <button
           type='submit'

@@ -46,18 +46,30 @@ export const expandObjects = async (
     let expandedData = data;
     if (expansionFields.includes('customerId')) {
       try {
+        const uniqueCustomerData = Object.values(
+          data.reduce((acc, item) => {
+            const { orgId, customerId } = item;
+            return { ...acc, [`${orgId}-${customerId}`]: item };
+          }, {})
+        );
         const batchCustomers = await db.entities.customers
           .get(
-            data.map((item) => ({
+            uniqueCustomerData.map((item) => ({
               customerId: item?.['customerId'],
               orgId: item?.['orgId'],
             }))
           )
-          .go();
+          .go({ preserveBatchOrder: true });
+
+        // compare keys to find the respective response.
         expandedData = await Promise.all(
           [...expandedData].map((item, i) => ({
             ...item,
-            customer: batchCustomers.data[i] as EntityItem<typeof Customer>,
+            customer: batchCustomers.data.find(
+              (customer) =>
+                `${item.orgId}-${item.customerId}` ===
+                `${customer?.orgId}-${customer?.customerId}`
+            ) as EntityItem<typeof Customer>,
           }))
         );
       } catch (err) {
@@ -68,18 +80,28 @@ export const expandObjects = async (
     }
     if (expansionFields.includes('operatorId')) {
       try {
+        const uniqueOperatorData = Object.values(
+          data.reduce((acc, item) => {
+            const { orgId, operatorId } = item;
+            return { ...acc, [`${orgId}-${operatorId}`]: item };
+          }, {})
+        );
         const batchOperators = await db.entities.operators
           .get(
-            data.map((item) => ({
+            uniqueOperatorData.map((item) => ({
               operatorId: item?.['operatorId'],
               orgId: item?.['orgId'],
             }))
           )
-          .go();
+          .go({ preserveBatchOrder: true });
         expandedData = await Promise.all(
           [...expandedData].map((item, i) => ({
             ...item,
-            operator: batchOperators.data[i] as EntityItem<typeof Operator>,
+            operator: batchOperators.data.find(
+              (operator) =>
+                `${item.orgId}-${item.operatorId}` ===
+                `${operator?.orgId}-${operator?.operatorId}`
+            ) as EntityItem<typeof Operator>,
           }))
         );
       } catch (err) {
@@ -88,17 +110,11 @@ export const expandObjects = async (
         throw new Error(`Failed to expand operatorid: ${err}`);
       }
     }
-    console.log(expandedData);
     return expandedData;
   };
 
   const expandedData = await getBatchFields(data);
+  console.log(expandedData);
 
-  // delete original ids used in expansion to prevent duplication
-  expandedData.map((item) => {
-    expansionFields.map((expansionField) => {
-      delete item[expansionField];
-    });
-  });
   return expandedData;
 };

@@ -1,18 +1,16 @@
 import { FC, useMemo, useRef, useState } from 'react';
 import {  useFormatter, useLocale, useTranslations } from 'next-intl';
-import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
-import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
+import { BiChevronLeft } from 'react-icons/bi';
 import { BsSearch, BsX } from 'react-icons/bs';
 import { DynamicBackground } from '../DynamicBackground';
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
-import { useConfigurationQuery, useOrgQuery, useCustomerQuery, useArticlesQuery, useSearchArticlesQuery } from '../(hooks)/queries';
+import { useConfigurationQuery } from '../(hooks)/queries';
 import { CgSpinner } from 'react-icons/cg';
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { EntityItem } from 'electrodb';
-import { highlightMatches } from './(help)/highlightMatches';
+import { highlightMatches } from '../../(helpers)/highlightMatches';
 import { useQuery } from '@tanstack/react-query';
 import { searchArticles } from '../(actions)/orgs/articles/searchArticles';
-import matchers from '@testing-library/jest-dom/matchers';
 import { getArticleWithContent } from '../(actions)/orgs/articles/getArticleWithContent';
 import { useIntersectionObserver } from 'usehooks-ts';
 
@@ -40,7 +38,7 @@ export type CategoryArticles ={ [key in ArticleCategory]: EntityItem<typeof Arti
 
 export const ArticleScreen: FC = () => {
   const t = useTranslations('chat-widget');
-  const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const locale = useLocale();
   const {relativeTime} = useFormatter();
   const { chatWidget: {setWidgetState, selectedArticleId, setSelectedArticleId} } = useChatWidgetStore();

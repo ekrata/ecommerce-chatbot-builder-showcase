@@ -4,10 +4,28 @@ const withNextIntl = require('next-intl/plugin')(
   'src/i18n.ts'
 );
 
-module.exports = withNextIntl({
-  // Other Next.js configuration ...
-  experimental: { appDir: true, typedRoutes: true, topLevelAwait: true },
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
 });
+
+const nextConfig = withPWA({
+  reactStrictMode: true,
+});
+
+module.exports = nextConfig;
+
+module.exports = withPWA(
+  withNextIntl({
+    // Other Next.js configuration ...
+    reactStrictMode: true,
+    experimental: {
+      appDir: true,
+      typedRoutes: true,
+    },
+  })
+);
 
 // Inected Content via Sentry Wizard Below
 

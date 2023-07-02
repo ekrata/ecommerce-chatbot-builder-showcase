@@ -37,7 +37,7 @@ export interface Props {
 
 export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children, mockWsUrl }) => {
     // Initialize the WebSocket connection and retrieve necessary properties
-    const orgId = process.env.NEXT_PUBLIC_CW_ORG_ID ?? ''
+    const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
     const configuration = useConfigurationQuery(orgId);
     const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
     const org = useOrgQuery(orgId)
