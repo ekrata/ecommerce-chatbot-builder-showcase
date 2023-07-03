@@ -1,22 +1,35 @@
-import { Configuration } from '@/entities/configuration';
-import { Conversation, ConversationItem } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
-import { Operator } from '@/entities/operator';
-import { Org } from '@/entities/org';
 import { EntityItem } from 'electrodb';
 import { StateCreator } from 'zustand';
-import { Message } from '@/entities/message';
-import { CreateCustomer, CreateMessage } from '@/entities/entities';
+
 import { Article } from '@/entities/article';
+import { Configuration } from '@/entities/configuration';
+import {
+  Conversation,
+  ConversationChannel,
+  ConversationItem,
+  ConversationStatus,
+  ConversationTopic,
+} from '@/entities/conversation';
+import { Customer } from '@/entities/customer';
+import { CreateCustomer, CreateMessage } from '@/entities/entities';
+import { Message } from '@/entities/message';
+import { Operator } from '@/entities/operator';
+import { Org } from '@/entities/org';
+
 import { ChatWidgetStateDefinition } from '../../(actions)/types';
 
 export type WidgetState = 'help' | 'conversations' | 'home';
 export type WidgetVisibility = 'expanded' | 'open' | 'minimized';
 
 export type ConversationState = 'search' | 'list' | 'customerInfo';
+export type ConversationOperatorView = 'all' | 'bots' | string;
 
 export interface DashStateDefinition {
   conversationState: 'search' | 'list' | 'customerInfo';
+  conversationChannel?: ConversationChannel;
+  conversationStatus?: ConversationStatus;
+  conversationTopic?: ConversationTopic;
+  conversationOperatorView?: ConversationOperatorView;
   settingsState: '';
 }
 
@@ -28,6 +41,32 @@ export interface DashStateActions {
    * @type {(widgetState: WidgetState) => void}
    */
   setConversationState: (conversationState: ConversationState) => void;
+  /**
+   * Sets the conversation list channel filter
+   * @date 03/07/2023 - 11:51:29
+   *
+   * @type {(conversationChannel: ConversationChannel) => void}
+   */
+  setConversationChannel: (conversationChannel?: ConversationChannel) => void;
+  /**
+   * Set conversation list topic filter
+   * @date 03/07/2023 - 11:51:44
+   *
+   * @type {(conversationTopic: ConversationTopic) => void}
+   */
+  setConversationTopic: (conversationTopic?: ConversationTopic) => void;
+  setConversationStatus: (conversationStatus?: ConversationStatus) => void;
+  /**
+   * Set conversation list operator view filter 
+   * @date 03/07/2023 - 11:52:05
+   *
+   * @type {(
+      conversationOperatorView: ConversationOperatorView
+    ) => void}
+   */
+  setConversationOperatorView: (
+    conversationOperatorView?: ConversationOperatorView
+  ) => void;
 }
 //   setConversationId: (widgetState: WidgetState) => void;
 //   /**

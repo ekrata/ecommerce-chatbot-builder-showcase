@@ -1,11 +1,8 @@
-import { ConversationType } from '@/entities/conversation';
-import {
-  CreateConversation,
-  CreateCustomer,
-  CreateMessage,
-} from '@/entities/entities';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
+
+import { ConversationType } from '@/entities/conversation';
+import { CreateConversation, CreateCustomer } from '@/entities/entities';
 
 export const createVisitor = async (orgId: string) => {
   const res = await fetch(

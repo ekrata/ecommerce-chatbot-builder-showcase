@@ -1,17 +1,19 @@
 'use client'
 
-import { FC,  useMemo, useEffect } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
-import { useConfigurationQuery, useConversationItemsQuery } from '../../(hooks)/queries';
-import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
-import { MessageTimeLabel } from './MessageTimeLabel';
-import { Avatar } from './Avatar';
-import { getItem } from '../../(helpers)/helpers';
-import { createMessage } from '../../(actions)/orgs/conversations/messages/createMessage';
-import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
-import { ConversationItem } from '@/entities/conversation';
 import { useSearchParams } from 'next/navigation';
+import { FC, useEffect, useMemo } from 'react';
+
+import { ConversationItem } from '@/entities/conversation';
+
+import { createMessage } from '../../(actions)/orgs/conversations/messages/createMessage';
+import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
+import { Avatar } from '../../(chat-widget)/(screens)/(messages)/Avatar';
+import { MessageTimeLabel } from '../../(chat-widget)/(screens)/(messages)/MessageTimeLabel';
+import { getItem } from '../../(helpers)/helpers';
+import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
+import { useConfigurationQuery } from '../../(hooks)/queries';
+import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
 
 interface Props  {
   conversationItem?: ConversationItem

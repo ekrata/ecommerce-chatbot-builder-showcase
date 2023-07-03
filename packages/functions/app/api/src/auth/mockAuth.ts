@@ -21,10 +21,8 @@ export const handler = AuthHandler({
         const claims = tokenset.claims();
         const operator = appDb.entities.operators.get({});
         const jwt = Session.create({
-          type: 'user',
-          properties: {
-            userID: user.userID,
-          },
+          type: 'operator',
+          properties: operator,
         });
         /** TODO: create or look up a user from your db **/
         // Redirects to https://example.com?token=xxx

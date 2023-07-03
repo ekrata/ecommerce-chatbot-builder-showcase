@@ -14,7 +14,7 @@ import { Operator } from "@/entities/operator";
  * @param {string} orgId
  * @returns {unknown}
  */
-export const getOperators = async (orgId: string, online: boolean) => {
+export const getOperators = async (orgId: string, online?: boolean) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/operators?online=${online}`
   );
@@ -33,7 +33,7 @@ export const getOperators = async (orgId: string, online: boolean) => {
  * @param {string} operatorId 
  * @returns {*}
  */
-export const useOperatorsQuery = (orgId: string, online: boolean) => {
+export const useOperatorsQuery = (orgId: string, online?: boolean) => {
   const queryClient = useQueryClient();
   return useQuery<EntityItem<typeof Operator>[]>({queryKey: [orgId, QueryKey.operators], initialData: () => {
     // Check if we have anythring in cache and return that, otherwise get initial data

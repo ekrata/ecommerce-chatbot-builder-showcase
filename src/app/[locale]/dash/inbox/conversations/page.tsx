@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
 import { ChatListPanel } from '../ChatListPanel';
 import ChatPanel, { CurrentChatPanel } from '../CurrentChatPanel';
-import ChatInfoPanel from '../ChatInfoPanel';
+import ChatInfoPanel from '../../conversations/CustomerInfoView';
 import ChatSkeleton from '../ChatSkeleton';
 import chatSkeleton from '../ChatSkeleton';
 import { useDashStore } from '../../useDashStore';

@@ -1,4 +1,5 @@
-import React, { PropsWithChildren} from 'react';
+import React, { PropsWithChildren } from 'react';
+
 import { WidgetProvider } from './WidgetProvider';
 
 /**
@@ -9,11 +10,11 @@ import { WidgetProvider } from './WidgetProvider';
  * @param {PropsWithChildren<Props>} { children, overrideQueryClient }
  * @returns {*}
  */
-export default function Layout({ children }: PropsWithChildren) {  
+export default function Layout({ children }: PropsWithChildren) {
   return (<WidgetProvider>
-      <div className='dark:bg-gray-900' >{children}</div>
-    </WidgetProvider>
-    )
+    <div className='dark:bg-gray-900' >{children}</div>
+  </WidgetProvider>
+  )
 }
 
     // <>
@@ -21,6 +22,6 @@ export default function Layout({ children }: PropsWithChildren) {
     //     client={queryClient}
     //     persistOptions={{ persister }}
     //   >
-    //   
+    //
     // </PersistQueryClientProvider>
     // </>

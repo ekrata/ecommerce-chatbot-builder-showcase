@@ -7,7 +7,7 @@ import { Config } from 'sst/node/config';
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId } = usePathParams();
-    const { cursor } = useQueryParams();
+    const { cursor, online } = useQueryParams();
     if (!orgId) {
       return {
         statusCode: 422,
@@ -16,8 +16,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
     try {
       const appDb = getAppDb(Config.REGION, Table.app.tableName);
+      const sortKeys: Record<string, any> = {};
+      if (online) {
+        sortKeys['online'] = online;
+      }
       const data = await appDb.entities.operators.query
-        .byOrg({ orgId })
+        .byOrg({ orgId, ...sortKeys })
         .go(cursor ? { cursor, limit: 25 } : { limit: 25 });
       return {
         statusCode: 200,

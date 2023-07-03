@@ -150,7 +150,7 @@ export const Operator = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: [],
+        composite: ['online'],
       },
     },
     byConnectionId: {

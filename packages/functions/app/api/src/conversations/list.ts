@@ -1,27 +1,33 @@
+import { EntityItem } from 'electrodb';
 import {
   ApiHandler,
   usePathParams,
   useQueryParam,
   useQueryParams,
 } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
+import { useSession } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
-import { getAppDb } from '../db';
 import { Table } from 'sst/node/table';
-import { ExpandableField, expandObjects } from '../util/expandObjects';
+
 import {
+  Conversation,
   ConversationChannel,
   ConversationItem,
   ConversationStatus,
+  ConversationTopic,
   ConversationType,
   ExpandedConversation,
 } from '@/entities/conversation';
-import { stringMap } from 'aws-sdk/clients/backup';
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
+import { ExpandableField, expandObjects } from '../util/expandObjects';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
+    const session = useSession();
     const { orgId } = usePathParams();
     const params = {
       ...useQueryParams(),
@@ -69,9 +75,10 @@ export interface ConversationFilterParams {
   customerId?: string;
   updatedAt?: string;
   createdAt?: string;
-  status?: string;
-  channel?: string;
-  type?: string;
+  status?: ConversationStatus;
+  channel?: ConversationChannel;
+  topic?: ConversationTopic;
+  type?: ConversationType;
 }
 
 export const listConversations = async (params: ConversationFilterParams) => {
@@ -89,11 +96,39 @@ export const listConversations = async (params: ConversationFilterParams) => {
     type,
   } = params;
   try {
+    let res: { data: EntityItem<typeof Conversation>[]; cursor: string | null };
     if (operatorId) {
-      const res = await appDb.entities.conversations.query
+      res = await appDb.entities.conversations.query
         .assigned({
           orgId,
           operatorId,
+          status: status as ConversationStatus,
+          channel: channel as ConversationChannel,
+          type: type as ConversationType,
+        })
+        .gte({
+          updatedAt: new Date(updatedAt ?? 0).getTime(),
+          // createdAt: new Date(createdAt ?? 0).getTime(),
+        })
+        .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
+    } else if (customerId) {
+      res = await appDb.entities.conversations.query
+        .byCustomer({
+          orgId,
+          customerId,
+          status: status as ConversationStatus,
+          channel: channel as ConversationChannel,
+          type: type as ConversationType,
+        })
+        .gte({
+          updatedAt: new Date(updatedAt ?? 0).getTime(),
+          // createdAt: new Date(createdAt ?? 0).getTime(),
+        })
+        .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
+    } else if (orgId) {
+      res = await appDb.entities.conversations.query
+        .byOrg({
+          orgId,
           status: status as ConversationStatus,
           channel: channel as ConversationChannel,
           type: type as ConversationType,
@@ -110,115 +145,6 @@ export const listConversations = async (params: ConversationFilterParams) => {
           expansionFields as unknown as ExpandableField[]
         )) as ExpandedConversation[];
 
-        if (includeMessages) {
-          const conversationItems = await Promise.all(
-            expandedData.map(async (item) => {
-              const messagesRes = await appDb.entities.messages.query
-                .byConversation({
-                  orgId,
-                  conversationId: item.conversationId,
-                })
-                .go();
-
-              const conversationItem: ConversationItem = {
-                conversation: item,
-                messages: messagesRes.data,
-              };
-
-              return conversationItem;
-            })
-          );
-          return {
-            statusCode: 200,
-            body: JSON.stringify({
-              cursor: res?.cursor,
-              data: conversationItems,
-            }),
-          };
-        }
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ cursor: res?.cursor, data: expandedData }),
-        };
-      } else
-        return {
-          statusCode: 200,
-          body: JSON.stringify(res),
-        };
-    } else if (customerId) {
-      const res = await appDb.entities.conversations.query
-        .byCustomer({
-          orgId,
-          customerId,
-          status: status as ConversationStatus,
-          channel: channel as ConversationChannel,
-          type: type as ConversationType,
-        })
-        .gte({
-          updatedAt: new Date(updatedAt ?? 0).getTime(),
-          // createdAt: new Date(createdAt ?? 0).getTime(),
-        })
-        .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
-      if (expansionFields) {
-        const expandedData: ExpandedConversation[] = (await expandObjects(
-          appDb,
-          res.data,
-          expansionFields as unknown as ExpandableField[]
-        )) as ExpandedConversation[];
-        if (includeMessages) {
-          const conversationItems = await Promise.all(
-            expandedData.map(async (item) => {
-              const messagesRes = await appDb.entities.messages.query
-                .byConversation({
-                  orgId,
-                  conversationId: item.conversationId,
-                })
-                .go();
-              const conversationItem: ConversationItem = {
-                conversation: item,
-                messages: messagesRes.data,
-              };
-
-              return conversationItem;
-            })
-          );
-          return {
-            statusCode: 200,
-            body: JSON.stringify({
-              cursor: res?.cursor,
-              data: conversationItems,
-            }),
-          };
-        }
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ cursor: res?.cursor, data: expandedData }),
-        };
-      } else
-        return {
-          statusCode: 200,
-          body: JSON.stringify(res),
-        };
-    } else if (orgId) {
-      const res = await appDb.entities.conversations.query
-        .byOrg({
-          orgId,
-          status: status as ConversationStatus,
-          channel: channel as ConversationChannel,
-          type: type as ConversationType,
-        })
-        .gte({
-          updatedAt: new Date(updatedAt ?? 0).getTime(),
-          // createdAt: new Date(createdAt ?? 0).getTime(),
-        })
-        .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
-      if (expansionFields) {
-        console.log(res.data);
-        const expandedData: ExpandedConversation[] = (await expandObjects(
-          appDb,
-          res.data,
-          expansionFields as unknown as ExpandableField[]
-        )) as ExpandedConversation[];
         if (includeMessages) {
           const conversationItems = await Promise.all(
             expandedData.map(async (item) => {

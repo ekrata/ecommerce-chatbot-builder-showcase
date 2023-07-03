@@ -1,15 +1,15 @@
 import { ApiHandler, usePathParams, useQueryParam } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
 import { Config } from 'sst/node/config';
-import { expandObjects } from '../util/expandObjects';
+import { Table } from 'sst/node/table';
+
 import {
-  Conversation,
   ConversationItem,
   ExpandedConversation,
 } from '@/entities/conversation';
-import { EntityItem } from 'electrodb';
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
+import { expandObjects } from '../util/expandObjects';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 

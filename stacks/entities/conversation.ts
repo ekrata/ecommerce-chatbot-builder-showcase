@@ -1,8 +1,9 @@
 import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
-import { Operator } from './operator';
-import { Message } from './message';
+
 import { Customer } from './customer';
+import { Message } from './message';
+import { Operator } from './operator';
 
 /**
  * Replaces customerId and operatorId fields with their respective expanded EntityItem<T> objects
@@ -54,11 +55,11 @@ export type ConversationStatus = (typeof conversationStatus)[number];
 
 export const conversationChannel = [
   'website',
-  'email',
-  'facebook',
+  'messenger',
   'whatsapp',
   'instagram',
 ] as const;
+
 export type ConversationChannel = (typeof conversationChannel)[number];
 
 export const conversationType = ['botChat', 'chat', 'ticket'] as const;
@@ -176,7 +177,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: ['updatedAt', 'status', 'channel', 'type'],
+        composite: ['updatedAt', 'status', 'channel', 'topic', 'type'],
       },
     },
     byOrg: {
@@ -187,7 +188,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi2sk',
-        composite: ['updatedAt', 'status', 'channel', 'type'],
+        composite: ['updatedAt', 'status', 'channel', 'topic', 'type'],
       },
     },
     byCustomer: {
@@ -198,7 +199,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi3sk',
-        composite: ['updatedAt', 'status', 'channel', 'type'],
+        composite: ['updatedAt', 'status', 'channel', 'topic', 'type'],
       },
     },
   },

@@ -4,30 +4,30 @@ import { useQuery } from "@tanstack/react-query";
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 
 /**
- * Returns conversationItems query 
+ * gets a conversationItem 
  * @date 24/06/2023 - 10:45:39
  *
  * @param {string} orgId
- * @param {string} customerId
+ * @param {string} conversationId 
  * @returns {*}
  */
-export const useConversationItemsQuery = (orgId: string, conversationId: string) => useQuery<ConversationItem[]>([orgId, conversationId, QueryKey.conversationItem], async () => (orgId && conversationId) ? await getConversationItem(orgId, conversationId) : undefined, {enabled: !!orgId && !!conversationId})
+export const useConversationItemQuery = (orgId: string, conversationId: string) => useQuery<ConversationItem | undefined>([orgId, conversationId, QueryKey.conversationItem], async () => (orgId && conversationId) ? await getConversationItem(orgId, conversationId) : undefined, {enabled: !!orgId && !!conversationId})
 
 
 
 /**
- * Returns sorted conversations
+ * Fetches a conversation item 
  * @date 23/06/2023 - 15:01:19
  *
  * @async
  * @param {string} orgId
  * @param {string} customerId
- * @returns {Promise<ConversationItem[]>}
+ * @returns {Promise<ConversationItem>}
  */
 export const getConversationItem = async (
   orgId: string,
   conversationId: string
-): Promise<ConversationItem[]> => {
+): Promise<ConversationItem> => {
   const res = await (
     await fetch(
       `${
@@ -37,7 +37,6 @@ export const getConversationItem = async (
       )}`
     )
   ).json();
-  sortConversationItems(res.data as ConversationItem[]);
   return res.data;
 };
 

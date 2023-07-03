@@ -1,26 +1,31 @@
 'use client';
 
-import { useState, FC } from 'react';
-import Image from 'next/image';
-import LocaleCode from 'locale-code';
-import { MdEmail, MdPhone } from 'react-icons/md';
-import { GoBrowser } from 'react-icons/go';
 import ct from 'countries-and-timezones';
-import { BsGlobe, BsTagsFill } from 'react-icons/bs';
 import { flag } from 'country-emoji';
-import { FaLanguage } from 'react-icons/fa';
-import { HiDocumentText } from 'react-icons/hi2';
-import { BiTime } from 'react-icons/bi';
+import LocaleCode from 'locale-code';
 import { useFormatter, useTranslations } from 'next-intl';
-import { Chat } from './Chat.type';
+import Image from 'next/image';
+import { FC, useState } from 'react';
+import { BiTime } from 'react-icons/bi';
+import { BsGlobe, BsPerson, BsTagsFill } from 'react-icons/bs';
+import { FaLanguage } from 'react-icons/fa';
+import { GoBrowser } from 'react-icons/go';
+import { HiDocumentText } from 'react-icons/hi2';
+import { MdEmail, MdPhone } from 'react-icons/md';
+
+import { ConversationItem } from '@/entities/conversation';
 
 type InfoTabs = 'Profile' | 'Visited Pages' | 'Notes';
 
-const visitedPages = 'Visited Pages';
+const visitedPagesTabLabel = 'Visited Pages';
 const profile = 'Profile';
 const notesTab = 'Notes';
 
-export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
+interface Props {
+  conversationItem?: ConversationItem
+}
+
+export const CustomerInfoView: FC<Props> = ({ conversationItem }) => {
   const [currentTab, setCurrentTab] = useState<InfoTabs>('Profile');
   const {
     customer: {
@@ -33,27 +38,27 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
       timezone,
       tags,
       properties,
-      visited,
+      visitedPages,
       notes,
     },
-  } = chat;
-  const country = ct.getCountryForTimezone(timezone);
+  } = conversationItem.conversation;
+  const country = ct.getCountryForTimezone(timezone ?? '');
   const tabActive = 'tab-active';
   const t = useTranslations('app.inbox.chat');
   const { relativeTime } = useFormatter();
   return (
     <div
       data-testid='chat-info-panel'
-      className='flex flex-col gap-y-2 bg-white dark:bg-gray-800 w-full border-l-2 border-primary p-4 h-screen'
+      className='flex flex-col w-full h-screen p-4 bg-white border-l-2 gap-y-2 dark:bg-gray-800 border-primary'
     >
       <div className='flex gap-x-2 '>
-        <Image
+        {profilePicture ? <Image
           src={profilePicture}
           alt='User image'
           width={80}
           height={80}
-          className='rounded-full object-contain'
-        />
+          className='object-contain rounded-full'
+        /> : <BsPerson className='w-80' />}
         <div className='flex flex-col'>
           <p>{name ?? 'Unknown'}</p>
           <p>{email}</p>
@@ -61,13 +66,12 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
         </div>
       </div>
       <div>
-        <div className='tabs w-full justify-items-stretch m-0'>
+        <div className='w-full m-0 tabs justify-items-stretch'>
           <button
             type='button'
             data-testid='profile-button'
-            className={`tab tab-bordered w-1/3 ${
-              currentTab === profile && tabActive
-            }`}
+            className={`tab tab-bordered w-1/3 ${currentTab === profile && tabActive
+              }`}
             onClick={() => setCurrentTab(profile)}
           >
             {t('profile')}
@@ -75,73 +79,71 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
           <button
             type='button'
             data-testid='visited-pages-button'
-            className={`tab tab-bordered w-1/3 ${
-              currentTab === visitedPages && tabActive
-            }`}
-            onClick={() => setCurrentTab(visitedPages)}
+            className={`tab tab-bordered w-1/3 ${currentTab === visitedPages && tabActive
+              }`}
+            onClick={() => setCurrentTab(visitedPagesTabLabel)}
           >
             {t('visited-pages')}
           </button>
           <button
             type='button'
             data-testid='notes-button'
-            className={`tab tab-bordered w-1/3 ${
-              currentTab === notesTab && tabActive
-            }`}
+            className={`tab tab-bordered w-1/3 ${currentTab === notesTab && tabActive
+              }`}
             onClick={() => setCurrentTab(notesTab)}
           >
             {t('notes')}
           </button>
         </div>
         {currentTab === 'Profile' && (
-          <div className=' shadow-lg p-4 my-6'>
+          <div className='p-4 my-6 shadow-lg '>
             <ul className='space-y-4'>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <MdEmail className='text-primary text-lg' />
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <MdEmail className='text-lg text-primary' />
                 <p>{email}</p>
               </li>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <MdPhone className='text-primary text-lg' />
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <MdPhone className='text-lg text-primary' />
                 <p>{phone ?? 'Phone...'}</p>
               </li>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <GoBrowser className='text-primary text-lg' />
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <GoBrowser className='text-lg text-primary' />
                 <p>{userAgent ?? ''}</p>
               </li>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <BsGlobe className='text-primary text-lg' />
-                <p className='flex text-xl'>{flag(country.name)}</p>
-                <p>{country.name}</p>
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <BsGlobe className='text-lg text-primary' />
+                <p className='flex text-xl'>{flag(country?.name ?? '')}</p>
+                <p>{country?.name}</p>
               </li>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <BiTime className='text-primary text-xl' />
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <BiTime className='text-xl text-primary' />
                 <p>
                   {timezone
                     ? `${new Date().toLocaleString(locale, {
-                        timeZone: timezone,
-                      })} ${timezone}`
+                      timeZone: timezone,
+                    })} ${timezone}`
                     : 'Phone...'}
                 </p>
               </li>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <FaLanguage className='text-primary text-lg' />
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <FaLanguage className='text-lg text-primary' />
                 <p className=''>{LocaleCode.getLanguageName(locale)}</p>
               </li>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <HiDocumentText className='text-primary text-lg' />
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <HiDocumentText className='text-lg text-primary' />
                 <p className=''>{JSON.stringify(properties)}</p>
               </li>
-              <li className='flex place-items-center justify-start gap-x-4'>
-                <BsTagsFill className='text-primary text-lg' />
+              <li className='flex justify-start place-items-center gap-x-4'>
+                <BsTagsFill className='text-lg text-primary' />
                 <p className=''>{tags?.join(', ')}</p>
               </li>
             </ul>
           </div>
         )}
         {currentTab === visitedPages && (
-          <div className=' shadow-lg p-4 my-6'>
+          <div className='p-4 my-6 shadow-lg '>
             <ul className='space-y-4'>
-              {Object.entries(visited)
+              {Object.entries(visitedPages)
                 .reverse()
                 ?.map(([key, link]) => (
                   <li className='flex gap-x-2'>
@@ -155,9 +157,9 @@ export const ChatInfoPanel: FC<{ chat: Chat }> = ({ chat }) => {
           </div>
         )}
         {currentTab === notes && (
-          <div className=' shadow-lg p-4 my-6'>
+          <div className='p-4 my-6 shadow-lg '>
             <textarea
-              className='textarea textarea-primary w-full h-screen'
+              className='w-full h-screen textarea textarea-primary'
               placeholder={t('notes-placeholder')}
             >
               {notes}

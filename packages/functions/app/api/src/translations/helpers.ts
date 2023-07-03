@@ -25,6 +25,9 @@ export const setupTranslation = (
           ...(translation as EntityItem<typeof Translation>).translations
             .chatWidget,
         },
+        dash: {
+          ...(translation as EntityItem<typeof Translation>).translations.dash,
+        },
       }),
       'utf8',
       (err) => {

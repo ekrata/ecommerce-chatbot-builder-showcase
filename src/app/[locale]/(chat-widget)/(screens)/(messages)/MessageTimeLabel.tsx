@@ -1,8 +1,9 @@
-import { ConversationItem } from "@/entities/conversation"
-import { Message } from "@/entities/message"
-import { EntityItem } from "electrodb"
-import { useFormatter, useTranslations } from "next-intl"
-import { useEffect, useState } from "react"
+import { EntityItem } from 'electrodb';
+import { useFormatter, useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+
+import { ConversationItem } from '@/entities/conversation';
+import { Message } from '@/entities/message';
 
 interface Props {
   conversationItem?: ConversationItem,
@@ -10,8 +11,8 @@ interface Props {
   updateFreq?: number
 }
 
-export const MessageTimeLabel: React.FC<Props> = ({conversationItem, message, updateFreq = 20000}) => {
-  const {relativeTime} = useFormatter();
+export const MessageTimeLabel: React.FC<Props> = ({ conversationItem, message, updateFreq = 20000 }) => {
+  const { relativeTime } = useFormatter();
   const t = useTranslations('chat-widget');
   const [dateNow, setDateNow] = useState(new Date())
 

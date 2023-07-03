@@ -1,4 +1,5 @@
 import { EntityItem } from 'electrodb';
+
 import { Configuration } from '@/entities/configuration';
 
 interface Props {
@@ -12,11 +13,11 @@ export /**
  * @param {{ configuration: EntityItem<typeof Configuration>; }} {configuration}
  * @returns {*}
  */
-const DynamicBackground: React.FC<Props> = ({configuration}) => {
-  const { backgroundColor, darkBackgroundColor } = {
-    ...configuration?.channels?.liveChat?.appearance?.widgetAppearance,
-  };
-  const background = `
+  const DynamicBackground: React.FC<Props> = ({ configuration }) => {
+    const { backgroundColor, darkBackgroundColor } = {
+      ...configuration?.channels?.liveChat?.appearance?.widgetAppearance,
+    };
+    const background = `
     .background {
       background: ${backgroundColor}
     }
@@ -24,5 +25,5 @@ const DynamicBackground: React.FC<Props> = ({configuration}) => {
       background: ${darkBackgroundColor}
     }
   `;
-  return <style>{background}</style>;
-};
+    return <style>{background}</style>;
+  };

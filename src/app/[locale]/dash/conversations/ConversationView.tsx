@@ -4,7 +4,7 @@ import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsSearch, BsX } from 'react-icons/bs';
 import { useDashStore } from '../(actions)/useDashStore';
-import { useConfigurationQuery, useOrgQuery,  useArticlesQuery, useSearchArticlesQuery } from '../../(hooks)/queries';
+import { useConfigurationQuery, useOrgQuery,  useArticlesQuery, useSearchArticlesQuery } from '../../../(hooks)/queries';
 import { CgSpinner } from 'react-icons/cg';
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { EntityItem } from 'electrodb';

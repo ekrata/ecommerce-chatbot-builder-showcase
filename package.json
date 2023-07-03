@@ -30,6 +30,9 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.354.0",
     "@heroicons/react": "^2.0.18",
+    "@middy/core": "^4.5.3",
+    "@middy/http-error-handler": "^4.5.3",
+    "@middy/validator": "^4.5.3",
     "@sentry/nextjs": "^7.56.0",
     "@sentry/serverless": "^7.56.0",
     "@storybook/react": "^7.0.24",
@@ -107,6 +110,7 @@
     "@storybook/testing-library": "^0.2.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
+    "@types/lodash": "^4.14.195",
     "@types/uuid": "^9.0.2",
     "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "5.12.1",

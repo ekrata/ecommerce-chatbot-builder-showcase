@@ -1,9 +1,11 @@
-import { Operator } from '@/entities/operator';
 import { EntityItem } from 'electrodb';
 import { AuthHandler, GoogleAdapter, Session } from 'sst/node/auth';
-import { getAppDb } from './db';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
+
+import { Operator } from '@/entities/operator';
+
+import { getAppDb } from '../db';
 
 declare module 'sst/node/auth' {
   export interface SessionTypes {
@@ -21,10 +23,8 @@ export const handler = AuthHandler({
         const claims = tokenset.claims();
         const operator = appDb.entities.operators.get({});
         const jwt = Session.create({
-          type: 'user',
-          properties: {
-            userID: user.userID,
-          },
+          type: 'operator',
+          properties: operator,
         });
         /** TODO: create or look up a user from your db **/
         // Redirects to https://example.com?token=xxx

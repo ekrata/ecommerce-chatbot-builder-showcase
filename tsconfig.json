@@ -28,6 +28,7 @@
       "app-api": ["./packages/functions/app/api/src"],
       "app-wsApi": ["./packages/functions/app/ws/src"],
       "mocks": ["./mocks"],
+      "@/public": ["./public"],
       "chat-widget": ["src/app/[locale]/(chat-widget)"]
     }
   },

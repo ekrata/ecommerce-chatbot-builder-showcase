@@ -5,6 +5,8 @@ import { getAppDb } from '../db';
 import { CreateOrg } from '../../../../../../stacks/entities/entities';
 import { Config } from 'sst/node/config';
 
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
+
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId } = usePathParams();
@@ -16,7 +18,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const appDb = getAppDb(Config.REGION, Table.app.tableName);
       const res = await appDb.entities.orgs
         .create({
           ...body,

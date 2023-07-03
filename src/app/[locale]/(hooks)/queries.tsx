@@ -1,16 +1,18 @@
-import { Configuration } from "@/entities/configuration";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { EntityItem } from "electrodb";
-import { getConfiguration } from "../(actions)/orgs/configurations/getConfiguration";
-import { Org } from "@/entities/org";
-import { Customer } from "@/entities/customer";
-import { getArticles } from "../(actions)/orgs/articles/getArticles";
-import { getOrg } from "../(actions)/orgs/getOrg";
-import { Article, ArticleSearchRes } from "@/entities/article";
-import { ConversationItem } from "@/entities/conversation";
-import { getConversationItems } from "../(actions)/orgs/conversations/getConversationItems";
-import { searchArticles } from "../(actions)/orgs/articles/searchArticles";
-import { getCustomer } from "../(actions)/orgs/customers/getCustomer";
+import { EntityItem } from 'electrodb';
+
+import { Article, ArticleSearchRes } from '@/entities/article';
+import { Configuration } from '@/entities/configuration';
+import { ConversationItem } from '@/entities/conversation';
+import { Customer } from '@/entities/customer';
+import { Org } from '@/entities/org';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { getArticles } from '../(actions)/orgs/articles/getArticles';
+import { searchArticles } from '../(actions)/orgs/articles/searchArticles';
+import { getConfiguration } from '../(actions)/orgs/configurations/getConfiguration';
+import { getConversationItems } from '../(actions)/orgs/conversations/getConversationItems';
+import { getCustomer } from '../(actions)/orgs/customers/getCustomer';
+import { getOrg } from '../(actions)/orgs/getOrg';
 
 /**
  * Contains the values used for query keys. This should always be used.
@@ -28,7 +30,7 @@ export enum QueryKey {
   customer = 'customer',
   visitors = 'visitors',
   shopifyProducts = 'shopifyProducts',
-  searchConversations = '',
+  searchConversationItems = 'searchConversationItems',
   articles = 'articles',
   articleWithContent = 'articleWithContent',
   articlesSearch = 'articlesSearch',

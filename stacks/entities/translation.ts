@@ -23,6 +23,41 @@ export const Translation = new Entity({
       default: {},
       required: true,
       properties: {
+        dash: {
+          type: 'map',
+          required: true,
+          default: {},
+          properties: {
+            conversations: {
+              type: 'string',
+              default: `{count, plural, 
+              =0 {No conversations found}
+              =1 {One conversation}
+              other {# conversations}
+              }`,
+            },
+            'All conversations': {
+              type: 'string',
+              default: 'All conversations',
+            },
+            'Bots in action': {
+              type: 'string',
+              default: 'Bots in action',
+            },
+            You: {
+              type: 'string',
+              default: 'You',
+            },
+            tickets: {
+              type: 'string',
+              default: `{count, plural, 
+              =0 {No tickets found}
+              =1 {One ticket}
+              other {# tickets}
+              }`,
+            },
+          },
+        },
         chatWidget: {
           type: 'map',
           required: true,

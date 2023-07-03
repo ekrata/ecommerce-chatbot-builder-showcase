@@ -4,7 +4,7 @@ import { userEvent, within } from '@storybook/testing-library';
 import { ChatListPanel } from './ChatListPanel';
 import { createRandomChat } from './mocks.test';
 import { ChatLog } from './OperatorChatLog';
-import { ChatInfoPanel } from './ChatInfoPanel';
+import { ChatInfoPanel } from '../conversations/CustomerInfoView';
 
 const meta: Meta<typeof ChatLog> = {
   /* 👇 The title prop is optional.

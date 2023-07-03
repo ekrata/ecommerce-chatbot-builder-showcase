@@ -1,5 +1,6 @@
-import { getWs } from 'packages/functions/app/getWs';
 import { EntityItem } from 'electrodb';
+import { getWs } from 'packages/functions/app/getWs';
+
 import { AppSocketProvider } from '@/components/AppSocketProvider';
 
 export default async function Page() {
