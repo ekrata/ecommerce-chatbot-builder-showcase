@@ -13,7 +13,6 @@ import {
 import {
   ConversationChannel, ConversationStatus, ConversationTopic, conversationTopic
 } from '@/entities/conversation';
-import FbMessengerIcon from '@/public/';
 import FbMessengerIcon from '@/public/brands/FbMessengerIcon';
 import InstagramIcon from '@/public/brands/InstagramIcon.svg';
 import WhatsappIcon from '@/public/brands/WhatsappIcon.svg';
@@ -27,8 +26,6 @@ export const statusIconMap: Record<ConversationStatus, ReactNode> = {
   'open': <FcLink />,
   'solved': <FcCheckmark />,
 }
-
-
 
 export const StatusSelect: React.FC = () => {
   const t = useTranslations('dash');

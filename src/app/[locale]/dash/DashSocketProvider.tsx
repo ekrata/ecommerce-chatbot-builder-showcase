@@ -11,6 +11,7 @@ import { Operator } from '@/entities/operator';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../(helpers)/sortConversationItems';
+import { useOperatorSession } from '../(helpers)/useOperatorSession';
 import { newMessageReducer } from '../(hooks)/mutations/useCreateMessageMut';
 import { QueryKey, useConfigurationQuery, useOrgQuery } from '../(hooks)/queries';
 import { useCustomerQuery } from '../(hooks)/queries/useCustomerQuery';
@@ -45,14 +46,8 @@ export interface Props {
 */
 export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ children, mockWsUrl }) => {
     // Initialize the WebSocket connection and retrieve necessary properties
-
-    const sessionOperator: EntityItem<typeof Operator> = JSON.parse(getCookie('session')?.toString() ?? '{}')
-    console.log(sessionOperator)
-    const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-    const configuration = useConfigurationQuery(orgId);
-    const org = useOrgQuery(orgId)
-    const customer = useCustomerQuery(orgId)
-    const operators = useOperatorsQuery(orgId, true)
+    const sessionOperator = useOperatorSession();
+    const operators = useOperatorsQuery(sessionOperator.orgId, true)
 
     const operator = operators?.data?.find((operator) => operator.operatorId === sessionOperator?.operatorId ?? '   ')
 
@@ -60,7 +55,7 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
         sendMessage: sM,
         lastMessage,
         readyState,
-    } = useWebSocket(mockWsUrl ?? getWsUrl(orgId, operator?.operatorId ?? '', 'operator'), {
+    } = useWebSocket(mockWsUrl ?? getWsUrl(sessionOperator.orgId, operator?.operatorId ?? '', 'operator'), {
         shouldReconnect: (closeEvent) => true,
     });
     // Initialize the queryClient from react-query
@@ -75,17 +70,17 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
             // Update the local chat messages state based on the message type
             switch (type) {
                 case WsAppMessageType.eventNewConversationItem:
-                    queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (data) => {
+                    queryClient.setQueryData<ConversationItem[]>([...payload, QueryKey.conversationItems], (data) => {
                         return [...data ?? [], payload];
                     });
                     break;
                 case WsAppMessageType.eventNewMessage:
-                    queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
+                    queryClient.setQueryData<ConversationItem[]>([...payload, QueryKey.conversationItems], (oldData) => {
                         return newMessageReducer(payload as EntityItem<typeof Message>, oldData ?? [])
                     });
                     break;
                 case WsAppMessageType.eventUpdateConversationItem:
-                    queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
+                    queryClient.setQueryData<ConversationItem[]>([...payload, QueryKey.conversationItems], (oldData) => {
                         const updatedConversationItem = (payload as ConversationItem)
                         const conversationItems = [...oldData?.filter((conversationItem) => conversationItem.conversation.conversationId !== updatedConversationItem.conversation.conversationId) ?? [], updatedConversationItem]
                         sortConversationItems(conversationItems)

@@ -1,14 +1,16 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { v4 as uuidv4 } from 'uuid';
-import { faker } from '@faker-js/faker';
-import { EntityItem } from 'electrodb';
 import { AxiosError } from 'axios';
+import { EntityItem } from 'electrodb';
+import { writeFile } from 'fs';
 import { Api } from 'sst/node/api';
+import { v4 as uuidv4 } from 'uuid';
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import { faker } from '@faker-js/faker';
+
 import { CreateOperator } from '../../../../../../stacks/entities/entities';
 import { Operator } from '../../../../../../stacks/entities/operator';
 import { getHttp } from '../http';
 import { MockOrgIds } from '../util/seed';
-import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -43,7 +45,7 @@ describe.concurrent('/operators', async () => {
     });
     // save a mock operators object for frontend use
     writeFile(
-      './mocks/customers.json',
+      './mocks/operators.json',
       JSON.stringify(res.data),
       'utf8',
       () => {

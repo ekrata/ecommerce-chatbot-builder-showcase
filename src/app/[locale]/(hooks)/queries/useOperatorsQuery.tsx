@@ -1,10 +1,11 @@
-import { Customer } from "@/entities/customer";
-import { EntityItem } from "electrodb";
-import { QueryKey } from "../queries";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCustomer } from "../../(actions)/orgs/customers/getCustomer";
-import { Operator } from "@/entities/operator";
+import { EntityItem } from 'electrodb';
 
+import { Customer } from '@/entities/customer';
+import { Operator } from '@/entities/operator';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { getCustomer } from '../../(actions)/orgs/customers/getCustomer';
+import { QueryKey } from '../queries';
 
 /**
  * Gets operators 
@@ -35,21 +36,23 @@ export const getOperators = async (orgId: string, online?: boolean) => {
  */
 export const useOperatorsQuery = (orgId: string, online?: boolean) => {
   const queryClient = useQueryClient();
-  return useQuery<EntityItem<typeof Operator>[]>({queryKey: [orgId, QueryKey.operators], initialData: () => {
-    // Check if we have anythring in cache and return that, otherwise get initial data
-    const cachedData = queryClient.getQueryData<EntityItem<typeof Operator>[]>([orgId, QueryKey.operators]);
-    if (cachedData) {
-      return cachedData;
+  return useQuery<EntityItem<typeof Operator>[]>({
+    queryKey: [orgId, QueryKey.operators], initialData: () => {
+      // Check if we have anythring in cache and return that, otherwise get initial data
+      const cachedData = queryClient.getQueryData<EntityItem<typeof Operator>[]>([orgId, QueryKey.operators]);
+      if (cachedData) {
+        return cachedData;
+      }
+      return [];
+    },
+    cacheTime: Infinity,
+    queryFn: async () => {
+      const operators = queryClient.getQueryData<EntityItem<typeof Operator>[]>([orgId, QueryKey.operators])
+      if (operators?.length) {
+        return await getOperators(orgId, online)
+      } else {
+        return []
+      }
     }
-    return undefined;
-  },
-  cacheTime: Infinity,
-  queryFn: async () => {
-    const operators = queryClient.getQueryData<EntityItem<typeof Operator>[]>([orgId, QueryKey.operators])
-    if (operators?.length) {
-      return await getOperators(orgId, online)
-    } else {
-      return undefined
-    }}
   })
 }

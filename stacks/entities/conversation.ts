@@ -121,6 +121,7 @@ export const Conversation = new Entity({
     },
     topic: {
       type: conversationTopic,
+      required: true,
     },
     read: {
       type: 'boolean',

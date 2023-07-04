@@ -96,7 +96,10 @@ export const listConversations = async (params: ConversationFilterParams) => {
     type,
   } = params;
   try {
-    let res: { data: EntityItem<typeof Conversation>[]; cursor: string | null };
+    let res: {
+      data: EntityItem<typeof Conversation>[];
+      cursor: string | null;
+    } = { cursor: null, data: [] };
     if (operatorId) {
       res = await appDb.entities.conversations.query
         .assigned({
@@ -138,49 +141,49 @@ export const listConversations = async (params: ConversationFilterParams) => {
           // createdAt: new Date(createdAt ?? 0).getTime(),
         })
         .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
-      if (expansionFields?.length) {
-        const expandedData: ExpandedConversation[] = (await expandObjects(
-          appDb,
-          res.data,
-          expansionFields as unknown as ExpandableField[]
-        )) as ExpandedConversation[];
-
-        if (includeMessages) {
-          const conversationItems = await Promise.all(
-            expandedData.map(async (item) => {
-              const messagesRes = await appDb.entities.messages.query
-                .byConversation({
-                  orgId,
-                  conversationId: item.conversationId,
-                })
-                .go();
-
-              const conversationItem: ConversationItem = {
-                conversation: item,
-                messages: messagesRes.data,
-              };
-
-              return conversationItem;
-            })
-          );
-          return {
-            statusCode: 200,
-            body: JSON.stringify({
-              cursor: res?.cursor,
-              data: conversationItems,
-            }),
-          };
-        }
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ cursor: res?.cursor, data: expandedData }),
-        };
-      } else
-        return {
-          statusCode: 200,
-          body: JSON.stringify(res),
-        };
     }
+    if (res?.data?.length && expansionFields?.length) {
+      const expandedData: ExpandedConversation[] = (await expandObjects(
+        appDb,
+        res.data,
+        expansionFields as unknown as ExpandableField[]
+      )) as ExpandedConversation[];
+
+      if (includeMessages) {
+        const conversationItems = await Promise.all(
+          expandedData.map(async (item) => {
+            const messagesRes = await appDb.entities.messages.query
+              .byConversation({
+                orgId,
+                conversationId: item.conversationId,
+              })
+              .go();
+
+            const conversationItem: ConversationItem = {
+              conversation: item,
+              messages: messagesRes.data,
+            };
+
+            return conversationItem;
+          })
+        );
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            cursor: res?.cursor,
+            data: conversationItems,
+          }),
+        };
+      }
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ cursor: res?.cursor, data: expandedData }),
+      };
+    } else
+      return {
+        statusCode: 200,
+        body: JSON.stringify(res),
+      };
   } catch (err) {
     Sentry.captureException(err);
     return {

@@ -8,7 +8,7 @@ import { BsPeopleFill, BsPerson, BsRobot } from 'react-icons/bs';
 
 import { useDashStore } from '../(actions)/useDashStore';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
-import { useOperatorsQuery } from '../../../(hooks)/queries/useOperatorsQuery';
+import { useOperatorsQuery } from '../../(hooks)/queries/useOperatorsQuery';
 
 export const OperatorSelect: React.FC = () => {
   const t = useTranslations('dash');

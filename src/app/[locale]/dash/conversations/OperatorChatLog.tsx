@@ -15,7 +15,7 @@ import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut
 import { useConfigurationQuery } from '../../(hooks)/queries';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
 
-interface Props  {
+interface Props {
   conversationItem?: ConversationItem
 }
 
@@ -25,21 +25,21 @@ interface Props  {
  *
  * @returns {*}
  */
-export const OperatorChatLog: FC<Props> = ({conversationItem}) => {
-    const t = useTranslations('chat-widget')
-    const searchParams = useSearchParams()
-    const search = searchParams.get('conversationId')
-    const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-    const customer = useCustomerQuery(orgId);
+export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
+  const t = useTranslations('chat-widget')
+  const searchParams = useSearchParams()
+  const search = searchParams.get('conversationId')
+  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
+  const customer = useCustomerQuery(orgId);
 
-    const configuration = useConfigurationQuery(orgId);
-    const { widgetAppearance } = {...configuration.data?.channels?.liveChat?.appearance}
+  const configuration = useConfigurationQuery(orgId);
+  const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
 
-    // Observing message creation/sending state
-    const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '' )
-    const { relativeTime } = useFormatter()
+  // Observing message creation/sending state
+  const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '')
+  const { relativeTime } = useFormatter()
 
-    return (
+  return (
     <div
       className="flex flex-col gap-y-1 pb-8 py-2 text-sm w-full bg-base-100 dark:bg-gray-800 overflow-y-scroll h-[30rem]"
       data-testid="chat-log"
@@ -53,46 +53,44 @@ export const OperatorChatLog: FC<Props> = ({conversationItem}) => {
                   <div className="indicator">
                     <span
                       data-testid="status-badge"
-                      className={`indicator-item  badge-success ring-white ring-2 badge-xs text-white dark:text-default rounded-full ${
-                        !message.sentAt
-                          ? 'mx-0 my-0 indicator-bottom animate-bounce'
-                          : 'my-2 mx-2 indicator-top'
-                      }`}
+                      className={`indicator-item  badge-success ring-white ring-2 badge-xs text-white dark:text-default rounded-full ${!message.sentAt
+                        ? 'mx-0 my-0 indicator-bottom animate-bounce'
+                        : 'my-2 mx-2 indicator-top'
+                        }`}
                     >
                       {!message.sentAt ? '...' : ''}
                     </span>
-                    <Avatar conversationItem={conversationItem} message={message}/>
+                    <Avatar conversationItem={conversationItem} message={message} />
                   </div>
-                  <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${
-                    !message.sentAt && 'animate-pulse'
-                  } tooltip-bottom z-10`}
-                  data-testid={`operator-message-content-${message.messageId}`}
-                  data-tip={<MessageTimeLabel conversationItem={conversationItem} message={message}/>}
-                >
-                  {message.content}
-                </p>
-              </div>
-              {i+1 === conversationItem?.messages?.length && (
-                <div className="flex justify-start place-items-center ">
-                  <MessageTimeLabel conversationItem={conversationItem} message={message}/>
+                  <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
+                    } tooltip-bottom z-10`}
+                    data-testid={`operator-message-content-${message.messageId}`}
+                    data-tip={<MessageTimeLabel conversationItem={conversationItem} message={message} />}
+                  >
+                    {message.content}
+                  </p>
                 </div>
-              )}
+                {i + 1 === conversationItem?.messages?.length && (
+                  <div className="flex justify-start place-items-center ">
+                    <MessageTimeLabel conversationItem={conversationItem} message={message} />
+                  </div>
+                )}
               </div>
             )}
             {message.sender === 'customer' && (
               <div className="flex flex-col chat chat-end">
-                <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}> 
+                <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
                   {message.content}
                 </div>
-                {i+1 === conversationItem?.messages?.length && (
+                {i + 1 === conversationItem?.messages?.length && (
                   <div className="flex justify-end place-items-center">
-                    {createMessageMut.isLoading ? 'Sending...' : <MessageTimeLabel conversationItem={conversationItem} message={message}/>}
+                    {createMessageMut.isLoading ? 'Sending...' : <MessageTimeLabel conversationItem={conversationItem} message={message} />}
                   </div>
                 )}
               </div>
-              )}
+            )}
           </div>
         ))}
     </div>
-    )
+  )
 };

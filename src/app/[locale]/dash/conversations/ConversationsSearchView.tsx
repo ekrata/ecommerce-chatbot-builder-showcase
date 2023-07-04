@@ -9,16 +9,11 @@ import { BsSearch, BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 import { useDebounce } from 'usehooks-ts';
 
-import { ArticleCategory } from '@/entities/article';
 import { ConversationItemSearchRes } from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { CategoryArticles } from '../../(chat-widget)/(screens)/HelpScreen';
 import { highlightMatches } from '../../(helpers)/highlightMatches';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
-import {
-  useArticlesQuery, useConfigurationQuery, useOrgQuery, useSearchArticlesQuery
-} from '../../(hooks)/queries';
 import {
   useSearchConversationItemsQuery
 } from '../../(hooks)/queries/useSearchConversationItemsQuery';

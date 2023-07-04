@@ -1,22 +1,18 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { v4 as uuidv4 } from 'uuid';
-import { faker } from '@faker-js/faker';
-import { EntityItem } from 'electrodb';
 import { AxiosError } from 'axios';
-
-import { Api } from 'sst/node/api';
-import { CreateConversation } from '../../../../../../stacks/entities/entities';
-import {
-  Conversation,
-  ConversationItem,
-} from '../../../../../../stacks/entities/conversation';
-import { getHttp } from '../http';
-import {
-  MockOrgIds,
-  mockMessageCountPerConversation,
-  mockSearchPhrase,
-} from '../util/seed';
+import { EntityItem } from 'electrodb';
 import { writeFile } from 'fs';
+import { Api } from 'sst/node/api';
+import { v4 as uuidv4 } from 'uuid';
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import { faker } from '@faker-js/faker';
+
+import {
+    Conversation, ConversationItem, ConversationTopic
+} from '../../../../../../stacks/entities/conversation';
+import { CreateConversation } from '../../../../../../stacks/entities/entities';
+import { getHttp } from '../http';
+import { mockMessageCountPerConversation, MockOrgIds, mockSearchPhrase } from '../util/seed';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -220,9 +216,11 @@ describe.concurrent('/conversations', async () => {
     const status = 'unassigned';
     const channel = 'website';
     const type = 'chat';
+    const topic: ConversationTopic = 'orderIssues';
     const data: CreateConversation = {
       conversationId,
       orgId,
+      topic,
       customerId,
       operatorId: '',
       status,
@@ -242,38 +240,9 @@ describe.concurrent('/conversations', async () => {
     expect(res.data?.orgId).toEqual(orgId);
     expect(res.data?.status).toEqual(status);
     expect(res.data?.channel).toEqual(channel);
+    expect(res.data?.topic).toEqual(topic);
     expect(res.data?.type).toEqual(type);
-  });
-  it('creates a conversation item', async () => {
-    const { orgId, customers } = mockOrgIds?.[0];
-    const { customerId } = faker.helpers.arrayElement(customers);
-    const conversationId = uuidv4();
-    const status = 'unassigned';
-    const channel = 'website';
-    const type = 'chat';
-    const data: CreateConversation = {
-      conversationId,
-      orgId,
-      customerId,
-      status,
-      type,
-      channel,
-    };
 
-    // validate creation api
-    const res = await http.post(
-      `/orgs/${orgId}/conversations/${conversationId}`,
-      data
-    );
-    expect(res).toBeTruthy();
-    expect(res.status).toBe(200);
-    expect(res.data).toBeTruthy();
-    expect(res.data?.operator).toEqual(conversationId);
-    expect(res.data?.orgId).toEqual(orgId);
-    expect(res.data?.status).toEqual(status);
-    expect(res.data?.channel).toEqual(channel);
-    expect(res.data?.type).toEqual(type);
-  });
   it("assigns an operatorId to a conversation, then updates the status to 'open'", async () => {
     const { orgId, customers, operatorIds } = mockOrgIds[1];
 

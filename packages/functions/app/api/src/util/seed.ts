@@ -1,32 +1,35 @@
-import { faker } from '@faker-js/faker';
 import { ApiHandler } from 'sst/node/api';
-import { v4 as uuidv4 } from 'uuid';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import {
-  CreateOrg,
-  CreateOperator,
-  CreateCustomer,
-  CreateConversation,
-  CreateMessage,
-  CreateTranslation,
-  CreateArticle,
-  CreateArticleContent,
-} from '../../../../../../stacks/entities/entities';
-import { getAppDb } from '../db';
-import { senderType } from '../../../../../../stacks/entities/message';
-import {
-  conversationChannel,
-  conversationStatus,
-  conversationType,
-} from '../../../../../../stacks/entities/conversation';
 import { Config } from 'sst/node/config';
-import { CreateConfiguration } from '../../../../../../stacks/entities/entities';
+import { Table } from 'sst/node/table';
+import { v4 as uuidv4 } from 'uuid';
+
+import { faker } from '@faker-js/faker';
+import * as Sentry from '@sentry/serverless';
+
 import {
   ArticleCategory,
   articleCategory,
   articleStatus,
 } from '../../../../../../stacks/entities/article';
+import {
+  conversationChannel,
+  conversationStatus,
+  conversationTopic,
+  conversationType,
+} from '../../../../../../stacks/entities/conversation';
+import {
+  CreateArticle,
+  CreateArticleContent,
+  CreateConfiguration,
+  CreateConversation,
+  CreateCustomer,
+  CreateMessage,
+  CreateOperator,
+  CreateOrg,
+  CreateTranslation,
+} from '../../../../../../stacks/entities/entities';
+import { senderType } from '../../../../../../stacks/entities/message';
+import { getAppDb } from '../db';
 
 export const mockLang = 'en';
 export const mockOrgCount = 3;
@@ -221,6 +224,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                       conversationId,
                       channel: faker.helpers.arrayElement(conversationChannel),
                       type: faker.helpers.arrayElement(conversationType),
+                      topic: faker.helpers.arrayElement(conversationTopic),
                       status,
                       customerId,
                       read: false,

@@ -4,9 +4,9 @@ import { isDesktop } from 'react-device-detect';
 
 import { useDashStore } from '../(actions)/useDashStore';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { ConversationView } from './ChatView';
 import { ConversationsListView } from './ConversationsListView';
 import { ConversationsSearchView } from './ConversationsSearchView';
-import { ConversationView } from './ConversationView';
 import { CustomerInfoView } from './CustomerInfoView';
 
 export default function Page() {
@@ -26,7 +26,7 @@ export default function Page() {
     } else if (conversationState === 'search') {
       return <ConversationsSearchView />
     } else if (conversationState === 'customerInfo') {
-      return <CustomerInfoView conversationItem={ }></CustomerInfoView>
+      return <CustomerInfoView ></CustomerInfoView>
     }
   }
 
