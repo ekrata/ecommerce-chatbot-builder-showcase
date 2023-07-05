@@ -50,6 +50,14 @@ export type ConversationItemSearchRes = {
   score: number;
 };
 
+export const conversationItemSearchKey = [
+  'conversation.customer.name',
+  'conversation.customer.email',
+  'messages.content',
+];
+
+export type ConversationItemSearchKey =
+  (typeof conversationItemSearchKey)[number];
 export const conversationStatus = ['unassigned', 'open', 'solved'] as const;
 export type ConversationStatus = (typeof conversationStatus)[number];
 
@@ -58,6 +66,7 @@ export const conversationChannel = [
   'messenger',
   'whatsapp',
   'instagram',
+  'emailTicket',
 ] as const;
 
 export type ConversationChannel = (typeof conversationChannel)[number];
@@ -103,10 +112,6 @@ export const Conversation = new Entity({
     },
     connectionId: {
       type: 'string',
-    },
-    type: {
-      type: conversationType,
-      required: true,
     },
     channel: {
       type: conversationChannel,
@@ -178,7 +183,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: ['updatedAt', 'status', 'channel', 'topic', 'type'],
+        composite: ['updatedAt', 'status', 'channel', 'topic'],
       },
     },
     byOrg: {
@@ -189,7 +194,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi2sk',
-        composite: ['updatedAt', 'status', 'channel', 'topic', 'type'],
+        composite: ['updatedAt', 'status', 'channel', 'topic'],
       },
     },
     byCustomer: {
@@ -200,7 +205,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi3sk',
-        composite: ['updatedAt', 'status', 'channel', 'topic', 'type'],
+        composite: ['updatedAt', 'status', 'channel', 'topic'],
       },
     },
   },

@@ -2,7 +2,8 @@ import { EntityItem } from 'electrodb';
 
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
-import { faker } from '@faker-js/faker';
+
+// import { faker } from '@faker-js/faker';
 
 interface Props {
   conversationItem?: ConversationItem,
@@ -11,8 +12,9 @@ interface Props {
 
 export const colors = ['pink', 'indigo', 'red', 'purple', 'green', 'amber', 'yellow', 'lime', 'blue', 'cyan', 'orange']
 export const getRandomColor = (customerId: string) => {
-  faker.seed(parseInt(customerId.split('-')[0]))
-  return faker.helpers.arrayElement(colors)
+  return 'pink'
+  // faker.seed(parseInt(customerId.split('-')[0]))
+  // return faker.helpers.arrayElement(colors)
 }
 
 export const CustomerAvatar: React.FC<Props> = ({ conversationItem, message }) => {

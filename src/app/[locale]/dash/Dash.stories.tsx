@@ -25,7 +25,7 @@ import { QueryClient } from '@tanstack/react-query';
 
 import { QueryKey } from '../(hooks)/queries';
 import {
-  createRandomConversation, createRandomCustomer, createRandomMessage, createRandomOperator
+    createRandomConversation, createRandomCustomer, createRandomMessage, createRandomOperator
 } from '../dash/inbox/mocks.test';
 import LocaleLayout from '../layout';
 import Page from './conversations/page';
@@ -48,7 +48,7 @@ const mockWsUrl = process.env.NEXT_PUBLIC_APP_WS_URL ?? 'Check .ENV'
 const lang = 'en';
 let mockSocket: Client;
 const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-setCookie('sessionUser', createRandomOperator(orgId))
+setCookie('sessionUser', { ...createRandomOperator(orgId), online: true })
 
 
 const existingConversationRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
@@ -98,6 +98,7 @@ const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
   rest.get(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/operators*`,
     async (req, res, ctx) => {
+      console.log('hi')
       return res(
         ctx.status(200),
         ctx.delay(2000),
@@ -143,6 +144,18 @@ const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
         ctx.json({ articleWithContent })
       )
     }),
+  rest.get(
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations*`,
+    async (req, res, ctx) => {
+      console.log(customerConversationItems)
+      return res(
+        ctx.status(200),
+        ctx.delay(2000),
+        ctx.json({ ...customerConversationItems })
+      )
+    }
+  ),
+
   rest.post(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/conversations/:conversationId`,
     async (req, res, ctx) => {
@@ -287,6 +300,9 @@ export const ConversationView: Story = {
     nextjs: {
       navigation: {
         pathname: '/dash/conversations',
+        query: {
+          conversationId: 'asdsadj-1323122312',
+        },
       },
     }
   },
@@ -302,7 +318,7 @@ export const ConversationView: Story = {
     // const router = useRouter();
     // router.push('/conversations')
     return (
-      <div className='h-screen'>
+      <div className='h-screen font-sans'>
         <DashProvider {...props}>
           <Layout>
             <Page></Page>

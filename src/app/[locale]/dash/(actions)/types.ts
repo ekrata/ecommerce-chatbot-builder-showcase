@@ -4,11 +4,7 @@ import { StateCreator } from 'zustand';
 import { Article } from '@/entities/article';
 import { Configuration } from '@/entities/configuration';
 import {
-  Conversation,
-  ConversationChannel,
-  ConversationItem,
-  ConversationStatus,
-  ConversationTopic,
+    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic
 } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { CreateCustomer, CreateMessage } from '@/entities/entities';

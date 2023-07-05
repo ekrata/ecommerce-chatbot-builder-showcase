@@ -1,10 +1,11 @@
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { isDesktop } from 'react-device-detect';
 
 import { useDashStore } from '../(actions)/useDashStore';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
-import { ConversationView } from './ChatView';
+import { ChatView } from './ChatView';
 import { ConversationsListView } from './ConversationsListView';
 import { ConversationsSearchView } from './ConversationsSearchView';
 import { CustomerInfoView } from './CustomerInfoView';
@@ -16,19 +17,23 @@ export default function Page() {
   const { conversationState, conversationOperatorView, setConversationOperatorView } = useDashStore()
 
   // E.g. `/dashboard?page=2&order=asc`
-  const conversationId = searchParams.get('conversationId');
+  const conversationId = searchParams?.get('conversationId');
 
-  const renderMobile = () => {
-    if (!conversationId) {
-      return <ConversationView></ConversationView>
+  const renderMobile = useMemo(() => {
+    if (conversationId) {
+      if (!conversationState) {
+        <ChatView></ChatView>
+      }
+      else if (conversationState === 'customerInfo') {
+        return <CustomerInfoView ></CustomerInfoView >
+      }
     } else if (conversationState === 'list') {
       return <ConversationsListView></ConversationsListView>
     } else if (conversationState === 'search') {
       return <ConversationsSearchView />
-    } else if (conversationState === 'customerInfo') {
-      return <CustomerInfoView ></CustomerInfoView>
     }
-  }
+    return <ConversationsListView />
+  }, [conversationState])
 
   const render = () => {
     <div className="grid grid-cols-12">
@@ -37,7 +42,7 @@ export default function Page() {
         {conversationState === 'search' && <ConversationsSearchView></ConversationsSearchView>}
       </div>
       <div className='col-span-6'>
-        <ConversationView />
+        <ChatView />
       </div>
       <div className='col-span-3'>
         <CustomerInfoView></CustomerInfoView>
@@ -46,5 +51,5 @@ export default function Page() {
     </div>
   }
 
-  return isDesktop ? render() : renderMobile();
+  return isDesktop ? render() : renderMobile;
 }

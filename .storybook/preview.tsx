@@ -1,11 +1,13 @@
 import '../src/app/globals.css';
-import React from 'react';
-import { Preview } from '@storybook/react';
-import { initialize } from 'msw-storybook-addon';
-import { mswLoader } from 'msw-storybook-addon';
-import LocaleLayout from '../src/app/[locale]/layout'
-import Link from "next/link";
+
+import { initialize, mswLoader } from 'msw-storybook-addon';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import React from 'react';
+
+import { Preview } from '@storybook/react';
+
+import LocaleLayout from '../src/app/[locale]/layout';
 
 // Initialize MSW
 initialize({
@@ -46,13 +48,13 @@ export const metadata = {
 //   );
 // }
 let messages;
-  try {
-    import(`../messages/en.json`).then(data => {
-      messages = data
-    })
-  } catch (error) {
-    notFound();
-  }
+try {
+  import(`../messages/en.json`).then(data => {
+    messages = data
+  })
+} catch (error) {
+  notFound();
+}
 
 
 const preview: Preview = {
@@ -60,9 +62,11 @@ const preview: Preview = {
     appDirectory: true,
   },
   decorators: [
-    (Story) => <LocaleLayout params={{locale: 'en', overrideMessages: messages}}>
-          <Story></Story>
+    (Story) => <div className='font-sans'>
+      <LocaleLayout params={{ locale: 'en', overrideMessages: messages }}>
+        <Story></Story>
       </LocaleLayout>
+    </div>
   ],
   loaders: [mswLoader],
 };

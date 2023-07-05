@@ -6,18 +6,13 @@ import { FC, useEffect, useMemo } from 'react';
 
 import { ConversationItem } from '@/entities/conversation';
 
-import { createMessage } from '../../(actions)/orgs/conversations/messages/createMessage';
-import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { Avatar } from '../../(chat-widget)/(screens)/(messages)/Avatar';
 import { MessageTimeLabel } from '../../(chat-widget)/(screens)/(messages)/MessageTimeLabel';
-import { getItem } from '../../(helpers)/helpers';
+import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from '../../(hooks)/queries';
+import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
-
-interface Props {
-  conversationItem?: ConversationItem
-}
 
 /**
  * Renders a chat log from the perspective of a customer, in the chat widget.
@@ -25,10 +20,13 @@ interface Props {
  *
  * @returns {*}
  */
-export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
+export const OperatorChatLog: FC = () => {
   const t = useTranslations('chat-widget')
+  const operatorSession = useOperatorSession();
   const searchParams = useSearchParams()
-  const search = searchParams.get('conversationId')
+  const conversationId = searchParams.get('conversationId')
+  const conversationItemQuery = useConversationItemQuery(operatorSession.orgId, conversationId ?? '')
+  const conversationItem = conversationItemQuery.data
   const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const customer = useCustomerQuery(orgId);
 
@@ -36,7 +34,7 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
 
   // Observing message creation/sending state
-  const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '')
+  const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', conversationId ?? '')
   const { relativeTime } = useFormatter()
 
   return (

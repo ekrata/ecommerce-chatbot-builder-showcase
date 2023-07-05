@@ -7,26 +7,14 @@ import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
 import {
-  ArticleCategory,
-  articleCategory,
-  articleStatus,
+    ArticleCategory, articleCategory, articleStatus
 } from '../../../../../../stacks/entities/article';
 import {
-  conversationChannel,
-  conversationStatus,
-  conversationTopic,
-  conversationType,
+    conversationChannel, conversationStatus, conversationTopic, conversationType
 } from '../../../../../../stacks/entities/conversation';
 import {
-  CreateArticle,
-  CreateArticleContent,
-  CreateConfiguration,
-  CreateConversation,
-  CreateCustomer,
-  CreateMessage,
-  CreateOperator,
-  CreateOrg,
-  CreateTranslation,
+    CreateArticle, CreateArticleContent, CreateConfiguration, CreateConversation, CreateCustomer,
+    CreateMessage, CreateOperator, CreateOrg, CreateTranslation
 } from '../../../../../../stacks/entities/entities';
 import { senderType } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../db';
@@ -223,7 +211,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                     const createConversation: CreateConversation = {
                       conversationId,
                       channel: faker.helpers.arrayElement(conversationChannel),
-                      type: faker.helpers.arrayElement(conversationType),
                       topic: faker.helpers.arrayElement(conversationTopic),
                       status,
                       customerId,

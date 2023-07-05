@@ -1,22 +1,12 @@
 import { EntityItem } from 'electrodb';
-import {
-  ApiHandler,
-  usePathParams,
-  useQueryParam,
-  useQueryParams,
-} from 'sst/node/api';
+import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
 import { useSession } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
 import {
-  Conversation,
-  ConversationChannel,
-  ConversationItem,
-  ConversationStatus,
-  ConversationTopic,
-  ConversationType,
-  ExpandedConversation,
+    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic,
+    ConversationType, ExpandedConversation
 } from '@/entities/conversation';
 import * as Sentry from '@sentry/serverless';
 
@@ -41,7 +31,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       updatedAt,
       status,
       channel,
-      type,
     } = params;
     params.expansionFields = JSON.parse(
       useQueryParam('expansionFields') ?? '[]'
@@ -78,7 +67,6 @@ export interface ConversationFilterParams {
   status?: ConversationStatus;
   channel?: ConversationChannel;
   topic?: ConversationTopic;
-  type?: ConversationType;
 }
 
 export const listConversations = async (params: ConversationFilterParams) => {
@@ -93,7 +81,6 @@ export const listConversations = async (params: ConversationFilterParams) => {
     createdAt,
     status,
     channel,
-    type,
   } = params;
   try {
     let res: {
@@ -107,7 +94,6 @@ export const listConversations = async (params: ConversationFilterParams) => {
           operatorId,
           status: status as ConversationStatus,
           channel: channel as ConversationChannel,
-          type: type as ConversationType,
         })
         .gte({
           updatedAt: new Date(updatedAt ?? 0).getTime(),
@@ -121,7 +107,6 @@ export const listConversations = async (params: ConversationFilterParams) => {
           customerId,
           status: status as ConversationStatus,
           channel: channel as ConversationChannel,
-          type: type as ConversationType,
         })
         .gte({
           updatedAt: new Date(updatedAt ?? 0).getTime(),
@@ -134,7 +119,6 @@ export const listConversations = async (params: ConversationFilterParams) => {
           orgId,
           status: status as ConversationStatus,
           channel: channel as ConversationChannel,
-          type: type as ConversationType,
         })
         .gte({
           updatedAt: new Date(updatedAt ?? 0).getTime(),

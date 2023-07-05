@@ -224,7 +224,6 @@ describe.concurrent('/conversations', async () => {
       customerId,
       operatorId: '',
       status,
-      type,
       channel,
     };
 
@@ -241,50 +240,50 @@ describe.concurrent('/conversations', async () => {
     expect(res.data?.status).toEqual(status);
     expect(res.data?.channel).toEqual(channel);
     expect(res.data?.topic).toEqual(topic);
-    expect(res.data?.type).toEqual(type);
 
-  it("assigns an operatorId to a conversation, then updates the status to 'open'", async () => {
-    const { orgId, customers, operatorIds } = mockOrgIds[1];
+    it("assigns an operatorId to a conversation, then updates the status to 'open'", async () => {
+      const { orgId, customers, operatorIds } = mockOrgIds[1];
 
-    const operatorId = faker.helpers.arrayElement(operatorIds);
-    const { conversations } = faker.helpers.arrayElement(customers);
-    const { conversationId } = faker.helpers.arrayElement(conversations);
+      const operatorId = faker.helpers.arrayElement(operatorIds);
+      const { conversations } = faker.helpers.arrayElement(customers);
+      const { conversationId } = faker.helpers.arrayElement(conversations);
 
-    // Get prexisting data for patch
-    const prepareRes = await http.get(
-      `/orgs/${orgId}/conversations/${conversationId}`
-    );
-    expect(prepareRes).toBeTruthy();
-    expect(prepareRes.status).toBe(200);
+      // Get prexisting data for patch
+      const prepareRes = await http.get(
+        `/orgs/${orgId}/conversations/${conversationId}`
+      );
+      expect(prepareRes).toBeTruthy();
+      expect(prepareRes.status).toBe(200);
 
-    // patch
-    const status = 'open';
-    const { data } = prepareRes;
-    delete data?.conversationId;
-    delete data?.orgId;
-    const res = await http.patch(
-      `/orgs/${orgId}/conversations/${conversationId}`,
-      {
-        ...data,
-        operatorId,
-        status,
-      }
-    );
-    expect(res).toBeTruthy();
-    expect(res.status).toBe(200);
+      // patch
+      const status = 'open';
+      const { data } = prepareRes;
+      delete data?.conversationId;
+      delete data?.orgId;
+      const res = await http.patch(
+        `/orgs/${orgId}/conversations/${conversationId}`,
+        {
+          ...data,
+          operatorId,
+          status,
+        }
+      );
+      expect(res).toBeTruthy();
+      expect(res.status).toBe(200);
 
-    // Validate patch with get
-    const getRes = await http.get(
-      `/orgs/${orgId}/conversations/${conversationId}`
-    );
+      // Validate patch with get
+      const getRes = await http.get(
+        `/orgs/${orgId}/conversations/${conversationId}`
+      );
 
-    expect(getRes).toBeTruthy();
-    expect(getRes.status).toBe(200);
-    expect(getRes.data).toBeTruthy();
-    expect(getRes.data?.conversationId).toEqual(conversationId);
-    expect(getRes.data?.operatorId).toEqual(operatorId);
-    expect(getRes.data?.orgId).toEqual(orgId);
-    expect(getRes.data?.status).toEqual(status);
+      expect(getRes).toBeTruthy();
+      expect(getRes.status).toBe(200);
+      expect(getRes.data).toBeTruthy();
+      expect(getRes.data?.conversationId).toEqual(conversationId);
+      expect(getRes.data?.operatorId).toEqual(operatorId);
+      expect(getRes.data?.orgId).toEqual(orgId);
+      expect(getRes.data?.status).toEqual(status);
+    });
   });
   it('deletes a conversation', async () => {
     const { orgId, customers } = mockOrgIds?.[2];

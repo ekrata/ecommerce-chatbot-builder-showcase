@@ -1,26 +1,12 @@
-import { EntityItem } from 'electrodb';
 import { Link, useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import {
-  ConversationItemSearchKey, conversationItemSearchKey
-} from 'packages/functions/app/api/src/conversations/search';
-import { FC, ReactNode, useMemo, useState } from 'react';
-import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
+import { FC } from 'react';
 import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
-import { BsSearch, BsX } from 'react-icons/bs';
-import { CgSpinner } from 'react-icons/cg';
-import { useDebounce } from 'usehooks-ts';
 
-import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { ConversationItem, ConversationItemSearchRes } from '@/entities/conversation';
 
-import { useDashStore } from '../(actions)/useDashStore';
 import { Avatar } from '../../(chat-widget)/(screens)/(messages)/Avatar';
-import { ConversationCard } from '../../(chat-widget)/(screens)/(messages)/ConversationCard';
-import { highlightMatches } from '../../(helpers)/highlightMatches';
-import {
-  useArticlesQuery, useConfigurationQuery, useOrgQuery, useSearchArticlesQuery
-} from '../../(hooks)/queries';
+import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { OperatorChatInput } from './OperatorChatInput';
 import { OperatorChatLog } from './OperatorChatLog';
@@ -48,13 +34,13 @@ interface Props {
 
 
 
-export const ChatView: FC = ({ conversationItem }) => {
+export const ChatView: FC = () => {
   const t = useTranslations('chat-widget');
-  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-  const locale = useLocale();
   const searchParams = useSearchParams()
+  const operatorSession = useOperatorSession();
   const conversationId = searchParams.get('conversationId')
-  const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
+  const conversationItemQuery = useConversationItemQuery(operatorSession.orgId, conversationId ?? '')
+  const conversationItem = conversationItemQuery.data
 
 
   return (

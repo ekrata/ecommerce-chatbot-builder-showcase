@@ -1,3 +1,4 @@
+'use client'
 import { getCookie } from 'cookies-next';
 import { EntityItem } from 'electrodb';
 // Import necessary hooks and libraries

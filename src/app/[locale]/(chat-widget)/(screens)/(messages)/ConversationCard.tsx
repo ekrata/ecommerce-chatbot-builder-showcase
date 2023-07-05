@@ -4,8 +4,9 @@ import { useMemo } from 'react';
 import { BiSend } from 'react-icons/bi';
 
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from '@/app/[locale]/(hooks)/queries/useConversationItemsQuery';
+import { ConversationItem } from '@/entities/conversation';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';
@@ -15,7 +16,7 @@ import { DynamicBackground } from '../../DynamicBackground';
 import { MessageTimeLabel } from './MessageTimeLabel';
 
 interface Props {
-  conversationId?: string
+  conversationItem: ConversationItem
   height: string,
   rounded?: boolean
   showRecentLabel?: boolean
@@ -27,13 +28,11 @@ interface Props {
  *
  * @returns {*}
  */
-export const ConversationCard: React.FC<Props> = ({ conversationId, height = '12', rounded = false, showRecentLabel }) => {
+export const ConversationCard: React.FC<Props> = ({ conversationItem, height = '12', rounded = false, showRecentLabel }) => {
   const { chatWidget: { setWidgetState, setSelectedConversationId } } = useChatWidgetStore()
   const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const t = useTranslations('chat-widget');
   const customer = useCustomerQuery(orgId);
-  const conversationItems = useConversationItemsByCustomerQuery(orgId, customer?.data?.customerId ?? '')
-  const conversationItem = getItem(conversationItems.data ?? [], conversationId ?? '');
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
   const { relativeTime } = useFormatter()
@@ -54,42 +53,19 @@ export const ConversationCard: React.FC<Props> = ({ conversationId, height = '12
       {showRecentLabel && <div className="flex pb-2 pl-2 mb-2 font-semibold">
         {t('Recent message')}
       </div>}
-      {conversationItems?.fetchStatus !== 'idle' && conversationItems?.isLoading && (
-        <div className="flex items-center mt-4 space-x-3 animate-pulse animate-fade-left">
-          <svg
-            className="text-gray-200 w-14 h-14 dark:text-gray-700"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-          <div>
-            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2"></div>
-            <div className="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+      <div className="flex justify-around place-items-center animate-fade-left">
+        <div className="w-12 h-12 p-2 rounded-full avatar shrink-0 background ring-2 ring-primary online">
+          {configuration.data && <DynamicBackground configuration={configuration.data} />}
+          <img src={widgetAppearance?.botLogo}></img>
+        </div>
+        <div className="flex flex-col w-3/5 place-items-start gap-y-1">
+          <h5 className='justify-start w-full text-base break-all truncate font-base justify-self-start'>{`${lastMessage?.content}aasjdksahdjshadhjsdahdsjasahdjasdhsajhdjasnasdjnsamdansjsdanbjadsbsjadsdhjsdhajasd`}</h5>
+          <div className="flex text-xs text-neutral-400 gap-x-1 ">
+            <MessageTimeLabel conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} />
           </div>
         </div>
-      )}
-      {conversationItems?.isSuccess && (
-        <div className="flex justify-around place-items-center animate-fade-left">
-          <div className="w-12 h-12 p-2 rounded-full avatar shrink-0 background ring-2 ring-primary online">
-            {configuration.data && <DynamicBackground configuration={configuration.data} />}
-            <img src={widgetAppearance?.botLogo}></img>
-          </div>
-          <div className="flex flex-col w-3/5 place-items-start gap-y-1">
-            <h5 className='justify-start w-full text-base break-all truncate font-base justify-self-start'>{`${lastMessage?.content}aasjdksahdjshadhjsdahdsjasahdjasdhsajhdjasnasdjnsamdansjsdanbjadsbsjadsdhjsdhajasd`}</h5>
-            <div className="flex text-xs text-neutral-400 gap-x-1 ">
-              <MessageTimeLabel conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} />
-            </div>
-          </div>
-          <BiSend className="text-2xl shrink-0 justify-self-end justify-right " />
-        </div>
-      )}
+        <BiSend className="text-2xl shrink-0 justify-self-end justify-right " />
+      </div>
     </button>
   )
 }

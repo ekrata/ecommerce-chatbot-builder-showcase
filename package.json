@@ -61,7 +61,6 @@
     "fuse.js": "^6.6.2",
     "http-server": "^14.1.1",
     "immer": "^10.0.2",
-    "jest-websocket-mock": "^2.4.0",
     "locale-code": "^2.0.2",
     "lodash": "^4.17.21",
     "mock-socket": "^9.2.1",

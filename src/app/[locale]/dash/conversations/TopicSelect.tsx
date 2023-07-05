@@ -6,7 +6,9 @@ import { t } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { ReactNode, useEffect } from 'react';
 import { BsFillBoxSeamFill, BsPeopleFill, BsPerson, BsRobot } from 'react-icons/bs';
+import { FaChevronDown } from 'react-icons/fa';
 import { FcClock, FcInTransit, FcPaid } from 'react-icons/fc';
+import { MdOutlineTopic } from 'react-icons/md';
 
 import { ConversationTopic } from '@/entities/conversation';
 
@@ -16,28 +18,45 @@ import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 export const topicIconMap: Record<ConversationTopic, ReactNode> = {
   'products': <FcPaid />,
   'orderStatus': <FcClock />,
-  'orderIssues': <BsFillBoxSeamFill className='text-amber-800' />,
+  'orderIssues': <BsFillBoxSeamFill className='text-amber-700' />,
   'shippingPolicy': <FcInTransit />
 }
 
-export const TopicSelect: React.FC = () => {
+interface Props {
+  dropdownPosition?: 'end'
+}
+
+export const TopicSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const t = useTranslations('dash');
   const sessionOperator = useOperatorSession();
   const { conversationOperatorView, setConversationOperatorView, setConversationTopic, conversationTopic } = useDashStore()
 
   return (
-    <details className="mb-32 dropdown">
-      <summary className="m-1 btn">
-        {conversationTopic ? topicIconMap[conversationTopic] : <p>All</p>}
+    <details className={`h-full w-full dropdown ${dropdownPosition ? `dropdown-${dropdownPosition}` : ''}`}>
+      <summary className="flex flex-row px-2 normal-case gap-x-1 flex-nowrap text-normal btn btn-ghost">
+        {conversationTopic ? <div className='text-2xl'>
+          {topicIconMap[conversationTopic]}
+        </div> : <MdOutlineTopic className='text-2xl' />}
+        <FaChevronDown className='' />
       </summary>
-      <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+      <ul className="p-2  font-sans shadow menu font-normal dropdown-content z-[1] bg-base-100 text-sm rounded-box w-52 overflow-y-clip max-w-screen animate-fade-left">
         {Object.entries(topicIconMap)?.map(([key, icon]) => (
-          <li className='flex' onClick={() => setConversationTopic(key as ConversationTopic)}>
-            {icon}
-            <p>
-              {startCase(key)}
-            </p>
-            <input type="radio" name="radio-2" className="justify-end radio radio-primary" checked={key === conversationTopic} />
+          <li className='flex flex-row justify-start normal-case place-items-center' >
+            <a className='flex flex-row justify-start w-full normal-case place-items-center'>
+              <input type="radio" name={`radio-${key}`} className="form-control radio-primary radio-xs" checked={key === conversationTopic} onClick={(event) => {
+                if (key === conversationTopic) {
+                  setConversationTopic()
+                } else {
+                  setConversationTopic(key as ConversationTopic)
+                }
+              }} />
+              <p className='flex text-sm place-items-center gap-x-2'>
+                <div className='text-2xl'>
+                  {icon}
+                </div>
+                {startCase(key)}
+              </p>
+            </a>
           </li>
         ))}
       </ul>

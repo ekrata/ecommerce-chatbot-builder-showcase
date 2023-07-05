@@ -1,23 +1,25 @@
-import { Link, useLocale, useTranslations } from 'next-intl';
-import {
-  ConversationItemSearchKey, conversationItemSearchKey
-} from 'packages/functions/app/api/src/conversations/search';
+'use client'
+import { Link, useTranslations } from 'next-intl';
 import { FC, ReactNode, useState } from 'react';
 import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsSearch, BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
+import { FcSearch } from 'react-icons/fc';
 import { useDebounce } from 'usehooks-ts';
 
-import { ConversationItemSearchRes } from '@/entities/conversation';
+import {
+    ConversationItemSearchKey, conversationItemSearchKey, ConversationItemSearchRes
+} from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
 import { highlightMatches } from '../../(helpers)/highlightMatches';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import {
-  useSearchConversationItemsQuery
+    useSearchConversationItemsQuery
 } from '../../(hooks)/queries/useSearchConversationItemsQuery';
 import { ChannelSelect } from './ChannelSelect';
+import { OperatorSelect } from './OperatorSelect';
 import { StatusSelect } from './StatusSelect';
 import { TopicSelect } from './TopicSelect';
 
@@ -43,26 +45,42 @@ export const ConversationsSearchView: FC = () => {
   const t = useTranslations('dash');
   const { conversationOperatorView, conversationChannel, conversationTopic, setConversationState } = useDashStore();
   const operatorSession = useOperatorSession();
+  const [phrase, setPhrase] = useState('');
+  const debouncedSearchPhrase = useDebounce(phrase, 150);
+  const searchConversationItemsQuery = useSearchConversationItemsQuery({ expansionFields: ['customerId', 'operatorId'], cursor: undefined, orgId: operatorSession.orgId, operatorId: conversationOperatorView, channel: conversationChannel, topic: conversationTopic, phrase: debouncedSearchPhrase })
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => setPhrase(data.phrase);
+  const handleChange: ChangeHandler = async (event) => {
+    setPhrase(event?.target?.value as string);
+  }
   const listSearchMatches = (responses: ConversationItemSearchRes[]) => {
     return (
       <ul className="w-full mb-10 animate-fade-left">
         {responses?.map((response) => {
-          const matchKeys = response.matches.map((match => match.key))
+          if (!response.matches) {
+            return <></>
+          }
+          const matchKeys = response?.matches?.map((match => match.key))
           const matches: Record<ConversationItemSearchKey, { indices: [number, number][], key: string, value: string, refIndex?: number } | undefined> = {}
           const highlightedField: Record<ConversationItemSearchKey, ReactNode[] | undefined> = {}
 
           conversationItemSearchKey.map((key) => {
-            matches[key] = response.matches.find((matchedField => matchedField.key === key))
+            matches[key] = response?.matches?.find((matchedField => matchedField.key === key))
           })
 
-          Object.entries(matches).map(([key, value]) => {
+          Object.entries(matches)?.map(([key, value]) => {
             highlightedField[key] = matchKeys.includes(key) && matches[key]?.indices.length ? highlightMatches(matches[key]?.value ?? '', matches[key]?.indices) : undefined
           })
           // const category = matchKeys.includes('category') && categoryIndicies?.length ? highlightMatches(response.item.category, categoryIndicies ) : ''
           // const subtitle = response.item?.subtitle && contentIndicies && matchKeys.includes('subtitle') ? highlightMatches(response.item?.subtitle, subtitleIndicies) : ''
           // const content = matchKeys.includes('content') && highlightMatches(response.item.content, contentIndicies)
           return (
-            <Link key={response.item.conversation.conversationId}
+            <Link key={response?.item?.conversation.conversationId}
               href={{
                 pathname: '/dash',
                 query: { conversationId: response.item.conversation.conversationId },
@@ -82,19 +100,7 @@ export const ConversationsSearchView: FC = () => {
       </ul>)
   };
 
-  const [phrase, setPhrase] = useState('');
-  const debouncedSearchPhrase = useDebounce(phrase, 150);
-  const searchConversationItemsQuery = useSearchConversationItemsQuery({ orgId: operatorSession.orgId, operatorId: conversationOperatorView, channel: conversationChannel, topic: conversationTopic, phrase: debouncedSearchPhrase })
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => setPhrase(data.phrase);
-  const handleChange: ChangeHandler = async (event) => {
-    setPhrase(event?.target?.value as string);
-  }
+
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
       <h5 className='flex font-semibold'>{t('conversations', { count: 0 })}</h5>
@@ -115,28 +121,34 @@ export const ConversationsSearchView: FC = () => {
     <div className="flex justify-between w-full h-full rounded-3xl">
       <div className="flex flex-col w-full h-full place-items-center ">
         <div
-          className={`bg-white flex flex-col gap-y-2 place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold p-3 gap-x-2   `}
+          className={`bg-white border-b-[1px] flex flex-col gap-y-2 place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold p-3 gap-x-2   `}
         >
 
           <div className='flex justify-center w-full place-items-center'>
-            <BiChevronLeft onClick={() => setConversationState('list')} role='button' className="absolute text-4xl hover:cursor-pointer left-1 " />
-            <form className="flex w-full text-black bg-white rounded-lg place-items-center join" onSubmit={handleSubmit(onSubmit)}>
-              <input className="justify-between w-full font-normal normal-case bg-white border-0 rounded-lg input-bordered input-sm text-normal" placeholder='Search for help' {...register("phrase", { onChange: (e) => handleChange(e) })} />
+            <BiChevronLeft onClick={() => setConversationState('list')} role='button' className="justify-start text-4xl hover:cursor-pointer " />
+            <form className="flex w-full text-black rounded-lg place-items-center join" onSubmit={handleSubmit(onSubmit)}>
+              <input className="justify-between w-full font-normal normal-case bg-gray-200 border-0 rounded-lg input-bordered input-sm text-normal" placeholder='Search for help' {...register("phrase", { onChange: (e) => handleChange(e) })} />
               <div className='rounded-r-lg -ml-7'>
                 {searchConversationItemsQuery.isFetching ?
                   <CgSpinner className="text-2xl animate-spin" />
-                  : phrase.length > 2 ? <BsX onClick={() => setPhrase('')} /> : <BsSearch className='justify-end text-lg ' />}
+                  : phrase.length > 2 ? <BsX onClick={() => setPhrase('')} /> : <FcSearch className='justify-end text-2xl ' />}
               </div>
             </form>
           </div>
-          <div className='flex'>
-            <ChannelSelect />
-            <TopicSelect />
-            <StatusSelect />
+          <div className='flex justify-end w-full place-items-center'>
+            <div className='flex place-items-center'>
+              <StatusSelect />
+              <ChannelSelect />
+              <TopicSelect dropdownPosition='end' />
+            </div>
+            <div className='flex justify-end place-items-center'>
+              <OperatorSelect dropdownPosition='end' />
+            </div>
+
           </div>
         </div>
         <div
-          className={`flex flex-col place-items-center  w-full  overflow-y-scroll mx-2 `}
+          className={`flex flex-col place-items-center  w-full bg-white h-screen  overflow-y-scroll  `}
         >
           {renderContent()}
         </div>

@@ -15,6 +15,7 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
+  typescript: { reactDocgen: false },
   staticDirs: ['../public'],
   docs: {
     autodocs: true,
@@ -28,8 +29,12 @@ const config: StorybookConfig = {
     if (config?.resolve) {
       config.resolve.alias = {
         ...config?.resolve?.alias,
-        '@next/font/google': require.resolve('./nextFontGoogle'),
+        // '@next/font/google': require.resolve('./nextFontGoogle'),
       };
+      config.resolve.modules = [
+        ...(config.resolve.modules || []),
+        path.resolve('./'),
+      ];
       /**
        * Fixes font import with /
        * @see https://github.com/storybookjs/storybook/issues/12844#issuecomment-867544160

@@ -5,9 +5,10 @@ import { flag } from 'country-emoji';
 import LocaleCode from 'locale-code';
 import { useFormatter, useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { FC, useState } from 'react';
-import { BiTime } from 'react-icons/bi';
-import { BsGlobe, BsPerson, BsTagsFill } from 'react-icons/bs';
+import { BiChevronRight, BiTime } from 'react-icons/bi';
+import { BsChat, BsGlobe, BsPerson, BsTagsFill } from 'react-icons/bs';
 import { FaLanguage } from 'react-icons/fa';
 import { GoBrowser } from 'react-icons/go';
 import { HiDocumentText } from 'react-icons/hi2';
@@ -15,18 +16,52 @@ import { MdEmail, MdPhone } from 'react-icons/md';
 
 import { ConversationItem } from '@/entities/conversation';
 
+import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
+
 type InfoTabs = 'Profile' | 'Visited Pages' | 'Notes';
 
 const visitedPagesTabLabel = 'Visited Pages';
 const profile = 'Profile';
 const notesTab = 'Notes';
 
-interface Props {
-  conversationItem?: ConversationItem
-}
+const fetchingSkeleton = (
+  <div className="flex flex-col w-full p-2 my-2 animate-pulse rounded-3xl gap-y-2">
+    {[...Array(10)].map(() => (
+      <div className="flex w-full place-items-center animate-fade-left">
+        <div className='flex flex-col w-full gap-y-2'>
+          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-full" />
+          <div className="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
+        </div>
+        <BiChevronRight className="text-4xl text-gray-300 dark:text-gray-600 justify-right" />
+      </div>))}
+  </div>
+)
 
-export const CustomerInfoView: FC<Props> = ({ conversationItem }) => {
+
+
+export const CustomerInfoView: FC = () => {
+  const t = useTranslations('app.inbox.chat');
+  const tDash = useTranslations('dash');
   const [currentTab, setCurrentTab] = useState<InfoTabs>('Profile');
+  const operatorSession = useOperatorSession();
+  const { orgId } = operatorSession
+  const searchParams = useSearchParams();
+  const conversationId = searchParams.get('conversationId')
+  const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
+  const conversationItem = conversationItemQuery.data
+  const noData = (
+    <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
+      <h5 className='flex font-semibold'><BsChat />{tDash('conversations', { count: 0 })}</h5>
+      {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
+    </div>
+  )
+  if (conversationItemQuery.isFetching) {
+    return fetchingSkeleton
+  }
+  if (!conversationItem) {
+    return noData
+  }
   const {
     customer: {
       profilePicture,
@@ -41,10 +76,9 @@ export const CustomerInfoView: FC<Props> = ({ conversationItem }) => {
       visitedPages,
       notes,
     },
-  } = conversationItem.conversation;
+  } = conversationItem?.conversation;
   const country = ct.getCountryForTimezone(timezone ?? '');
   const tabActive = 'tab-active';
-  const t = useTranslations('app.inbox.chat');
   const { relativeTime } = useFormatter();
   return (
     <div

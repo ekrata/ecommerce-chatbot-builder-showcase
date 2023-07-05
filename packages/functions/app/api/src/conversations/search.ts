@@ -1,21 +1,18 @@
-import Fuse from 'fuse.js';
-import {
-  ApiHandler,
-  usePathParams,
-  useQueryParam,
-  useQueryParams,
-} from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
-import { Config } from 'sst/node/config';
 import { EntityItem } from 'electrodb';
-import { ArticleContent } from '@/entities/articleContent';
-import { Article } from '@/entities/article';
-import { ConversationFilterParams, listConversations } from './list';
+import Fuse from 'fuse.js';
 import { TupleToObject } from 'helpers/typeUtilities';
-import { ConversationItem } from '@/entities/conversation';
+import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import { Config } from 'sst/node/config';
+import { Table } from 'sst/node/table';
+
+import { Article } from '@/entities/article';
+import { ArticleContent } from '@/entities/articleContent';
+import { ConversationItem, conversationItemSearchKey } from '@/entities/conversation';
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
 import { ExpandableField } from '../util/expandObjects';
+import { ConversationFilterParams, listConversations } from './list';
 
 export type ConversationSearchParams = {
   phrase: string;
@@ -39,14 +36,6 @@ var lastScanDate = 0;
  */
 var scanResult: Fuse<any>;
 
-export const conversationItemSearchKey = [
-  'conversation.customer.name',
-  'conversation.customer.email',
-  'messages.content',
-];
-
-export type ConversationItemSearchKey =
-  (typeof conversationItemSearchKey)[number];
 /**
  * Builds the search index
  *
@@ -138,7 +127,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       updatedAt,
       status,
       channel,
-      type,
     } = params;
 
     if (!orgId || !phrase) {

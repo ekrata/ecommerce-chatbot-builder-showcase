@@ -1,15 +1,15 @@
+'use client'
 import { EntityItem } from 'electrodb';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import {
-  ConversationItemSearchKey, conversationItemSearchKey
-} from 'packages/functions/app/api/src/conversations/search';
 import { FC, ReactNode, useMemo, useState } from 'react';
 import { BiChevronRight, BiMailSend, BiSend } from 'react-icons/bi';
 import { BsChat, BsSearch, BsWhatsapp, BsX } from 'react-icons/bs';
+import { FcSearch } from 'react-icons/fc';
 
 import {
-  ConversationChannel, ConversationItem, ConversationItemSearchRes, ConversationTopic
+    ConversationChannel, ConversationItem, ConversationItemSearchRes, ConversationTopic,
+    conversationTopic
 } from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
@@ -38,16 +38,16 @@ const fetchingArticlesSkeleton = (
   </div>
 )
 
+
+
 export const ConversationsListView: FC = () => {
   const t = useTranslations('dash');
-  const { setConversationState, conversationOperatorView } = useDashStore();
+  const { setConversationState, conversationOperatorView, conversationChannel, conversationTopic, conversationStatus } = useDashStore();
   const operatorSession = useOperatorSession();
   const locale = useLocale();
-  const [queryCursor, setQueryCursor] = useState<string | undefined>(undefined)
-  const [channelFilter, setChannelFilter] = useState<ConversationChannel | undefined>(undefined);
-  const [topicFilter, setTopicFilter] = useState<ConversationTopic | undefined>(undefined);
+  const [cursor, setCursor] = useState<string | undefined>(undefined)
 
-  const conversationItems = useConversationItemsQuery({ orgId: operatorSession.orgId, expansionFields: ['customerId', 'operatorId'], cursor: queryCursor, includeMessages: 'true', topic: topicFilter, channel: channelFilter, type: 'chat' })
+  const conversationItems = useConversationItemsQuery({ orgId: operatorSession.orgId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true', topic: conversationTopic, channel: conversationChannel, operatorId: conversationOperatorView, type: 'chat' })
 
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
@@ -55,7 +55,6 @@ export const ConversationsListView: FC = () => {
       {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
     </div>
   )
-
   const renderContent = () => {
     if (conversationItems.isFetching) {
       return fetchingArticlesSkeleton
@@ -65,7 +64,7 @@ export const ConversationsListView: FC = () => {
         <ul className="w-full mb-10 animate-fade-left">
           {conversationItems?.data?.map((item) => (
             <li className="flex justify-between w-full  h-16 hover:bg-transparent  px-4 font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal">
-              <ConversationCard height='16' conversationId={item.conversation.conversationId}></ConversationCard>
+              <ConversationCard height='16' conversationItem={item}></ConversationCard>
             </li>)
           )}
         </ul>) : noData
@@ -76,24 +75,28 @@ export const ConversationsListView: FC = () => {
     <div className="flex justify-between w-full h-full rounded-3xl">
       <div className="flex flex-col w-full h-full place-items-center ">
         <div
-          className={` bg-white flex flex-col gap-y-2 place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold p-3 gap-x-2   `}
+          className={` bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold gap-x-2   `}
         >
-          <div className='flex justify-center w-full place-items-center'>
-            <ChannelSelect />
-            <TopicSelect />
-            <div className='flex justify-end'>
-              <BsSearch className='text-lg ' />
-              <OperatorSelect />
+          <div className='flex justify-end w-full place-items-center'>
+            <div className='flex place-items-center'>
+              <StatusSelect />
+              <ChannelSelect />
+              <TopicSelect dropdownPosition='end' />
             </div>
-          </div>
-          <div>
-            <StatusSelect />
+            <div className='flex justify-end place-items-center'>
+              <button className='btn btn-ghost'>
+                <a>
+                  <FcSearch className='text-2xl' onClick={() => setConversationState('search')} />
+                </a>
+              </button>
+              <OperatorSelect dropdownPosition='end' />
+            </div>
+
           </div>
         </div>
         <div
-          className={`flex flex-col place-items-center  w-full  overflow-y-scroll mx-2 `}
+          className={`flex flex-col place-items-center  w-full bg-white h-screen  overflow-y-scroll mx-2 `}
         >
-
           {renderContent()}
         </div>
       </div>

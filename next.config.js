@@ -10,12 +10,6 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
 });
 
-const nextConfig = withPWA({
-  reactStrictMode: true,
-});
-
-module.exports = nextConfig;
-
 module.exports = withPWA(
   withNextIntl({
     // Other Next.js configuration ...
@@ -23,6 +17,10 @@ module.exports = withPWA(
     experimental: {
       appDir: true,
       typedRoutes: true,
+    },
+    webpack(config) {
+      config.experiments = { ...config.experiments, topLevelAwait: true }
+      return config
     },
   })
 );
