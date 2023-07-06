@@ -1,7 +1,8 @@
+import '../globals.css';
+
 import { NextIntlClientProvider, useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
-import '../globals.css';
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 export const metadata = {
   title: 'Crow Commerce',
@@ -9,12 +10,12 @@ export const metadata = {
 };
 
 export function generateStaticParams() {
-  return [{locale: 'en'}, {locale: 'de'}];
+  return [{ locale: 'en' }, { locale: 'de' }];
 }
 
-export default function LocaleLayout({ children, params: {locale, overrideMessages} }: {children: ReactNode, params: {locale: string, overrideMessages?: any}}) {
+export default function LocaleLayout({ children, params: { locale, overrideMessages } }: { children: ReactNode, params: { locale: string, overrideMessages?: any } }) {
   let messages;
-  if(!overrideMessages) {
+  if (!overrideMessages) {
     try {
       import(`../../../messages/${locale}.json`).then(data => {
         messages = data

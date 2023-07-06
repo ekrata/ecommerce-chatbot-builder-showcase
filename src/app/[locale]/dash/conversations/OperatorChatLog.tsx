@@ -13,20 +13,23 @@ import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut
 import { useConfigurationQuery } from '../../(hooks)/queries';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
+import { CustomerAvatar } from './CustomerAvatar';
 
+interface Props {
+  conversationItem: ConversationItem
+}
 /**
  * Renders a chat log from the perspective of a customer, in the chat widget.
  * @date 13/06/2023 - 12:09:16
  *
  * @returns {*}
  */
-export const OperatorChatLog: FC = () => {
+export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
+
   const t = useTranslations('chat-widget')
   const operatorSession = useOperatorSession();
   const searchParams = useSearchParams()
-  const conversationId = searchParams.get('conversationId')
-  const conversationItemQuery = useConversationItemQuery(operatorSession.orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery.data
+  const conversationId = searchParams?.get('conversationId')
   const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const customer = useCustomerQuery(orgId);
 
@@ -45,10 +48,10 @@ export const OperatorChatLog: FC = () => {
       {conversationItem?.messages
         ?.map((message, i) => (
           <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
-            {(message.sender === 'operator' || message.sender === 'bot') && (
-              <div className="flex flex-col justify-start w-full gap-x-2" >
+            {(message.sender === 'customer') && (
+              <div className="flex flex-col w-full chat chat-start gap-x-2" >
                 <div className="flex-none w-30 h-30">
-                  <div className="indicator">
+                  {/* <div className="indicator">
                     <span
                       data-testid="status-badge"
                       className={`indicator-item  badge-success ring-white ring-2 badge-xs text-white dark:text-default rounded-full ${!message.sentAt
@@ -58,8 +61,8 @@ export const OperatorChatLog: FC = () => {
                     >
                       {!message.sentAt ? '...' : ''}
                     </span>
-                    <Avatar conversationItem={conversationItem} message={message} />
-                  </div>
+                    <CustomerAvatar conversationItem={conversationItem} message={message} />
+                  </div> */}
                   <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
                     } tooltip-bottom z-10`}
                     data-testid={`operator-message-content-${message.messageId}`}
@@ -75,7 +78,7 @@ export const OperatorChatLog: FC = () => {
                 )}
               </div>
             )}
-            {message.sender === 'customer' && (
+            {message.sender === 'operator' || message.sender === 'bot' && (
               <div className="flex flex-col chat chat-end">
                 <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
                   {message.content}

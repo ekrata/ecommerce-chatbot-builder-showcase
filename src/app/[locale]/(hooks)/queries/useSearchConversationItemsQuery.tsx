@@ -8,8 +8,7 @@ import { QueryKey } from '../queries';
 export const useSearchConversationItemsQuery = (params: ConversationFilterParams & { phrase: string }) => useQuery<ConversationItemSearchRes[]>(
   {
     queryKey: [params.orgId, params.operatorId, params.channel, params.status, params.updatedAt, QueryKey.searchConversationItems, params.cursor],
-    queryFn: () => searchConversationItems(params) ?? [],
-    keepPreviousData: true,
+    queryFn: async () => await searchConversationItems(params) ?? [],
     enabled: !!params.orgId
   })
 
@@ -35,5 +34,7 @@ export const searchConversationItems = async (
       }/orgs/${params.orgId}/conversations/search?${new URLSearchParams(JSON.stringify(params)).toString()}`
     )
   ).json();
+  console.log(res)
+  console.log(res.data)
   return res.data;
 };

@@ -47,7 +47,7 @@ export const ConversationsListView: FC = () => {
   const locale = useLocale();
   const [cursor, setCursor] = useState<string | undefined>(undefined)
 
-  const conversationItems = useConversationItemsQuery({ orgId: operatorSession.orgId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true', topic: conversationTopic, channel: conversationChannel, operatorId: conversationOperatorView, type: 'chat' })
+  const conversationItems = useConversationItemsQuery({ orgId: operatorSession.orgId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true', topic: conversationTopic, channel: conversationChannel, operatorId: conversationOperatorView })
 
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>

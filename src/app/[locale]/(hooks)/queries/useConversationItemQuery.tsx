@@ -1,7 +1,8 @@
-import { ConversationItem } from "@/entities/conversation";
-import { QueryKey } from "../queries";
-import { useQuery } from "@tanstack/react-query";
+import { ConversationItem } from '@/entities/conversation';
+import { useQuery } from '@tanstack/react-query';
+
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
+import { QueryKey } from '../queries';
 
 /**
  * gets a conversationItem 
@@ -11,7 +12,7 @@ import { sortConversationItems } from '../../(helpers)/sortConversationItems';
  * @param {string} conversationId 
  * @returns {*}
  */
-export const useConversationItemQuery = (orgId: string, conversationId: string) => useQuery<ConversationItem | undefined>([orgId, conversationId, QueryKey.conversationItem], async () => (orgId && conversationId) ? await getConversationItem(orgId, conversationId) : undefined, {enabled: !!orgId && !!conversationId})
+export const useConversationItemQuery = (orgId: string, conversationId: string) => useQuery<ConversationItem | undefined>({ queryKey: [orgId, conversationId, QueryKey.conversationItem], queryFn: async () => await getConversationItem(orgId, conversationId), enabled: !!orgId && !!conversationId })
 
 
 
@@ -28,15 +29,16 @@ export const getConversationItem = async (
   orgId: string,
   conversationId: string
 ): Promise<ConversationItem> => {
+  console.log('hiihihi')
   const res = await (
     await fetch(
-      `${
-        process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${orgId}/conversations/${conversationId}?&includeMessages=true&expansionFields=${encodeURIComponent(
+      `${process.env.NEXT_PUBLIC_APP_API_URL
+      }/orgs/${orgId}/conversations/${conversationId}?includeMessages=true&expansionFields=${encodeURIComponent(
         JSON.stringify(['customerId', 'operatorId'])
       )}`
     )
   ).json();
+  console.log(res)
   return res.data;
 };
 

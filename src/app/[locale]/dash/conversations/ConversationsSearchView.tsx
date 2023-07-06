@@ -1,6 +1,7 @@
 'use client'
-import { Link, useTranslations } from 'next-intl';
-import { FC, ReactNode, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { FC, ReactNode, useMemo, useState } from 'react';
 import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsSearch, BsX } from 'react-icons/bs';
@@ -27,7 +28,7 @@ type Inputs = {
   phrase: string;
 };
 
-const fetchingArticlesSkeleton = (
+const fetchingSkeleton = (
   <div className="flex flex-col w-full p-2 my-2 animate-pulse rounded-3xl gap-y-2">
     {[...Array(10)].map(() => (
       <div className="flex w-full place-items-center animate-fade-left">
@@ -79,17 +80,20 @@ export const ConversationsSearchView: FC = () => {
           // const category = matchKeys.includes('category') && categoryIndicies?.length ? highlightMatches(response.item.category, categoryIndicies ) : ''
           // const subtitle = response.item?.subtitle && contentIndicies && matchKeys.includes('subtitle') ? highlightMatches(response.item?.subtitle, subtitleIndicies) : ''
           // const content = matchKeys.includes('content') && highlightMatches(response.item.content, contentIndicies)
+          console.log(highlightedField)
+          console.log(matches)
           return (
-            <Link key={response?.item?.conversation.conversationId}
+            <Link
               href={{
-                pathname: '/dash',
+                pathname: '/dash/conversations',
                 query: { conversationId: response.item.conversation.conversationId },
-              }}>
+              }}
+              passHref>
               <li key={response.refIndex} className={`flex  justify-between w-full ${highlightedField['conversation.messages']?.length ? 'h-28' : 'h-20'} font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal`}>
                 <div className='flex flex-col justify-start w-5/6 overflow-y-clip basis-3/4 place-items-start gap-y-1'>
-                  <h5 className='justify-start text-base text-start'>{highlightedField['conversation.customer.name'] ? highlightedField['conversation.customer.name'].map(child => (<>{child}</>)) : matches['conversation.customer.name']?.value}</h5>
-                  <h5 className='text-sm'>{highlightedField['conversation.customer.email'] ? highlightedField['conversation.customer.email'].map(child => (<>{child}</>)) : matches['conversation.customer.email']?.value}</h5>
-                  {highlightedField['conversation.messages'] && <p className='justify-start text-xs text-start text-neutral-400'>{highlightedField['conversation.messages'] ? highlightedField['conversation.messages'].map(child => (<>{child}</>)) : matches['conversation.messages']?.value}</p>}
+                  <h5 className='justify-start text-base text-start'>{highlightedField['conversation.customer.name'] ? highlightedField['conversation.customer.name'].map(child => (<>{child}</>)) : response.item.conversation.customer?.name}</h5>
+                  <h5 className='text-sm'>{highlightedField['conversation.customer.email'] ? highlightedField['conversation.customer.email'].map(child => (<>{child}</>)) : response.item.conversation.customer?.email}</h5>
+                  {highlightedField['messages.content'] && <p className='justify-start text-xs text-start text-neutral-400'>{highlightedField['messages.content'] ? highlightedField['messages.content'].map(child => (<>{child}</>)) : response.item.messages?.slice(-1)[0].content}</p>}
                 </div>
                 <BiChevronRight className="flex text-3xl basis-1/6 shrink-0 justify-right" />
               </li>
@@ -97,9 +101,8 @@ export const ConversationsSearchView: FC = () => {
           )
         })
         }
-      </ul>)
+      </ul >)
   };
-
 
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
@@ -108,15 +111,7 @@ export const ConversationsSearchView: FC = () => {
     </div>
   )
 
-  const renderContent = () => {
-    if (searchConversationItemsQuery.isFetching) {
-      return fetchingArticlesSkeleton
-    }
-    else {
-      return searchConversationItemsQuery?.data?.length ? listSearchMatches(searchConversationItemsQuery.data) ?? [] : noData
-    }
-  }
-
+  console.log(searchConversationItemsQuery?.data)
   return (
     <div className="flex justify-between w-full h-full rounded-3xl">
       <div className="flex flex-col w-full h-full place-items-center ">
@@ -150,7 +145,8 @@ export const ConversationsSearchView: FC = () => {
         <div
           className={`flex flex-col place-items-center  w-full bg-white h-screen  overflow-y-scroll  `}
         >
-          {renderContent()}
+          {searchConversationItemsQuery.isFetching ? fetchingSkeleton :
+            (searchConversationItemsQuery?.data?.length ? listSearchMatches(searchConversationItemsQuery.data) : noData)}
         </div>
       </div>
     </div>

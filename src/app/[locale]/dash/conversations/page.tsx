@@ -17,25 +17,29 @@ export default function Page() {
   const { conversationState, conversationOperatorView, setConversationOperatorView } = useDashStore()
 
   // E.g. `/dashboard?page=2&order=asc`
+
+
+  console.log(searchParams)
   const conversationId = searchParams?.get('conversationId');
+  console.log(searchParams?.entries())
+  console.log(conversationId)
+
 
   const renderMobile = useMemo(() => {
+    console.log(conversationId)
     if (conversationId) {
-      if (!conversationState) {
-        <ChatView></ChatView>
-      }
-      else if (conversationState === 'customerInfo') {
-        return <CustomerInfoView ></CustomerInfoView >
-      }
+      return <ChatView></ChatView>
+    }
+    else if (conversationState === 'customerInfo') {
+      return <CustomerInfoView ></CustomerInfoView >
     } else if (conversationState === 'list') {
       return <ConversationsListView></ConversationsListView>
     } else if (conversationState === 'search') {
       return <ConversationsSearchView />
     }
-    return <ConversationsListView />
-  }, [conversationState])
+  }, [conversationState, conversationId])
 
-  const render = () => {
+  const render = useMemo(() => {
     <div className="grid grid-cols-12">
       <div className='col-span-3'>
         {conversationState === 'list' && <ConversationsListView></ConversationsListView>}
@@ -47,9 +51,8 @@ export default function Page() {
       <div className='col-span-3'>
         <CustomerInfoView></CustomerInfoView>
       </div>
-
     </div>
-  }
+  }, [conversationState])
 
-  return isDesktop ? render() : renderMobile;
+  return isDesktop ? render : renderMobile;
 }

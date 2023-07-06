@@ -39,7 +39,6 @@ const fetchingSkeleton = (
 )
 
 
-
 export const CustomerInfoView: FC = () => {
   const t = useTranslations('app.inbox.chat');
   const tDash = useTranslations('dash');
@@ -47,7 +46,7 @@ export const CustomerInfoView: FC = () => {
   const operatorSession = useOperatorSession();
   const { orgId } = operatorSession
   const searchParams = useSearchParams();
-  const conversationId = searchParams.get('conversationId')
+  const conversationId = searchParams?.get('conversationId')
   const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
   const conversationItem = conversationItemQuery.data
   const noData = (

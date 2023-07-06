@@ -25,7 +25,7 @@ export const OperatorChatInput: FC = () => {
   const operatorSession = useOperatorSession();
   const { orgId } = operatorSession
   const searchParams = useSearchParams();
-  const conversationId = searchParams.get('conversationId')
+  const conversationId = searchParams?.get('conversationId')
   const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
   const conversationItem = conversationItemQuery.data
   const customer = useCustomerQuery(orgId);

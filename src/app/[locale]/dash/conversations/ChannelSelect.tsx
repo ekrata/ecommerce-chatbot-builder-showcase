@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 // import WhatsappIcon from 'public/brands/WhatsappIcon.svg';
 import { ReactNode, useEffect } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
-import { FcShop } from 'react-icons/fc';
+import { FcFeedback, FcShop } from 'react-icons/fc';
 import { GrChannel, GrMultiple } from 'react-icons/gr';
 
 import { ConversationChannel, ConversationTopic, conversationTopic } from '@/entities/conversation';
@@ -16,7 +16,8 @@ import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 
 export const channelIconMap: Record<ConversationChannel, ReactNode | HTMLImageElement> = {
   'website': <FcShop className='text-2xl' />,
-  'messenger': <img src="/brands/FbMessengericon.svg" className='object-fill w-6 h-6' alt="Fb messenger" />,
+  'emailTicket': <FcFeedback className='text-2xl' />,
+  'messenger': <img src="/brands/FbMessengericon.svg" className='h-6 object - fill w- 6' alt="Fb messenger" />,
   'whatsapp': <img src="/brands/WhatsappIcon.svg" className='object-fill w-8 h-8' alt="Whatsapp" />,
   'instagram': <img src="/brands/InstagramIcon.svg" className='object-fill w-6 h-6' alt="Instagram" />
 }

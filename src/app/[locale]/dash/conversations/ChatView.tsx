@@ -1,4 +1,5 @@
-import { Link, useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FC } from 'react';
 import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
@@ -8,6 +9,7 @@ import { ConversationItem, ConversationItemSearchRes } from '@/entities/conversa
 import { Avatar } from '../../(chat-widget)/(screens)/(messages)/Avatar';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
+import { CustomerAvatar } from './CustomerAvatar';
 import { OperatorChatInput } from './OperatorChatInput';
 import { OperatorChatLog } from './OperatorChatLog';
 
@@ -38,16 +40,18 @@ export const ChatView: FC = () => {
   const t = useTranslations('chat-widget');
   const searchParams = useSearchParams()
   const operatorSession = useOperatorSession();
-  const conversationId = searchParams.get('conversationId')
+  const conversationId = searchParams?.get('conversationId')
   const conversationItemQuery = useConversationItemQuery(operatorSession.orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery.data
+  console.log(conversationItemQuery.data)
+  const conversationItem = conversationItemQuery.data?.[0]
+  console.log(conversationItem)
 
 
   return (
     <div className="flex justify-between w-full h-full rounded-3xl">
       <div className="flex flex-col w-full h-full place-items-center ">
         <div
-          className={`text-white flex flex-col gap-y-2 place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold p-3 gap-x-2   `}
+          className={`bg-white border-b-[1px]  flex flex-row gap-y-2 place-items-center animated-flip-down w-full justify-start rounded-t-lg text-sm flex-wrap p-3 gap-x-2 `}
         >
           <Link className='justify-start' key={'/dash'}
             href={{
@@ -55,25 +59,21 @@ export const ChatView: FC = () => {
             }}>
             <BiChevronLeft className='text-5xl'></BiChevronLeft>
           </Link>
-          {conversationItem?.conversation?.operator && (
+          {conversationItem?.conversation?.customer?.name}
+          {conversationItem?.conversation?.customer && (
             <>
-              <Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} />
-              {`${conversationItem?.conversation?.operator.name}`}
+              <CustomerAvatar conversationItem={conversationItem} message={conversationItem.messages?.slice(-1)[0]} />
+              <p></p>{`${conversationItem.conversation?.customer?.name ?? conversationItem.conversation?.customer?.email ?? conversationItem.conversation?.customer?.id}`}
             </>
-          )
-          }
-          {!conversationItem?.conversation?.operator && (<>
-            <div className=''><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} /> </div>
-            {`${t('orgName') ?? ''} ${t('Bot') ?? 'Bot'}`}
-          </>)}
+          )}
         </div>
-      </div>
-      <div
-        className={`flex flex-col place-items-center  w-full  overflow-y-scroll mx-2 `}
-      >
-        {conversationItemQuery?.isFetching && fetchingConversationItemSkeleton}
-        <OperatorChatLog />
-        <OperatorChatInput />
+        <div
+          className={`flex flex-col place-items-center  w-full  overflow-y-scroll mx-2 `}
+        >
+          {conversationItemQuery?.isFetching && fetchingConversationItemSkeleton}
+          <OperatorChatLog conversationItem={conversationItem} />
+          <OperatorChatInput />
+        </div>
       </div>
     </div >
   );
