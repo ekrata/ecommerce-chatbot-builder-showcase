@@ -25,14 +25,11 @@ export const OperatorChatInput: FC = () => {
   const operatorSession = useOperatorSession();
   const { orgId } = operatorSession
   const searchParams = useSearchParams();
-  const conversationId = searchParams?.get('conversationId')
+  const conversationId = searchParams.get('conversationId')
   const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery.data
-  const customer = useCustomerQuery(orgId);
-  const configuration = useConfigurationQuery(orgId);
-  const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
+  const conversationItem = conversationItemQuery.data?.[0]
 
-  const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', conversationId ?? '');
+  const createMessageMut = useCreateMessageMut(orgId, conversationItem?.customer?.data?.customerId, conversationId ?? '');
 
   const {
     register,
@@ -46,7 +43,7 @@ export const OperatorChatInput: FC = () => {
       messageId: messageId,
       conversationId: conversationId ?? '',
       orgId,
-      customerId: customer.data?.customerId ?? '',
+      customerId: conversationItem?.customer?.data?.customerId,
       operatorId: conversationItem?.conversation?.operator?.operatorId ?? '',
       content: msg,
       sentAt: Date.now(),
@@ -76,7 +73,7 @@ export const OperatorChatInput: FC = () => {
             )}
           </div>
           <button
-            className={` btn text-xl border-0 rounded-br-lg background `}
+            className={` btn text-xl border-0 rounded-br-lg bg-black`}
             data-testid="msg-send"
             type="submit"
             disabled={createMessageMut.isLoading}

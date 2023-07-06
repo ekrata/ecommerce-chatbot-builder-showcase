@@ -5,19 +5,21 @@ import { flag } from 'country-emoji';
 import LocaleCode from 'locale-code';
 import { useFormatter, useTranslations } from 'next-intl';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FC, useState } from 'react';
-import { BiChevronRight, BiTime } from 'react-icons/bi';
+import { isMobile } from 'react-device-detect';
+import { BiChevronLeft, BiChevronRight, BiTime } from 'react-icons/bi';
 import { BsChat, BsGlobe, BsPerson, BsTagsFill } from 'react-icons/bs';
 import { FaLanguage } from 'react-icons/fa';
 import { GoBrowser } from 'react-icons/go';
 import { HiDocumentText } from 'react-icons/hi2';
 import { MdEmail, MdPhone } from 'react-icons/md';
 
-import { ConversationItem } from '@/entities/conversation';
-
+import { useDashStore } from '../(actions)/useDashStore';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
+import { CustomerAvatar } from './CustomerAvatar';
 
 type InfoTabs = 'Profile' | 'Visited Pages' | 'Notes';
 
@@ -39,16 +41,18 @@ const fetchingSkeleton = (
 )
 
 
+
 export const CustomerInfoView: FC = () => {
   const t = useTranslations('app.inbox.chat');
   const tDash = useTranslations('dash');
   const [currentTab, setCurrentTab] = useState<InfoTabs>('Profile');
+  const { conversationState, setConversationState } = useDashStore();
   const operatorSession = useOperatorSession();
   const { orgId } = operatorSession
   const searchParams = useSearchParams();
   const conversationId = searchParams?.get('conversationId')
   const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery.data
+  const conversationItem = conversationItemQuery.data?.[0]
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
       <h5 className='flex font-semibold'><BsChat />{tDash('conversations', { count: 0 })}</h5>
@@ -82,18 +86,17 @@ export const CustomerInfoView: FC = () => {
   return (
     <div
       data-testid='chat-info-panel'
-      className='flex flex-col w-full h-screen p-4 bg-white border-l-2 gap-y-2 dark:bg-gray-800 border-primary'
+      className='flex flex-col w-full h-screen p-4 bg-white gap-y-2 dark:bg-gray-800 '
     >
-      <div className='flex gap-x-2 '>
-        {profilePicture ? <Image
-          src={profilePicture}
-          alt='User image'
-          width={80}
-          height={80}
-          className='object-contain rounded-full'
-        /> : <BsPerson className='w-80' />}
+      <div className='flex gap-x-2 place-item-center'>
+        {isMobile &&
+          <BiChevronLeft className='text-4xl' onClick={() => setConversationState()}></BiChevronLeft>
+        }
+        <div className='flex place-items-center'>
+          <CustomerAvatar conversationItem={conversationItem} message={conversationItem.message}></CustomerAvatar>
+        </div>
         <div className='flex flex-col'>
-          <p>{name ?? 'Unknown'}</p>
+          <p>{name ?? ''}</p>
           <p>{email}</p>
           <p>{LocaleCode.getLanguageName(locale)}</p>
         </div>
@@ -129,18 +132,18 @@ export const CustomerInfoView: FC = () => {
           </button>
         </div>
         {currentTab === 'Profile' && (
-          <div className='p-4 my-6 shadow-lg '>
+          <div className='my-6 '>
             <ul className='space-y-4'>
               <li className='flex justify-start place-items-center gap-x-4'>
                 <MdEmail className='text-lg text-primary' />
-                <p>{email}</p>
+                <p>{email ?? ''}</p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
                 <MdPhone className='text-lg text-primary' />
                 <p>{phone ?? 'Phone...'}</p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
-                <GoBrowser className='text-lg text-primary' />
+                <GoBrowser className='text-6xl text-primary' />
                 <p>{userAgent ?? ''}</p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
@@ -154,7 +157,7 @@ export const CustomerInfoView: FC = () => {
                   {timezone
                     ? `${new Date().toLocaleString(locale, {
                       timeZone: timezone,
-                    })} ${timezone}`
+                    })}${timezone}`
                     : 'Phone...'}
                 </p>
               </li>
@@ -183,7 +186,7 @@ export const CustomerInfoView: FC = () => {
                     <p className='text-subtitle'>
                       {relativeTime(new Date(parseInt(key, 10)), new Date())}
                     </p>
-                    <a className='link link-primary'>{link}</a>
+                    <a className='link link-primary'>{visitedPages}</a>
                   </li>
                 ))}
             </ul>

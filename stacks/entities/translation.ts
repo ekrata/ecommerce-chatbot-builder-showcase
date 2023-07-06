@@ -48,6 +48,18 @@ export const Translation = new Entity({
               type: 'string',
               default: 'You',
             },
+            Name: {
+              type: 'string',
+              default: 'Name',
+            },
+            Entered: {
+              type: 'string',
+              default: 'Entered',
+            },
+            "Last Visited Page": {
+              type: 'string',
+              default: 'Last Visited Page',
+            },
             tickets: {
               type: 'string',
               default: `{count, plural, 

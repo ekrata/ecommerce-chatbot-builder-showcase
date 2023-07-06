@@ -243,77 +243,6 @@ export const PageView: Story = {
     );
   },
 }
-// play: async ({ canvasElement, step }) => {
-//   const canvas = within(canvasElement);
-//   await step(
-//     'Operator starts a conversation, and both operator and customer sends messages',
-//     async () => {
-//       console.log('hi')
-//       const mockServer = new Server(mockWsUrl);
-//       if (mockServer) {
-//         mockServer.stop();
-//         mockServer.close();
-//         mockServer.on('connection', (socket) => {
-//           console.log('test connected!');
-//           mockSocket = socket;
-//         });
-//       }
-
-//       const operator = createRandomOperator(orgId);
-//       const customer = createRandomCustomer(orgId);
-//       const conversation = createRandomConversation('unassigned', orgId, operator.operatorId, customer.customerId);
-//       const expandedConversation: ExpandedConversation = { ...conversation, operator, customer };
-//       const conversationItem: ConversationItem = { conversation: expandedConversation, messages: [] };
-
-//       mockServer.emit(
-//         'createNewConversationItem',
-//         JSON.stringify(conversationItem)
-//       );
-
-//       const conversationItems = queryClient.getQueryData<ConversationItem[]>([orgId, customer.customerId, QueryKey.conversationItems]);
-//       expect(conversationItems?.length).toEqual(1)
-//       expect(conversationItems?.[0]).toStrictEqual(conversationItem)
-
-
-//       const message = createRandomMessage(
-//         orgId,
-//         conversation.conversationId,
-//         operator.operatorId,
-//         customer.customerId
-//       )
-
-//       mockServer.emit(
-//         'sendNewMessage',
-//         JSON.stringify(message)
-//       );
-
-//       expect(conversationItems?.[0].messages?.[0]).toStrictEqual(message);
-
-
-//       // navbar rendered
-//       (await canvas.findByTestId('navbar-conversations')).click();
-
-//       // conversation created and rendered
-//       (await canvas.findByTestId(conversationItem.conversation.conversationId)).click();
-
-//       // conversation has operator's and is rendered
-//       expect(await canvas.findByTestId(`operator-message-content-${message.messageId}`)).toBeInTheDocument();
-
-//       // user responds
-//       const inputMsg = (await canvas.findByTestId('msg-input'))
-//       const customerMsgContent = 'Hi, do you sell socks?'
-//       fireEvent.change(inputMsg, { target: { value: customerMsgContent } });
-//       (await canvas.findByTestId('sendMsg')).click()
-
-//       // conversation has operator's and is rendered
-//       expect(await canvas.findByTestId(`operator-message-content-${message.messageId}`)).toBeInTheDocument()
-//       expect(await canvas.findByTestId(`operator-message-content-${message.messageId}`)).toHaveTextContent(customerMsgContent)
-//       expect(conversationItems?.[0].messages?.length).toEqual(2);
-
-//       //       // await new Promise((r) => setTimeout(r, 2000));
-//       // check local state is updated
-//     }
-//   )
 
 
 export const ConversationView: Story = {
@@ -362,6 +291,45 @@ export const ConversationItemView: Story = {
       appDirectory: true,
       navigation: {
         pathname: '/dash/conversations',
+        query: {
+          conversationId: 'asdsadj-1323122312',
+        },
+      },
+    }
+  },
+  render: () => {
+    const props = { overrideQueryProvider: queryClient, mockWsUrl };
+    const mockServer = new Server(mockWsUrl);
+    // const router = useRouter();
+    // router.push(`/dash/conversations?conversationId${'asdjasdjsad'}`)
+    if (mockServer) {
+      mockServer.on('connection', (socket) => {
+        console.log('test connected!');
+        mockSocket = socket;
+      });
+    }
+
+    return (
+      <div className='h-screen font-sans'>
+        <DashProvider {...props}>
+          <Layout>
+            <Page></Page>
+          </Layout>
+        </DashProvider>
+      </div>
+    );
+  },
+}
+
+export const VisitorsView: Story = {
+  parameters: {
+    msw: {
+      handlers: [...defaultRoutes, ...existingConversationRoutes]
+    },
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/dash/visitors',
         query: {
           conversationId: 'asdsadj-1323122312',
         },

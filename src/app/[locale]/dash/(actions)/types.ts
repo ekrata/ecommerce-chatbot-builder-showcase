@@ -1,16 +1,8 @@
-import { EntityItem } from 'electrodb';
 import { StateCreator } from 'zustand';
 
-import { Article } from '@/entities/article';
-import { Configuration } from '@/entities/configuration';
 import {
-    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic
+    ConversationChannel, ConversationStatus, ConversationTopic
 } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
-import { CreateCustomer, CreateMessage } from '@/entities/entities';
-import { Message } from '@/entities/message';
-import { Operator } from '@/entities/operator';
-import { Org } from '@/entities/org';
 
 import { ChatWidgetStateDefinition } from '../../(actions)/types';
 
@@ -21,7 +13,7 @@ export type ConversationState = 'search' | 'list' | 'customerInfo';
 export type ConversationOperatorView = 'all' | 'bots' | string;
 
 export interface DashStateDefinition {
-  conversationState: 'search' | 'list' | 'customerInfo';
+  conversationState?: 'search' | 'list' | 'customerInfo';
   conversationChannel?: ConversationChannel;
   conversationStatus?: ConversationStatus;
   conversationTopic?: ConversationTopic;
@@ -36,7 +28,7 @@ export interface DashStateActions {
    *
    * @type {(widgetState: WidgetState) => void}
    */
-  setConversationState: (conversationState: ConversationState) => void;
+  setConversationState: (conversationState?: ConversationState) => void;
   /**
    * Sets the conversation list channel filter
    * @date 03/07/2023 - 11:51:29

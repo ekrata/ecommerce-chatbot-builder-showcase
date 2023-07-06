@@ -26,16 +26,17 @@ export default function Page() {
 
 
   const renderMobile = useMemo(() => {
-    console.log(conversationId)
-    if (conversationId) {
-      return <ChatView></ChatView>
+    if (conversationId && conversationState !== 'customerInfo') {
+      return <ChatView />
     }
-    else if (conversationState === 'customerInfo') {
-      return <CustomerInfoView ></CustomerInfoView >
+    else if (conversationId && conversationState === 'customerInfo') {
+      return <CustomerInfoView />
     } else if (conversationState === 'list') {
-      return <ConversationsListView></ConversationsListView>
+      return <ConversationsListView />
     } else if (conversationState === 'search') {
       return <ConversationsSearchView />
+    } else {
+      return <ConversationsListView />
     }
   }, [conversationState, conversationId])
 
@@ -48,7 +49,7 @@ export default function Page() {
       <div className='col-span-6'>
         <ChatView />
       </div>
-      <div className='col-span-3'>
+      <div className='col-span-3 border-primary border-l-[1px]'>
         <CustomerInfoView></CustomerInfoView>
       </div>
     </div>

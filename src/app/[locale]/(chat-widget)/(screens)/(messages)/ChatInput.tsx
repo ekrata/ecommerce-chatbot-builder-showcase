@@ -6,7 +6,7 @@ import { CgSpinner } from 'react-icons/cg';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from '@/app/[locale]/(hooks)/queries/useConversationItemsQuery';
 import { CreateMessage } from '@/entities/entities';
 
@@ -75,7 +75,7 @@ export const ChatInput: FC = () => {
             )}
           </div>
           <button
-            className={` btn text-xl border-0 rounded-br-lg background `}
+            className={`btn text-xl border-0 rounded-br-lg`}
             data-testid="msg-send"
             type="submit"
             disabled={createMessageMut.isLoading}
@@ -83,7 +83,7 @@ export const ChatInput: FC = () => {
             {createMessageMut.isLoading ?
               <CgSpinner className="text-2xl animate-spin text-base-100" />
               : <BiSend className="text-2xl" />}
-            {configuration.data && <DynamicBackground configuration={configuration.data} />}
+            {/* {configuration.data && <DynamicBackground configuration={configuration.data} />} */}
           </button>
         </div>
       </div>

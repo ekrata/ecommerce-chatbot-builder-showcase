@@ -55,7 +55,7 @@ export const useConfigurationQuery = (orgId: string) => useQuery<EntityItem<type
  * @param {string} orgId
  * @returns {*}
  */
-export const useOrgQuery = (orgId: string) => useQuery<EntityItem<typeof Org>>([orgId, QueryKey.org], async () => await getOrg(orgId), {enabled: !!orgId});
+export const useOrgQuery = (orgId: string) => useQuery<EntityItem<typeof Org>>([orgId, QueryKey.org], async () => await getOrg(orgId), { enabled: !!orgId });
 /**
  * Returns articles query 
  * @date 24/06/2023 - 10:45:39
@@ -64,7 +64,7 @@ export const useOrgQuery = (orgId: string) => useQuery<EntityItem<typeof Org>>([
  * @param {string} locale
  * @returns {*}
  */
-export const useArticlesQuery = (orgId: string, locale: string) => useQuery<EntityItem<typeof Article>[]>([orgId, QueryKey.articles], async() => await getArticles(orgId, locale));
+export const useArticlesQuery = (orgId: string, locale: string) => useQuery<EntityItem<typeof Article>[]>([orgId, QueryKey.articles], async () => await getArticles(orgId, locale));
 
 /**
  * Full text searches a phrase 
@@ -75,12 +75,12 @@ export const useArticlesQuery = (orgId: string, locale: string) => useQuery<Enti
  * @param {string} phrase
  * @returns {*}
  */
-export const useSearchArticlesQuery = (orgId: string, locale: string, phrase: string) => useQuery<ArticleSearchRes[]>([orgId, phrase, QueryKey.articles], 
-  async() => {
-  if(phrase.length > 3) {
-    return await searchArticles(orgId, locale, phrase);
-  } else {
-    return []
-  } 
-})
+export const useSearchArticlesQuery = (orgId: string, locale: string, phrase: string) => useQuery<ArticleSearchRes[]>([orgId, phrase, QueryKey.articles],
+  async () => {
+    if (phrase.length > 3) {
+      return await searchArticles(orgId, locale, phrase);
+    } else {
+      return []
+    }
+  })
 

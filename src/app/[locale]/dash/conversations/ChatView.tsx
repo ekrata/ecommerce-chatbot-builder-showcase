@@ -2,11 +2,13 @@ import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FC } from 'react';
-import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
+import { isMobile } from 'react-device-detect';
+import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { FcImport } from 'react-icons/fc';
 
-import { ConversationItem, ConversationItemSearchRes } from '@/entities/conversation';
+import { ConversationItem } from '@/entities/conversation';
 
-import { Avatar } from '../../(chat-widget)/(screens)/(messages)/Avatar';
+import { useDashStore } from '../(actions)/useDashStore';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { CustomerAvatar } from './CustomerAvatar';
@@ -34,18 +36,14 @@ interface Props {
   conversationItem?: ConversationItem
 }
 
-
-
 export const ChatView: FC = () => {
   const t = useTranslations('chat-widget');
+  const { setConversationState } = useDashStore();
   const searchParams = useSearchParams()
   const operatorSession = useOperatorSession();
   const conversationId = searchParams?.get('conversationId')
   const conversationItemQuery = useConversationItemQuery(operatorSession.orgId, conversationId ?? '')
-  console.log(conversationItemQuery.data)
   const conversationItem = conversationItemQuery.data?.[0]
-  console.log(conversationItem)
-
 
   return (
     <div className="flex justify-between w-full h-full rounded-3xl">
@@ -53,18 +51,21 @@ export const ChatView: FC = () => {
         <div
           className={`bg-white border-b-[1px]  flex flex-row gap-y-2 place-items-center animated-flip-down w-full justify-start rounded-t-lg text-sm flex-wrap p-3 gap-x-2 `}
         >
-          <Link className='justify-start' key={'/dash'}
-            href={{
-              pathname: '/dash',
-            }}>
-            <BiChevronLeft className='text-5xl'></BiChevronLeft>
-          </Link>
+          {isMobile &&
+            <Link className='justify-start' key={'/dash'}
+              href={{
+                pathname: '/dash',
+              }}>
+              <BiChevronLeft className='text-4xl '></BiChevronLeft>
+            </Link>
+          }
           {conversationItem?.conversation?.customer?.name}
           {conversationItem?.conversation?.customer && (
-            <>
+            <a onClick={() => setConversationState('customerInfo')} className='flex flex-row place-items-center gap-x-2'>
               <CustomerAvatar conversationItem={conversationItem} message={conversationItem.messages?.slice(-1)[0]} />
-              <p></p>{`${conversationItem.conversation?.customer?.name ?? conversationItem.conversation?.customer?.email ?? conversationItem.conversation?.customer?.id}`}
-            </>
+              <p>{`${conversationItem.conversation?.customer?.name ?? conversationItem.conversation?.customer?.email ?? conversationItem.conversation?.customer?.id}`}</p>
+              <FcImport className='text-3xl rotate-180 rounded-full' />
+            </a>
           )}
         </div>
         <div

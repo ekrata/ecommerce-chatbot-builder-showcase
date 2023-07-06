@@ -141,7 +141,6 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
               <p>
                 {operator.name ?? operator.email}
               </p>
-
             </a>
           </li>
         ))}

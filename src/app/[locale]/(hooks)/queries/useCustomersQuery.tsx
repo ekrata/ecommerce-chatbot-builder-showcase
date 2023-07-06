@@ -1,7 +1,7 @@
 import { EntityItem } from 'electrodb';
 
 import { Customer } from '@/entities/customer';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { QueryKey } from '../queries';
 
@@ -14,7 +14,7 @@ import { QueryKey } from '../queries';
  * @param {string} customerId
  * @returns {unknown}
  */
-export const getVisitors = async (orgId: string): Promise<EntityItem<typeof Customer>[]> => {
+export const getVisitors = async (orgId: string) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/customers/?online=true`
   );
@@ -22,7 +22,7 @@ export const getVisitors = async (orgId: string): Promise<EntityItem<typeof Cust
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data');
   }
-  return res.json();
+  return await res.json();
 };
 
 
@@ -34,10 +34,11 @@ export const getVisitors = async (orgId: string): Promise<EntityItem<typeof Cust
  * @param {string} customerId
  * @returns {*}
  */
-export const useVisitorsQuery = (orgId: string) => useQuery<EntityItem<typeof Customer>[]>(
-  {
-    queryKey: [orgId, QueryKey.visitors],
-    queryFn: async () => {
-      return getVisitors(orgId)
-    }
+export const useCustomersQuery = (orgId: string) => {
+  return useQuery<EntityItem<typeof Customer>>({
+    queryKey: [orgId, QueryKey.],
+    cacheTime: Infinity,
+    queryFn: async () => { }
   })
+}
+
