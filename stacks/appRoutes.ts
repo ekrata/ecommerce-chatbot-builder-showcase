@@ -2,7 +2,9 @@ import { ApiRouteProps } from 'sst/constructs';
 
 export const appRoutes: Record<string, ApiRouteProps<string>> = {
   'GET /orgs/{orgId}/conversations':
-    'packages/functions/app/api/src/conversations/list.handler',
+    'packages/functions/app/api/src/conversations/listByLastMessageSentAt.handler',
+  'GET /orgs/{orgId}/conversations-by-createdAt':
+    'packages/functions/app/api/src/conversations/listByCreatedAt.handler',
   'GET /orgs/{orgId}/conversations/search':
     'packages/functions/app/api/src/conversations/search.handler',
   'GET /orgs/{orgId}/conversations/{conversationId}':
@@ -97,16 +99,16 @@ export const appRoutes: Record<string, ApiRouteProps<string>> = {
   'PATCH /orgs/{orgId}/customers/{customerId}':
     'packages/functions/app/api/src/customers/update.handler',
 
-  'GET /orgs/{orgId}/visitors':
-    'packages/functions/app/api/src/visitors/list.handler',
-  'GET /orgs/{orgId}/visitors/{visitorId}':
-    'packages/functions/app/api/src/visitors/get.handler',
-  'DELETE /orgs/{orgId}/visitors/{visitorId}':
-    'packages/functions/app/api/src/visitors/delete.handler',
-  'POST /orgs/{orgId}/visitors/{visitorId}':
-    'packages/functions/app/api/src/visitors/create.handler',
-  'PATCH /orgs/{orgId}/visitors/{visitorId}':
-    'packages/functions/app/api/src/visitors/update.handler',
+  'GET /orgs/{orgId}/visits':
+    'packages/functions/app/api/src/visits/list.handler',
+  'GET /orgs/{orgId}/visits/{visitId}':
+    'packages/functions/app/api/src/visits/get.handler',
+  'DELETE /orgs/{orgId}/visits/{visitId}':
+    'packages/functions/app/api/src/visits/delete.handler',
+  'POST /orgs/{orgId}/visits/{visitId}':
+    'packages/functions/app/api/src/visits/create.handler',
+  'PATCH /orgs/{orgId}/visits/{visitId}':
+    'packages/functions/app/api/src/visits/update.handler',
 
   'GET /orgs/{orgId}/settings':
     'packages/functions/app/api/src/customers/get.handler',

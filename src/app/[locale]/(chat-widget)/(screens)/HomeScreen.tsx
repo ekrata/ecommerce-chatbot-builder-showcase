@@ -7,12 +7,12 @@ import { BsSearch } from 'react-icons/bs';
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
 import { useArticlesQuery, useConfigurationQuery, useOrgQuery } from '../../(hooks)/queries';
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from '../../(hooks)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
 import { DynamicBackground } from '../DynamicBackground';
 import { Avatar } from './(messages)/Avatar';
-import { ConversationCard } from './(messages)/ConversationCard';
+import { CustomerConversationCard } from './(messages)/CustomerConversationCard';
 import { StartConversationCard } from './(messages)/StartConversationCard';
 
 type Inputs = {
@@ -54,10 +54,9 @@ export const HomeScreen: FC = () => {
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[1]} message={conversationItems.data?.[1]?.messages?.slice(-1)[0]} /> </div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[2]} message={conversationItems.data?.[2]?.messages?.slice(-1)[0]} /> </div>
         </div>
-
         {mostRecentConversationItem && (
           <div className=" bg-white shadow-md border-[1px] border-gray-300 h-30  rounded-3xl mx-4 gap-y-4 animate-fade-left animate-once">
-            <ConversationCard height='28' conversationId={mostRecentConversationItem.conversation.conversationId} rounded showRecentLabel />
+            <CustomerConversationCard height='28' conversationItem={mostRecentConversationItem} rounded showRecentLabel />
           </div>
         )}
         <div className=" dark:bg-gray-900 bg-white border-gray-300  shadow-md border-[1px] text-normal    rounded-3xl mx-4 gap-y-4 animate-fade-left">

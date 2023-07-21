@@ -1,25 +1,33 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
+import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
-import { appDb } from '../db';
-import { CreateCustomer } from '../../../../../../stacks/entities/entities';
+
+import * as Sentry from '@sentry/serverless';
+
+import {
+  CreateCustomer,
+  CreateVisit,
+} from '../../../../../../stacks/entities/entities';
+import { getAppDb } from '../db';
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, visitorId } = usePathParams();
-    const body: CreateCustomer = useJsonBody();
-    if (!orgId || !visitorId) {
+    const { orgId, visitId } = usePathParams();
+    const body: CreateVisit = useJsonBody();
+    if (!orgId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
       };
     }
     try {
-      const res = await appDb(Table.app.tableName)
-        .entities.visitors.create({
+      const res = await appDb.entities.visits
+        .create({
           ...body,
+          visitId,
           orgId,
-          visitorId,
         })
         .go();
       return {
@@ -33,5 +41,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

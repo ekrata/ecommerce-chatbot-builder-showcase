@@ -6,7 +6,7 @@ import { Table } from 'sst/node/table';
 
 import {
     Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic,
-    ConversationType, ExpandedConversation
+    ExpandedConversation
 } from '@/entities/conversation';
 import * as Sentry from '@sentry/serverless';
 
@@ -33,7 +33,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       channel,
     } = params;
     params.expansionFields = JSON.parse(
-      useQueryParam('expansionFields') ?? '[]'
+      useQueryParam('expansionFields') ?? '[]',
     );
 
     // minimum params
@@ -52,7 +52,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );
 
 export interface ConversationFilterParams {
@@ -96,7 +96,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
           channel: channel as ConversationChannel,
         })
         .gte({
-          updatedAt: new Date(updatedAt ?? 0).getTime(),
+          createdAt: new Date(createdAt ?? 0).getTime(),
           // createdAt: new Date(createdAt ?? 0).getTime(),
         })
         .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
@@ -109,7 +109,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
           channel: channel as ConversationChannel,
         })
         .gte({
-          updatedAt: new Date(updatedAt ?? 0).getTime(),
+          createdAt: new Date(createdAt ?? 0).getTime(),
           // createdAt: new Date(createdAt ?? 0).getTime(),
         })
         .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
@@ -121,7 +121,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
           channel: channel as ConversationChannel,
         })
         .gte({
-          updatedAt: new Date(updatedAt ?? 0).getTime(),
+          createdAt: new Date(createdAt ?? 0).getTime(),
           // createdAt: new Date(createdAt ?? 0).getTime(),
         })
         .go(cursor ? { cursor, limit: 10 } : { limit: 10 });
@@ -130,7 +130,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
       const expandedData: ExpandedConversation[] = (await expandObjects(
         appDb,
         res.data,
-        expansionFields as unknown as ExpandableField[]
+        expansionFields as unknown as ExpandableField[],
       )) as ExpandedConversation[];
 
       if (includeMessages) {
@@ -149,7 +149,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
             };
 
             return conversationItem;
-          })
+          }),
         );
         return {
           statusCode: 200,

@@ -1,15 +1,27 @@
-import { Entity } from 'electrodb';
+import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
-import { rating } from './conversation';
 
-export const Visitor = new Entity({
+import { Customer } from './customer';
+
+/**
+ * Expands the customer field of a visit.
+ * @date 17/07/2023 - 10:56:12
+ *
+ * @export
+ * @typedef {ExpandedVisit}
+ */
+export type ExpandedVisit = EntityItem<typeof Visit> & {
+  customer: EntityItem<typeof Customer>;
+};
+
+export const Visit = new Entity({
   model: {
-    entity: 'visitor',
+    entity: 'visit',
     version: '1',
     service: 'appDb',
   },
   attributes: {
-    visitorId: {
+    visitId: {
       type: 'string',
       required: true,
       readOnly: true,
@@ -26,42 +38,20 @@ export const Visitor = new Entity({
       required: true,
       readOnly: true,
     },
-    ip: {
-      type: 'string',
-    },
-    locale: {
+    url: {
       type: 'string',
       required: true,
-      default: 'en',
     },
-    rating: {
-      type: rating,
-    },
-    userAgent: {
-      type: 'string',
-    },
-    visitedPages: {
-      type: 'map',
-      properties: {
-        datetimeAtVist: {
-          type: 'number',
-        },
-        value: {
-          type: 'string',
-        },
-      },
-    },
-    timezone: {
-      type: 'string',
+    at: {
+      type: 'number',
+      required: true,
     },
     createdAt: {
       type: 'number',
-      readOnly: true,
       default: Date.now(),
     },
     updatedAt: {
       type: 'number',
-      readOnly: true,
       watch: '*',
       default: Date.now(),
       set: () => Date.now(),
@@ -71,7 +61,7 @@ export const Visitor = new Entity({
     primary: {
       pk: {
         field: 'pk',
-        composite: ['orgId', 'visitorId'],
+        composite: ['orgId', 'visitId'],
       },
       sk: {
         field: 'sk',
@@ -86,7 +76,18 @@ export const Visitor = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: [],
+        composite: ['at'],
+      },
+    },
+    byCustomerId: {
+      index: 'gsi2pk-gsi2sk-index',
+      pk: {
+        field: 'gsi2pk',
+        composite: ['orgId', 'customerId'],
+      },
+      sk: {
+        field: 'gsi2sk',
+        composite: ['at'],
       },
     },
   },

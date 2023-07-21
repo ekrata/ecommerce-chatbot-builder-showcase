@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { BiSend } from 'react-icons/bi';
 
 import {
-    useConversationItemsByCustomerQuery
+  useConversationItemsByCustomerQuery
 } from '@/app/[locale]/(hooks)/queries/useConversationItemsQuery';
 import { ConversationItem } from '@/entities/conversation';
 
@@ -13,7 +13,7 @@ import { getItem } from '../../(helpers)/helpers';
 import { useConfigurationQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
 import { DynamicBackground } from '../../DynamicBackground';
-import { MessageTimeLabel } from './MessageTimeLabel';
+import { CustomerMessageTimeLabel } from './CustomerMessageTimeLabel';
 
 interface Props {
   conversationItem: ConversationItem
@@ -23,12 +23,12 @@ interface Props {
 }
 
 /**
- * Renders a chat containing info about a conversation. Clicking on it creates a new conversation and redirects to the chat screen. 
+ * Renders a chat containing info about a conversation from the perspective of the customer. Clicking on it creates a new conversation and redirects to the chat screen. 
  * @date 14/06/2023 - 21:27:34
  *
  * @returns {*}
  */
-export const ConversationCard: React.FC<Props> = ({ conversationItem, height = '12', rounded = false, showRecentLabel }) => {
+export const CustomerConversationCard: React.FC<Props> = ({ conversationItem, height = '12', rounded = false, showRecentLabel }) => {
   const { chatWidget: { setWidgetState, setSelectedConversationId } } = useChatWidgetStore()
   const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const t = useTranslations('chat-widget');
@@ -59,9 +59,9 @@ export const ConversationCard: React.FC<Props> = ({ conversationItem, height = '
           <img src={widgetAppearance?.botLogo}></img>
         </div>
         <div className="flex flex-col w-3/5 place-items-start gap-y-1">
-          <h5 className='justify-start w-full text-base break-all truncate font-base justify-self-start'>{`${lastMessage?.content}aasjdksahdjshadhjsdahdsjasahdjasdhsajhdjasnasdjnsamdansjsdanbjadsbsjadsdhjsdhajasd`}</h5>
+          <h5 className='justify-start w-full text-base break-all truncate font-base justify-self-start'>{`${lastMessage?.content}`}</h5>
           <div className="flex text-xs text-neutral-400 gap-x-1 ">
-            <MessageTimeLabel conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} />
+            <CustomerMessageTimeLabel conversationItem={conversationItem} />
           </div>
         </div>
         <BiSend className="text-2xl shrink-0 justify-self-end justify-right " />

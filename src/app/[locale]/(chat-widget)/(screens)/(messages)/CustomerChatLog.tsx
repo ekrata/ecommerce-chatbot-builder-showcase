@@ -11,7 +11,7 @@ import { useCreateMessageMut } from '../../../(hooks)/mutations/useCreateMessage
 import { useConfigurationQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
 import { Avatar } from './Avatar';
-import { MessageTimeLabel } from './MessageTimeLabel';
+import { CustomerMessageTimeLabel } from './CustomerMessageTimeLabel';
 
 interface Props {
   conversationId: string
@@ -63,14 +63,14 @@ export const CustomerChatLog: FC = ({ }) => {
                   <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
                     } tooltip-bottom z-10`}
                     data-testid={`operator-message-content-${message.messageId}`}
-                    data-tip={<MessageTimeLabel conversationItem={conversationItem} message={message} />}
+                    data-tip={<CustomerMessageTimeLabel conversationItem={conversationItem} />}
                   >
                     {message.content}
                   </p>
                 </div>
                 {i + 1 === conversationItem?.messages?.length && (
                   <div className="flex justify-start place-items-center ">
-                    <MessageTimeLabel conversationItem={conversationItem} message={message} />
+                    <CustomerMessageTimeLabel conversationItem={conversationItem} />
                   </div>
                 )}
               </div>
@@ -82,7 +82,7 @@ export const CustomerChatLog: FC = ({ }) => {
                 </div>
                 {i + 1 === conversationItem?.messages?.length && (
                   <div className="flex justify-end place-items-center">
-                    {createMessageMut.isLoading ? 'Sending...' : <MessageTimeLabel conversationItem={conversationItem} message={message} />}
+                    {createMessageMut.isLoading ? 'Sending...' : <CustomerMessageTimeLabel conversationItem={conversationItem} />}
                   </div>
                 )}
               </div>

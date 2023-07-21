@@ -1,8 +1,10 @@
 import { EntityItem, Service } from 'electrodb';
-import { getAppDb } from '../db';
+
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
 
 export const expandableField = ['customerId', 'operatorId'] as const;
 export type ExpandableField = (typeof expandableField)[number];
@@ -36,12 +38,12 @@ export const expandObjects = async (
   data: {
     [key: string]: any;
   }[],
-  expansionFields: ExpandableField[]
+  expansionFields: ExpandableField[],
 ) => {
   const getBatchFields = async (
     data: {
       [key: string]: any;
-    }[]
+    }[],
   ) => {
     let expandedData = data;
     if (expansionFields.includes('customerId')) {
@@ -50,30 +52,28 @@ export const expandObjects = async (
           data.reduce((acc, item) => {
             const { orgId, customerId } = item;
             return { ...acc, [`${orgId}-${customerId}`]: item };
-          }, {})
+          }, {}),
         );
+        const batchIds = uniqueCustomerData.map((item) => ({
+          orgId: item?.['orgId'],
+          customerId: item?.['customerId'],
+        }));
         const batchCustomers = await db.entities.customers
-          .get(
-            uniqueCustomerData.map((item) => ({
-              customerId: item?.['customerId'],
-              orgId: item?.['orgId'],
-            }))
-          )
+          .get(batchIds)
           .go({ preserveBatchOrder: true });
 
         // compare keys to find the respective response.
         expandedData = await Promise.all(
           [...expandedData].map((item, i) => ({
             ...item,
-            customer: batchCustomers.data.find(
+            customer: batchCustomers?.data.find(
               (customer) =>
                 `${item.orgId}-${item.customerId}` ===
-                `${customer?.orgId}-${customer?.customerId}`
+                `${customer?.orgId}-${customer?.customerId}`,
             ) as EntityItem<typeof Customer>,
-          }))
+          })),
         );
       } catch (err) {
-        console.log(err);
         Sentry.captureException(err);
         throw new Error(`Failed to expand customerId: ${err}`);
       }
@@ -84,14 +84,14 @@ export const expandObjects = async (
           data.reduce((acc, item) => {
             const { orgId, operatorId } = item;
             return { ...acc, [`${orgId}-${operatorId}`]: item };
-          }, {})
+          }, {}),
         );
         const batchOperators = await db.entities.operators
           .get(
             uniqueOperatorData.map((item) => ({
               operatorId: item?.['operatorId'],
               orgId: item?.['orgId'],
-            }))
+            })),
           )
           .go({ preserveBatchOrder: true });
         expandedData = await Promise.all(
@@ -100,12 +100,11 @@ export const expandObjects = async (
             operator: batchOperators.data.find(
               (operator) =>
                 `${item.orgId}-${item.operatorId}` ===
-                `${operator?.orgId}-${operator?.operatorId}`
+                `${operator?.orgId}-${operator?.operatorId}`,
             ) as EntityItem<typeof Operator>,
-          }))
+          })),
         );
       } catch (err) {
-        console.log(err);
         Sentry.captureException(err);
         throw new Error(`Failed to expand operatorid: ${err}`);
       }
@@ -114,7 +113,6 @@ export const expandObjects = async (
   };
 
   const expandedData = await getBatchFields(data);
-  console.log(expandedData);
 
   return expandedData;
 };

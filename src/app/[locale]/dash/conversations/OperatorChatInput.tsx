@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { CreateMessage } from '@/entities/entities';
 
-import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';

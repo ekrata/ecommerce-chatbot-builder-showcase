@@ -116,10 +116,12 @@ export const Conversation = new Entity({
     channel: {
       type: conversationChannel,
       required: true,
+      default: '',
     },
     status: {
       type: conversationStatus,
       required: true,
+      default: 'unassigned',
     },
     rating: {
       type: rating,
@@ -127,6 +129,7 @@ export const Conversation = new Entity({
     topic: {
       type: conversationTopic,
       required: true,
+      default: '',
     },
     read: {
       type: 'boolean',
@@ -150,6 +153,10 @@ export const Conversation = new Entity({
       type: 'boolean',
       required: true,
       default: false,
+    },
+    lastMessageAt: {
+      type: 'number',
+      default: undefined,
     },
     createdAt: {
       type: 'number',
@@ -183,7 +190,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: ['updatedAt', 'status', 'channel', 'topic'],
+        composite: ['createdAt', 'channel', 'topic'],
       },
     },
     byOrg: {
@@ -194,7 +201,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi2sk',
-        composite: ['updatedAt', 'status', 'channel', 'topic'],
+        composite: ['createdAt', 'channel', 'topic'],
       },
     },
     byCustomer: {
@@ -205,7 +212,7 @@ export const Conversation = new Entity({
       },
       sk: {
         field: 'gsi3sk',
-        composite: ['updatedAt', 'status', 'channel', 'topic'],
+        composite: ['createdAt', 'channel', 'topic'],
       },
     },
   },

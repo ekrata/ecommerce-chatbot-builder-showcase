@@ -1,11 +1,8 @@
-import { ApiHandler, usePathParams, useQueryParam } from 'sst/node/api';
+import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
-import {
-  ConversationItem,
-  ExpandedConversation,
-} from '@/entities/conversation';
+import { ConversationItem, ExpandedConversation } from '@/entities/conversation';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
@@ -15,9 +12,10 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, conversationId, includeMessages } = usePathParams();
+    const { orgId, conversationId } = usePathParams();
+    const { includeMessages } = useQueryParams();
     const expansionFields = JSON.parse(
-      useQueryParam('expansionFields') ?? '[]'
+      useQueryParam('expansionFields') ?? '[]',
     );
     if (!conversationId || !orgId) {
       return {
@@ -41,7 +39,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           await expandObjects(
             appDb,
             [res.data ?? {}],
-            ['customerId', 'operatorId']
+            ['customerId', 'operatorId'],
           )
         )[0] as ExpandedConversation;
         if (includeMessages) {
@@ -77,5 +75,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

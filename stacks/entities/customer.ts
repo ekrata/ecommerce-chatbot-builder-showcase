@@ -1,5 +1,6 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+
 import { rating } from './conversation';
 
 export const Customer = new Entity({
@@ -59,17 +60,6 @@ export const Customer = new Entity({
     userAgent: {
       type: 'string',
     },
-    visitedPages: {
-      type: 'map',
-      properties: {
-        datetimeAtVist: {
-          type: 'number',
-        },
-        value: {
-          type: 'string',
-        },
-      },
-    },
     tags: {
       type: 'set',
       items: 'string',
@@ -94,15 +84,17 @@ export const Customer = new Entity({
     },
     createdAt: {
       type: 'number',
-      readOnly: true,
       default: Date.now(),
     },
     updatedAt: {
       type: 'number',
-      readOnly: true,
       watch: '*',
       default: Date.now(),
       set: () => Date.now(),
+    },
+    lastVisitAt: {
+      type: 'number',
+      default: Date.now(),
     },
   },
   indexes: {
@@ -124,18 +116,7 @@ export const Customer = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: [],
-      },
-    },
-    byConnectionId: {
-      index: 'gsi2pk-gsi2sk-index',
-      pk: {
-        field: 'gsi2pk',
-        composite: ['connectionId'],
-      },
-      sk: {
-        field: 'gsi2sk',
-        composite: [],
+        composite: ['createdAt'],
       },
     },
   },

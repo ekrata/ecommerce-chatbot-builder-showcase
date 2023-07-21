@@ -1,14 +1,15 @@
 import { CreateEntityItem, UpdateEntityItem } from 'electrodb';
-import { Org } from './org';
-import { Conversation } from './conversation';
-import { Message } from './message';
-import { Operator } from './operator';
-import { Customer } from './customer';
-import { Visitor } from './visitor';
-import { Configuration } from './configuration';
-import { Translation } from './translation';
+
 import { Article } from './article';
 import { ArticleContent } from './articleContent';
+import { Configuration } from './configuration';
+import { Conversation } from './conversation';
+import { Customer } from './customer';
+import { Message } from './message';
+import { Operator } from './operator';
+import { Org } from './org';
+import { Translation } from './translation';
+import { Visit } from './visit';
 
 export type CreateOrg = CreateEntityItem<typeof Org>;
 export type UpdateOrg = UpdateEntityItem<typeof Org>;
@@ -25,8 +26,8 @@ export type UpdateOperator = UpdateEntityItem<typeof Operator>;
 export type CreateCustomer = CreateEntityItem<typeof Customer>;
 export type UpdateCustomer = UpdateEntityItem<typeof Customer>;
 
-export type CreateVisitor = CreateEntityItem<typeof Visitor>;
-export type UpdateVisitor = UpdateEntityItem<typeof Visitor>;
+export type CreateVisit = CreateEntityItem<typeof Visit>;
+export type UpdateVisit = UpdateEntityItem<typeof Visit>;
 
 export type CreateConfiguration = CreateEntityItem<typeof Configuration>;
 export type UpdateConfiguration = UpdateEntityItem<typeof Configuration>;

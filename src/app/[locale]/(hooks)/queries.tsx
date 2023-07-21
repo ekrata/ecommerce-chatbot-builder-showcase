@@ -2,17 +2,13 @@ import { EntityItem } from 'electrodb';
 
 import { Article, ArticleSearchRes } from '@/entities/article';
 import { Configuration } from '@/entities/configuration';
-import { ConversationItem } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
 import { Org } from '@/entities/org';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { getArticles } from '../(actions)/orgs/articles/getArticles';
-import { searchArticles } from '../(actions)/orgs/articles/searchArticles';
-import { getConfiguration } from '../(actions)/orgs/configurations/getConfiguration';
-import { getConversationItems } from '../(actions)/orgs/conversations/getConversationItems';
-import { getCustomer } from '../(actions)/orgs/customers/getCustomer';
-import { getOrg } from '../(actions)/orgs/getOrg';
+import { getArticles } from '../(chat-widget)/(actions)/orgs/articles/getArticles';
+import { searchArticles } from '../(chat-widget)/(actions)/orgs/articles/searchArticles';
+import { getConfiguration } from '../(chat-widget)/(actions)/orgs/configurations/getConfiguration';
+import { getOrg } from '../(chat-widget)/(actions)/orgs/getOrg';
 
 /**
  * Contains the values used for query keys. This should always be used.
@@ -28,7 +24,8 @@ export enum QueryKey {
   org = 'org',
   configuration = 'configuration',
   customer = 'customer',
-  visitors = 'visitors',
+  customers = 'customers',
+  visits = 'visits',
   shopifyProducts = 'shopifyProducts',
   searchConversationItems = 'searchConversationItems',
   articles = 'articles',
@@ -37,8 +34,6 @@ export enum QueryKey {
   operators = "operators"
 }
 
-
-// const orgId = process.env.NEXT_PUBLIC_ORG_ID  ?? ''
 
 /**
  * Returns configuration query 

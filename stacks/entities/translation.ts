@@ -36,6 +36,10 @@ export const Translation = new Entity({
               other {# conversations}
               }`,
             },
+            'Start chat': {
+              type: 'string',
+              default: 'Start chat',
+            },
             'All conversations': {
               type: 'string',
               default: 'All conversations',
@@ -56,7 +60,7 @@ export const Translation = new Entity({
               type: 'string',
               default: 'Entered',
             },
-            "Last Visited Page": {
+            'Last Visited Page': {
               type: 'string',
               default: 'Last Visited Page',
             },
@@ -67,6 +71,10 @@ export const Translation = new Entity({
               =1 {One ticket}
               other {# tickets}
               }`,
+            },
+            at: {
+              type: 'string',
+              default: 'at',
             },
           },
         },

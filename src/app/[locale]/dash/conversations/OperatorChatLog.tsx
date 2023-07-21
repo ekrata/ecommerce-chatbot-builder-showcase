@@ -7,13 +7,13 @@ import { FC, useEffect, useMemo } from 'react';
 import { ConversationItem } from '@/entities/conversation';
 
 import { Avatar } from '../../(chat-widget)/(screens)/(messages)/Avatar';
-import { MessageTimeLabel } from '../../(chat-widget)/(screens)/(messages)/MessageTimeLabel';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from '../../(hooks)/queries';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
 import { CustomerAvatar } from './CustomerAvatar';
+import { OperatorMessageTimeLabel } from './OperatorMessageTimeLabel';
 
 interface Props {
   conversationItem: ConversationItem
@@ -66,14 +66,14 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
                   <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
                     } tooltip-bottom z-10`}
                     data-testid={`operator-message-content-${message.messageId}`}
-                    data-tip={<MessageTimeLabel conversationItem={conversationItem} message={message} />}
+                    data-tip={<OperatorMessageTimeLabel conversationItem={conversationItem} />}
                   >
                     {message.content}
                   </p>
                 </div>
                 {i + 1 === conversationItem?.messages?.length && (
                   <div className="flex justify-start place-items-center ">
-                    <MessageTimeLabel conversationItem={conversationItem} message={message} />
+                    <OperatorMessageTimeLabel conversationItem={conversationItem} />
                   </div>
                 )}
               </div>
@@ -85,7 +85,7 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
                 </div>
                 {i + 1 === conversationItem?.messages?.length && (
                   <div className="flex justify-end place-items-center">
-                    {createMessageMut.isLoading ? 'Sending...' : <MessageTimeLabel conversationItem={conversationItem} message={message} />}
+                    {createMessageMut.isLoading ? 'Sending...' : <OperatorMessageTimeLabel conversationItem={conversationItem} />}
                   </div>
                 )}
               </div>

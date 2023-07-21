@@ -1,10 +1,12 @@
-import { describe, it, test, expect, beforeAll } from 'vitest';
-import { faker } from '@faker-js/faker';
-import { MockOrgIds } from 'packages/functions/app/api/src/util/seed';
-import { getHttp } from 'packages/functions/app/api/src/http';
-import { Api, WebSocketApi } from 'sst/node/api';
 import { EntityItem } from 'electrodb';
+import { getHttp } from 'packages/functions/app/api/src/http';
+import { MockOrgIds } from 'packages/functions/app/api/src/util/seed';
+import { Api, WebSocketApi } from 'sst/node/api';
+import { beforeAll, describe, expect, it, test } from 'vitest';
+
 import { Operator } from '@/entities/operator';
+import { faker } from '@faker-js/faker';
+
 import { getWs } from '../../getWs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids

@@ -7,14 +7,27 @@ import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
 import {
-    ArticleCategory, articleCategory, articleStatus
+  ArticleCategory,
+  articleCategory,
+  articleStatus,
 } from '../../../../../../stacks/entities/article';
 import {
-    conversationChannel, conversationStatus, conversationTopic, conversationType
+  conversationChannel,
+  conversationStatus,
+  conversationTopic,
+  conversationType,
 } from '../../../../../../stacks/entities/conversation';
 import {
-    CreateArticle, CreateArticleContent, CreateConfiguration, CreateConversation, CreateCustomer,
-    CreateMessage, CreateOperator, CreateOrg, CreateTranslation
+  CreateArticle,
+  CreateArticleContent,
+  CreateConfiguration,
+  CreateConversation,
+  CreateCustomer,
+  CreateMessage,
+  CreateOperator,
+  CreateOrg,
+  CreateTranslation,
+  CreateVisit,
 } from '../../../../../../stacks/entities/entities';
 import { senderType } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../db';
@@ -35,6 +48,7 @@ export const mockArticleSearchPhraseFreq = 4;
 export const mockSearchPhrase = `30-Day returns`;
 export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
+export const mockVisitsPerCustomer = 5;
 export const mockMessageCountPerConversation = 10;
 export const mockArticleTitles: { [key in ArticleCategory]: string[] } = {
   'General Information': [],
@@ -78,6 +92,7 @@ export interface MockOrgIds {
   customers: {
     customerId: string;
     conversations: { conversationId: string; messageIds: string[] }[];
+    visitIds: string[];
   }[];
 }
 
@@ -136,10 +151,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                       };
                       await db.entities.articles.create(createArticle).go();
                       return { articleId, articleContentId };
-                    })
+                    }),
                   );
-                }
-              )
+                },
+              ),
             )
           ).flat();
 
@@ -160,8 +175,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                   .create(createArticleContent)
                   .go();
                 return articleContentId;
-              }
-            )
+              },
+            ),
           );
 
           // operators
@@ -174,7 +189,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 orgId,
               };
               await db.entities.operators.create(createOperator).go();
-            })
+            }),
           );
 
           const operators = await db.entities.operators.query
@@ -182,8 +197,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             .go();
 
           mockOrg.operatorIds = operators.data.map(
-            (operator) => operator.operatorId
+            (operator) => operator.operatorId,
           );
+
+          const visitedBaseUrl = faker.internet.url();
           mockOrg.customers = await Promise.all(
             [...Array(mockCustomerCount)].map(async () => {
               const customerId = uuidv4();
@@ -200,7 +217,24 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 online: faker.datatype.boolean(),
                 phone: faker.phone.number('501-###-###'),
               };
-              console.log(createCustomer);
+
+              const visitIds = await Promise.all(
+                [...Array(mockVisitsPerCustomer)].map(async () => {
+                  const visitId = uuidv4();
+                  const createVisit: CreateVisit = {
+                    orgId: mockOrg.orgId ?? '',
+                    visitId,
+                    customerId,
+                    at: faker.date.recent().getTime(),
+                    url: `${visitedBaseUrl}/${faker.internet.domainWord()}`,
+                  };
+                  await db.entities.visits.create(createVisit).go();
+                  return visitId;
+                }),
+              );
+
+              // const visits = await db.entities.visits.put(visitBodies).go();
+
               await db.entities.customers.create(createCustomer).go();
               const conversations = await Promise.all(
                 [...Array(mockConversationCountPerCustomer)].map(
@@ -246,18 +280,18 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                           };
                           await db.entities.messages.create(createMessage).go();
                           return messageId;
-                        }
-                      )
+                        },
+                      ),
                     );
                     return { conversationId, messageIds };
-                  }
-                )
+                  },
+                ),
               );
-              return { customerId, conversations };
-            })
+              return { customerId, conversations, visitIds };
+            }),
           );
           return mockOrg;
-        })
+        }),
       );
       return {
         statusCode: 200,
@@ -270,5 +304,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

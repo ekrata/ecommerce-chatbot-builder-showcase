@@ -93,7 +93,7 @@ export const CustomerInfoView: FC = () => {
           <BiChevronLeft className='text-4xl' onClick={() => setConversationState()}></BiChevronLeft>
         }
         <div className='flex place-items-center'>
-          <CustomerAvatar conversationItem={conversationItem} message={conversationItem.message}></CustomerAvatar>
+          <CustomerAvatar conversationItem={conversationItem}></CustomerAvatar>
         </div>
         <div className='flex flex-col'>
           <p>{name ?? ''}</p>
@@ -158,7 +158,7 @@ export const CustomerInfoView: FC = () => {
                     ? `${new Date().toLocaleString(locale, {
                       timeZone: timezone,
                     })}${timezone}`
-                    : 'Phone...'}
+                    : ''}
                 </p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>

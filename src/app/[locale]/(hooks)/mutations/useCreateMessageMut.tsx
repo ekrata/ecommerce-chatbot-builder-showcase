@@ -1,13 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { MutationKey } from "../mutations"
-import { createMessage } from "../../(actions)/orgs/conversations/messages/createMessage"
-import { QueryKey } from "../queries"
-import { ConversationItem } from "@/entities/conversation"
-import { sortConversationItems } from "../../(helpers)/sortConversationItems"
-import { EntityItem } from "electrodb"
-import { Message } from "@/entities/message"
+import { EntityItem } from 'electrodb';
 
+import { ConversationItem } from '@/entities/conversation';
+import { Message } from '@/entities/message';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import {
+    createMessage
+} from '../../(chat-widget)/(actions)/orgs/conversations/messages/createMessage';
+import { sortConversationItems } from '../../(helpers)/sortConversationItems';
+import { MutationKey } from '../mutations';
+import { QueryKey } from '../queries';
 
 /**
  * adds a new message to the specific conversationItem.  
@@ -18,17 +20,17 @@ import { Message } from "@/entities/message"
  * @returns {*}
  */
 export const newMessageReducer = (newMessage: EntityItem<typeof Message>, conversationItems: ConversationItem[]) => {
-    const {conversationId} = newMessage
-    const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem.conversation.conversationId !== conversationId) ?? []
-    const conversationItem = conversationItems?.find(conversationItem => conversationItem.conversation.conversationId === conversationId)
-    if(conversationItem?.conversation) {
-      const newConversationItem: ConversationItem = {...conversationItem, messages: [...(conversationItem?.messages ?? []), newMessage]} 
-      const items = [newConversationItem, ...oldConversationItems.map((item) => ({...item}))]
-      sortConversationItems(items)
-      return items 
-    }
-    return oldConversationItems
+  const { conversationId } = newMessage
+  const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem.conversation.conversationId !== conversationId) ?? []
+  const conversationItem = conversationItems?.find(conversationItem => conversationItem.conversation.conversationId === conversationId)
+  if (conversationItem?.conversation) {
+    const newConversationItem: ConversationItem = { ...conversationItem, messages: [...(conversationItem?.messages ?? []), newMessage] }
+    const items = [newConversationItem, ...oldConversationItems.map((item) => ({ ...item }))]
+    sortConversationItems(items)
+    return items
   }
+  return oldConversationItems
+}
 
 /**
  * Creates a message, 
@@ -42,12 +44,12 @@ export const newMessageReducer = (newMessage: EntityItem<typeof Message>, conver
  * @returns {*}
  */
 export const useCreateMessageMut = (orgId: string, customerId: string, conversationId: string) => {
-    const queryClient = useQueryClient()
-    return useMutation({
-        mutationKey: [orgId, MutationKey.createMessage],
-        mutationFn: async(params: Parameters<typeof createMessage>) => await createMessage(...params),
-        onSuccess: (newMessage) => {
-          queryClient.setQueryData<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], (oldData) => newMessageReducer(newMessage, oldData ?? []))
-        }
-    })
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: [orgId, MutationKey.createMessage],
+    mutationFn: async (params: Parameters<typeof createMessage>) => await createMessage(...params),
+    onSuccess: (newMessage) => {
+      queryClient.setQueryData<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], (oldData) => newMessageReducer(newMessage, oldData ?? []))
+    }
+  })
 }

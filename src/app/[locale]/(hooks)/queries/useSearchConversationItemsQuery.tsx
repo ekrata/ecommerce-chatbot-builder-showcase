@@ -1,4 +1,6 @@
-import { ConversationFilterParams } from 'packages/functions/app/api/src/conversations/list';
+import {
+    ConversationFilterParams
+} from 'packages/functions/app/api/src/conversations/listByCreatedAt';
 
 import { ConversationItemSearchRes } from '@/entities/conversation';
 import { useQuery } from '@tanstack/react-query';

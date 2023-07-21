@@ -1,15 +1,17 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { v4 as uuidv4 } from 'uuid';
-import { faker } from '@faker-js/faker';
-import { EntityItem } from 'electrodb';
 import { AxiosError } from 'axios';
+import { EntityItem } from 'electrodb';
+import { writeFile } from 'fs';
 import { Api } from 'sst/node/api';
-import { CreateCustomer } from '../../../../../../stacks/entities/entities';
+import { v4 as uuidv4 } from 'uuid';
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import { faker } from '@faker-js/faker';
+
 import { rating } from '../../../../../../stacks/entities/conversation';
 import { Customer } from '../../../../../../stacks/entities/customer';
+import { CreateCustomer } from '../../../../../../stacks/entities/entities';
 import { getHttp } from '../http';
 import { MockOrgIds } from '../util/seed';
-import { writeFile } from 'fs';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -49,7 +51,7 @@ describe.concurrent('/customers', async () => {
       'utf8',
       () => {
         expect(true).toEqual(true);
-      }
+      },
     );
   });
   it('creates a customer', async () => {

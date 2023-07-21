@@ -10,10 +10,10 @@ import { RandomBackground } from '../../(chat-widget)/DynamicBackground';
 
 interface Props {
   conversationItem?: ConversationItem,
-  message?: EntityItem<typeof Message>
 }
 
-export const CustomerAvatar: React.FC<Props> = ({ conversationItem, message }) => {
+export const CustomerAvatar: React.FC<Props> = ({ conversationItem }) => {
+  const message = conversationItem?.messages?.slice(-1)?.[0]
   return (
     <div className={`background avatar w-8 h-8  rounded-full p-2 ring-2 ring-primary ${message?.sender === 'operator' && conversationItem?.conversation.operator.online ? 'online' : 'offline'}`}>
       <RandomBackground customerId={conversationItem?.conversation?.customer?.customerId ?? ''} />

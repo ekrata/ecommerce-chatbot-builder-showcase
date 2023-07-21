@@ -1,8 +1,12 @@
-import { ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic, ConversationType } from "@/entities/conversation";
-import { QueryKey } from "../queries";
-import { useQuery } from "@tanstack/react-query";
+import {
+    ConversationFilterParams
+} from 'packages/functions/app/api/src/conversations/listByCreatedAt';
+
+import { ConversationChannel, ConversationItem } from '@/entities/conversation';
+import { useQuery } from '@tanstack/react-query';
+
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
-import { ConversationFilterParams } from "packages/functions/app/api/src/conversations/list";
+import { QueryKey } from '../queries';
 
 /**
  * Returns conversationItems query for customerId
@@ -12,13 +16,13 @@ import { ConversationFilterParams } from "packages/functions/app/api/src/convers
  * @param {string} customerId
  * @returns {*}
  */
-export const useConversationItemsByCustomerQuery = (orgId: string, customerId: string) => useQuery<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], async () => (orgId && customerId) ? await getConversationItemsByCustomer(orgId, customerId) : [], {enabled: !!orgId && !!customerId})
+export const useConversationItemsByCustomerQuery = (orgId: string, customerId: string) => useQuery<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], async () => (orgId && customerId) ? await getConversationItemsByCustomer(orgId, customerId) : [], { enabled: !!orgId && !!customerId })
 
 
 
 export const useConversationItemsQuery = (params: ConversationFilterParams) => useQuery<ConversationItem[]>(
   {
-    queryKey: [params.orgId, params.operatorId, params.channel, params.status, params.updatedAt, QueryKey.conversationItems, params.cursor], 
+    queryKey: [params.orgId, params.operatorId, params.channel, params.status, params.updatedAt, QueryKey.conversationItems, params.cursor],
     queryFn: () => getConversationItems(params) ?? [],
     keepPreviousData: true,
     enabled: !!params.orgId
@@ -39,8 +43,7 @@ export const getConversationItemsByCustomer = async (
 ): Promise<ConversationItem[]> => {
   const res = await (
     await fetch(
-      `${
-        process.env.NEXT_PUBLIC_APP_API_URL
+      `${process.env.NEXT_PUBLIC_APP_API_URL
       }/orgs/${orgId}/conversations?customerId=${customerId}&includeMessages=true&expansionFields=${encodeURIComponent(
         JSON.stringify(['customerId', 'operatorId'])
       )}`
@@ -66,13 +69,12 @@ export const getConversationItems = async (
   params: ConversationFilterParams
 ): Promise<ConversationItem[]> => {
   params.expansionFields = ['customerId', 'operatorId']
-  if(params.operatorId === 'all' || params.operatorId === 'bots') {
+  if (params.operatorId === 'all' || params.operatorId === 'bots') {
     params.operatorId = ''
   }
   const res = await (
     await fetch(
-      `${
-        process.env.NEXT_PUBLIC_APP_API_URL
+      `${process.env.NEXT_PUBLIC_APP_API_URL
       }/orgs/${params.orgId}/conversations?${new URLSearchParams(JSON.stringify(params)).toString()}`
     )
   ).json();

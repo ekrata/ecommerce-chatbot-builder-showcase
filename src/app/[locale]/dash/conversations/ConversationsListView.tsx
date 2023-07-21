@@ -13,10 +13,10 @@ import {
 } from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { ConversationCard } from '../../(chat-widget)/(screens)/(messages)/ConversationCard';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useConversationItemsQuery } from '../../(hooks)/queries/useConversationItemsQuery';
 import { ChannelSelect } from './ChannelSelect';
+import { OperatorConversationCard } from './OperatorConversationCard';
 import { OperatorSelect } from './OperatorSelect';
 import { StatusSelect } from './StatusSelect';
 import { TopicSelect } from './TopicSelect';
@@ -64,7 +64,7 @@ export const ConversationsListView: FC = () => {
         <ul className="w-full mb-10 animate-fade-left">
           {conversationItems?.data?.map((item) => (
             <li className="flex justify-between w-full  h-16 hover:bg-transparent  px-4 font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal">
-              <ConversationCard height='16' conversationItem={item}></ConversationCard>
+              <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
             </li>)
           )}
         </ul>) : noData

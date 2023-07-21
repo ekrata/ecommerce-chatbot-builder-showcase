@@ -1,8 +1,10 @@
 import { ApiHandler, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
 import { Config } from 'sst/node/config';
+import { Table } from 'sst/node/table';
+
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -30,5 +32,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

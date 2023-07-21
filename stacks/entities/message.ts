@@ -129,7 +129,29 @@ export const Message = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: [],
+        composite: ['sentAt'],
+      },
+    },
+    byOrg: {
+      index: 'gsi2pk-gsi2sk-index',
+      pk: {
+        field: 'gsi2pk',
+        composite: ['orgId'],
+      },
+      sk: {
+        field: 'gsi2sk',
+        composite: ['sentAt'],
+      },
+    },
+    byOrgConversation: {
+      index: 'gsi3pk-gsi3sk-index',
+      pk: {
+        field: 'gsi3pk',
+        composite: ['orgId', 'conversationId'],
+      },
+      sk: {
+        field: 'gsi3sk',
+        composite: ['sentAt'],
       },
     },
   },

@@ -12,7 +12,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
 import { ExpandableField } from '../util/expandObjects';
-import { ConversationFilterParams, listConversations } from './list';
+import { ConversationFilterParams, listConversations } from './listByCreatedAt';
 
 export type ConversationSearchParams = {
   phrase: string;
@@ -116,7 +116,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       orgId,
     } as unknown as ConversationSearchParams;
     params.expansionFields = JSON.parse(
-      useQueryParam('expansionFields') ?? '[]'
+      useQueryParam('expansionFields') ?? '[]',
     );
     const {
       phrase,
@@ -161,5 +161,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

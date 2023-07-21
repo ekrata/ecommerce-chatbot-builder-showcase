@@ -15,7 +15,7 @@ import { useCreateConversationMut } from '../../../(hooks)/mutations';
 import { useConfigurationQuery, useOrgQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
 import { DynamicBackground } from '../../DynamicBackground';
-import { ConversationCard } from './ConversationCard';
+import { CustomerConversationCard } from './CustomerConversationCard';
 
 type Inputs = {
   msg: string;
@@ -76,7 +76,7 @@ export const ConversationsScreen: FC = () => {
           {conversationItems.isFetching && fetchingConversationItemsSkeleton}
           {conversationItems.isSuccess && conversationItems.data.map((conversationItem) => (
             <div key={conversationItem.conversation.conversationId} data-testid={conversationItem.conversation.conversationId} className="w-full border-b-2 divide-y-2">
-              <ConversationCard height={'16'} conversationId={conversationItem.conversation.conversationId} />
+              <CustomerConversationCard height={'16'} conversationItem={conversationItem} />
             </div>
           ))}
           {(conversationItems.isSuccess && !conversationItems.data.length &&
@@ -87,7 +87,7 @@ export const ConversationsScreen: FC = () => {
         <button onClick={async () => {
           const conversationId = uuidv4()
           setSelectedConversationId(conversationId);
-          const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, type: 'botChat', channel: 'website', status: 'unassigned' }])
+          const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, channel: 'website', status: 'unassigned' }])
         }}
           className="fixed z-10 justify-center normal-case border-0 shadow-lg btn gap-x-2 background rounded-3xl bottom-20">{t('Send us a message')}
           {configuration.data && <DynamicBackground configuration={configuration.data} />}

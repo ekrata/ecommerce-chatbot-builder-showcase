@@ -1,11 +1,11 @@
-import { ApiHandler, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { EventBus } from 'sst/node/event-bus';
 import AWS from 'aws-sdk';
-import { appDb } from '../db';
+import { ApiHandler, usePathParams } from 'sst/node/api';
+
+import * as Sentry from '@sentry/serverless';
 
 const client = new AWS.EventBridge();
+
+// const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event, ctx, callback) => {
@@ -83,9 +83,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           statusCode: 500,
           body: JSON.stringify(err),
         };
-        console.log(err);
       }
       callback(null, `Successfully processed ${event.Records.length} records.`);
     });
-  })
+  }),
 );
