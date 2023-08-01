@@ -1,10 +1,8 @@
 import { EntityItem } from 'electrodb';
 
-import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { getCustomer } from '../../(actions)/orgs/customers/getCustomer';
 import { QueryKey } from '../queries';
 
 /**

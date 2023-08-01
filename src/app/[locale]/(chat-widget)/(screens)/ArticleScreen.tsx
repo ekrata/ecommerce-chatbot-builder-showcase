@@ -9,8 +9,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getArticleWithContent } from '../(actions)/orgs/articles/getArticleWithContent';
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
+import { DynamicBackground } from '../../(helpers)/DynamicBackground';
 import { useConfigurationQuery } from '../../(hooks)/queries';
-import { DynamicBackground } from '../DynamicBackground';
 
 const fetchingArticleSkeleton = (
   <div className="flex-col w-screen h-screen p-2 my-2 animate-pulse rounded-3xl gap-y-2">

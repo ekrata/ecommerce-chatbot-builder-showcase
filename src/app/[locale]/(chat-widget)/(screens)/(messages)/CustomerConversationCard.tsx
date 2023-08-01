@@ -4,15 +4,15 @@ import { useMemo } from 'react';
 import { BiSend } from 'react-icons/bi';
 
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from '@/app/[locale]/(hooks)/queries/useConversationItemsQuery';
 import { ConversationItem } from '@/entities/conversation';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';
+import { DynamicBackground } from '../../../(helpers)/DynamicBackground';
 import { useConfigurationQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
-import { DynamicBackground } from '../../DynamicBackground';
 import { CustomerMessageTimeLabel } from './CustomerMessageTimeLabel';
 
 interface Props {

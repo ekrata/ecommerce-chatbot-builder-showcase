@@ -1,7 +1,6 @@
 import { ConversationItem } from '@/entities/conversation';
 import { useQuery } from '@tanstack/react-query';
 
-import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import { QueryKey } from '../queries';
 
 /**
@@ -29,7 +28,6 @@ export const getConversationItem = async (
   orgId: string,
   conversationId: string
 ): Promise<ConversationItem> => {
-  console.log('hiihihi')
   const res = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
@@ -38,7 +36,6 @@ export const getConversationItem = async (
       )}`
     )
   ).json();
-  console.log(res)
   return res.data;
 };
 

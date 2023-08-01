@@ -9,6 +9,7 @@ import customerConversations from 'mocks/customer-conversations.json';
 import customers from 'mocks/customers.json';
 import operators from 'mocks/operators.json';
 import orgs from 'mocks/orgs.json';
+import translation from 'mocks/translation.json';
 import visits from 'mocks/visits.json';
 import { DefaultBodyType, MockedRequest, rest, RestHandler } from 'msw';
 
@@ -39,6 +40,22 @@ export const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
     },
   ),
   rest.get(
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/articles/:articleid`,
+    async (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.delay(2000),
+        ctx.json(articleWithContent),
+      );
+    },
+  ),
+  rest.get(
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/translations/:lang`,
+    async (req, res, ctx) => {
+      return res(ctx.status(200), ctx.delay(2000), ctx.json(translation));
+    },
+  ),
+  rest.get(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/customers/:customerId`,
     async (req, res, ctx) => {
       return res(ctx.status(200), ctx.delay(2000), ctx.json(customers.data[0]));
@@ -47,8 +64,6 @@ export const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
   rest.get(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/customers*`,
     async (req, res, ctx) => {
-      console.log('his');
-      console.log(customers);
       return res(ctx.status(200), ctx.delay(2000), ctx.json(customers));
     },
   ),
@@ -61,7 +76,6 @@ export const defaultRoutes: RestHandler<MockedRequest<DefaultBodyType>>[] = [
   rest.get(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/:orgId/operators*`,
     async (req, res, ctx) => {
-      console.log('hi');
       return res(
         ctx.status(200),
         ctx.delay(2000),

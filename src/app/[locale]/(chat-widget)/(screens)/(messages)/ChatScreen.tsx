@@ -4,15 +4,15 @@ import { BiChevronLeft } from 'react-icons/bi';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from '@/app/[locale]/(hooks)/queries/useConversationItemsQuery';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';
+import { DynamicBackground } from '../../../(helpers)/DynamicBackground';
 import { useCreateCustomerMut } from '../../../(hooks)/mutations/useCreateCustomerMut';
 import { useConfigurationQuery, useOrgQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
-import { DynamicBackground } from '../../DynamicBackground';
 import { Avatar } from './Avatar';
 import { ChatInput } from './ChatInput';
 import { CustomerChatLog } from './CustomerChatLog';

@@ -46,6 +46,10 @@ export const Org = new Entity({
     billingSubscriptionId: {
       type: 'string',
     },
+    domain: {
+      type: 'string',
+      default: '',
+    },
     createdAt: {
       type: 'number',
       readOnly: true,

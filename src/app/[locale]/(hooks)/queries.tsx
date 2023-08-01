@@ -23,6 +23,7 @@ export enum QueryKey {
   conversationItem = 'conversationItem',
   org = 'org',
   configuration = 'configuration',
+  translation = 'translation',
   customer = 'customer',
   customers = 'customers',
   visits = 'visits',

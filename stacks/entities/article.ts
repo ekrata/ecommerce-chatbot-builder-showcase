@@ -1,9 +1,10 @@
 import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+
+import { ArticleContent } from './articleContent';
 import { Conversation } from './conversation';
 import { Customer } from './customer';
 import { Operator } from './operator';
-import { ArticleContent } from './articleContent';
 
 /**
  * Contains data about a search result match.
@@ -31,9 +32,8 @@ export type ArticleWithContent = EntityItem<typeof Article> & {
  * Status of article
  * @date 12/06/2023 - 17:08:29
  *
- * @type {readonly ["draft", "in review", "published"]}
  */
-export const articleStatus = ['draft', 'in review', 'published'] as const;
+export const articleStatus = ['Draft', 'In Review', 'Published'] as const;
 /**
  *
  * @date 12/06/2023 - 17:08:29

@@ -15,6 +15,9 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+.tooltip::before {
+  @apply z-50;
+}
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -44,4 +47,9 @@ body {
 
 .scrollbar::-webkit-scrollbar-thumb:hover {
   background: #c0a0b9;
+}
+
+
+.modal {
+
 }

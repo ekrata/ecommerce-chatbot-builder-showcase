@@ -2,14 +2,11 @@
 
 import ct from 'countries-and-timezones';
 import { flag } from 'country-emoji';
-import LocaleCode from 'locale-code';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { BiChevronRight } from 'react-icons/bi';
-import { BsChat, BsChatDots, BsLaptop } from 'react-icons/bs';
 import { FcAlarmClock, FcClock, FcGlobe } from 'react-icons/fc';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -38,7 +38,7 @@ export const newConversationItemReducer = (newConversationItem: ConversationItem
   const { conversationId } = newConversationItem.conversation
   // remove duplicates just in case?
   const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem.conversation.conversationId !== conversationId) ?? []
-  const newConversationItems = { ...oldConversationItems, newConversationItem }
+  const newConversationItems = [...oldConversationItems, newConversationItem]
   sortConversationItems(newConversationItems)
   return newConversationItems
 }
@@ -60,7 +60,7 @@ export const useCreateConversationMut = (orgId: string) => {
     mutationKey: [orgId, MutationKey.createConversation],
     mutationFn: async (params: Parameters<typeof createConversation>) => await createConversation(...params),
     onSuccess: (newConversation) => {
-      queryClient.setQueryData<ConversationItem[]>([orgId, QueryKey.conversationItems], (oldData) => newConversationItemReducer(newConversation, oldData ?? []))
+      queryClient.setQueryData<ConversationItem[]>([orgId, MutationKey.createConversation], (oldData) => newConversationItemReducer(newConversation, oldData ?? []))
     }
   })
 }

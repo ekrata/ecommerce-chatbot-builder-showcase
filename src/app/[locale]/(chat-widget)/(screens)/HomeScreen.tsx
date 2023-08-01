@@ -5,12 +5,12 @@ import { BiChevronRight } from 'react-icons/bi';
 import { BsSearch } from 'react-icons/bs';
 
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
+import { DynamicBackground } from '../../(helpers)/DynamicBackground';
 import { useArticlesQuery, useConfigurationQuery, useOrgQuery } from '../../(hooks)/queries';
 import {
     useConversationItemsByCustomerQuery
 } from '../../(hooks)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
-import { DynamicBackground } from '../DynamicBackground';
 import { Avatar } from './(messages)/Avatar';
 import { CustomerConversationCard } from './(messages)/CustomerConversationCard';
 import { StartConversationCard } from './(messages)/StartConversationCard';

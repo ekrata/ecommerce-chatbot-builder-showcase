@@ -10,11 +10,11 @@ import { useDebounce } from 'usehooks-ts';
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
+import { DynamicBackground } from '../../(helpers)/DynamicBackground';
 import { highlightMatches } from '../../(helpers)/highlightMatches';
 import {
-  useArticlesQuery, useConfigurationQuery, useOrgQuery, useSearchArticlesQuery
+    useArticlesQuery, useConfigurationQuery, useOrgQuery, useSearchArticlesQuery
 } from '../../(hooks)/queries';
-import { DynamicBackground } from '../DynamicBackground';
 
 type Inputs = {
   phrase: string;

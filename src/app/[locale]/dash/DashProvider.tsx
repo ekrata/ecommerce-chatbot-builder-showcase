@@ -1,4 +1,5 @@
 import { PropsWithChildren, ReactNode } from 'react';
+import { ToastContainer } from 'react-toastify';
 
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -38,6 +39,16 @@ export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQuery
       >
         <DashSocketProvider mockWsUrl={mockWsUrl}>
           <div className='dark:bg-gray-900' >{children}</div>
+          <ToastContainer position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light" />
         </DashSocketProvider>
       </QueryClientProvider>
     </>

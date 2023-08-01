@@ -12,10 +12,10 @@ import { CreateMessage } from '@/entities/entities';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';
+import { DynamicBackground } from '../../../(helpers)/DynamicBackground';
 import { useCreateMessageMut } from '../../../(hooks)/mutations/useCreateMessageMut';
 import { useConfigurationQuery, useOrgQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
-import { DynamicBackground } from '../../DynamicBackground';
 
 type Inputs = {
   msg: string

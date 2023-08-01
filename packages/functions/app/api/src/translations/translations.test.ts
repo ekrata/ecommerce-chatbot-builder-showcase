@@ -1,14 +1,16 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { v4 as uuidv4 } from 'uuid';
-import { faker } from '@faker-js/faker';
 import { AxiosError } from 'axios';
-import { Api } from 'sst/node/api';
-import { CreateTranslation } from '@/entities/entities';
-import { getHttp } from '../http';
-import { MockOrgIds, mockOrgCount } from '../util/seed';
-import { writeFile } from 'fs';
-import { Translation } from '@/entities/translation';
 import { EntityItem } from 'electrodb';
+import { writeFile } from 'fs';
+import { Api } from 'sst/node/api';
+import { v4 as uuidv4 } from 'uuid';
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import { CreateTranslation } from '@/entities/entities';
+import { Translation } from '@/entities/translation';
+import { faker } from '@faker-js/faker';
+
+import { getHttp } from '../http';
+import { mockOrgCount, MockOrgIds } from '../util/seed';
 import { setupTranslation } from './helpers';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
@@ -49,6 +51,15 @@ describe.concurrent('orgs/${orgId}/translations/{lang}', async () => {
     expect(res.data?.lang).toEqual(lang);
 
     setupTranslation(res.data);
+    // save a mock visits object for frontend use
+    writeFile(
+      './mocks/translation.json',
+      JSON.stringify(res.data),
+      'utf8',
+      () => {
+        expect(true).toEqual(true);
+      },
+    );
   });
   it(`updates the "We're Online" translation property`, async () => {
     const { orgId } = mockOrgIds[1];
@@ -72,9 +83,10 @@ describe.concurrent('orgs/${orgId}/translations/{lang}', async () => {
 
     const getRes = await http.get(`/orgs/${orgId}/translations/${lang}`);
     const updatedConfig = getRes.data as EntityItem<typeof Translation>;
+
     expect(updatedConfig.orgId).toEqual(orgId);
     expect(translation.translations.chatWidget["We're online"]).toEqual(
-      newTranslation
+      newTranslation,
     );
   });
   it('deletes a translation', async () => {

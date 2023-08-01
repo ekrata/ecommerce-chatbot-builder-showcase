@@ -1,14 +1,18 @@
-/**
- * Description placeholder
- * @date 24/06/2023 - 12:33:18
- *
- * @export
- * @enum {number}
- */
 export enum MutationKey {
   createConversation = 'createConversation',
+  updateConversation = 'updateConversation',
   createMessage = 'createMessage',
   createCustomer = 'createCustomer',
+  updateCustomer = 'updateCustomer',
+  updateConfiguration = 'updateConfiguration',
+  updateTranslation = 'updateTranslation',
+  deleteTranslation = 'deleteTranslation',
+  createArticle = 'createArticle',
+  updateArticle = 'updateArticle',
+  deleteArticle = 'deleteArticle',
+  createArticleContent = 'createArticleContent',
+  updateArticleContent = 'updateArticleContent',
+  deleteArticleContent = 'deleteArticleContent',
 }
 
 

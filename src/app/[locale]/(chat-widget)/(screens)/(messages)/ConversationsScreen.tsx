@@ -6,15 +6,15 @@ import { BsPersonCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from '@/app/[locale]/(hooks)/queries/useConversationItemsQuery';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
+import { DynamicBackground } from '../../../(helpers)/DynamicBackground';
 import { useCreateConversationMut } from '../../../(hooks)/mutations';
 import { useConfigurationQuery, useOrgQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
-import { DynamicBackground } from '../../DynamicBackground';
 import { CustomerConversationCard } from './CustomerConversationCard';
 
 type Inputs = {

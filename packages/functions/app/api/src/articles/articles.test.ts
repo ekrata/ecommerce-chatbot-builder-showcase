@@ -1,18 +1,17 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { v4 as uuidv4 } from 'uuid';
-import { faker } from '@faker-js/faker';
 import { AxiosError } from 'axios';
+import { EntityItem } from 'electrodb';
+import { writeFile } from 'fs';
 import { Api } from 'sst/node/api';
+import { v4 as uuidv4 } from 'uuid';
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import { Article, ArticleWithContent } from '@/entities/article';
 import { CreateArticle } from '@/entities/entities';
+import { faker } from '@faker-js/faker';
+
+import { articleCategory, articleStatus } from '../../../../../../stacks/entities/article';
 import { getHttp } from '../http';
 import { MockOrgIds, mockSearchPhrase } from '../util/seed';
-import { writeFile } from 'fs';
-import { EntityItem } from 'electrodb';
-import { Article, ArticleWithContent } from '@/entities/article';
-import {
-  articleCategory,
-  articleStatus,
-} from '../../../../../../stacks/entities/article';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -33,7 +32,7 @@ describe.concurrent(
       const { articleId, articleContentId } =
         faker.helpers.arrayElement(articleIds);
       const res = await http.get(
-        `/orgs/${orgId}/${lang}/articles/${articleId}`
+        `/orgs/${orgId}/${lang}/articles/${articleId}`,
       );
       expect(res).toBeTruthy();
       expect(res.status).toBe(200);
@@ -47,7 +46,7 @@ describe.concurrent(
       const { articleId, articleContentId } =
         faker.helpers.arrayElement(articleIds);
       const res = await http.get(
-        `/orgs/${orgId}/${lang}/articles/${articleId}/with-content`
+        `/orgs/${orgId}/${lang}/articles/${articleId}/with-content`,
       );
       expect(res).toBeTruthy();
       expect(res.status).toBe(200);
@@ -57,10 +56,10 @@ describe.concurrent(
       expect(res.data?.articleId).toEqual(articleId);
       expect(res.data?.lang).toEqual(lang);
       expect(article.articleContent.articleContentId).toEqual(
-        article.articleContentId
+        article.articleContentId,
       );
       expect(article?.articleContent.content.length).toEqual(
-        article.articleContent.content.length
+        article.articleContent.content.length,
       );
 
       writeFile(
@@ -69,7 +68,7 @@ describe.concurrent(
         'utf8',
         () => {
           expect(true).toEqual(true);
-        }
+        },
       );
     });
     it('lists articles by org and lang', async () => {
@@ -90,7 +89,7 @@ describe.concurrent(
         'utf8',
         () => {
           expect(true).toEqual(true);
-        }
+        },
       );
     });
     it(
@@ -99,7 +98,7 @@ describe.concurrent(
         const { orgId, articleIds, lang } = mockOrgIds[0];
 
         const res = await http.get(
-          `/orgs/${orgId}/${lang}/articles/search?phrase=${mockSearchPhrase}`
+          `/orgs/${orgId}/${lang}/articles/search?phrase=${mockSearchPhrase}`,
         );
         expect(res).toBeTruthy();
         expect(res.status).toBe(200);
@@ -113,10 +112,10 @@ describe.concurrent(
           'utf8',
           () => {
             expect(true).toEqual(true);
-          }
+          },
         );
       },
-      { timeout: 100000 }
+      { timeout: 100000 },
     );
     it('creates a article', async () => {
       const orgId = uuidv4();
@@ -133,7 +132,7 @@ describe.concurrent(
       // validate article creation
       const res = await http.post(
         `/orgs/${orgId}/${lang}/articles/${articleId}`,
-        createArticle
+        createArticle,
       );
       expect(res).toBeTruthy();
       expect(res.status).toBe(200);
@@ -148,27 +147,27 @@ describe.concurrent(
         faker.helpers.arrayElement(articleIds);
       // Get prexisting data for patch
       const prepareRes = await http.get(
-        `/orgs/${orgId}/${lang}/articles/${articleId}`
+        `/orgs/${orgId}/${lang}/articles/${articleId}`,
       );
       expect(prepareRes).toBeTruthy();
       expect(prepareRes.status).toBe(200);
 
       // patch
       const article = prepareRes?.data as EntityItem<typeof Article>;
-      const status = 'published';
+      const status = 'Published';
       article.status = status;
       const res = await http.patch(
         `/orgs/${orgId}/${lang}/articles/${articleId}`,
         {
           ...article,
-        }
+        },
       );
       expect(res).toBeTruthy();
       expect(res.status).toBe(200);
 
       // validate with GET
       const getRes = await http.get(
-        `/orgs/${orgId}/${lang}/articles/${articleId}`
+        `/orgs/${orgId}/${lang}/articles/${articleId}`,
       );
       const updatedConfig = getRes.data as EntityItem<typeof Article>;
       expect(updatedConfig.orgId).toEqual(orgId);
@@ -183,7 +182,7 @@ describe.concurrent(
         faker.helpers.arrayElement(articleIds);
       const lang = 'en';
       const res = await http.delete(
-        `/orgs/${orgId}/${lang}/articles/${articleId}`
+        `/orgs/${orgId}/${lang}/articles/${articleId}`,
       );
       expect(res).toBeTruthy();
       expect(res.status).toBe(200);
@@ -196,5 +195,5 @@ describe.concurrent(
         expect((err as AxiosError).response?.status).toBe(404);
       }
     });
-  }
+  },
 );

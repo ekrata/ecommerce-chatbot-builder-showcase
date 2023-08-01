@@ -3,8 +3,8 @@ import { EntityItem } from 'electrodb';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 
+import { DynamicBackground } from '../../../(helpers)/DynamicBackground';
 import { useConfigurationQuery } from '../../../(hooks)/queries';
-import { DynamicBackground } from '../../DynamicBackground';
 
 interface Props {
   conversationItem?: ConversationItem,

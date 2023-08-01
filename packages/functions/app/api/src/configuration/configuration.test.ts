@@ -1,15 +1,17 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { v4 as uuidv4 } from 'uuid';
-import { faker } from '@faker-js/faker';
 import { AxiosError } from 'axios';
-import { Api } from 'sst/node/api';
-import { CreateConfiguration, CreateOrg } from '@/entities/entities';
-import { getHttp } from '../http';
-import { MockOrgIds, mockOrgCount } from '../util/seed';
-import { orgPlanTier } from '../../../../../../stacks/entities/org';
-import { writeFile } from 'fs';
-import { Configuration } from '@/entities/configuration';
 import { EntityItem } from 'electrodb';
+import { writeFile } from 'fs';
+import { Api } from 'sst/node/api';
+import { v4 as uuidv4 } from 'uuid';
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import { Configuration } from '@/entities/configuration';
+import { CreateConfiguration, CreateOrg } from '@/entities/entities';
+import { faker } from '@faker-js/faker';
+
+import { orgPlanTier } from '../../../../../../stacks/entities/org';
+import { getHttp } from '../http';
+import { mockOrgCount, MockOrgIds } from '../util/seed';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -50,7 +52,7 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
       'utf8',
       () => {
         expect(true).toEqual(true);
-      }
+      },
     );
   });
   it('updates the default background color', async () => {
@@ -82,7 +84,7 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
     expect(updatedConfig.orgId).toEqual(orgId);
     expect(
       updatedConfig.channels?.liveChat?.appearance?.widgetAppearance
-        ?.backgroundColor
+        ?.backgroundColor,
     ).toEqual(backgroundColor);
   });
   it('deletes a configuration', async () => {

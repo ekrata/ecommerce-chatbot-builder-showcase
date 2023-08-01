@@ -4,7 +4,7 @@ import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 import { faker } from '@faker-js/faker';
 
-import { RandomBackground } from '../../(chat-widget)/DynamicBackground';
+import { RandomBackground } from '../../(helpers)/DynamicBackground';
 
 // import { faker } from '@faker-js/faker';
 
