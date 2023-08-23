@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -14,7 +18,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["jest", "node", "@testing-library/jest-dom"],
+    "types": [
+      "jest",
+      "node",
+      "@testing-library/jest-dom"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -22,14 +30,30 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/entities/*": ["./stacks/entities/*"],
-      "@/components/*": ["./src/components/*"],
-      "app-api": ["./packages/functions/app/api/src"],
-      "app-wsApi": ["./packages/functions/app/ws/src"],
-      "mocks": ["./mocks"],
-      "@/public": ["./public"],
-      "chat-widget": ["src/app/[locale]/(chat-widget)"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@/entities/*": [
+        "./stacks/entities/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "app-api": [
+        "./packages/functions/app/api/src"
+      ],
+      "app-wsApi": [
+        "./packages/functions/app/ws/src"
+      ],
+      "mocks": [
+        "./mocks"
+      ],
+      "@/public": [
+        "./public"
+      ],
+      "chat-widget": [
+        "src/app/[locale]/chat-widget"
+      ]
     }
   },
   "include": [
@@ -40,7 +64,9 @@
     ".next/types/**/*.ts",
     "jest.setup.js",
     "src/app/[locale]/dash/inbox/conversations/[chat]/ConversationSocket.tsx",
-    "src/app/[locale]/(chat-widget)/ChatWidgetCard.dtsx"
+    "src/app/[locale]/chat-widget/ChatWidgetCard.dtsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

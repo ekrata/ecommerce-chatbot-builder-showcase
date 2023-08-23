@@ -20,7 +20,6 @@ export const Translation = new Entity({
       required: true,
       readOnly: true,
     },
-
     translations: {
       type: 'map',
       default: {},
@@ -75,6 +74,11 @@ export const Translation = new Entity({
               other {# tickets}
               }`,
             },
+            Email: {
+              type: 'string',
+              default: 'Email',
+            },
+
             at: {
               type: 'string',
               default: 'at',
@@ -103,6 +107,10 @@ export const Translation = new Entity({
               type: 'string',
               default: 'Status',
             },
+            Create: {
+              type: 'string',
+              default: 'Create',
+            },
             'Delete article': {
               type: 'string',
               default: 'Delete article',
@@ -114,6 +122,10 @@ export const Translation = new Entity({
             'Copied to clipboard': {
               type: 'string',
               default: 'Copied to clipboard',
+            },
+            Remove: {
+              type: 'string',
+              default: 'Remove',
             },
             Save: {
               type: 'string',
@@ -468,10 +480,6 @@ export const Translation = new Entity({
                       type: 'string',
                       default: 'Email address',
                     },
-                    'Automatic response': {
-                      type: 'string',
-                      default: 'Automatic Response',
-                    },
                     'Choose email type': {
                       type: 'string',
                       default: 'Choose email type',
@@ -512,10 +520,6 @@ export const Translation = new Entity({
                         default:
                           'Set up an automatic reply that customers will receive when they create a ticket.',
                       },
-                    'Filtered emails': {
-                      type: 'string',
-                      default: 'Filtered emails',
-                    },
                     "List of filtered out emails from which you won't receive any tickets":
                       {
                         type: 'string',
@@ -613,6 +617,19 @@ export const Translation = new Entity({
                       type: 'string',
                       default: 'Your picture',
                     },
+                    Name: {
+                      type: 'string',
+                      default: 'Name',
+                    },
+
+                    Region: {
+                      type: 'string',
+                      default: 'Region',
+                    },
+                    Language: {
+                      type: 'string',
+                      default: 'Language',
+                    },
                   },
                 },
                 customerSatisfaction: {
@@ -686,6 +703,32 @@ export const Translation = new Entity({
                         default:
                           'When all operators are offline, chat widget will be seen as offline. You can decide how it should behave in',
                       },
+                  },
+                },
+                Operators: {
+                  type: 'map',
+                  default: {},
+                  properties: {
+                    Operators: {
+                      type: 'string',
+                      default: 'Operators',
+                    },
+                    'Add an operator': {
+                      type: 'string',
+                      default: 'Add an operator',
+                    },
+                    Role: {
+                      type: 'string',
+                      default: 'Role',
+                    },
+                    'Resend invitation': {
+                      type: 'string',
+                      default: 'Resend Invitation',
+                    },
+                    'Edit permissions': {
+                      type: 'string',
+                      default: 'Edit permissions',
+                    },
                   },
                 },
                 'Chat Page': {

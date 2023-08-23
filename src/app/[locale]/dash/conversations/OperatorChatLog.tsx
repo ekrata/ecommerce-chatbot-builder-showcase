@@ -6,12 +6,12 @@ import { FC, useEffect, useMemo } from 'react';
 
 import { ConversationItem } from '@/entities/conversation';
 
-import { Avatar } from '../../(chat-widget)/(screens)/(messages)/Avatar';
 import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from '../../(hooks)/queries';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
+import { Avatar } from '../../chat-widget/(screens)/(messages)/Avatar';
 import { CustomerAvatar } from './CustomerAvatar';
 import { OperatorMessageTimeLabel } from './OperatorMessageTimeLabel';
 

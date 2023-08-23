@@ -7,9 +7,6 @@ import { Resolver, useForm } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-  getArticleWithContent
-} from '@/app/[locale]/(chat-widget)/(actions)/orgs/articles/getArticleWithContent';
 import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
 import {
   useCreateArticleContentMut
@@ -23,6 +20,9 @@ import {
   useUpdateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleContentMut';
 import { useUpdateArticleMut } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleMut';
+import {
+  getArticleWithContent
+} from '@/app/[locale]/chat-widget/(actions)/orgs/articles/getArticleWithContent';
 import { ArticleCategory, articleCategory, articleStatus, ArticleStatus } from '@/entities/article';
 import { useQuery } from '@tanstack/react-query';
 

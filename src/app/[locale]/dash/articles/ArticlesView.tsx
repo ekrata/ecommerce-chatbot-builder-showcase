@@ -1,3 +1,5 @@
+'use client'
+
 import { EntityItem } from 'electrodb';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -13,7 +15,7 @@ import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { DynamicBackground } from '../../(helpers)/DynamicBackground';
 import { highlightMatches } from '../../(helpers)/highlightMatches';
 import {
-    useArticlesQuery, useConfigurationQuery, useOrgQuery, useSearchArticlesQuery
+  useArticlesQuery, useConfigurationQuery, useOrgQuery, useSearchArticlesQuery
 } from '../../(hooks)/queries';
 
 type Inputs = {

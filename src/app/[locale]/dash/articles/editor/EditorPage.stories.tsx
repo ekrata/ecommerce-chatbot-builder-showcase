@@ -1,7 +1,7 @@
-import { setCookie } from 'cookies-next';
-import { Client, Server, ServerOptions } from 'mock-socket';
+import { Client } from 'mock-socket';
 import { v4 as uuidv4 } from 'uuid';
 
+import { setOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
 import LocaleLayout from '@/app/[locale]/layout';
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ const mockWsUrl = process.env.NEXT_PUBLIC_APP_WS_URL ?? 'Check .ENV'
 const lang = 'en';
 let mockSocket: Client;
 const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-setCookie('sessionUser', { ...createRandomOperator(orgId), online: true })
+setOperatorSession({ ...createRandomOperator(orgId), online: true })
 
 const queryClient = new QueryClient({
   defaultOptions: {

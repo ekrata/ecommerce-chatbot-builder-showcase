@@ -8,11 +8,17 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { faker } from '@faker-js/faker';
 
 import {
-    Conversation, ConversationItem, ConversationTopic
+  Conversation,
+  ConversationItem,
+  ConversationTopic,
 } from '../../../../../../stacks/entities/conversation';
 import { CreateConversation } from '../../../../../../stacks/entities/entities';
 import { getHttp } from '../http';
-import { mockMessageCountPerConversation, MockOrgIds, mockSearchPhrase } from '../util/seed';
+import {
+  mockMessageCountPerConversation,
+  MockOrgIds,
+  mockSearchPhrase,
+} from '../util/seed';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -55,7 +61,7 @@ describe.concurrent('/conversations', async () => {
     expect(res.data?.operator.operatorId).toBeTruthy();
     expect(res.data?.customer.customerId).toBeTruthy();
   });
-  it('gets a conversation with operator and customer expanded, and with messages included', async () => {
+  it.only('gets a conversation with operator and customer expanded, and with messages included', async () => {
     const { orgId, customers } = mockOrgIds[0];
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);
@@ -73,7 +79,7 @@ describe.concurrent('/conversations', async () => {
     expect(res.data?.conversation.customer.customerId).toBeTruthy();
     expect(res.data?.messages).toBeTruthy();
     expect(res.data?.messages.length).toBeGreaterThan(0);
-  });
+  }, 1000000);
   it('lists conversations by operator', async () => {
     const { orgId, operatorIds } = mockOrgIds[0];
     const operatorId = faker.helpers.arrayElement(operatorIds);

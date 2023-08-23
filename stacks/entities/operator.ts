@@ -30,8 +30,7 @@ export const Operator = new Entity({
     },
     connectionId: {
       type: 'string',
-      required: true,
-      default: () => uuidv4(),
+      default: '',
     },
     profilePicture: {
       type: 'string',
@@ -54,9 +53,19 @@ export const Operator = new Entity({
     },
     name: {
       type: 'string',
+      default: '',
     },
     email: {
       type: 'string',
+      default: '',
+    },
+    region: {
+      type: 'string',
+      default: '',
+    },
+    language: {
+      type: 'string',
+      default: '',
     },
     createdAt: {
       type: 'number',
@@ -150,28 +159,6 @@ export const Operator = new Entity({
       },
       sk: {
         field: 'gsi1sk',
-        composite: ['online'],
-      },
-    },
-    byConnectionId: {
-      index: 'gsi2pk-gsi2sk-index',
-      pk: {
-        field: 'gsi2pk',
-        composite: ['connectionId'],
-      },
-      sk: {
-        field: 'gsi2sk',
-        composite: [],
-      },
-    },
-    byOnline: {
-      index: 'gsi3pk-gsi3sk-index',
-      pk: {
-        field: 'gsi3pk',
-        composite: ['orgId', 'online'],
-      },
-      sk: {
-        field: 'gsi3sk',
         composite: [],
       },
     },

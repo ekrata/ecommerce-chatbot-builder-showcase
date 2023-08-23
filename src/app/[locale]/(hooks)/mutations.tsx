@@ -13,6 +13,9 @@ export enum MutationKey {
   createArticleContent = 'createArticleContent',
   updateArticleContent = 'updateArticleContent',
   deleteArticleContent = 'deleteArticleContent',
+  updateOperator = "updateOperator",
+  createOperator = "createOperator",
+  deleteOperator = "deleteOperator"
 }
 
 

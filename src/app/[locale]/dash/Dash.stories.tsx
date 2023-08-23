@@ -1,23 +1,14 @@
-import { setCookie } from 'cookies-next';
 import { EntityItem } from 'electrodb';
 import { Client, Server, ServerOptions } from 'mock-socket';
 
 // import customerConversationItems from 'mocks/'
-import { getWsUrl } from '@/app/getWsUrl';
-import { ConversationItem, ExpandedConversation } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
-import { CreateConversation, CreateMessage } from '@/entities/entities';
-import { Message } from '@/entities/message';
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
 
-import { QueryKey } from '../(hooks)/queries';
-import {
-  createRandomConversation, createRandomCustomer, createRandomMessage, createRandomOperator
-} from '../dash/inbox/mocks.test';
+import { setOperatorSession } from '../(helpers)/useOperatorSession';
+import { createRandomOperator } from '../dash/inbox/mocks.test';
 import LocaleLayout from '../layout';
 import Page from './conversations/page';
-import DashNavbar from './DashNavbar';
 import { DashProvider } from './DashProvider';
 import Layout from './layout';
 import { defaultRoutes, existingConversationRoutes } from './mswRoutes';
@@ -37,7 +28,7 @@ const mockWsUrl = process.env.NEXT_PUBLIC_APP_WS_URL ?? 'Check .ENV'
 const lang = 'en';
 let mockSocket: Client;
 const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-setCookie('sessionUser', { ...createRandomOperator(orgId), online: true })
+setOperatorSession({ ...createRandomOperator(orgId), online: true })
 
 
 const queryClient = new QueryClient({

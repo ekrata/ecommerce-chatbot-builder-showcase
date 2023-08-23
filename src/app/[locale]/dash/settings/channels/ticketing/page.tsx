@@ -93,26 +93,24 @@ export default function Page() {
       )} />
       <Collapse content={
         <div>
-          <EmailModal emailState={[emails, setEmails]} />
+          {/* <EmailModal emailState={[emails, setEmails]} /> */}
         </div>
       } title={(
         <>
           <BsLink className='text-2xl' />
-          {t('Connecting email')}
+          {t('Automatic response')}
         </>
       )} />
-      <Collapse content={
-
-      } title={(
+      <Collapse title={(
         <>
           <BsLink className='text-2xl' />
-          {t('Connecting email')}
+          {t('Custom email signature')}
         </>
       )} />
-      <Collapse content={<></>} title={(
+      <Collapse title={(
         <>
           <BsLink className='text-2xl' />
-          {t('Connecting email')}
+          {t('Filtered emails')}
         </>
       )} />
       < form className='h-screen bg-white' onSubmit={onSubmit} >

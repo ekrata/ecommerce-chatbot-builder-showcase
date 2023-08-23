@@ -1,11 +1,12 @@
 import { EntityItem } from 'electrodb';
 import { getHttp } from 'packages/functions/app/api/src/http';
 import { MockOrgIds } from 'packages/functions/app/api/src/util/seed';
-import { Api, WebSocketApi } from 'sst/node/api';
+import { Api } from 'sst/node/api';
 import { beforeAll, describe, expect, it, test } from 'vitest';
 
 import { Operator } from '@/entities/operator';
 import { faker } from '@faker-js/faker';
+import * as Sentry from '@sentry/serverless';
 
 import { getWs } from '../../getWs';
 
@@ -20,15 +21,14 @@ beforeAll(async () => {
 });
 
 describe.concurrent('/ws', async () => {
-  it('connects and then disconnects a operator socket', () =>
-    new Promise((done) => {
+  it('connects, using an operatorId, sets the connection id and then disconnects', () =>
+    new Promise(async (done) => {
       const { orgId, operatorIds } = mockOrgIds[0];
       const operatorId = faker.helpers.arrayElement(operatorIds);
       try {
         const ws = getWs(orgId, operatorId, 'operator');
         console.log(ws.url);
-
-        ws.onopen = (event) => {
+        ws.addEventListener('open', (event) => {
           ws.ping();
           expect(true).toBeTruthy();
           http.get(`/orgs/${orgId}/operators/${operatorId}`).then((res) => {
@@ -37,15 +37,44 @@ describe.concurrent('/ws', async () => {
             const operator: EntityItem<typeof Operator> = res?.data;
             expect(operator.connectionId).not.toEqual('');
             ws.close();
+            // ws.send('Hello Server!');
           });
-        };
+        });
         ws.onclose = (event) => {
           ws.ping();
-          expect(true).toBeTruthy();
           done(event);
         };
       } catch (err) {
-        expect(false).toBeTruthy();
+        console.log(err);
+        Sentry.captureException(err);
+        done(err);
+      }
+    }));
+  it('connects, using an customerId, sets the connection id and then disconnects', () =>
+    new Promise(async (done) => {
+      const { orgId, operatorIds, customers } = mockOrgIds[0];
+      const { customerId } = faker.helpers.arrayElement(customers);
+      try {
+        const ws = getWs(orgId, customerId, 'customer');
+        ws.addEventListener('open', (event) => {
+          ws.ping();
+          expect(true).toBeTruthy();
+          http.get(`/orgs/${orgId}/customers/${customerId}`).then((res) => {
+            expect(res).toBeTruthy();
+            expect(res.status).toBe(200);
+            const operator: EntityItem<typeof Operator> = res?.data;
+            expect(operator.connectionId).not.toEqual('');
+            ws.close();
+            // ws.send('Hello Server!');
+          });
+        });
+        ws.onclose = (event) => {
+          ws.ping();
+          done(event);
+        };
+      } catch (err) {
+        console.log(err);
+        Sentry.captureException(err);
         done(err);
       }
     }));

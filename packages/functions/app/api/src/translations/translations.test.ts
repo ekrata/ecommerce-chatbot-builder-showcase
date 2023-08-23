@@ -10,7 +10,7 @@ import { Translation } from '@/entities/translation';
 import { faker } from '@faker-js/faker';
 
 import { getHttp } from '../http';
-import { mockOrgCount, MockOrgIds } from '../util/seed';
+import { MockOrgIds } from '../util/seed';
 import { setupTranslation } from './helpers';
 
 // Seed db in vitest beforeAll, then use preexisitng ids

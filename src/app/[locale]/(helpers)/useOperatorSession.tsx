@@ -1,7 +1,6 @@
-import { Operator } from "@/entities/operator"
-import { getCookie } from "cookies-next"
-import { EntityItem } from "electrodb"
+import { EntityItem } from 'electrodb';
 
+import { Operator } from '@/entities/operator';
 
 /**
  * Gets the current operator's session
@@ -9,4 +8,6 @@ import { EntityItem } from "electrodb"
  *
  * @returns {*}
  */
-export const useOperatorSession =  (): EntityItem<typeof Operator> => JSON.parse(getCookie('sessionUser')?.toString() ?? '') as EntityItem<typeof Operator>
+export const useOperatorSession = (): EntityItem<typeof Operator> => JSON.parse(localStorage.getItem('sessionUser')?.toString() ?? '') as EntityItem<typeof Operator>
+
+export const setOperatorSession = (operator: EntityItem<typeof Operator>) => localStorage.setItem('sessionUser', JSON.stringify(operator))

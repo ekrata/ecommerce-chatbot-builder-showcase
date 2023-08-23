@@ -5,10 +5,10 @@ import { Configuration } from '@/entities/configuration';
 import { Org } from '@/entities/org';
 import { useQuery } from '@tanstack/react-query';
 
-import { getArticles } from '../(chat-widget)/(actions)/orgs/articles/getArticles';
-import { searchArticles } from '../(chat-widget)/(actions)/orgs/articles/searchArticles';
-import { getConfiguration } from '../(chat-widget)/(actions)/orgs/configurations/getConfiguration';
-import { getOrg } from '../(chat-widget)/(actions)/orgs/getOrg';
+import { getArticles } from '../chat-widget/(actions)/orgs/articles/getArticles';
+import { searchArticles } from '../chat-widget/(actions)/orgs/articles/searchArticles';
+import { getConfiguration } from '../chat-widget/(actions)/orgs/configurations/getConfiguration';
+import { getOrg } from '../chat-widget/(actions)/orgs/getOrg';
 
 /**
  * Contains the values used for query keys. This should always be used.

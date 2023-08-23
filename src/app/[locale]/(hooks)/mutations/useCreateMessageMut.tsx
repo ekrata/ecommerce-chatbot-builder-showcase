@@ -4,10 +4,10 @@ import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-    createMessage
-} from '../../(chat-widget)/(actions)/orgs/conversations/messages/createMessage';
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
+import {
+  createMessage
+} from '../../chat-widget/(actions)/orgs/conversations/messages/createMessage';
 import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';
 

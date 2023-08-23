@@ -5,22 +5,16 @@ import { Resolver, useForm } from 'react-hook-form';
 import { BsChevronUp } from 'react-icons/bs';
 import { useCopyToClipboard } from 'usehooks-ts';
 
+import { LanguageCode, languageCodeMap } from '@/app/[locale]/(helpers)/lang';
 import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
 import {
-  useDeleteChatWidgetTranslation
+    useDeleteChatWidgetTranslation
 } from '@/app/[locale]/(hooks)/mutations/useDeleteChatWidgetTranslation';
 import { useUpdateTranslationMut } from '@/app/[locale]/(hooks)/mutations/useUpdateTranslationMut';
 import { useConfigurationQuery, useOrgQuery } from '@/app/[locale]/(hooks)/queries';
 import { useTranslationQuery } from '@/app/[locale]/(hooks)/queries/useTranslationQuery';
 import { UpdateTranslation } from '@/entities/entities';
 import { ChatWidgetTranslations, Translation } from '@/entities/translation';
-
-const languageCodes = ['en', 'es', 'de', 'zh', 'fr', 'ar', 'bn', 'pa'] as const
-
-
-const languages = ['English', 'Spanish', 'German', 'Chinese', 'French', 'Arabic', 'Bengali', 'Punjabi (Panjabi)']
-export type LanguageCode = (typeof languageCodes)[number]
-const languageCodeMap = languageCodes.map((langCode, i) => ({ [langCode]: languages[i] }))
 
 const resolver: Resolver<ChatWidgetTranslations> = async (values) => {
   return {
@@ -45,21 +39,7 @@ interface Props {
   content: ReactNode
 }
 
-const Collapse: FC<Props> = ({ title, content }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  return (
-    <div className="bg-white collapse border-b-[1px] " onClick={() => setOpen(!open)}>
-      <input type="checkbox" />
-      <div className={`flex justify-between text-xl font-medium collapse-title `}>
-        {title}
-        <BsChevronUp className={`${open ? 'rotate-180' : ''}`} />
-      </div>
-      <div className="collapse-content">
-        {content}
-      </div>
-    </div>
-  )
-}
+
 
 
 

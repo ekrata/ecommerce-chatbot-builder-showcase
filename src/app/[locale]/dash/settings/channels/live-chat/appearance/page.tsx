@@ -1,3 +1,5 @@
+'use client'
+
 import { EntityItem } from 'electrodb';
 import { useTranslations } from 'next-intl';
 import { FC, ReactNode, useState } from 'react';

@@ -3,7 +3,7 @@ import { BsChevronUp } from 'react-icons/bs';
 
 interface Props {
   title: ReactNode,
-  content: ReactNode
+  content?: ReactNode
 }
 
 
@@ -16,9 +16,11 @@ export const Collapse: FC<Props> = ({ title, content }) => {
         {title}
         <BsChevronUp className={`${open ? 'rotate-180' : ''}`} />
       </div>
-      <div className="collapse-content">
-        {content}
-      </div>
+      {content &&
+        <div className="collapse-content">
+          {content}
+        </div>
+      }
     </div>
   )
 }

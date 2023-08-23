@@ -50,7 +50,7 @@ describe.concurrent('/operators', async () => {
       'utf8',
       () => {
         expect(true).toEqual(true);
-      }
+      },
     );
   });
   it('creates a operator', async () => {
@@ -119,5 +119,16 @@ describe.concurrent('/operators', async () => {
       expect(err).toBeTruthy();
       expect((err as AxiosError).response?.status).toBe(404);
     }
+  });
+  it.only('returns a signed url to upload a profile picutre for key operatorId', async () => {
+    const { orgId, operatorIds } = mockOrgIds?.[2];
+    const operatorId = faker.helpers.arrayElement(operatorIds);
+
+    const res = await http.get(
+      `/orgs/${orgId}/operators/${operatorId}/getSignedProfileUpload`,
+    );
+    expect(res).toBeTruthy();
+    expect(res.data.url.length).toBeGreaterThan(100);
+    expect(res.status).toBe(200);
   });
 });

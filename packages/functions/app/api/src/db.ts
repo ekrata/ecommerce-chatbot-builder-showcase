@@ -34,3 +34,5 @@ export const getAppDb = (region: string, tableName: string) =>
       table: tableName,
     },
   );
+
+export type AppDb = ReturnType<typeof getAppDb>;

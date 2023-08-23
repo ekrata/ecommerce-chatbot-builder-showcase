@@ -104,4 +104,28 @@ describe.concurrent('orgs/${orgId}/configuration', async () => {
       expect((err as AxiosError).response?.status).toBe(404);
     }
   });
+  it('returns a presigned logo upload url', async () => {
+    const { orgId, customers } = mockOrgIds?.[2];
+    const { conversations } = faker.helpers.arrayElement(customers);
+    const { conversationId } = faker.helpers.arrayElement(conversations);
+
+    const res = await http.get(
+      `/orgs/${orgId}/configuration/getPresignedLogoUrl`,
+    );
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data.url.length).toBeGreaterThan(100);
+  });
+  it('returns a presigned botlogo upload url', async () => {
+    const { orgId, customers } = mockOrgIds?.[2];
+    const { conversations } = faker.helpers.arrayElement(customers);
+    const { conversationId } = faker.helpers.arrayElement(conversations);
+
+    const res = await http.get(
+      `/orgs/${orgId}/configuration/getPresignedBotLogoUrl`,
+    );
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data.url.length).toBeGreaterThan(100);
+  });
 });

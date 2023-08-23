@@ -2,7 +2,7 @@ import '../globals.css';
 
 import { NextIntlClientProvider, useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
+import React from 'react';
 
 export const metadata = {
   title: 'Crow Commerce',
@@ -13,7 +13,7 @@ export function generateStaticParams() {
   return [{ locale: 'en' }, { locale: 'de' }];
 }
 
-export default function LocaleLayout({ children, params: { locale, overrideMessages } }: { children: ReactNode, params: { locale: string, overrideMessages?: any } }) {
+export default function LocaleLayout({ children, params: { locale, overrideMessages } }: { children: any, params: { locale: string, overrideMessages?: any } }) {
   let messages;
   if (!overrideMessages) {
     try {

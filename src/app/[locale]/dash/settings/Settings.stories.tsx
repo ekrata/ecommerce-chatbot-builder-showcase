@@ -1,9 +1,9 @@
-import { setCookie } from 'cookies-next';
-import { Client, Server, ServerOptions } from 'mock-socket';
+import { Client, Server } from 'mock-socket';
 
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
 
+import { setOperatorSession } from '../../(helpers)/useOperatorSession';
 import { createRandomOperator } from '../../dash/inbox/mocks.test';
 import { DashProvider } from '../DashProvider';
 import LocaleLayout from '../layout';
@@ -11,7 +11,6 @@ import { defaultRoutes, existingConversationRoutes } from '../mswRoutes';
 import Page from './page';
 
 import type { Meta, StoryObj } from '@storybook/react';
-import Layout from '../layout';
 const meta: Meta<typeof LocaleLayout> = {
   component: LocaleLayout,
 };
@@ -26,7 +25,7 @@ const mockWsUrl = process.env.NEXT_PUBLIC_APP_WS_URL ?? 'Check .ENV'
 const lang = 'en';
 let mockSocket: Client;
 const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-setCookie('sessionUser', { ...createRandomOperator(orgId), online: true })
+setOperatorSession({ ...createRandomOperator(orgId), online: true })
 
 const queryClient = new QueryClient({
   defaultOptions: {

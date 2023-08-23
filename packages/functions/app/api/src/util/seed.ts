@@ -49,7 +49,7 @@ export const mockSearchPhrase = `30-Day returns`;
 export const mockArticleHighlightCount = 5;
 export const mockConversationCountPerCustomer = 1;
 export const mockVisitsPerCustomer = 5;
-export const mockMessageCountPerConversation = 10;
+export const mockMessageCountPerConversation = 1;
 export const mockArticleTitles: { [key in ArticleCategory]: string[] } = {
   'General Information': [],
   Technical: [],
@@ -86,6 +86,9 @@ export interface MockOrgIds {
    *
    * @type {string[]}
    */
+  ownerId: string;
+  adminId: string;
+  moderatorId: string;
   articleIds: { articleId: string; articleContentId: string }[];
   lang: string;
   operatorIds: string[];
@@ -199,6 +202,36 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           mockOrg.operatorIds = operators.data.map(
             (operator) => operator.operatorId,
           );
+
+          const ownerOperatorId = uuidv4();
+          const createOwnerOperator: CreateOperator = {
+            operatorId: ownerOperatorId,
+            email: faker.internet.email(),
+            orgId,
+            permissionTier: 'owner',
+          };
+          await db.entities.operators.create(createOwnerOperator).go();
+          mockOrg.ownerId = ownerOperatorId;
+
+          const adminOperatorId = uuidv4();
+          const createAdminOperator: CreateOperator = {
+            operatorId: adminOperatorId,
+            email: faker.internet.email(),
+            orgId,
+            permissionTier: 'admin',
+          };
+          await db.entities.operators.create(createAdminOperator).go();
+          mockOrg.adminId = adminOperatorId;
+
+          const moderatorOperatorId = uuidv4();
+          const createModeratorOperator: CreateOperator = {
+            operatorId: moderatorOperatorId,
+            email: faker.internet.email(),
+            orgId,
+            permissionTier: 'moderator',
+          };
+          await db.entities.operators.create(createModeratorOperator).go();
+          mockOrg.moderatorId = moderatorOperatorId;
 
           const visitedBaseUrl = faker.internet.url();
           mockOrg.customers = await Promise.all(

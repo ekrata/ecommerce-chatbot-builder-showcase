@@ -1,4 +1,5 @@
-import { EntityItem } from 'electrodb';
+'use client'
+
 import { useTranslations } from 'next-intl';
 import { FC, ReactNode, useState } from 'react';
 import { Controller, Resolver, useForm } from 'react-hook-form';

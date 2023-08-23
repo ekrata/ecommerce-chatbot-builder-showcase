@@ -176,7 +176,7 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
 
   const pageThree = (
     <>
-      <div className="w-full mb-4 text-center ">
+      <div className="w-full mb-6 text-center ">
         <h3 className='text-3xl'>
           {t('Follow email instructions')}
         </h3>
@@ -205,7 +205,9 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
             <li className={`step ${step > 1 && 'step-primary'}`}></li>
             <li className={`step ${step > 2 && 'step-primary'}`}></li>
           </ul>
-          <button className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">✕</button>
+          <button type="button" className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2" onClick={() => {
+            window.create_email_modal.close()
+          }}>✕</button>
           {step === 1 && pageOne}
           {step === 2 && pageTwo}
           {step === 3 && pageThree}

@@ -9,11 +9,17 @@ import { v4 as uuidv4 } from 'uuid';
  */
 export const Analytic = new Entity({
   model: {
-    entity: 'article',
+    entity: 'analytic',
     version: '1',
     service: 'appDb',
   },
   attributes: {
+    analyticId: {
+      type: 'string',
+      required: true,
+      readOnly: true,
+      default: () => uuidv4(),
+    },
     createdAt: {
       type: 'number',
       readOnly: true,
@@ -42,6 +48,76 @@ export const Analytic = new Entity({
     type: 'map',
     default: {},
     properties: {
+      topics: {
+        type: 'map',
+        default: {},
+        properties: {
+          products: {
+            type: 'number',
+            default: 0,
+          },
+          orderStatus: {
+            type: 'number',
+            default: 0,
+          },
+          orderIssues: {
+            type: 'number',
+            default: 0,
+          },
+          shippingPolicy: {
+            type: 'number',
+            default: 0,
+          },
+        },
+        channel: {
+          type: 'map',
+          default: {},
+          properties: {
+            website: {
+              type: 'number',
+              default: 0,
+            },
+            messenger: {
+              type: 'number',
+              default: 0,
+            },
+            whatsapp: {
+              type: 'number',
+              default: 0,
+            },
+            instagram: {
+              type: 'number',
+              default: 0,
+            },
+            emailTicket: {
+              type: 'number',
+              default: 0,
+            },
+          },
+        },
+      },
+      ratings: {
+        '1': {
+          type: 'number',
+          default: 0,
+        },
+        '2': {
+          type: 'number',
+          default: 0,
+        },
+        '3': {
+          type: 'number',
+          default: 0,
+        },
+        '4': {
+          type: 'number',
+          default: 0,
+        },
+        '5': {
+          type: 'number',
+          default: 0,
+        },
+      },
       new: {
         type: 'number',
         default: 0,
@@ -81,6 +157,23 @@ export const Analytic = new Entity({
         type: 'number',
         default: 0,
       },
+      popularLinks: {
+        type: 'list',
+        items: {
+          type: 'map',
+          default: {},
+          properties: {
+            link: {
+              type: 'string',
+              default: '',
+            },
+            visits: {
+              type: 'number',
+              default: 0,
+            },
+          },
+        },
+      },
     },
   },
   updatedAt: {
@@ -94,22 +187,11 @@ export const Analytic = new Entity({
     get: {
       pk: {
         field: 'pk',
-        composite: ['orgId', 'articleId', 'lang'],
+        composite: ['analyticId'],
       },
       sk: {
         field: 'sk',
-        composite: [],
-      },
-    },
-    byOrg: {
-      index: 'gsi2pk-gsi2sk-index',
-      pk: {
-        field: 'gsi2pk',
-        composite: ['orgId', 'lang'],
-      },
-      sk: {
-        field: 'gsi2sk',
-        composite: [],
+        composite: ['createdAt'],
       },
     },
   },

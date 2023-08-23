@@ -45,6 +45,11 @@ export const Configuration = new Entity({
       readOnly: true,
       required: true,
     },
+    personal: {
+      type: 'map',
+      default: {},
+      properties: {},
+    },
     channels: {
       type: 'map',
       default: {},

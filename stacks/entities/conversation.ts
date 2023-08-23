@@ -110,9 +110,6 @@ export const Conversation = new Entity({
     operatorId: {
       type: 'string',
     },
-    connectionId: {
-      type: 'string',
-    },
     channel: {
       type: conversationChannel,
       required: true,
