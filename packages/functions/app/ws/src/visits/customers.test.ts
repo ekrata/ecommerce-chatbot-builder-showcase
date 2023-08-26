@@ -23,8 +23,9 @@ beforeAll(async () => {
 });
 
 describe('customers', () => {
-  it(`a customer is created when they visit the website, a ddbstream 'customer' create event is the processed by ddb-stream/processBatch,
-   which then creates an event for eventbridge, which then calls the 'createCustomer' wsApi route`, () =>
+  it(`a customer visits a new site link, a ddbstream 'visit' create event is the processed by ddb-stream/processBatch,
+   which then creates an event for eventbridge, which then calls the 'createVisit' wsApi route, notifying operators
+    that are in an 'open' conversation with the customerId in the visit`, () =>
     new Promise((done) => {
       const { orgId, customers, operatorIds, adminId, ownerId, moderatorId } =
         mockOrgIds[0];
@@ -45,7 +46,7 @@ describe('customers', () => {
         const newCustomerEvent = JSON.parse(event.data.toString()) as WsEvent;
         const body = newCustomerEvent.body as EntityItem<typeof Customer>;
         const { type } = newCustomerEvent;
-        if (type === 'createCustomer') {
+        if (type === 'createVisit') {
           console.log('validating', clientType, 'recieves customer');
           expect(body.customerId).toStrictEqual(customerId);
           doneCounter += 1;

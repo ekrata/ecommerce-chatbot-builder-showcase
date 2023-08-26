@@ -29,6 +29,8 @@ export const WidgetProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQue
     persister,
   })
 
+
+
   return (
     <>
       <QueryClientProvider

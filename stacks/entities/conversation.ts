@@ -157,7 +157,6 @@ export const Conversation = new Entity({
     },
     createdAt: {
       type: 'number',
-      readOnly: true,
       default: Date.now(),
     },
     updatedAt: {

@@ -12,12 +12,12 @@ import * as Sentry from '@sentry/serverless';
 import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
+import { WsAppMessage } from '../WsMessage';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event, context) => {
-    console.log('createMessage');
     try {
       const newImage = DynamoDB.Converter.unmarshall(
         event.detail?.dynamodb?.NewImage,
@@ -42,35 +42,37 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
       const operators = await appDb.entities.operators.query
         .byOrg({ orgId })
+        .where(({ permissionTier, operatorId, connectionId }, { eq, ne }) => {
+          // if not unassigned conversation, only notify relevant connected operator and superusers
+          if (conversation.data?.status !== 'unassigned') {
+            return `${ne(connectionId, '')} AND ${eq(
+              permissionTier,
+              'admin',
+            )} OR ${eq(permissionTier, 'owner')} OR ${eq(
+              permissionTier,
+              'moderator',
+            )} OR ${
+              conversation.data?.operatorId
+                ? eq(operatorId, conversation.data?.operatorId)
+                : ''
+            }`;
+            // if unassigned, notify all connected operators
+          }
+          return `${ne(connectionId, '')}`;
+        })
         .go();
 
       const customer = await appDb.entities.customers.query
         .primary({ orgId, customerId })
         .go();
 
-      let filteredOperators = operators.data;
-
-      // if not unassigned, send to operators that can view all messages, and the operator assigned to the conversation
-      if (
-        conversation.data?.status !== 'unassigned' ||
-        conversation.data?.operatorId
-      ) {
-        filteredOperators = operators.data.filter(
-          (operator) =>
-            operator.permissionTier === 'admin' ||
-            operator.permissionTier === 'moderator' ||
-            operator.permissionTier === 'owner' ||
-            operator.operatorId === conversation.data?.operatorId,
-        );
-      }
-
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
-        [...filteredOperators, ...customer.data],
-        { type: 'createMessage', body: messageData },
+        [...operators.data, ...customer.data],
+        { type: WsAppMessage.createMessage, body: messageData },
       );
 
       return { statusCode: 200, body: 'Message sent' };

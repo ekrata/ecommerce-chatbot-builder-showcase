@@ -1,8 +1,16 @@
-import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import {
+  ApiHandler,
+  usePathParams,
+  useQueryParam,
+  useQueryParams,
+} from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
-import { ConversationItem, ExpandedConversation } from '@/entities/conversation';
+import {
+  ConversationItem,
+  ExpandedConversation,
+} from '@/entities/conversation';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
@@ -34,13 +42,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           body: `No conversation with conversationId: ${conversationId} and orgId: ${orgId} exists. `,
         };
       }
-      if (expansionFields) {
+      if (expansionFields?.length) {
         const expandedData = (
-          await expandObjects(
-            appDb,
-            [res.data ?? {}],
-            ['customerId', 'operatorId'],
-          )
+          await expandObjects(appDb, [res.data ?? {}], expansionFields)
         )[0] as ExpandedConversation;
         if (includeMessages) {
           const messagesRes = await appDb.entities.messages.query

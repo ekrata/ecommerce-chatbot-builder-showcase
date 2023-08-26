@@ -6,23 +6,24 @@ import { WebSocketApi } from 'sst/node/websocket-api';
 
 import { Conversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
+import { Visit } from '@/entities/visit';
 import * as Sentry from '@sentry/serverless';
 
 import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
+import { WsAppMessage } from '../WsMessage';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event, context) => {
     try {
-      console.log('createCustomer');
       const newImage = DynamoDB.Converter.unmarshall(
         event?.detail?.dynamodb?.NewImage,
       );
-      const customerData = Customer.parse({ Item: newImage }).data;
-      if (!customerData) {
+      const visitData = Visit.parse({ Item: newImage }).data;
+      if (!visitData) {
         return {
           statusCode: 500,
           body: {
@@ -31,30 +32,46 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           },
         };
       }
-      const { orgId, customerId } = customerData;
+      const { orgId, customerId } = visitData;
 
-      const operators = await appDb.entities.operators.query
+      // get operators assigned to customer so we can let them know their customer has visited a new page
+      const conversations = await appDb.entities.conversations.query
         .byOrg({ orgId })
+        .where(
+          ({ customerId, status }, { eq }) =>
+            `${eq(customerId, visitData.customerId)} AND ${eq(status, 'open')}`,
+        )
         .go();
 
-      const customer = await appDb.entities.customers.query
-        .primary({ orgId, customerId: customerId ?? '' })
+      const operatorIds = conversations?.data?.map(
+        (conversation) => conversation?.operatorId,
+      );
+
+      // get operators from ids
+
+      const operators = await appDb.entities.operators
+        .get(
+          operatorIds.map((operatorId) => ({
+            orgId,
+            operatorId: operatorId ?? '',
+          })),
+        )
         .go();
 
-      let filteredOperators = operators.data;
+      // Presently, we only want to notify new visits for current, open conversations.
+      // Other cases are simply updated when querying from client.
 
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
-        [...filteredOperators, ...customer.data],
-        { type: 'createCustomer', body: customerData },
+        [...operators?.data],
+        { type: WsAppMessage.createVisit, body: visitData },
       );
 
       return { statusCode: 200, body: 'Message sent' };
     } catch (err) {
-      console.log('err');
       console.log(err);
       Sentry.captureException(err);
       return { statusCode: 500, body: JSON.stringify(err) };

@@ -15,17 +15,17 @@ initialize({
 });
 
 
-Object.defineProperty(Link, "default", {
-  configurable: true,
-  value: (props: { children, href: { pathname: string, query: { [key: string]: string } } }) => {
-    const href = `${props.href.pathname}?${new URLSearchParams(props.href.query).toString()}`
-    return (
-      <a href={href}>
-        {props.children}
-      </a>
-    )
-  }
-});
+// Object.defineProperty(Link, "default", {
+//   configurable: true,
+//   value: (props: { children, href: { pathname: string, query: { [key: string]: string } } }) => {
+//     const href = `${props.href.pathname}?${new URLSearchParams(props.href.query).toString()}`
+//     return (
+//       <a href={href}>
+//         {props.children}
+//       </a>
+//     )
+//   }
+// });
 
 
 

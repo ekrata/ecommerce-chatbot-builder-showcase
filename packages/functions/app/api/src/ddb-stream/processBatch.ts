@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { WsAppMessage } from 'packages/functions/app/ws/src/WsMessage';
 import { ApiHandler, usePathParams } from 'sst/node/api';
 import { EventBus } from 'sst/node/event-bus';
 
@@ -12,9 +13,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event, ctx) => {
     try {
       event?.Records?.forEach(async (record: object) => {
+        console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
         // CREATE
         if (record.eventName === 'INSERT') {
-          if (record.dynamodb.NewImage.context?.S === 'message') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'message' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'message'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [
@@ -29,7 +34,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               .promise();
           }
 
-          if (record.dynamodb.NewImage.context?.S === 'conversation') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'conversation' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'conversation'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [
@@ -44,7 +52,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               .promise();
           }
 
-          if (record.dynamodb.NewImage.context?.S === 'operator') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'operator' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'operator'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [
@@ -59,7 +70,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               .promise();
           }
 
-          if (record.dynamodb.NewImage.context?.S === 'customer') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'customer' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'customer'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [
@@ -73,11 +87,32 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               })
               .promise();
           }
+
+          if (
+            record.dynamodb.NewImage.context?.S === 'visit' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'visit'
+          ) {
+            const entries = await client
+              .putEvents({
+                Entries: [
+                  {
+                    EventBusName: EventBus.appEventBus.eventBusName,
+                    Source: 'ddbStream',
+                    DetailType: WsAppMessage.createVisit,
+                    Detail: JSON.stringify(record),
+                  },
+                ],
+              })
+              .promise();
+          }
         }
 
         // UPDATE
-        if (record.eventName === 'UPDATE') {
-          if (record.dynamodb.NewImage.context?.S === 'message') {
+        if (record.eventName === 'MODIFY') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'message' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'message'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [
@@ -91,7 +126,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               })
               .promise();
           }
-          if (record.dynamodb.NewImage.context?.S === 'conversation') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'conversation' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'conversation'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [
@@ -105,7 +143,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               })
               .promise();
           }
-          if (record.dynamodb.NewImage.context?.S === 'operator') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'operator' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'operator'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [
@@ -119,7 +160,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               })
               .promise();
           }
-          if (record.dynamodb.NewImage.context?.S === 'customer') {
+          if (
+            record.dynamodb.NewImage.context?.S === 'customer' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'customer'
+          ) {
             const entries = await client
               .putEvents({
                 Entries: [

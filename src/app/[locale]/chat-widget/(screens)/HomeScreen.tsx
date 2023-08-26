@@ -8,7 +8,7 @@ import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
 import { DynamicBackground } from '../../(helpers)/DynamicBackground';
 import { useArticlesQuery, useConfigurationQuery, useOrgQuery } from '../../(hooks)/queries';
 import {
-    useConversationItemsByCustomerQuery
+  useConversationItemsByCustomerQuery
 } from '../../(hooks)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
 import { Avatar } from './(messages)/Avatar';
@@ -50,7 +50,7 @@ export const HomeScreen: FC = () => {
         <div className="sticky flex p-4 -mb-40 background pb-60 rounded-t-3xl animate-fade-left">
           {configuration.data && <DynamicBackground configuration={configuration.data} />}
           <div className='mr-6 justify-left animate-fade-left'>{<img src={widgetAppearance?.logo} className='object-cover h-10 mt-10' /> ?? (<h1>{org?.data?.name ?? 'RadCorp'}</h1>)}</div>
-          <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[0]} message={conversationItems.data?.[0].messages?.slice(-1)[0]} /> </div>
+          <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[0]} message={conversationItems.data?.[0]?.messages?.slice(-1)[0]} /> </div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[1]} message={conversationItems.data?.[1]?.messages?.slice(-1)[0]} /> </div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[2]} message={conversationItems.data?.[2]?.messages?.slice(-1)[0]} /> </div>
         </div>

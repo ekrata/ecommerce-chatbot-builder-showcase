@@ -1,11 +1,13 @@
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
+import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import { ApiHandler, useJsonBody } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import { Conversation } from '@/entities/conversation';
+import { createConversation } from '@/app/[locale]/chat-widget/actions';
+import { Conversation, ExpandedConversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
@@ -13,6 +15,7 @@ import * as Sentry from '@sentry/serverless';
 import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
+import { WsAppMessage } from '../WsMessage';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -37,35 +40,46 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
       const operators = await appDb.entities.operators.query
         .byOrg({ orgId })
+        .where(({ permissionTier, operatorId, connectionId }, { eq, ne }) => {
+          // if not unassigned conversation, only notify relevant connected operator and superusers
+          if (conversationData?.status !== 'unassigned') {
+            return `${ne(connectionId, '')} AND ${eq(
+              permissionTier,
+              'admin',
+            )} OR ${eq(permissionTier, 'owner')} OR ${eq(
+              permissionTier,
+              'moderator',
+            )} OR ${
+              conversationData?.operatorId
+                ? eq(operatorId, conversationData.operatorId)
+                : ''
+            }`;
+          }
+          // if unassigned, notify all connected operators
+          return `${ne(connectionId, '')}`;
+        })
         .go();
 
       const customer = await appDb.entities.customers.query
         .primary({ orgId, customerId: customerId ?? '' })
+        .where(({ connectionId }, { ne }) => `${ne(connectionId, '')}`)
         .go();
 
-      let filteredOperators = operators.data;
-
-      // if not unassigned, send to operators that can view all messages, and the operator assigned to the conversation
-      if (
-        conversationData?.status !== 'unassigned' ||
-        conversationData?.operatorId
-      ) {
-        filteredOperators = operators.data.filter(
-          (operator) =>
-            operator.permissionTier === 'admin' ||
-            operator.permissionTier === 'operator' ||
-            operator.permissionTier === 'moderator' ||
-            operator.operatorId === operatorId,
-        );
-      }
+      const expandedData = (
+        await expandObjects(
+          appDb,
+          [conversationData],
+          ['customerId', 'operatorId'],
+        )
+      )[0] as ExpandedConversation;
 
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
-        [...filteredOperators, ...customer.data],
-        { type: 'createConversation', body: conversationData },
+        [...operators?.data, ...customer.data],
+        { type: WsAppMessage.createConversation, body: expandedData },
       );
 
       return { statusCode: 200, body: 'Message sent' };

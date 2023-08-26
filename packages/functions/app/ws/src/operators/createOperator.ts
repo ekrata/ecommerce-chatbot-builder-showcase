@@ -45,7 +45,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         new ApiGatewayManagementApi({
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
-        [...filteredOperators, ...customer.data],
+        [...filteredOperators],
         { type: 'createOperator', body: operatorData },
       );
 

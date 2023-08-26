@@ -61,7 +61,7 @@ describe.concurrent('/conversations', async () => {
     expect(res.data?.operator.operatorId).toBeTruthy();
     expect(res.data?.customer.customerId).toBeTruthy();
   });
-  it.only('gets a conversation with operator and customer expanded, and with messages included', async () => {
+  it('gets a conversation with operator and customer expanded, and with messages included', async () => {
     const { orgId, customers } = mockOrgIds[0];
     const { conversations } = faker.helpers.arrayElement(customers);
     const { conversationId } = faker.helpers.arrayElement(conversations);

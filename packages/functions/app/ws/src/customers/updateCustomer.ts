@@ -15,6 +15,7 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event, context) => {
+    console.log('updatingCustomer');
     try {
       const newImage = DynamoDB.Converter.unmarshall(
         event?.detail?.dynamodb?.NewImage,

@@ -1,29 +1,30 @@
 'use client'
 
 import { EntityItem } from 'electrodb';
+import { getWs } from 'packages/functions/app/getWs';
+import { WsAppMessage } from 'packages/functions/app/ws/src/WsMessage';
 // Import necessary hooks and libraries
 import { createContext, PropsWithChildren, useContext, useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getWsUrl } from '@/app/getWsUrl';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
+import { Operator } from '@/entities/operator';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useCreateCustomerMut } from '../(hooks)/mutations/useCreateCustomerMut';
 import { newMessageReducer } from '../(hooks)/mutations/useCreateMessageMut';
 import { QueryKey, useConfigurationQuery, useOrgQuery } from '../(hooks)/queries';
 import { useCustomerQuery } from '../(hooks)/queries/useCustomerQuery';
+import { WsAppMessageType } from '../dash/DashSocketProvider';
 import { sortConversationItems } from './(helpers)/sortConversationItems';
 
 // Create a context for chat messages
 const ChatMessagesContext = createContext(null);
 const SOCKET_URL = "ws://localhost:3001";
-export enum WsAppMessageType {
-    // INITIAL_DATA: "eventNewMessage",
-    eventNewMessage = "eventNewMessage",
-    eventNewConversationItem = "eventNewConversationItem",
-    eventUpdateConversationItem = "eventUpdateConversationItem",
-};
+
 
 // const connectionStatus = {
 //     [ReadyState.CONNECTING]: 'Connecting',
@@ -46,43 +47,63 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children, mo
     const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
     const org = useOrgQuery(orgId)
     const customer = useCustomerQuery(orgId)
+    const newCustomerId = uuidv4()
+    const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId)
+
+    useEffect(() => {
+        if (!customer?.data?.customerId) {
+            // (async () => await createCustomerMut.mutateAsync([orgId, '', false]))()
+        }
+    }, [])
 
     const {
         sendMessage: sM,
         lastMessage,
         readyState,
-    } = useWebSocket(mockWsUrl ?? getWsUrl(orgId, customer.data?.customerId ?? '', 'customer'), {
+    } = useWebSocket(getWsUrl(orgId, customer?.data?.customerId ?? newCustomerId, 'customer'), {
         shouldReconnect: (closeEvent) => true,
+        onMessage: (event) => {
+
+        }
     });
     // Initialize the queryClient from react-query
     const queryClient = useQueryClient();
     // Check if WebSocket connection is open and ready for sending messages
     const canSendMessages = readyState === ReadyState.OPEN;
 
+
+
     // Handle the incoming WebSocket messages
     useEffect(() => {
         if (lastMessage && lastMessage.data) {
-            const { type, payload } = JSON.parse(lastMessage.data);
+            const { type, body } = JSON.parse(lastMessage.data);
             // Update the local chat messages state based on the message type
+            console.log(type)
             switch (type) {
-                case WsAppMessageType.eventNewConversationItem:
+                case WsAppMessage.createConversation:
                     queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (data) => {
-                        return [...data ?? [], payload];
+                        return [...data ?? [], body];
                     });
                     break;
-                case WsAppMessageType.eventNewMessage:
+                case WsAppMessage.createMessage:
                     queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
-                        return newMessageReducer(payload as EntityItem<typeof Message>, oldData ?? [])
+                        return newMessageReducer(body as EntityItem<typeof Message>, oldData ?? [])
                     });
                     break;
-                case WsAppMessageType.eventUpdateConversationItem:
+                case WsAppMessage.updateConversation:
                     queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
-                        const updatedConversationItem = (payload as ConversationItem)
+                        const updatedConversationItem = (body as ConversationItem)
                         const conversationItems = [...oldData?.filter((conversationItem) => conversationItem.conversation.conversationId !== updatedConversationItem.conversation.conversationId) ?? [], updatedConversationItem]
                         sortConversationItems(conversationItems)
                         return conversationItems
                     });
                     break;
+                case WsAppMessage.updateOperator:
+                    queryClient.setQueryData<EntityItem<typeof Operator>[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
+                        const updateOperatorItem = (body as EntityItem<typeof Operator>)
+                        const operators = [...oldData?.filter((operator) => operator.operatorId !== updateOperatorItem.operatorId) ?? [], updateOperatorItem]
+                        return operators
+                    });
                 default:
                     break;
             }
@@ -111,5 +132,3 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children, mo
     );
 };
 
-// Define a custom hook to access the chat messages context
-export const useWidgetSocketContext = () => useContext(null);

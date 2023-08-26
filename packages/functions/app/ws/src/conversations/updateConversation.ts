@@ -1,11 +1,12 @@
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
+import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import { ApiHandler, useJsonBody } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import { Conversation } from '@/entities/conversation';
+import { Conversation, ExpandedConversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
@@ -52,6 +53,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       ) {
         filteredOperators = operators.data.filter(
           (operator) =>
+            operator.permissionTier === 'owner' ||
             operator.permissionTier === 'admin' ||
             operator.permissionTier === 'operator' ||
             operator.permissionTier === 'moderator' ||
@@ -59,13 +61,21 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         );
       }
 
+      const expandedData = (
+        await expandObjects(
+          appDb,
+          [conversationData],
+          ['customerId', 'operatorId'],
+        )
+      )[0] as ExpandedConversation;
+
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
         [...filteredOperators, ...customer.data],
-        { type: 'updateConversation', body: conversationData },
+        { type: 'updateConversation', body: expandedData },
       );
 
       return { statusCode: 200, body: 'Message sent' };

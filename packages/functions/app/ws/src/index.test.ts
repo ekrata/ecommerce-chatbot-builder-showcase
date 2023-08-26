@@ -14,7 +14,8 @@ import { getWs } from '../../getWs';
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/seed-test-db`)).data as MockOrgIds[];
+  mockOrgIds = (await http.post(`/util/small-seed-test-db`))
+    .data as MockOrgIds[];
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }

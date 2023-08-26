@@ -162,6 +162,8 @@ export function BaseStack({ stack, app }: StackContext) {
     ? {
         'POST /util/seed-test-db':
           'packages/functions/app/api/src/util/seed.handler',
+        'POST /util/small-seed-test-db':
+          'packages/functions/app/api/src/util/smallSeed.handler',
         'POST /util/wipe-test-db':
           'packages/functions/app/api/src/util/wipe.handler',
       }
@@ -316,6 +318,7 @@ export function BaseStack({ stack, app }: StackContext) {
   // });
 
   process.env.NEXT_PUBLIC_APP_API_URL = api.url;
+  process.env.NEXT_PUBLIC_WS_API_URL = wsApi.url;
 
   const site = new NextjsSite(stack, 'site', {
     customDomain: {

@@ -4,11 +4,13 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { BiSend } from 'react-icons/bi';
 import { v4 as uuidv4 } from 'uuid';
 
+import {
+  useCreateConversationMut
+} from '@/app/[locale]/(hooks)/mutations/useCreateConversationMut';
 import { useCreateCustomerMut } from '@/app/[locale]/(hooks)/mutations/useCreateCustomerMut';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { DynamicBackground } from '../../../(helpers)/DynamicBackground';
-import { useCreateConversationMut } from '../../../(hooks)/mutations';
 import { useConfigurationQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
 

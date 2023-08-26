@@ -6,13 +6,15 @@ import { BsPersonCircle } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-    useConversationItemsByCustomerQuery
+  useCreateConversationMut
+} from '@/app/[locale]/(hooks)/mutations/useCreateConversationMut';
+import {
+  useConversationItemsByCustomerQuery
 } from '@/app/[locale]/(hooks)/queries/useConversationItemsQuery';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import { DynamicBackground } from '../../../(helpers)/DynamicBackground';
-import { useCreateConversationMut } from '../../../(hooks)/mutations';
 import { useConfigurationQuery, useOrgQuery } from '../../../(hooks)/queries';
 import { useCustomerQuery } from '../../../(hooks)/queries/useCustomerQuery';
 import { CustomerConversationCard } from './CustomerConversationCard';
@@ -50,11 +52,11 @@ export const ConversationsScreen: FC = () => {
   // const createCustomerMut = useCreateCustomerMut(orgId, uuidv4());
   const customer = useCustomerQuery(orgId)
 
-  const createConversationMut = useCreateConversationMut(orgId, customer.data?.customerId ?? '');
+  const createConversationMut = useCreateConversationMut(orgId);
   const conversationItems = useConversationItemsByCustomerQuery(orgId, customer.data?.customerId ?? '')
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
-      <h5 className='flex font-semibold'>{t('articles', { count: 0 })}</h5>
+      <h5 className='flex font-semibold'>{t('messages', { count: 0 })}</h5>
     </div>
   )
 
