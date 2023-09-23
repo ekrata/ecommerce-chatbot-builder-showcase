@@ -6,7 +6,7 @@ import { useOnClickOutside } from 'usehooks-ts';
 import * as yup from 'yup';
 
 import { CopyToClipboard } from '@/app/[locale]/(components)/CopyToClipboard';
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -28,12 +28,13 @@ type EmailProviderType = 'google' | 'microsoft' | 'other mailbox provider'
 export const EmailModal: FC<Props> = ({ emailState }) => {
   const t = useTranslations('dash.settings.Ticketing')
   const tDash = useTranslations('dash')
-  const { orgId } = useOperatorSession()
+  const [user] = useAuthContext()
+  const orgId = user?.orgId ?? ''
   const dialogRef = useRef(null);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [emailType, setEmailType] = useState<EmailType>('existing')
   const [providerType, setProviderType] = useState<EmailProviderType>('google')
-  const configuration = useConfigurationQuery(orgId);
+  const configuration = useConfigurationQuery(orgId ?? '');
   const { forwardingEmail } = { ...configuration.data?.channels?.ticketing }
 
   const [emails, setEmails] = emailState
@@ -44,7 +45,7 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
   })
 
   useOnClickOutside(dialogRef, () => {
-    window?.create_email_modal?.close()
+    (window as any)?.create_email_modal?.close()
   })
 
   const pageOne = (
@@ -137,7 +138,7 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
       </li>
       <li>
         {t("google.Copy the following email address and paste it in the 'Please enter a new forwarding email address:' field and click on the 'Next button'")}
-        <CopyToClipboard value={forwardingEmail}></CopyToClipboard>
+        <CopyToClipboard value={forwardingEmail ?? ''}></CopyToClipboard>
         <img src="/settings/ticketing/Gmail3.png" className='' alt="Gmail3" />
       </li>
       <li>
@@ -159,7 +160,7 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
       </li>
       <li>
         {t("microsoft.Copy the following email address and paste it in the 'Forward my email to:' field and click on the 'Save' button")}
-        <CopyToClipboard value={forwardingEmail}></CopyToClipboard>
+        <CopyToClipboard value={forwardingEmail ?? ''}></CopyToClipboard>
         <img src="/settings/ticketing/Outlook3.png" className='' alt="Outlook3" />
       </li>
     </ol>
@@ -189,7 +190,7 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
           setStep(2)
         }}> {tDash('Back')}</button >
         <button className="normal-case btn btn-sm btn-primary" onClick={() => {
-          window.create_email_modal.close()
+          (window as any).create_email_modal.close()
         }}> {tDash('Done')}</button >
       </div>
     </>
@@ -197,7 +198,7 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
 
   return (
     <>
-      <button className="normal-case btn btn-sm btn-primary" onClick={() => window?.create_email_modal?.showModal()}> {t('Connect new email')}</button >
+      <button className="normal-case btn btn-sm btn-primary" onClick={() => (window as any)?.create_email_modal?.showModal()}> {t('Connect new email')}</button >
       <dialog id="create_email_modal" className="bg-transparent" >
         <form method="dialog" className="flex flex-col gap-y-4 modal-box w-[30rem] place-items-center" ref={dialogRef} onSubmit={onSubmit}>
           <ul className="z-10 py-4 steps">
@@ -206,7 +207,7 @@ export const EmailModal: FC<Props> = ({ emailState }) => {
             <li className={`step ${step > 2 && 'step-primary'}`}></li>
           </ul>
           <button type="button" className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2" onClick={() => {
-            window.create_email_modal.close()
+            (window as any).create_email_modal.close()
           }}>✕</button>
           {step === 1 && pageOne}
           {step === 2 && pageTwo}

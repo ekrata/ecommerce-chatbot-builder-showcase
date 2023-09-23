@@ -3,10 +3,11 @@
 import { useFormatter, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { FC, useEffect, useMemo } from 'react';
+import { BsChat } from 'react-icons/bs';
 
 import { ConversationItem } from '@/entities/conversation';
 
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from '../../(hooks)/queries';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
@@ -26,11 +27,11 @@ interface Props {
  */
 export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
 
-  const t = useTranslations('chat-widget')
-  const operatorSession = useOperatorSession();
+  const t = useTranslations('dash')
+  const [operatorSession] = useAuthContext();
   const searchParams = useSearchParams()
   const conversationId = searchParams?.get('conversationId')
-  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
+  const orgId = operatorSession?.orgId ?? ''
   const customer = useCustomerQuery(orgId);
 
   const configuration = useConfigurationQuery(orgId);
@@ -39,13 +40,18 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
   // Observing message creation/sending state
   const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', conversationId ?? '')
   const { relativeTime } = useFormatter()
+  const noData = <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
+    <h5 className='flex font-semibold'><BsChat />{t('Select a conversation to view it here', { count: 0 })}</h5>
+    {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
+  </div>
 
   return (
     <div
-      className="flex flex-col gap-y-1 pb-8 py-2 text-sm w-full bg-base-100 dark:bg-gray-800 overflow-y-scroll h-[30rem]"
+      className="flex flex-col w-full h-full py-2 pb-8 overflow-y-scroll text-sm gap-y-1 bg-base-100 dark:bg-gray-800"
       data-testid="chat-log"
     >
-      {conversationItem?.messages
+
+      {conversationItem ? conversationItem?.messages
         ?.map((message, i) => (
           <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
             {(message.sender === 'customer') && (
@@ -91,7 +97,7 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
               </div>
             )}
           </div>
-        ))}
+        )) : noData}
     </div>
   )
 };

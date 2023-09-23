@@ -12,7 +12,7 @@ import { GrChannel, GrMultiple } from 'react-icons/gr';
 import { ConversationChannel, ConversationTopic, conversationTopic } from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 
 export const channelIconMap: Record<ConversationChannel, ReactNode | HTMLImageElement> = {
   'website': <FcShop className='text-2xl' />,
@@ -29,7 +29,7 @@ interface Props {
 
 export const ChannelSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const t = useTranslations('dash');
-  const sessionOperator = useOperatorSession();
+  const [sessionOperator] = useAuthContext();
   const { setConversationChannel, conversationChannel } = useDashStore()
 
   return (
@@ -53,14 +53,14 @@ export const ChannelSelect: React.FC<Props> = ({ dropdownPosition }) => {
                   setConversationChannel(key as ConversationChannel)
                 }
               }} />
-              <p className='flex text-sm place-items-center gap-x-2'>
+              <div className='flex text-sm place-items-center gap-x-2'>
                 <div className='text-xl'>
                   <>
                     {icon}
                   </>
                 </div>
                 {startCase(key)}
-              </p>
+              </div>
             </a>
 
           </li>

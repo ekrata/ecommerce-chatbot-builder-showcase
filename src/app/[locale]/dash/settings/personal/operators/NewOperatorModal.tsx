@@ -9,7 +9,7 @@ import { useOnClickOutside } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 import * as zod from 'zod';
 
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useCreateOperatorMut } from '@/app/[locale]/(hooks)/mutations/useCreateOperatorMut';
 import { CreateOperator, UpdateOperator } from '@/entities/entities';
 import { Operator, permissionTier } from '@/entities/operator';
@@ -38,7 +38,8 @@ export const getOperatorIcon = (operator: EntityItem<typeof Operator>) => {
 export const NewOperatorModal: FC = () => {
   const t = useTranslations('dash.settings.Operators')
   const tDash = useTranslations('dash')
-  const { orgId } = useOperatorSession()
+  const [user] = useAuthContext()
+  const orgId = user?.orgId ?? ''
   const dialogRef = useRef(null);
   const { register, handleSubmit, getValues, formState: { errors }
   } = useForm<zod.infer<typeof schema>>({ defaultValues: {}, resolver: zodResolver(schema), });
@@ -47,7 +48,7 @@ export const NewOperatorModal: FC = () => {
   const createOperatorMut = useCreateOperatorMut(orgId, newOperatorId)
 
   useOnClickOutside(dialogRef, () => {
-    window?.new_operator_modal?.close()
+    (window as any)?.new_operator_modal?.close()
   })
 
   // const { register, handleSubmit, setValue, getValues, control, formState: { errors } } = useForm({ defaultValues: { name: operator.name, email: operator.email }, resolver: zodResolver(schema) });
@@ -70,10 +71,10 @@ export const NewOperatorModal: FC = () => {
 
   return (
     <>
-      <button type='button' className="normal-case btn btn-sm btn-primary" onClick={() => window?.new_operator_modal?.showModal()}>{t('Add an operator')}</button >
+      <button type='button' className="normal-case btn btn-sm btn-primary" onClick={() => (window as any)?.new_operator_modal?.showModal()}>{t('Add an operator')}</button >
       <dialog id="new_operator_modal" className="bg-transparent">
         <form method="dialog" className="flex flex-col gap-y-4 modal-box w-[30rem] place-items-center" ref={dialogRef} onSubmit={onSubmit}>
-          <button type='button' className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2" onClick={() => window.new_operator_modal.close()}>✕</button>
+          <button type='button' className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2" onClick={() => (window as any).new_operator_modal.close()}>✕</button>
           <div className="w-full mb-4 text-center ">
             <h3 className='text-3xl'>
               {t('Add an operator')}

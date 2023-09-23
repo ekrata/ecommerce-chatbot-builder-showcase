@@ -20,19 +20,16 @@ import { WsAppMessage } from '../WsMessage';
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event, context) => {
+  ApiHandler(async (event: any, context) => {
     try {
       const newImage = DynamoDB.Converter.unmarshall(
-        event.detail?.dynamodb?.NewImage,
+        event?.detail?.dynamodb?.NewImage,
       );
       const conversationData = Conversation.parse({ Item: newImage }).data;
       if (!conversationData) {
         return {
           statusCode: 500,
-          body: {
-            error:
-              'Failed to parse the eventbridge event into a usable entity.',
-          },
+          body: 'Failed to parse the eventbridge event into a usable entity.',
         };
       }
       const { orgId, operatorId, customerId, conversationId } =
@@ -83,9 +80,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       );
 
       return { statusCode: 200, body: 'Message sent' };
-    } catch (err) {
-      console.log('err');
-      console.log(err);
+    } catch (err: any) {
       Sentry.captureException(err);
       return { statusCode: 500, body: JSON.stringify(err) };
     }

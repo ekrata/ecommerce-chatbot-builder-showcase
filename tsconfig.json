@@ -30,8 +30,12 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@/marketing/*": ["./src/app/[locale]/(marketing)/*"],
       "@/*": [
         "./src/*"
+      ],
+      "@/styles": [
+        ""
       ],
       "@/entities/*": [
         "./stacks/entities/*"
@@ -65,7 +69,7 @@
     "jest.setup.js",
     "src/app/[locale]/dash/inbox/conversations/[chat]/ConversationSocket.tsx",
     "src/app/[locale]/chat-widget/ChatWidgetCard.dtsx"
-  ],
+, "src/app/[locale]/(marketing)/tsconfig.json", "next.config.js"  ],
   "exclude": [
     "node_modules"
   ]

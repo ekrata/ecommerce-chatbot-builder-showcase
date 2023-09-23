@@ -7,18 +7,15 @@ import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
 import { Conversation, ExpandedConversation } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
-import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
 
-import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event, context) => {
+  ApiHandler(async (event: any, context) => {
     try {
       const newImage = DynamoDB.Converter.unmarshall(
         event?.detail?.dynamodb?.NewImage,
@@ -27,10 +24,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       if (!conversationData) {
         return {
           statusCode: 500,
-          body: {
-            error:
-              'Failed to parse the eventbridge event into a usable entity.',
-          },
+          body: 'Failed to parse the eventbridge event into a usable entity.',
         };
       }
       const { orgId, operatorId, customerId, conversationId } =

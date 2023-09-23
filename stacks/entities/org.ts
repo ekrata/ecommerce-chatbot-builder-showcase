@@ -20,10 +20,10 @@ export const Org = new Entity({
     name: {
       type: 'string',
       required: true,
+      default: '',
     },
     email: {
       type: 'string',
-      required: true,
     },
     planTier: {
       type: orgPlanTier,

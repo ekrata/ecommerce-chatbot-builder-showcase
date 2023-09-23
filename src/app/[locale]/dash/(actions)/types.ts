@@ -1,10 +1,10 @@
 import { StateCreator } from 'zustand';
 
 import {
-    ConversationChannel, ConversationStatus, ConversationTopic
+  ConversationChannel,
+  ConversationStatus,
+  ConversationTopic,
 } from '@/entities/conversation';
-
-import { ChatWidgetStateDefinition } from '../../(actions)/types';
 
 export type WidgetState = 'help' | 'conversations' | 'home';
 export type WidgetVisibility = 'expanded' | 'open' | 'minimized';
@@ -53,7 +53,7 @@ export interface DashStateActions {
     ) => void}
    */
   setConversationOperatorView: (
-    conversationOperatorView?: ConversationOperatorView
+    conversationOperatorView?: ConversationOperatorView,
   ) => void;
 }
 //   setConversationId: (widgetState: WidgetState) => void;

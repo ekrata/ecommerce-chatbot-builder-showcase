@@ -14,6 +14,7 @@ import { Message } from '@/entities/message';
 import { Operator } from '@/entities/operator';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { useAuthContext } from '../(hooks)/AuthProvider';
 import { useCreateCustomerMut } from '../(hooks)/mutations/useCreateCustomerMut';
 import { newMessageReducer } from '../(hooks)/mutations/useCreateMessageMut';
 import { QueryKey, useConfigurationQuery, useOrgQuery } from '../(hooks)/queries';
@@ -40,15 +41,17 @@ export interface Props {
     mockWsUrl?: string
 }
 
-export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children, mockWsUrl }) => {
+export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) => {
     // Initialize the WebSocket connection and retrieve necessary properties
-    const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
+    // const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
+    const [user] = useAuthContext()
+    const orgId = user?.orgId ?? ''
     const configuration = useConfigurationQuery(orgId);
     const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
     const org = useOrgQuery(orgId)
     const customer = useCustomerQuery(orgId)
     const newCustomerId = uuidv4()
-    const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId)
+    // const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId)
 
     useEffect(() => {
         if (!customer?.data?.customerId) {

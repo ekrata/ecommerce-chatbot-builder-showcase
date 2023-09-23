@@ -1,21 +1,23 @@
-import Link from 'next/link'
+import { Metadata, Route } from 'next';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-import { Button } from '@/components/Button'
-import { TextField } from '@/components/Fields'
-import { Logo } from '@/components/Logo'
-import { SlimLayout } from '@/components/SlimLayout'
-import { type Metadata } from 'next'
+import { Button } from '../../../components/Button';
+import { Logo } from '../../../components/Logo';
+import { SlimLayout } from '../../../components/SlimLayout';
 
 export const metadata: Metadata = {
   title: 'Sign In',
 }
 
 export default function Login() {
+
+
   return (
     <SlimLayout>
       <div className="flex">
-        <Link href="/" aria-label="Home">
-          <Logo className="h-10 w-auto" />
+        <Link href={"/" as Route} aria-label="Home">
+          <Logo className="w-auto h-10" />
         </Link>
       </div>
       <h2 className="mt-20 text-lg font-semibold text-gray-900">
@@ -28,32 +30,44 @@ export default function Login() {
           className="font-medium text-blue-600 hover:underline"
         >
           Sign up
-        </Link>{' '}
+        </Link>
+        {' '}
         for a free trial.
       </p>
-      <form action="#" className="mt-10 grid grid-cols-1 gap-y-8">
-        <TextField
-          label="Email address"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-        />
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-        />
-        <div>
-          <Button type="submit" variant="solid" color="blue" className="w-full">
-            <span>
-              Sign in <span aria-hidden="true">&rarr;</span>
-            </span>
-          </Button>
+      {/* <script src="https://accounts.google.com/gsi/client" async defer>
+      </script> */}
+
+      {/* <script type="text/javascript">
+        {
+          async function callback() {
+            return await fetch()
+          }
+        }
+      </script> */}
+
+      <a
+        href={`${process.env.NEXT_PUBLIC_APP_API_URL}/auth/google/authorize`}
+        rel="noreferrer"
+      >
+        <Button>
+          Sign in with google
+          {/* <div id="g_id_onload"
+          data-client_id="11916374620-iveeirp449he0iocir9j15v4be5c1rjt.apps.googleusercontent.com"
+          data-context="signup"
+          data-ux_mode="popup"
+          data-auto_select="true"
+          data-itp_support="true">
         </div>
-      </form>
+        <div className="g_id_signin"
+          data-type="standard"
+          data-shape="pill"
+          data-theme="outline"
+          data-text="continue_with"
+          data-size="large"
+          data-logo_alignment="left">
+        </div> */}
+        </Button>
+      </a>
     </SlimLayout>
   )
 }

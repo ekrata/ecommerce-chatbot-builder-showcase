@@ -1,10 +1,12 @@
+'use client'
+
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { isDesktop } from 'react-device-detect';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { ChatView } from './ChatView';
 import { ConversationsListView } from './ConversationsListView';
 import { ConversationsSearchView } from './ConversationsSearchView';
@@ -12,18 +14,12 @@ import { CustomerInfoView } from './CustomerInfoView';
 
 export default function Page() {
   const searchParams = useSearchParams();
+  const operator = useAuthContext()
   const t = useTranslations('dash');
-  const sessionOperator = useOperatorSession();
   const { conversationState, conversationOperatorView, setConversationOperatorView } = useDashStore()
 
   // E.g. `/dashboard?page=2&order=asc`
-
-
-  console.log(searchParams)
   const conversationId = searchParams?.get('conversationId');
-  console.log(searchParams?.entries())
-  console.log(conversationId)
-
 
   const renderMobile = useMemo(() => {
     if (conversationId && conversationState !== 'customerInfo') {
@@ -40,10 +36,11 @@ export default function Page() {
     }
   }, [conversationState, conversationId])
 
-  const render = useMemo(() => {
+  const render = useMemo(() => (
     <div className="grid grid-cols-12">
       <div className='col-span-3'>
         {conversationState === 'list' && <ConversationsListView></ConversationsListView>}
+
         {conversationState === 'search' && <ConversationsSearchView></ConversationsSearchView>}
       </div>
       <div className='col-span-6'>
@@ -53,7 +50,7 @@ export default function Page() {
         <CustomerInfoView></CustomerInfoView>
       </div>
     </div>
-  }, [conversationState])
+  ), [conversationState])
 
   return isDesktop ? render : renderMobile;
 }

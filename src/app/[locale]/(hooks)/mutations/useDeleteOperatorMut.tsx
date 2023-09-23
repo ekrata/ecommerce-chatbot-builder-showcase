@@ -4,7 +4,6 @@ import { UpdateOperator } from '@/entities/entities';
 import { Operator } from '@/entities/operator';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';
 

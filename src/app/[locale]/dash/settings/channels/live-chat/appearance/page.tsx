@@ -1,21 +1,22 @@
 'use client'
 
-import { EntityItem } from 'electrodb';
 import { useTranslations } from 'next-intl';
 import { FC, ReactNode, useState } from 'react';
 import { Controller, Resolver, useForm } from 'react-hook-form';
 import { BsChevronDown, BsChevronUp, BsEye, BsPaintBucket, BsPhone } from 'react-icons/bs';
 import { FaDesktop, FaPaintBrush } from 'react-icons/fa';
 
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
   useUpdateConfigurationMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
 import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries';
-import { ConfigLiveChatAppearance, deviceVisibility } from '@/entities/configuration';
-import { UpdateConfiguration } from '@/entities/entities';
 
 import { Collapse } from '../../../../../(components)/Collapse';
+import {
+  ConfigLiveChatAppearance, deviceVisibility
+} from '../../../../../../../../stacks/entities/configuration';
+import { UpdateConfiguration } from '../../../../../../../../stacks/entities/entities';
 
 const resolver: Resolver<ConfigLiveChatAppearance> = async (values) => {
   return {
@@ -41,7 +42,8 @@ const getTemplateColors = (currentColor: string) => [
 export default function Page() {
   const t = useTranslations('dash.settings')
   const tDash = useTranslations('dash')
-  const { orgId } = useOperatorSession()
+  const [user] = useAuthContext()
+  const orgId = user?.orgId ?? ''
   const configurationQuery = useConfigurationQuery(orgId);
   const updateConfigurationMut = useUpdateConfigurationMut(orgId);
   const { backgroundColor } = { ...configurationQuery.data?.channels?.liveChat?.appearance?.widgetAppearance }
@@ -97,9 +99,9 @@ export default function Page() {
           </div>
           <div className='flex col-span-9 place-items-center gap-x-2'>
             <label>{t('appearance.Left')}</label>
-            <input type="radio" name="radio-widgetPosition-left" className="radio radio-primary" {...register('widgetAppearance.widgetPosition')} value='left' />
+            <input type="radio" className=" radio radio-primary" {...register('widgetAppearance.widgetPosition')} value='left' />
             <FaDesktop className='text-6xl' />
-            <input type="radio" name="radio-widgetPosition-right" className="radio radio-primary" {...register('widgetAppearance.widgetPosition')} value='right' />
+            <input type="radio" className="radio radio-primary" {...register('widgetAppearance.widgetPosition')} value='right' />
             <label>{t('appearance.Right')}</label>
           </div>
           <div className='col-span-3'>
@@ -166,9 +168,9 @@ export default function Page() {
           <div className='col-span-9'>
             <div className='flex col-span-9 place-items-center gap-x-2'>
               <label>{t('appearance.Left')}</label>
-              <input type="radio" name="radio-buttonPosition-left" className="radio radio-primary radio-sm" {...register('mobileWidget.buttonPosition')} value='left' />
+              <input type="radio" className="radio radio-primary radio-sm" {...register('mobileWidget.buttonPosition')} value='left' />
               <BsPhone className='text-6xl' />
-              <input type="radio" name="radio-buttonPosition-right" className="radio radio-primary radio-sm" {...register('mobileWidget.buttonPosition')} value='right' />
+              <input type="radio" className="radio radio-primary radio-sm" {...register('mobileWidget.buttonPosition')} value='right' />
               <label>{t('appearance.Right')}</label>
             </div>
           </div>

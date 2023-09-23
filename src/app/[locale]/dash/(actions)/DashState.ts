@@ -1,9 +1,15 @@
 import {
-    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic
+  ConversationChannel,
+  ConversationStatus,
+  ConversationTopic,
 } from '@/entities/conversation';
 
 import {
-    ConversationOperatorView, ConversationState, DashStateDefinition, DashStateType, StateSlice
+  ConversationOperatorView,
+  ConversationState,
+  DashStateDefinition,
+  DashStateType,
+  StateSlice,
 } from './types';
 
 /**
@@ -26,7 +32,7 @@ const initialDashState: DashStateDefinition = {
  */
 export const createDashState: StateSlice<DashStateType> = (set) => ({
   ...initialDashState,
-  setConversationState: (conversationState: ConversationState) =>
+  setConversationState: (conversationState?: ConversationState) =>
     set((state) => {
       state.conversationState = conversationState;
     }),
@@ -39,7 +45,7 @@ export const createDashState: StateSlice<DashStateType> = (set) => ({
       state.conversationTopic = conversationTopic;
     }),
   setConversationOperatorView: (
-    conversationOperatorView?: ConversationOperatorView
+    conversationOperatorView?: ConversationOperatorView,
   ) =>
     set((state) => {
       state.conversationOperatorView = conversationOperatorView;

@@ -7,16 +7,16 @@ import { ReactNode, useEffect } from 'react';
 import { BsFillBoxSeamFill, BsPeopleFill, BsPerson, BsRobot } from 'react-icons/bs';
 import { FaChevronDown } from 'react-icons/fa';
 import {
-    FcCheckmark, FcClock, FcHighPriority, FcInTransit, FcLink, FcMediumPriority, FcPaid, FcShop
+  FcCheckmark, FcClock, FcHighPriority, FcInTransit, FcLink, FcMediumPriority, FcPaid, FcShop
 } from 'react-icons/fc';
 import { TbStatusChange } from 'react-icons/tb';
 
 import {
-    ConversationChannel, ConversationStatus, ConversationTopic, conversationTopic
+  ConversationChannel, ConversationStatus, ConversationTopic, conversationTopic
 } from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { topicIconMap } from './TopicSelect';
 
 export const statusIconMap: Record<ConversationStatus, ReactNode> = {
@@ -31,7 +31,7 @@ interface Props {
 
 export const StatusSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const t = useTranslations('dash');
-  const sessionOperator = useOperatorSession();
+  const [sessionOperator] = useAuthContext();
   const { setConversationStatus, conversationStatus } = useDashStore()
 
   return (
@@ -53,12 +53,12 @@ export const StatusSelect: React.FC<Props> = ({ dropdownPosition }) => {
                   setConversationStatus(key as ConversationStatus)
                 }
               }} />
-              <p className='flex text-sm place-items-center gap-x-2'>
+              <div className='flex text-sm place-items-center gap-x-2'>
                 <div className='text-2xl'>
                   {icon}
                 </div>
                 {startCase(key)}
-              </p>
+              </div>
             </a>
           </li>
         ))}

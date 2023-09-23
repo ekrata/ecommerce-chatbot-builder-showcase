@@ -1,9 +1,9 @@
 function askNotificationPermission() {
   // function to actually ask the permissions
-  function handlePermission(permission) {
+  function handlePermission(permission: any) {
     // set the button to shown or hidden, depending on what the user answers
-    notificationBtn.style.display =
-      Notification.permission === 'granted' ? 'none' : 'block';
+    // notificationBtn.style.display =
+    //   Notification.permission === 'granted' ? 'none' : 'block';
   }
 
   // Let's check if the browser supports notifications

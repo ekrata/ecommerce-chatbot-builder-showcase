@@ -25,7 +25,7 @@ export const StartConversationCard: React.FC = () => {
   const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const t = useTranslations('chat-widget');
   const customer = useCustomerQuery(orgId);
-  const createConversationMut = useCreateConversationMut(orgId, customer.data?.customerId ?? '');
+  const createConversationMut = useCreateConversationMut(orgId);
   const newCustomerId = uuidv4()
   const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId);
   const { relativeTime } = useFormatter()
@@ -39,11 +39,11 @@ export const StartConversationCard: React.FC = () => {
     const conversationId = uuidv4()
     setSelectedConversationId(conversationId);
     await createCustomerMut.mutateAsync([orgId, '', false])
-    await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, type: 'botChat', channel: 'website', status: 'unassigned' }])
+    await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, channel: 'website', status: 'unassigned' }])
   }
 
   return (
-    <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light normal-case btn btn-ghost animate-ping rounded-3xl text-base-100 place-items-center animate-fade-left animate-once " onClick={async () => await onClick()} >
+    <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light normal-case btn btn-ghost rounded-3xl text-base-100 place-items-center animate-fade-left animate-once " onClick={async () => await onClick()} >
       <div className="flex justify-around place-items-center">
         <div className="w-12 h-12 p-2 rounded-full avatar background ring-2 ring-primary online">
           {configuration.data && <DynamicBackground configuration={configuration.data} />}

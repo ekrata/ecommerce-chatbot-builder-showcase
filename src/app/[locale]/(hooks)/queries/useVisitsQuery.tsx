@@ -15,9 +15,9 @@ export interface PaginateQueryParams {
  * @param {string} orgId
  * @returns {unknown}
  */
-export const getVisits = async (orgId: string) => {
+export const getVisits = async (orgId: string, customerId?: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/visits?expansionFields=${encodeURIComponent(
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/visits?${customerId && 'customerId=' + customerId}&expansionFields=${encodeURIComponent(
       JSON.stringify(['customerId']),
     )}`,
   );
@@ -37,12 +37,12 @@ export const getVisits = async (orgId: string) => {
  * @param {string} orgId
  * @returns {*}
  */
-export const useVisitsQuery = (orgId: string) => {
+export const useVisitsQuery = (orgId: string, customerId?: string) => {
   return useQuery<{
     data: ExpandedVisit[], cursor: string | undefined
   }>({
     queryKey: [orgId, QueryKey.visits],
-    queryFn: async () => getVisits(orgId)
+    queryFn: async () => getVisits(orgId, customerId)
   })
 }
 

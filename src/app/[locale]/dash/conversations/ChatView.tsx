@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FC } from 'react';
@@ -9,7 +9,7 @@ import { FcImport } from 'react-icons/fc';
 import { ConversationItem } from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { CustomerAvatar } from './CustomerAvatar';
 import { OperatorChatInput } from './OperatorChatInput';
@@ -40,10 +40,10 @@ export const ChatView: FC = () => {
   const t = useTranslations('chat-widget');
   const { setConversationState } = useDashStore();
   const searchParams = useSearchParams()
-  const operatorSession = useOperatorSession();
+  const [operatorSession] = useAuthContext();
   const conversationId = searchParams?.get('conversationId')
-  const conversationItemQuery = useConversationItemQuery(operatorSession.orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery.data?.[0]
+  const conversationItemQuery = useConversationItemQuery(operatorSession?.orgId ?? '', conversationId ?? '')
+  const conversationItem = conversationItemQuery.data
 
   return (
     <div className="flex justify-between w-full h-full rounded-3xl">
@@ -62,17 +62,17 @@ export const ChatView: FC = () => {
           {conversationItem?.conversation?.customer?.name}
           {conversationItem?.conversation?.customer && (
             <a onClick={() => setConversationState('customerInfo')} className='flex flex-row place-items-center gap-x-2'>
-              <CustomerAvatar conversationItem={conversationItem} message={conversationItem.messages?.slice(-1)[0]} />
-              <p>{`${conversationItem.conversation?.customer?.name ?? conversationItem.conversation?.customer?.email ?? conversationItem.conversation?.customer?.id}`}</p>
+              <CustomerAvatar conversationItem={conversationItem} />
+              <p>{`${conversationItem.conversation?.customer?.name ?? conversationItem.conversation?.customer?.email ?? conversationItem.conversation?.customer?.customerId}`}</p>
               <FcImport className='text-3xl rotate-180 rounded-full' />
             </a>
           )}
         </div>
         <div
-          className={`flex flex-col place-items-center  w-full  overflow-y-scroll mx-2 `}
+          className={`flex flex-col place-items-center  w-full h-full  justify-stretch  overflow-y-scroll mx-2 `}
         >
           {conversationItemQuery?.isFetching && fetchingConversationItemSkeleton}
-          <OperatorChatLog conversationItem={conversationItem} />
+          {conversationItem && <OperatorChatLog conversationItem={conversationItem} />}
           <OperatorChatInput />
         </div>
       </div>

@@ -1,10 +1,10 @@
-import Link from 'next/link'
+import { Metadata, Route } from 'next';
+import Link from 'next/link';
 
-import { Button } from '@/components/Button'
-import { SelectField, TextField } from '@/components/Fields'
-import { Logo } from '@/components/Logo'
-import { SlimLayout } from '@/components/SlimLayout'
-import { type Metadata } from 'next'
+import { Button } from '../../../components/Button';
+import { SelectField, TextField } from '../../../components/Fields';
+import { Logo } from '../../../components/Logo';
+import { SlimLayout } from '../../../components/SlimLayout';
 
 export const metadata: Metadata = {
   title: 'Sign Up',
@@ -14,8 +14,8 @@ export default function Register() {
   return (
     <SlimLayout>
       <div className="flex">
-        <Link href="/" aria-label="Home">
-          <Logo className="h-10 w-auto" />
+        <Link href={"/" as Route} aria-label="Home">
+          <Logo className="w-auto h-10" />
         </Link>
       </div>
       <h2 className="mt-20 text-lg font-semibold text-gray-900">
@@ -33,7 +33,7 @@ export default function Register() {
       </p>
       <form
         action="#"
-        className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
+        className="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-2"
       >
         <TextField
           label="First name"

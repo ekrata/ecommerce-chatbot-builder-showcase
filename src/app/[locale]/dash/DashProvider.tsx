@@ -1,3 +1,4 @@
+'use client'
 import { PropsWithChildren, ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 
@@ -24,20 +25,12 @@ export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQuery
     }
   })
 
-  const persister = createSyncStoragePersister({ storage: window.localStorage })
-
-  persistQueryClient({
-    queryClient,
-    persister,
-  })
-
-  console.log(mockWsUrl)
   return (
     <>
       <QueryClientProvider
         client={overrideQueryClient ?? queryClient}
       >
-        <DashSocketProvider mockWsUrl={mockWsUrl}>
+        <DashSocketProvider>
           <div className='dark:bg-gray-900' >{children}</div>
           <ToastContainer position="top-center"
             autoClose={5000}

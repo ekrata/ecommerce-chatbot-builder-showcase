@@ -1,22 +1,24 @@
-import { faker } from '@faker-js/faker';
 import { EntityItem } from 'electrodb';
-import { Message, SenderType } from '@/entities/message';
+import { v4 as uuidv4 } from 'uuid';
+
+import { Configuration } from '@/entities/configuration';
 import {
   Conversation,
-  ConversationStatus,
   conversationChannel,
+  ConversationStatus,
   conversationTopic,
   conversationType,
 } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
-import { v4 as uuidv4 } from 'uuid';
-import { Org, orgPlanTier } from '@/entities/org';
+import { Message, SenderType } from '@/entities/message';
 import { Operator } from '@/entities/operator';
-import { DefaultTags } from './Chat.type';
-import { Configuration } from '@/entities/configuration';
+import { Org, orgPlanTier } from '@/entities/org';
 import { Translation } from '@/entities/translation';
-import translation from '../../../../../mocks/translation.json';
+import { faker } from '@faker-js/faker';
+
 import configuration from '../../../../../mocks/configuration.json';
+import translation from '../../../../../mocks/translation.json';
+import { DefaultTags } from './Chat.type';
 
 /**
  * Description placeholder
@@ -49,7 +51,7 @@ export const createRandomOrg = (): EntityItem<typeof Org> => {
  * @returns {EntityItem<typeof Configuration>}
  */
 export const loadConfiguration = (
-  orgId: string
+  orgId: string,
 ): EntityItem<typeof Configuration> => {
   return {
     ...(configuration as EntityItem<typeof Configuration>),
@@ -72,7 +74,7 @@ export const createRandomMessage = (
   conversationId: string,
   operatorId: string,
   customerId: string,
-  typing?: number
+  typing?: number,
 ): EntityItem<typeof Message> => {
   const now = new Date();
   const twoHoursAgo = new Date();
@@ -104,14 +106,14 @@ export const createRandomMessage = (
  */
 export const createRandomMessages = (
   params: Parameters<typeof createRandomMessage>,
-  count: number
+  count: number,
 ) => {
   const lastParams = params;
   lastParams.slice(-1)[0] = undefined;
   return Array.from(Array(count)).map((_, i) =>
     i + 1 === count
       ? createRandomMessage(...lastParams)
-      : createRandomMessage(...params)
+      : createRandomMessage(...params),
   );
 };
 
@@ -145,7 +147,7 @@ export const createRandomConversation = (
   status: ConversationStatus,
   orgId: string,
   operatorId: string,
-  customerId: string
+  customerId: string,
 ): EntityItem<typeof Conversation> => {
   const now = new Date();
   const twoHoursAgo = new Date();
@@ -173,7 +175,7 @@ export const createRandomConversation = (
  * @returns {EntityItem<typeof Customer>}
  */
 export const createRandomCustomer = (
-  orgId: string
+  orgId: string,
 ): EntityItem<typeof Customer> => {
   const now = new Date();
   const twoHoursAgo = new Date();
@@ -207,7 +209,7 @@ export const createRandomCustomer = (
  * @returns {EntityItem<typeof Operator>}
  */
 export const createRandomOperator = (
-  orgId: string
+  orgId: string,
 ): EntityItem<typeof Operator> => {
   const now = new Date();
   const twoHoursAgo = new Date();

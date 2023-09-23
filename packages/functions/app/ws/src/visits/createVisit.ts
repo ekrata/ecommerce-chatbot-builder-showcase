@@ -4,12 +4,9 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import { Conversation } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
 import { Visit } from '@/entities/visit';
 import * as Sentry from '@sentry/serverless';
 
-import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
 import { WsAppMessage } from '../WsMessage';
@@ -17,7 +14,7 @@ import { WsAppMessage } from '../WsMessage';
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event, context) => {
+  ApiHandler(async (event: any, context) => {
     try {
       const newImage = DynamoDB.Converter.unmarshall(
         event?.detail?.dynamodb?.NewImage,
@@ -26,10 +23,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       if (!visitData) {
         return {
           statusCode: 500,
-          body: {
-            error:
-              'Failed to parse the eventbridge event into a usable entity.',
-          },
+          body: 'Failed to parse the eventbridge event into a usable entity.',
         };
       }
       const { orgId, customerId } = visitData;

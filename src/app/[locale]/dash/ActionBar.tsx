@@ -8,7 +8,7 @@ export const getFeatureName = (pathname: string) =>
 
 export default function ActionBar() {
   const path = usePathname();
-  const featureName = getFeatureName(path);
+  const featureName = getFeatureName(path ?? '');
   // if (featureName === 'home') {
   //   return
   // }

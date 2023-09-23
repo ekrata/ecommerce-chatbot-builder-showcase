@@ -17,8 +17,9 @@ import { HiDocumentText } from 'react-icons/hi2';
 import { MdEmail, MdPhone } from 'react-icons/md';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
+import { useVisitsQuery } from '../../(hooks)/queries/useVisitsQuery';
 import { CustomerAvatar } from './CustomerAvatar';
 
 type InfoTabs = 'Profile' | 'Visited Pages' | 'Notes';
@@ -47,12 +48,13 @@ export const CustomerInfoView: FC = () => {
   const tDash = useTranslations('dash');
   const [currentTab, setCurrentTab] = useState<InfoTabs>('Profile');
   const { conversationState, setConversationState } = useDashStore();
-  const operatorSession = useOperatorSession();
-  const { orgId } = operatorSession
+  const [operatorSession] = useAuthContext();
+  const orgId = operatorSession?.orgId ?? ''
   const searchParams = useSearchParams();
   const conversationId = searchParams?.get('conversationId')
   const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery.data?.[0]
+  const conversationItem = conversationItemQuery?.data
+  const visitsQuery = useVisitsQuery(orgId, conversationItem?.conversation?.customerId)
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
       <h5 className='flex font-semibold'><BsChat />{tDash('conversations', { count: 0 })}</h5>
@@ -76,7 +78,6 @@ export const CustomerInfoView: FC = () => {
       timezone,
       tags,
       properties,
-      visitedPages,
       notes,
     },
   } = conversationItem?.conversation;
@@ -115,7 +116,7 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='visited-pages-button'
-            className={`tab tab-bordered w-1/3 ${currentTab === visitedPages && tabActive
+            className={`tab tab-bordered w-1/3 ${currentTab === 'Visited Pages' && tabActive
               }`}
             onClick={() => setCurrentTab(visitedPagesTabLabel)}
           >
@@ -176,17 +177,16 @@ export const CustomerInfoView: FC = () => {
             </ul>
           </div>
         )}
-        {currentTab === visitedPages && (
+        {currentTab === 'Visited Pages' && (
           <div className='p-4 my-6 shadow-lg '>
             <ul className='space-y-4'>
-              {Object.entries(visitedPages)
-                .reverse()
-                ?.map(([key, link]) => (
+              {visitsQuery?.data?.data
+                ?.map((item) => (
                   <li className='flex gap-x-2'>
                     <p className='text-subtitle'>
-                      {relativeTime(new Date(parseInt(key, 10)), new Date())}
+                      {relativeTime(new Date(item.at), new Date())}
                     </p>
-                    <a className='link link-primary'>{visitedPages}</a>
+                    <a className='link link-primary'>{item.url}</a>
                   </li>
                 ))}
             </ul>

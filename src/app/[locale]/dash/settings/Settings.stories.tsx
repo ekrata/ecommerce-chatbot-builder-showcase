@@ -3,10 +3,7 @@ import { Client, Server } from 'mock-socket';
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
 
-import { setOperatorSession } from '../../(helpers)/useOperatorSession';
-import { createRandomOperator } from '../../dash/inbox/mocks.test';
-import { DashProvider } from '../DashProvider';
-import LocaleLayout from '../layout';
+import LocaleLayout from '../../layout';
 import { defaultRoutes, existingConversationRoutes } from '../mswRoutes';
 import Page from './page';
 
@@ -25,7 +22,6 @@ const mockWsUrl = process.env.NEXT_PUBLIC_APP_WS_URL ?? 'Check .ENV'
 const lang = 'en';
 let mockSocket: Client;
 const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-setOperatorSession({ ...createRandomOperator(orgId), online: true })
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,11 +55,9 @@ export const PageView: Story = {
 
     return (
       <div className='h-screen'>
-        <DashProvider {...props}>
-          <Layout>
-            <Page></Page>
-          </Layout>
-        </DashProvider>
+        <LocaleLayout params={{ locale: 'en' }}>
+          <Page></Page>
+        </LocaleLayout>
       </div >
     );
   },

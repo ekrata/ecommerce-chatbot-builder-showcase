@@ -1,11 +1,9 @@
 'use client';
 
-import { Typography } from '../../mt-components';
-
 export default function Footer() {
   return (
-    <footer className='w-full bg-white p-8'>
-      <div className='flex flex-row flex-wrap items-center justify-center gap-y-6 gap-x-12 bg-white text-center md:justify-between'>
+    <footer className='w-full p-8 bg-white'>
+      <div className='flex flex-row flex-wrap items-center justify-center text-center bg-white gap-y-6 gap-x-12 md:justify-between'>
         <ul className='flex flex-wrap items-center gap-y-2 gap-x-8'>
           <li />
         </ul>

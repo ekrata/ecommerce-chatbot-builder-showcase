@@ -3,7 +3,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
   useUpdateConfigurationMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
@@ -31,7 +31,8 @@ const resolver: Resolver<ConfigTicketing> = async (values) => {
 export default function Page() {
   const t = useTranslations('dash.settings.Ticketing')
   const tDash = useTranslations('dash')
-  const { orgId } = useOperatorSession()
+  const [user] = useAuthContext()
+  const orgId = user?.orgId ?? ''
   const configurationQuery = useConfigurationQuery(orgId);
   const updateConfigurationMut = useUpdateConfigurationMut(orgId);
   const ticketing = { ...configurationQuery.data?.channels?.ticketing }

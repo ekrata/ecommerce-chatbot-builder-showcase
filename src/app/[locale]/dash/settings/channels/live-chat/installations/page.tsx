@@ -10,7 +10,7 @@ import { FaDesktop, FaPaintBrush, FaShopify } from 'react-icons/fa';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { useCopyToClipboard } from 'usehooks-ts';
 
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
   useUpdateConfigurationMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
@@ -53,7 +53,8 @@ export type SupportedInstallation = (typeof supportedInstallations)[number]
 
 export default function Page() {
   const t = useTranslations('dash.settings.installation')
-  const { orgId } = useOperatorSession()
+  const [user] = useAuthContext()
+  const orgId = user?.orgId ?? ''
   const configurationQuery = useConfigurationQuery(orgId);
   const orgQuery = useOrgQuery(orgId);
   const updateConfigurationMut = useUpdateConfigurationMut(orgId);
@@ -64,7 +65,7 @@ export default function Page() {
   const onSubmit = handleSubmit(async (data) => {
     const updateBody: UpdateConfiguration = {
       ...configurationQuery.data, channels: {
-        ...configurationQuery?.data?.channels, liveChat: { ...configurationQuery?.data?.channels?.liveChat, appearance: { ...data, widgetAppearance: { ...data.widgetAppearance, backgroundColor: selectedBackgroundColor }, } }
+        ...configurationQuery?.data?.channels, liveChat: { ...configurationQuery?.data?.channels?.liveChat, appearance: { ...data, widgetAppearance: { ...data.widgetAppearance, backgroundColor: '' }, } }
       }
     }
     await updateConfigurationMut.mutateAsync([orgId, updateBody])

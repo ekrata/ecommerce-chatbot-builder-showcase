@@ -10,9 +10,11 @@ const client = new AWS.EventBridge();
 // const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event, ctx) => {
+  ApiHandler(async (event: any, ctx) => {
     try {
-      event?.Records?.forEach(async (record: object) => {
+      // eslint-disable-next-line no-use-before-define
+      event?.Records?.forEach(async (record: any) => {
+        // eslint-disable-next-line no-use-before-define
         console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
         // CREATE
         if (record.eventName === 'INSERT') {

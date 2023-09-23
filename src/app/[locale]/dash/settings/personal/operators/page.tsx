@@ -9,7 +9,7 @@ import { BsPerson, BsPersonFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useCreateOperatorMut } from '@/app/[locale]/(hooks)/mutations/useCreateOperatorMut';
 import { useDeleteOperatorMut } from '@/app/[locale]/(hooks)/mutations/useDeleteOperatorMut';
 import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries';
@@ -20,8 +20,8 @@ import { getOperatorIcon, NewOperatorModal } from './NewOperatorModal';
 export default function Page() {
   const tDash = useTranslations('dash')
   const t = useTranslations('dash.settings.Operators')
-  const operator = useOperatorSession()
-  const { orgId, operatorId } = operator
+  const [operator] = useAuthContext()
+  const orgId = operator?.orgId ?? ''
   const newOperatorId = uuidv4()
   const configurationQuery = useConfigurationQuery(orgId);
   const operatorsQuery = useOperatorsQuery(orgId);

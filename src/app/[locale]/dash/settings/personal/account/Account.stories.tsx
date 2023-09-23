@@ -3,10 +3,8 @@ import { Client, Server, ServerOptions } from 'mock-socket';
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
 
-import { DashProvider } from '../../../DashProvider';
-import { createRandomOperator } from '../../../inbox/mocks.test';
+import LocaleLayout from '../../../../layout';
 import { defaultRoutes, existingConversationRoutes } from '../../../mswRoutes';
-import LocaleLayout from '../../layout';
 import Page from './page';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -57,11 +55,9 @@ export const PageView: Story = {
 
     return (
       <div className='h-screen'>
-        <DashProvider {...props}>
-          <LocaleLayout>
-            <Page></Page>
-          </LocaleLayout>
-        </DashProvider>
+        <LocaleLayout params={{ locale: 'en' }}>
+          <Page></Page>
+        </LocaleLayout>
       </div >
     );
   },

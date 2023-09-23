@@ -6,9 +6,9 @@ import { BsChevronUp } from 'react-icons/bs';
 import { useCopyToClipboard } from 'usehooks-ts';
 
 import { LanguageCode, languageCodeMap } from '@/app/[locale]/(helpers)/lang';
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
-    useDeleteChatWidgetTranslation
+  useDeleteChatWidgetTranslation
 } from '@/app/[locale]/(hooks)/mutations/useDeleteChatWidgetTranslation';
 import { useUpdateTranslationMut } from '@/app/[locale]/(hooks)/mutations/useUpdateTranslationMut';
 import { useConfigurationQuery, useOrgQuery } from '@/app/[locale]/(hooks)/queries';
@@ -47,7 +47,8 @@ interface Props {
 export default function Page() {
   const t = useTranslations('dash.settings.translations')
   const tDash = useTranslations('dash')
-  const { orgId } = useOperatorSession()
+  const [user] = useAuthContext()
+  const orgId = user?.orgId ?? ''
   const configurationQuery = useConfigurationQuery(orgId);
   const locale = useLocale();
   const orgQuery = useOrgQuery(orgId);

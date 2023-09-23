@@ -16,6 +16,6 @@ export default function Page() {
   console.log(params)
 
   return (
-    <EditorView articleId={articleId} />
+    <EditorView articleId={Array.isArray(articleId) ? articleId[0] : articleId} />
   )
 }

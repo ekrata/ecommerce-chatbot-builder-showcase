@@ -1,8 +1,10 @@
 import { EntityItem } from 'electrodb';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Customer } from '@/entities/customer';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useCreateCustomerMut } from '../mutations/useCreateCustomerMut';
 import { QueryKey } from '../queries';
 
 /**
@@ -36,6 +38,8 @@ export const getCustomer = async (orgId: string, customerId: string) => {
  */
 export const useCustomerQuery = (orgId: string) => {
   const queryClient = useQueryClient();
+  const newCustomerId = uuidv4()
+  const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId);
   return useQuery<EntityItem<typeof Customer>>({
     queryKey: [orgId, QueryKey.customer], initialData: () => {
       // Check if we have anything in cache and return that, otherwise get initial data
@@ -43,7 +47,6 @@ export const useCustomerQuery = (orgId: string) => {
       if (cachedData) {
         return cachedData;
       }
-      return undefined;
     },
     cacheTime: Infinity,
     queryFn: async () => {
@@ -51,7 +54,7 @@ export const useCustomerQuery = (orgId: string) => {
       if (customer?.customerId) {
         return await getCustomer(orgId, customer?.customerId ?? '')
       } else {
-        return undefined
+        return await createCustomerMut.mutateAsync([orgId, '', false])
       }
     }
   })

@@ -1,8 +1,8 @@
-import { articleContentsStack } from 'packages/functions/app/api/src/article-contents/ArticleContentsStack';
+import { articleContentsStack } from 'packages/functions/app/api/src/article-contents/articleContentsStack';
 import { articlesStack } from 'packages/functions/app/api/src/articles/articlesStack';
-import { configurationStack } from 'packages/functions/app/api/src/configuration/ConfigurationStack';
-import { conversationsStack } from 'packages/functions/app/api/src/conversations/ConversationsStack';
-import { customersStack } from 'packages/functions/app/api/src/customers/CustomersStack';
+import { configurationStack } from 'packages/functions/app/api/src/configuration/configurationStack';
+import { conversationsStack } from 'packages/functions/app/api/src/conversations/conversationsStack';
+import { customersStack } from 'packages/functions/app/api/src/customers/customersStack';
 import { messagesStack } from 'packages/functions/app/api/src/messages/messagesStack';
 import { operatorsStack } from 'packages/functions/app/api/src/operators/operatorsStack';
 import { orgsStack } from 'packages/functions/app/api/src/orgs/orgsStack';

@@ -17,7 +17,7 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
  * @type {*}
  */
 export const handler = Sentry.AWSLambda.wrapHandler(
-  async (event, ctx, callback) => {
+  async (event: any, ctx, callback) => {
     try {
       const { orgId, customerId, operatorId } = event?.queryStringParameters;
       if ((!orgId && !customerId) || (!orgId && !operatorId)) {

@@ -4,7 +4,7 @@ import { UpdateOperator } from '@/entities/entities';
 import { Operator } from '@/entities/operator';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { setOperatorSession, useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../AuthProvider';
 import { MutationKey } from '../mutations';
 
 export const updateOperator = async (
@@ -25,7 +25,7 @@ export const updateOperator = async (
 
 
 const updateOperatorReducer = (oldOperator: EntityItem<typeof Operator>, updatedOperator: EntityItem<typeof Operator>) => {
-  setOperatorSession({ ...oldOperator, ...updatedOperator })
+  ({ ...oldOperator, ...updatedOperator })
 }
 
 /**
@@ -38,12 +38,14 @@ const updateOperatorReducer = (oldOperator: EntityItem<typeof Operator>, updated
  */
 export const useUpdateOperatorMut = (orgId: string, operatorId: string) => {
   const queryClient = useQueryClient()
-  const operatorSession = useOperatorSession()
+  const [user, setAuthContext] = useAuthContext()
   return useMutation({
     mutationKey: [orgId, operatorId, MutationKey.updateOperator],
     mutationFn: async (params: Parameters<typeof updateOperator>) => await updateOperator(...params),
     onSuccess: (updatedOperator) => {
-      updateOperatorReducer(operatorSession, updatedOperator)
+      if (user) {
+        updateOperatorReducer(user, updatedOperator)
+      }
     }
   })
 }

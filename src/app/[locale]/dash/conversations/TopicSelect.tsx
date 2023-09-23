@@ -2,7 +2,6 @@
 
 import { getCookie } from 'cookies-next';
 import { startCase } from 'lodash';
-import { t } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { ReactNode, useEffect } from 'react';
 import { BsFillBoxSeamFill, BsPeopleFill, BsPerson, BsRobot } from 'react-icons/bs';
@@ -13,7 +12,7 @@ import { MdOutlineTopic } from 'react-icons/md';
 import { ConversationTopic } from '@/entities/conversation';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 
 export const topicIconMap: Record<ConversationTopic, ReactNode> = {
   'products': <FcPaid />,
@@ -28,7 +27,7 @@ interface Props {
 
 export const TopicSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const t = useTranslations('dash');
-  const sessionOperator = useOperatorSession();
+  const [sessionOperator] = useAuthContext();
   const { conversationOperatorView, setConversationOperatorView, setConversationTopic, conversationTopic } = useDashStore()
 
   return (
@@ -50,12 +49,12 @@ export const TopicSelect: React.FC<Props> = ({ dropdownPosition }) => {
                   setConversationTopic(key as ConversationTopic)
                 }
               }} />
-              <p className='flex text-sm place-items-center gap-x-2'>
+              <div className='flex text-sm place-items-center gap-x-2'>
                 <div className='text-2xl'>
                   {icon}
                 </div>
                 {startCase(key)}
-              </p>
+              </div>
             </a>
           </li>
         ))}

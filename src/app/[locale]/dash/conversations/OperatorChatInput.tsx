@@ -8,12 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { CreateMessage } from '@/entities/entities';
 
-import { getItem } from '../../(helpers)/helpers';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useCreateMessageMut } from '../../(hooks)/mutations/useCreateMessageMut';
-import { useConfigurationQuery, useOrgQuery } from '../../(hooks)/queries';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
-import { useCustomerQuery } from '../../(hooks)/queries/useCustomerQuery';
 
 type Inputs = {
   msg: string
@@ -21,14 +18,13 @@ type Inputs = {
 
 export const OperatorChatInput: FC = () => {
   const t = useTranslations('chat-widget');
-  const operatorSession = useOperatorSession();
-  const { orgId } = operatorSession
+  const [operatorSession] = useAuthContext();
   const searchParams = useSearchParams();
-  const conversationId = searchParams.get('conversationId')
-  const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery.data?.[0]
+  const conversationId = searchParams?.get('conversationId')
+  const conversationItemQuery = useConversationItemQuery(operatorSession?.orgId ?? '', conversationId ?? '')
+  const conversationItem = conversationItemQuery?.data
 
-  const createMessageMut = useCreateMessageMut(orgId, conversationItem?.customer?.data?.customerId, conversationId ?? '');
+  const createMessageMut = useCreateMessageMut(operatorSession?.orgId ?? '', conversationItem?.conversation.customer?.customerId ?? '', conversationId ?? '');
 
   const {
     register,
@@ -41,14 +37,14 @@ export const OperatorChatInput: FC = () => {
     const createMessage: CreateMessage = {
       messageId: messageId,
       conversationId: conversationId ?? '',
-      orgId,
-      customerId: conversationItem?.customer?.data?.customerId,
+      orgId: operatorSession?.orgId ?? '',
+      customerId: conversationItem?.conversation.customer?.customerId ?? '',
       operatorId: conversationItem?.conversation?.operator?.operatorId ?? '',
       content: msg,
       sentAt: Date.now(),
       sender: 'customer'
     }
-    await createMessageMut.mutateAsync([orgId, conversationId ?? '', messageId ?? '', createMessage])
+    await createMessageMut.mutateAsync([operatorSession?.orgId ?? '', conversationId ?? '', messageId ?? '', createMessage])
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='w-full'>

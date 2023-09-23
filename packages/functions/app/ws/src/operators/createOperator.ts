@@ -16,7 +16,7 @@ import { postToConnection } from '../postToConnection';
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event, context) => {
+  ApiHandler(async (event: any, context) => {
     try {
       const newImage = DynamoDB.Converter.unmarshall(
         event?.detail?.dynamodb?.NewImage,
@@ -25,10 +25,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       if (!operatorData) {
         return {
           statusCode: 500,
-          body: {
-            error:
-              'Failed to parse the eventbridge event into a usable entity.',
-          },
+          body: 'Failed to parse the eventbridge event into a usable entity.',
         };
       }
       const { orgId } = operatorData;

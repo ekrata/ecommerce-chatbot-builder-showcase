@@ -56,7 +56,7 @@ export const ConversationsScreen: FC = () => {
   const conversationItems = useConversationItemsByCustomerQuery(orgId, customer.data?.customerId ?? '')
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
-      <h5 className='flex font-semibold'>{t('messages', { count: 0 })}</h5>
+      <h5 className='flex font-semibold'>{t('Messages', { count: 0 })}</h5>
     </div>
   )
 

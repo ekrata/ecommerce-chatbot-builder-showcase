@@ -3,7 +3,7 @@ import { Client } from 'mock-socket';
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
 
-import { setOperatorSession } from '../../(helpers)/useOperatorSession';
+import LocaleLayout from '../../layout';
 import { DashProvider } from '../DashProvider';
 import { createRandomOperator } from '../inbox/mocks.test';
 import Layout from '../layout';
@@ -25,7 +25,7 @@ const mockWsUrl = process.env.NEXT_PUBLIC_APP_WS_URL ?? 'Check .ENV'
 const lang = 'en';
 let mockSocket: Client;
 const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
-setOperatorSession({ ...createRandomOperator(orgId), online: true })
+// setAuthContext({ ...createRandomOperator(orgId), online: true })
 
 const queryClient = new QueryClient({
   defaultOptions: {

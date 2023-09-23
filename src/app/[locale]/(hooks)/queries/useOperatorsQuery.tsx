@@ -36,7 +36,9 @@ export const useOperatorsQuery = (orgId: string, online?: boolean) => {
   return useQuery<EntityItem<typeof Operator>[]>({
     queryKey: [orgId, QueryKey.operators],
     queryFn: async () => {
-      return await getOperators(orgId) ?? []
+      const data = await getOperators(orgId) ?? []
+      return data.data
+
     }
   })
 }

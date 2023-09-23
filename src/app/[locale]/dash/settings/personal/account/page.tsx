@@ -1,17 +1,13 @@
 import ct from 'countries-and-timezones';
-import { t } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { BsPerson } from 'react-icons/bs';
-import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
 import { languageCodeMap } from '@/app/[locale]/(helpers)/lang';
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useUpdateOperatorMut } from '@/app/[locale]/(hooks)/mutations/useUpdateOperatorMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries';
-import { Avatar } from '@/app/[locale]/chat-widget/(screens)/(messages)/Avatar';
 import { UpdateOperator } from '@/entities/entities';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -27,13 +23,12 @@ const schema = z.object({
 export default function Page() {
   const tDash = useTranslations('dash')
   const t = useTranslations('dash.settings.Account')
-  const operator = useOperatorSession()
-  const { orgId, operatorId } = operator
-  const configurationQuery = useConfigurationQuery(orgId);
+  const [user] = useAuthContext()
+  const orgId = user?.orgId ?? ''
+  const operatorId = user?.operatorId ?? ''
   const updateOperatorMut = useUpdateOperatorMut(orgId, operatorId)
-  const timezones = ct.getAllTimezones();
 
-  const { register, handleSubmit, setValue, getValues, control, formState: { errors } } = useForm({ defaultValues: { ...operator }, resolver: zodResolver(schema) });
+  const { register, handleSubmit, setValue, getValues, control, formState: { errors } } = useForm({ defaultValues: { ...user }, resolver: zodResolver(schema) });
   const onSubmit = handleSubmit(async (data) => {
     const updateBody: UpdateOperator = {
       ...data
@@ -66,8 +61,8 @@ export default function Page() {
         <div className='flex col-span-9 place-items-center gap-x-2'>
           <div className="avatar">
             <div className="w-10 mask mask-squircle">
-              {operator.profilePicture ?
-                <img src={operator.profilePicture}></img>
+              {user?.profilePicture ?
+                <img src={user.profilePicture}></img>
                 :
                 <BsPerson></BsPerson>
               }
@@ -76,7 +71,7 @@ export default function Page() {
           <input type="file" className="w-full max-w-xs file-input file-input-bordered file-input-sm file-input-primary " />
         </div>
         <div className='col-span-3'>
-          {t('Email')}
+          {tDash('Email')}
         </div>
         <div className='col-span-9'>
           <input className='input input-sm input-bordered'></input>

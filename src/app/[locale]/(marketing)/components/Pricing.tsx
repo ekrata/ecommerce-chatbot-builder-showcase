@@ -1,7 +1,7 @@
-import clsx from 'clsx'
+import clsx from 'clsx';
 
-import { Button } from '@/components/Button'
-import { Container } from '@/components/Container'
+import { Button } from '../components/Button';
+import { Container } from '../components/Container';
 
 function SwirlyDoodle(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -72,7 +72,7 @@ function Plan({
         featured ? 'order-first bg-blue-600 py-8 lg:order-none' : 'lg:py-8',
       )}
     >
-      <h3 className="mt-5 font-display text-lg text-white">{name}</h3>
+      <h3 className="mt-5 text-lg text-white font-display">{name}</h3>
       <p
         className={clsx(
           'mt-2 text-base',
@@ -81,7 +81,7 @@ function Plan({
       >
         {description}
       </p>
-      <p className="order-first font-display text-5xl font-light tracking-tight text-white">
+      <p className="order-first text-5xl font-light tracking-tight text-white font-display">
         {price}
       </p>
       <ul
@@ -99,7 +99,7 @@ function Plan({
         ))}
       </ul>
       <Button
-        href={href}
+        href={{ pathname: href }}
         variant={featured ? 'solid' : 'outline'}
         color="white"
         className="mt-8"
@@ -116,11 +116,11 @@ export function Pricing() {
     <section
       id="pricing"
       aria-label="Pricing"
-      className="bg-slate-900 py-20 sm:py-32"
+      className="py-20 bg-slate-900 sm:py-32"
     >
       <Container>
         <div className="md:text-center">
-          <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl">
+          <h2 className="text-3xl tracking-tight text-white font-display sm:text-4xl">
             <span className="relative whitespace-nowrap">
               <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-blue-400" />
               <span className="relative">Simple pricing,</span>
@@ -132,7 +132,7 @@ export function Pricing() {
             work well for you.
           </p>
         </div>
-        <div className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
+        <div className="grid max-w-2xl grid-cols-1 mt-16 -mx-4 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
           <Plan
             name="Starter"
             price="$9"

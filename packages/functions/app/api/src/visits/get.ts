@@ -17,7 +17,6 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    console.log('hi');
     const { orgId, visitId } = usePathParams();
     const expansionFields = JSON.parse(
       useQueryParam('expansionFields') ?? '[]',

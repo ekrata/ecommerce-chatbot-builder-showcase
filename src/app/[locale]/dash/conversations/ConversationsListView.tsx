@@ -7,13 +7,8 @@ import { BiChevronRight, BiMailSend, BiSend } from 'react-icons/bi';
 import { BsChat, BsSearch, BsWhatsapp, BsX } from 'react-icons/bs';
 import { FcSearch } from 'react-icons/fc';
 
-import {
-    ConversationChannel, ConversationItem, ConversationItemSearchRes, ConversationTopic,
-    conversationTopic
-} from '@/entities/conversation';
-
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useConversationItemsQuery } from '../../(hooks)/queries/useConversationItemsQuery';
 import { ChannelSelect } from './ChannelSelect';
 import { OperatorConversationCard } from './OperatorConversationCard';
@@ -43,11 +38,11 @@ const fetchingArticlesSkeleton = (
 export const ConversationsListView: FC = () => {
   const t = useTranslations('dash');
   const { setConversationState, conversationOperatorView, conversationChannel, conversationTopic, conversationStatus } = useDashStore();
-  const operatorSession = useOperatorSession();
+  const [operatorSession] = useAuthContext();
   const locale = useLocale();
   const [cursor, setCursor] = useState<string | undefined>(undefined)
 
-  const conversationItems = useConversationItemsQuery({ orgId: operatorSession.orgId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true', topic: conversationTopic, channel: conversationChannel, operatorId: conversationOperatorView })
+  const conversationItems = useConversationItemsQuery({ orgId: operatorSession?.orgId ?? '', expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true', topic: conversationTopic, channel: conversationChannel, operatorId: conversationOperatorView })
 
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>

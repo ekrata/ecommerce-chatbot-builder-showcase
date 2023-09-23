@@ -1,24 +1,23 @@
 'use client'
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { FC, ReactNode, useMemo, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
-import { BsSearch, BsX } from 'react-icons/bs';
+import { BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 import { FcSearch } from 'react-icons/fc';
 import { useDebounce } from 'usehooks-ts';
 
-import {
-    ConversationItemSearchKey, conversationItemSearchKey, ConversationItemSearchRes
-} from '@/entities/conversation';
-
 import { useDashStore } from '../(actions)/useDashStore';
 import { highlightMatches } from '../../(helpers)/highlightMatches';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import {
-    useSearchConversationItemsQuery
+  useSearchConversationItemsQuery
 } from '../../(hooks)/queries/useSearchConversationItemsQuery';
+import {
+  ConversationItemSearchKey, conversationItemSearchKey, ConversationItemSearchRes
+} from '../../../../../stacks/entities/conversation';
 import { ChannelSelect } from './ChannelSelect';
 import { OperatorSelect } from './OperatorSelect';
 import { StatusSelect } from './StatusSelect';
@@ -45,10 +44,10 @@ export const ConversationsSearchView: FC = () => {
   const tCw = useTranslations('chat-widget');
   const t = useTranslations('dash');
   const { conversationOperatorView, conversationChannel, conversationTopic, setConversationState } = useDashStore();
-  const operatorSession = useOperatorSession();
+  const [operatorSession] = useAuthContext();
   const [phrase, setPhrase] = useState('');
   const debouncedSearchPhrase = useDebounce(phrase, 150);
-  const searchConversationItemsQuery = useSearchConversationItemsQuery({ expansionFields: ['customerId', 'operatorId'], cursor: undefined, orgId: operatorSession.orgId, operatorId: conversationOperatorView, channel: conversationChannel, topic: conversationTopic, phrase: debouncedSearchPhrase })
+  const searchConversationItemsQuery = useSearchConversationItemsQuery({ expansionFields: ['customerId', 'operatorId'], cursor: undefined, orgId: operatorSession?.orgId ?? '', operatorId: conversationOperatorView, channel: conversationChannel, topic: conversationTopic, phrase: debouncedSearchPhrase })
   const {
     register,
     handleSubmit,

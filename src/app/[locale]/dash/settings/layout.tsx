@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { PropsWithChildren, useMemo } from 'react';
 
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
 import { SettingsMenu } from './SettingsMenu';
 
 export default function Layout({ children }: PropsWithChildren) {

@@ -19,6 +19,7 @@ import { getOrg } from '../chat-widget/(actions)/orgs/getOrg';
  */
 
 export enum QueryKey {
+  session = 'session',
   conversationItems = 'conversationItems',
   conversationItem = 'conversationItem',
   org = 'org',

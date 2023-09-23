@@ -11,7 +11,7 @@ import { FcAlarmClock, FcClock, FcGlobe } from 'react-icons/fc';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useOperatorSession } from '../../(helpers)/useOperatorSession';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useCreateConversationMut } from '../../(hooks)/mutations/useCreateConversationMut';
 import { useVisitsQuery } from '../../(hooks)/queries/useVisitsQuery';
 import { CustomerAvatar } from '../conversations/CustomerAvatar';
@@ -71,8 +71,8 @@ export const VisitorView: FC = () => {
   const router = useRouter();
 
   const { relativeTime } = useFormatter();
-  const operatorSession = useOperatorSession();
-  const { orgId } = operatorSession
+  const [operatorSession] = useAuthContext();
+  const orgId = operatorSession?.orgId ?? ''
   const visitsQuery = useVisitsQuery(orgId);
   const searchParams = useSearchParams();
   const createConversationMut = useCreateConversationMut(orgId)
@@ -85,7 +85,7 @@ export const VisitorView: FC = () => {
 
   const handleStartChat = async (customerId: string) => {
     const conversationId = uuidv4()
-    await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, operatorId: operatorSession.operatorId, customerId, channel: 'website', status: 'open' }])
+    await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, operatorId: operatorSession?.operatorId, customerId, channel: 'website', status: 'open' }])
     router.push(`/conversations?conversationId=${conversationId}`)
   }
 

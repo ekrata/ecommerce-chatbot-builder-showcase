@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/serverless';
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  async (event, ctx, callback) => {
+  async (event: any, ctx, callback) => {
     try {
       const customer = (
         await appDb.entities.customers

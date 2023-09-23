@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 export function NavLink({
   href,
@@ -9,8 +9,8 @@ export function NavLink({
 }) {
   return (
     <Link
-      href={href}
-      className="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+      href={{ pathname: href }}
+      className="inline-block px-2 py-1 text-sm rounded-lg text-slate-700 hover:bg-slate-100 hover:text-slate-900"
     >
       {children}
     </Link>

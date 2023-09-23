@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import clsx from 'clsx'
+import clsx, { ClassValue } from 'clsx';
+import Link from 'next/link';
 
 const baseStyles = {
   solid:
@@ -35,11 +35,11 @@ type ButtonProps<
   variant?: Variant
   color?: Color
 } & (
-  | Omit<React.ComponentPropsWithoutRef<typeof Link>, 'color'>
-  | (Omit<React.ComponentPropsWithoutRef<'button'>, 'color'> & {
+    | Omit<React.ComponentPropsWithoutRef<typeof Link>, 'color'>
+    | (Omit<React.ComponentPropsWithoutRef<'button'>, 'color'> & {
       href?: undefined
     })
-)
+  )
 
 export function Button<
   Color extends ColorKey<Variant>,
@@ -50,7 +50,8 @@ export function Button<
 
   className = clsx(
     baseStyles[variant],
-    variantStyles[variant][color],
+    // eslint-disable-next-line
+    variantStyles[variant][color] as ClassValue,
     className,
   )
 

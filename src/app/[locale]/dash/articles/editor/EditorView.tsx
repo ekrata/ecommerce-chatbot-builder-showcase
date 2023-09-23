@@ -7,7 +7,7 @@ import { Resolver, useForm } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import { v4 as uuidv4 } from 'uuid';
 
-import { useOperatorSession } from '@/app/[locale]/(helpers)/useOperatorSession';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
   useCreateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useCreateArticleContentMut';
@@ -69,11 +69,10 @@ export const EditorView: React.FC<Props> = ({ articleId }) => {
   const newArticleId = uuidv4()
   const newArticleContentId = uuidv4()
   const t = useTranslations('dash');
-  const sessionOperator = useOperatorSession();
-
+  const [user] = useAuthContext();
+  const orgId = user?.orgId ?? ''
 
   const [lang, setLang] = useState<string>('english');
-  const { orgId } = sessionOperator
   const [editorHtml, setEditorHtml] = useState<string>();
 
   const articleWithContentQuery = useQuery([orgId, lang, articleId], async () => getArticleWithContent(orgId, lang, articleId ?? ''), { enabled: !!(!!orgId && !!lang && articleId !== 'new') })

@@ -36,12 +36,41 @@ export function BaseStack({ stack, app }: StackContext) {
     value: app.region,
   });
 
-  const DASH_AUTH_REDIRECT = new Config.Parameter(stack, 'DASH_AUTH_REDIRECT', {
-    value: stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`,
+  const getFrontendUrl = () => {
+    if (app.local) {
+      return 'http://localhost:3000';
+    }
+    return stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`;
+  };
+
+  const frontendUrl = new Config.Parameter(stack, 'FRONTEND_URL', {
+    value: getFrontendUrl(),
   });
 
+  const getAllowedOrigins = () => {
+    if (app.local) {
+      return 'http://localhost:3000';
+    }
+    return stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`;
+  };
+
+  const allowedOrigins = new Config.Parameter(stack, 'ALLOWED_ORIGINS', {
+    value: getAllowedOrigins(),
+  });
+
+  console.log('Frontend value: ', frontendUrl.value);
+
+  const oauthGoogleClientId = new Config.Parameter(
+    stack,
+    'OAUTH_GOOGLE_CLIENT_ID',
+    {
+      value: `11916374620-iveeirp449he0iocir9j15v4be5c1rjt.apps.googleusercontent.com`,
+    },
+  );
+
+  const oauthGoogleSecret = new Config.Secret(stack, 'OAUTH_GOOGLE_SECRET');
+
   const STRIPE_KEY = new Config.Secret(stack, 'STRIPE_KEY');
-  const OAUTH_GOOGLE_KEY = new Config.Secret(stack, 'OAUTH_GOOGLE_KEY');
 
   if (app.stage !== 'prod') {
     app.setDefaultRemovalPolicy('destroy');
@@ -269,20 +298,44 @@ export function BaseStack({ stack, app }: StackContext) {
   const api = new Api(stack, 'appApi', {
     cors: {
       allowCredentials: true,
-      allowHeaders: ['content-type'],
+      allowHeaders: [
+        'Authorization',
+        'Origin',
+        'Access-Control-Allow-Origin',
+        'Content-Type',
+        'Accept',
+      ],
+      exposeHeaders: [
+        'Authorization',
+        'Origin',
+        'Access-Control-Allow-Origin',
+        'Content-Type',
+        'Accept',
+      ],
       allowMethods: ['ANY'],
-      allowOrigins: ['http://localhost:3000', 'https://INSERT_PROD_URL'],
+      allowOrigins: [allowedOrigins.value],
     },
     defaults: {
       function: {
         timeout: app.local ? 100 : 10,
-        bind: [table, assets, REGION],
+        bind: [
+          table,
+          assets,
+          REGION,
+          oauthGoogleClientId,
+          oauthGoogleSecret,
+          frontendUrl,
+          allowedOrigins,
+        ],
         // bind: [table, REGION, OAUTH_GOOGLE_KEY, STRIPE_KEY],
         permissions: [table],
       },
     },
     routes: {
       ...testRoutes,
+      'GET /session': 'packages/functions/app/api/src/session.handler',
+      'OPTIONS /session':
+        'packages/functions/app/api/src/sessionOptions.handler',
       // 'POST /ddb-stream/process-batch': {
       //   function: {
       //     handler:
@@ -297,12 +350,13 @@ export function BaseStack({ stack, app }: StackContext) {
 
   const auth = new Auth(stack, 'auth', {
     authenticator: {
-      handler: 'packages/functions/api/src/auth.handler',
+      handler: 'packages/functions/app/api/src/auth.handler',
     },
   });
 
   auth.attach(stack, {
     api,
+    prefix: '/auth',
   });
 
   // // Create the WebSocket API

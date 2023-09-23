@@ -12,7 +12,7 @@ import { Operator } from '@/entities/operator';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../(helpers)/sortConversationItems';
-import { useOperatorSession } from '../(helpers)/useOperatorSession';
+import { useAuthContext } from '../(hooks)/AuthProvider';
 import { newMessageReducer } from '../(hooks)/mutations/useCreateMessageMut';
 import { QueryKey, useConfigurationQuery, useOrgQuery } from '../(hooks)/queries';
 import { useCustomerQuery } from '../(hooks)/queries/useCustomerQuery';
@@ -47,16 +47,16 @@ export interface Props {
 */
 export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ children, mockWsUrl }) => {
     // Initialize the WebSocket connection and retrieve necessary properties
-    const sessionOperator = useOperatorSession();
-    const operators = useOperatorsQuery(sessionOperator.orgId, true)
+    const [sessionOperator] = useAuthContext()
+    // const operators = useOperatorsQuery(sessionOperator?.orgId ?? '')
 
-    const operator = operators?.data?.find((operator) => operator.operatorId === sessionOperator?.operatorId ?? '   ')
+    // const operator = operators?.data?.find((operator) => operator.operatorId === sessionOperator?.operatorId ?? '   ')
 
     const {
         sendMessage: sM,
         lastMessage,
         readyState,
-    } = useWebSocket(mockWsUrl ?? getWsUrl(sessionOperator.orgId, operator?.operatorId ?? '', 'operator'), {
+    } = useWebSocket(mockWsUrl ?? getWsUrl(sessionOperator?.orgId ?? '', sessionOperator?.operatorId ?? '', 'operator'), {
         shouldReconnect: (closeEvent) => true,
     });
     // Initialize the queryClient from react-query
