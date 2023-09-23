@@ -1,6 +1,5 @@
 import { Metadata, Route } from 'next';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 import { Button } from '../../../components/Button';
 import { Logo } from '../../../components/Logo';

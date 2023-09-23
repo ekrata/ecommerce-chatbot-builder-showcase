@@ -1,14 +1,10 @@
 import { EntityItem } from 'electrodb';
 
-import { Article } from '@/entities/article';
 import { ArticleContent } from '@/entities/articleContent';
-import { ConversationItem, ExpandedConversation } from '@/entities/conversation';
-import { CreateArticle, CreateArticleContent, CreateConversation } from '@/entities/entities';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CreateArticleContent } from '@/entities/entities';
+import { useMutation } from '@tanstack/react-query';
 
-import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import { MutationKey } from '../mutations';
-import { createArticle } from './useCreateArticleMut';
 
 export const createArticleContent = async (
   orgId: string,

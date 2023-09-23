@@ -1,4 +1,5 @@
 import { ArticleCategory } from '@/entities/article';
+import { CreateOperator } from '@/entities/entities';
 
 export type MockOrgIds = {
   orgId: string;
@@ -68,4 +69,5 @@ export interface MockArgs {
   mockConversationCountPerCustomer: number;
   mockVisitsPerCustomer: number;
   mockMessageCountPerConversation: number;
+  existingOperator?: CreateOperator;
 }

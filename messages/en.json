@@ -212,7 +212,7 @@
     "Code snippet": "Code snippet",
     "Need more help?": "Need more help?",
     "Visit our Knowledge base": "Visit our Knowledge base",
-    "The help screen, articles and our in-built CMS is only available to + users.": "The help screen, articles and our in-built CMS is only available to + users.",
+    "The help screen, articles and our in-built CMS is only available to + users": "The help screen, articles and our in-built CMS is only available to + users",
     "settings": {
       "appearance": {
         "Appearance": "Appearance",
@@ -256,14 +256,14 @@
       "translations": {
         "Translations": "Translations",
         "Multilanguage": "Multilanguage",
-        "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser.": "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser.",
+        "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser": "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser.",
         "Delete language": "Delete language"
       },
       "installation": {
         "Installation": "Installation",
         "The chat code is not installed properly": "The chat code is not installed properly",
         "The chat code is installed": "The chat code is installed",
-        "Paste this code snippet just before the </body> tag.": "Paste this code snippet just before the </body> tag.",
+        "Paste this code snippet just before the </body> tag": "Paste this code snippet just before the </body> tag.",
         "Provide your Shopify domain to connect with eChat": "Provide your Shopify domain to connect with eChat",
         "Copy to clipboard": "Copy to clipboard",
         "Your store name": "Your store name",
@@ -274,7 +274,7 @@
         "Ticketing": "Ticketing",
         "Connecting email": "Connecting email",
         "Connect new email": "Connect new email",
-        "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability.": "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability.",
+        "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability": "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability.",
         "Send from": "Paste this code snippet just before the </body> tag.",
         "Sender address": "Sender address",
         "Automatic response": "Automatic response",
@@ -294,8 +294,8 @@
         "You can connect your existing mailbox or create a new one with a eChat domain": "You can connect your existing mailbox or create a new one with a eChat domain.",
         "Alias": "Alias",
         "Other mailbox provider": "Other mailbox provider",
-        "Set up an automatic reply that customers will receive when they create a ticket.": "Set up an automatic reply that customers will receive when they create a ticket.",
-        "List of filtered out emails from which you won't receive any tickets": "List of filtered out emails from which you won’t receive any tickets.",
+        "Set up an automatic reply that customers will receive when they create a ticket": "Set up an automatic reply that customers will receive when they create a ticket.",
+        "List of filtered out emails from which you won't receive any tickets": "List of filtered out emails from which you won’t receive any tickets",
         "google": {
           "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings": "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings",
           "Choose the 'Forwarding and POP/IMAP' tab in the settings and click on the 'Add a forwarding address' button in the middle": "Choose the \"Forwarding and POP/IMAP\" tab in the settings and click on the \"Add a forwarding address\" button in the middle",
@@ -323,8 +323,8 @@
       },
       "customerSatisfaction": {
         "Customer satisfaction": "Customer satisfaction",
-        "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience. It will be shown whenever an operator closes a conversation. You will be able to check results in the Analytics section.": "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience. It will be shown whenever an operator closes a conversation. You will be able to check results in the Analytics section.",
-        "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled.": "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled.",
+        "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience, It will be shown whenever an operator closes a conversation, You will be able to check results in the Analytics section": "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience. It will be shown whenever an operator closes a conversation. You will be able to check results in the Analytics section.",
+        "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled": "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled.",
         "Automated survey": "Automated survey",
         "Message about rating": "Message about rating",
         "How would you rate your experience talking to us today?": "How would you rate your experience talking to us today?",
@@ -336,7 +336,7 @@
         "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status": "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status.",
         "Operating hours are enabled": "Operating hours are enabled",
         "Operating hours are disabled": "Operating hours are disabled",
-        "When all operators are offline, chat widget will be seen as offline. You can decide how it should behave in": "When all operators are offline, chat widget will be seen as offline. You can decide how it should behave in"
+        "When all operators are offline, chat widget will be seen as offline, You can decide how it should behave in": "When all operators are offline, chat widget will be seen as offline. You can decide how it should behave in"
       },
       "Operators": {
         "Operators": "Operators",
@@ -360,8 +360,8 @@
       "Integrations": "Integrations",
       "Desktop & Mobile": {
         "Desktop & Mobile": "Desktop & Mobile",
-        "Download our mobile app and stay in touch with your customers on the go.": "Download our mobile app and stay in touch with your customers on the go.",
-        "Download desktop app to use the chat whenever you are on your computer. You don’t need to keep your browser open to stay online.": "Download desktop app to use the chat whenever you are on your computer. You don’t need to keep your browser open to stay online."
+        "Download our mobile app and stay in touch with your customers on the go": "Download our mobile app and stay in touch with your customers on the go.",
+        "Download desktop app to use the chat whenever you are on your computer, You don’t need to keep your browser open to stay online": "Download desktop app to use the chat whenever you are on your computer. You don’t need to keep your browser open to stay online."
       },
       "Contact Properties": "Contact Properties",
       "Project & Billing": "Project & Billing",

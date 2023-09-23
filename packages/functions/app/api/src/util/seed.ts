@@ -50,7 +50,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockMessageCountPerConversation: 1,
       };
       const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
-        [...Array(mockArgs.mockOrgCount)].map(() => seed(db, mockArgs)),
+        [...Array(mockArgs.mockOrgCount)].map((_, i) => seed(db, mockArgs, i)),
       );
       return {
         statusCode: 200,
@@ -66,7 +66,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
   }),
 );
 
-export const seed = async (db: AppDb, mockArgs: MockArgs) => {
+export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   const {
     mockLang,
     mockOrgCount,
@@ -79,6 +79,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs) => {
     mockConversationCountPerCustomer,
     mockVisitsPerCustomer,
     mockMessageCountPerConversation,
+    existingOperator,
   } = mockArgs;
   // org
   const orgId = uuidv4();
@@ -196,6 +197,12 @@ export const seed = async (db: AppDb, mockArgs: MockArgs) => {
     orgId,
     permissionTier: 'moderator',
   };
+
+  if (existingOperator && orgIndex === 0) {
+    await db.entities.operators
+      .create({ ...existingOperator, orgId: orgId })
+      .go();
+  }
   await db.entities.operators.create(createModeratorOperator).go();
   mockOrg.moderatorId = moderatorOperatorId;
 

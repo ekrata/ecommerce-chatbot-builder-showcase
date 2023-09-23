@@ -1,4 +1,3 @@
-import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ConversationType } from '../../../../stacks/entities/conversation';
@@ -9,7 +8,7 @@ import {
 
 export const createVisitor = async (orgId: string) => {
   const res = await fetch(
-    `${Api.appApi.url}/orgs/${orgId}/visitors/${uuidv4()}`,
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/visitors/${uuidv4()}`,
     {},
   );
   if (!res.ok) {

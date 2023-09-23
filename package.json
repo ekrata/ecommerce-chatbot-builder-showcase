@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "sst bind next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "sst bind next start",
     "lint": "next lint",
     "sst-dev": "sst dev",
+    "sst-dev-demo": "sst dev && ts-node populate.ts",
     "timeout": "node -e \"setTimeout(() => process.exit(0), 10000)\"",
     "test-app-api": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run --threads=false -c vitest/appApi.config.ts'",
     "test-app-ws": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run --threads=false -c vitest/appWs.config.ts'",

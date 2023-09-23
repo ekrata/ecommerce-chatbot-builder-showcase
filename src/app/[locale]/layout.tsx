@@ -1,10 +1,11 @@
 
 import '../globals.css';
 
-import { NextIntlClientProvider, useLocale, useMessages } from 'next-intl';
+import { NextIntlClientProvider, useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
+import en from '../../../messages/en.json';
 import { AuthProvider } from './(hooks)/AuthProvider';
 import { QueryClientWrapper } from './(hooks)/QueryClientProvider';
 
@@ -14,24 +15,21 @@ export const metadata = {
 };
 
 const locales = ['en', 'de'];
+export function generateStaticParams() {
+  return [{ locale: 'en' }, { locale: 'de' }];
+}
 
-
-export default function LocaleLayout({ children, params: { overrideMessages } }: { children: any, params: { locale: string, overrideMessages?: any } }) {
+export default async function LocaleLayout({ children, params: { locale, overrideMessages } }: { children: any, params: { locale: string, overrideMessages?: any } }) {
   let messages;
-  const locale = useLocale();
+  // const locale = useLocale();
   // if (!overrideMessages) {
   try {
-    console.log('importing')
-    import(`../../../messages/${locale}.json`).then(data => {
-      messages = data
-    })
+    messages = (await import(`../../../messages/${locale}.json`)).default;
   } catch (error) {
     notFound();
   }
   const isValidLocale = locales.some((cur) => cur === locale);
   if (!isValidLocale) notFound();
-
-
 
   return (
     <html lang={locale}>
