@@ -30,14 +30,15 @@ interface Props {
 export const ChannelSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const t = useTranslations('dash');
   const [sessionOperator] = useAuthContext();
-  const { setConversationChannel, conversationChannel } = useDashStore()
+  const { setConversationListFilter, conversationListFilter } = useDashStore()
+  const { channel } = conversationListFilter
 
   return (
     <details className={`w-full h-full dropdown ${dropdownPosition ? `dropdown-${dropdownPosition}` : ''}`}>
       <summary className="flex flex-row px-2 normal-case flex-nowrap gap-x-1 place-items-center text-normal btn btn-ghost">
-        {conversationChannel ? <div className='object-fill text-2xl'>
+        {channel ? <div className='object-fill text-2xl'>
           <>
-            {channelIconMap[conversationChannel]}
+            {channel}
           </>
         </div> : <GrMultiple className='text-2xl' />}
         <FaChevronDown className='' />
@@ -46,11 +47,11 @@ export const ChannelSelect: React.FC<Props> = ({ dropdownPosition }) => {
         {Object.entries(channelIconMap)?.map(([key, icon], i) => (
           <li key={key} className='flex flex-row justify-start normal-case place-items-center' >
             <a className='flex flex-row justify-start w-full normal-case place-items-center'>
-              <input type="radio" name={`radio-${key}`} className="form-control radio-primary radio-xs" checked={key === conversationChannel} onClick={() => {
-                if (key === conversationChannel) {
-                  setConversationChannel()
+              <input type="radio" name={`radio-${key}`} className="form-control radio-primary radio-xs" defaultChecked={key === channel} onClick={() => {
+                if (key === channel) {
+                  setConversationListFilter({ ...conversationListFilter, channel: channel })
                 } else {
-                  setConversationChannel(key as ConversationChannel)
+                  setConversationListFilter({ ...conversationListFilter, channel: channel })
                 }
               }} />
               <div className='flex text-sm place-items-center gap-x-2'>

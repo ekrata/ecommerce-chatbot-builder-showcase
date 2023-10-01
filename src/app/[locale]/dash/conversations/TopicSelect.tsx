@@ -28,25 +28,26 @@ interface Props {
 export const TopicSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const t = useTranslations('dash');
   const [sessionOperator] = useAuthContext();
-  const { conversationOperatorView, setConversationOperatorView, setConversationTopic, conversationTopic } = useDashStore()
+  const { setConversationListFilter, conversationListFilter } = useDashStore()
+  const { topic } = conversationListFilter
 
   return (
     <details className={`h-full w-full dropdown ${dropdownPosition ? `dropdown-${dropdownPosition}` : ''}`}>
       <summary className="flex flex-row px-2 normal-case gap-x-1 flex-nowrap text-normal btn btn-ghost">
-        {conversationTopic ? <div className='text-2xl'>
-          {topicIconMap[conversationTopic]}
+        {topic ? <div className='text-2xl'>
+          { }
         </div> : <MdOutlineTopic className='text-2xl' />}
         <FaChevronDown className='' />
       </summary>
       <ul className="p-2  font-sans shadow menu font-normal dropdown-content z-[1] bg-base-100 text-sm rounded-box w-52 overflow-y-clip max-w-screen animate-fade-left">
         {Object.entries(topicIconMap)?.map(([key, icon]) => (
-          <li className='flex flex-row justify-start normal-case place-items-center' >
+          <li key={key} className='flex flex-row justify-start normal-case place-items-center' >
             <a className='flex flex-row justify-start w-full normal-case place-items-center'>
-              <input type="radio" name={`radio-${key}`} className="form-control radio-primary radio-xs" checked={key === conversationTopic} onClick={(event) => {
-                if (key === conversationTopic) {
-                  setConversationTopic()
+              <input type="radio" name={`radio-${key}`} className="form-control radio-primary radio-xs" defaultChecked={key === topic} onClick={(event) => {
+                if (key === topic) {
+                  setConversationListFilter({ ...conversationListFilter, topic: key as ConversationTopic })
                 } else {
-                  setConversationTopic(key as ConversationTopic)
+                  setConversationListFilter({ ...conversationListFilter, topic: key as ConversationTopic })
                 }
               }} />
               <div className='flex text-sm place-items-center gap-x-2'>

@@ -18,6 +18,7 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event: any, context) => {
+    console.log('creating message');
     try {
       const newImage = DynamoDB.Converter.unmarshall(
         event.detail?.dynamodb?.NewImage,
@@ -31,44 +32,56 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         };
       }
 
-      const { orgId, operatorId, customerId, conversationId } = messageData;
+      const { orgId, customerId, conversationId } = messageData;
+      const messageOperatorId = messageData.operatorId;
 
       const conversation = await appDb.entities.conversations
         .get({ orgId, conversationId })
         .go();
-
+      //
+      // console.log('hi', messageData, conversation?.data);
+      // console.log('hi', conversation.data?.operatorId);
+      // filter recipitents
       const operators = await appDb.entities.operators.query
         .byOrg({ orgId })
-        .where(({ permissionTier, operatorId, connectionId }, { eq, ne }) => {
+        .where(({ operatorId, permissionTier }, { eq, ne }) => {
           // if not unassigned conversation, only notify relevant connected operator and superusers
-          if (conversation.data?.status !== 'unassigned') {
-            return `${ne(connectionId, '')} AND ${eq(
+          if (conversation?.data?.status !== 'unassigned') {
+            return `${eq(permissionTier, 'admin')} OR ${eq(
               permissionTier,
-              'admin',
-            )} OR ${eq(permissionTier, 'owner')} OR ${eq(
-              permissionTier,
-              'moderator',
-            )} OR ${
-              conversation.data?.operatorId
-                ? eq(operatorId, conversation.data?.operatorId)
-                : ''
-            }`;
-            // if unassigned, notify all connected operators
+              'owner',
+            )} OR ${eq(permissionTier, 'moderator')} OR ${eq(
+              operatorId,
+              messageOperatorId,
+            )}`;
           }
+          return ``;
+        })
+        .where(({ connectionId }, { ne }) => {
           return `${ne(connectionId, '')}`;
         })
         .go();
 
+      console.log('ops', operators);
+
+      // filter recipitents
       const customer = await appDb.entities.customers.query
         .primary({ orgId, customerId })
         .go();
 
+      console.log(
+        [...operators.data, ...customer.data].filter(
+          (person) => person?.connectionId,
+        ),
+      );
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
-        [...operators.data, ...customer.data],
+        [...operators.data, ...customer.data].filter(
+          (person) => person.connectionId,
+        ),
         { type: WsAppMessage.createMessage, body: messageData },
       );
 

@@ -1,4 +1,5 @@
 import { ConversationItem } from '@/entities/conversation';
+
 import { sortConversationItems } from '../../../(helpers)/sortConversationItems';
 
 export /**
@@ -12,15 +13,15 @@ export /**
  */
 const getConversationItems = async (
   orgId: string,
-  customerId: string
+  customerId: string,
 ): Promise<ConversationItem[]> => {
   const res = await (
     await fetch(
       `${
         process.env.NEXT_PUBLIC_APP_API_URL
       }/orgs/${orgId}/conversations?customerId=${customerId}&includeMessages=true&expansionFields=${encodeURIComponent(
-        JSON.stringify(['customerId', 'operatorId'])
-      )}`
+        JSON.stringify(['customerId', 'operatorId']),
+      )}`,
     )
   ).json();
   sortConversationItems(res.data as ConversationItem[]);

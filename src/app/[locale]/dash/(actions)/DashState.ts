@@ -1,16 +1,8 @@
 import {
-  ConversationChannel,
-  ConversationStatus,
-  ConversationTopic,
-} from '@/entities/conversation';
+    ConversationFilterParams
+} from 'packages/functions/app/api/src/conversations/listByCreatedAt';
 
-import {
-  ConversationOperatorView,
-  ConversationState,
-  DashStateDefinition,
-  DashStateType,
-  StateSlice,
-} from './types';
+import { ConversationState, DashStateDefinition, DashStateType, StateSlice } from './types';
 
 /**
  * Initial chat widget state
@@ -20,6 +12,13 @@ import {
  */
 const initialDashState: DashStateDefinition = {
   conversationState: 'list',
+  conversationListFilter: {
+    orgId: '',
+    cursor: '',
+    customerId: '',
+    operatorId: 'all',
+    expansionFields: ['customerId', 'operatorId'],
+  },
   settingsState: '',
 };
 
@@ -35,23 +34,16 @@ export const createDashState: StateSlice<DashStateType> = (set) => ({
   setConversationState: (conversationState?: ConversationState) =>
     set((state) => {
       state.conversationState = conversationState;
+      return state;
     }),
-  setConversationChannel: (conversationChannel?: ConversationChannel) =>
-    set((state) => {
-      state.conversationChannel = conversationChannel;
-    }),
-  setConversationTopic: (conversationTopic?: ConversationTopic) =>
-    set((state) => {
-      state.conversationTopic = conversationTopic;
-    }),
-  setConversationOperatorView: (
-    conversationOperatorView?: ConversationOperatorView,
+  setConversationListFilter: (
+    conversationListFilter?: ConversationFilterParams,
   ) =>
     set((state) => {
-      state.conversationOperatorView = conversationOperatorView;
-    }),
-  setConversationStatus: (conversationStatus?: ConversationStatus) =>
-    set((state) => {
-      state.conversationStatus = conversationStatus;
+      state.conversationListFilter = {
+        ...state.conversationListFilter,
+        ...conversationListFilter,
+      };
+      return state;
     }),
 });

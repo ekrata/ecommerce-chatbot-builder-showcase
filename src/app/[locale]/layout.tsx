@@ -1,4 +1,3 @@
-
 import '../globals.css';
 
 import { NextIntlClientProvider, useLocale } from 'next-intl';
@@ -15,7 +14,7 @@ export const metadata = {
 };
 
 const locales = ['en', 'de'];
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return [{ locale: 'en' }, { locale: 'de' }];
 }
 

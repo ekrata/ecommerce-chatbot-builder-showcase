@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { FC, ReactNode, useState } from 'react';
 import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
-import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
+import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 import { FcSearch } from 'react-icons/fc';
@@ -51,7 +51,6 @@ export const ConversationsSearchView: FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => setPhrase(data.phrase);

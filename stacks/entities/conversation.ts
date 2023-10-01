@@ -26,9 +26,8 @@ export type ExpandedConversation = EntityItem<typeof Conversation> & {
  * @interface ConversationItem
  * @typedef {ConversationItem}
  */
-export interface ConversationItem {
-  conversation: ExpandedConversation;
-  messages?: EntityItem<typeof Message>[];
+export interface ConversationItem extends ExpandedConversation {
+  messages: EntityItem<typeof Message>[];
 }
 
 /**

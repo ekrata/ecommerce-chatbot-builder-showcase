@@ -44,7 +44,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         existingOperator: createOperator,
       };
       const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
-        [...Array(mockArgs.mockOrgCount)].map((_, i) => seed(db, mockArgs, i)),
+        [...Array(mockArgs.mockOrgCount)].map((_, i) => {
+          console.log('seed', i);
+          return seed(db, mockArgs, i);
+        }),
       );
 
       return {

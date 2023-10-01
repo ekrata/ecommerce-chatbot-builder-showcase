@@ -1,3 +1,4 @@
+import { ConversationFilterParams } from 'packages/functions/app/api/src/conversations/listByCreatedAt';
 import { StateCreator } from 'zustand';
 
 import {
@@ -14,10 +15,7 @@ export type ConversationOperatorView = 'all' | 'bots' | string;
 
 export interface DashStateDefinition {
   conversationState?: 'search' | 'list' | 'customerInfo';
-  conversationChannel?: ConversationChannel;
-  conversationStatus?: ConversationStatus;
-  conversationTopic?: ConversationTopic;
-  conversationOperatorView?: ConversationOperatorView;
+  conversationListFilter: ConversationFilterParams;
   settingsState: '';
 }
 
@@ -30,30 +28,12 @@ export interface DashStateActions {
    */
   setConversationState: (conversationState?: ConversationState) => void;
   /**
-   * Sets the conversation list channel filter
+   * Sets the conversation list filter
    * @date 03/07/2023 - 11:51:29
    *
-   * @type {(conversationChannel: ConversationChannel) => void}
    */
-  setConversationChannel: (conversationChannel?: ConversationChannel) => void;
-  /**
-   * Set conversation list topic filter
-   * @date 03/07/2023 - 11:51:44
-   *
-   * @type {(conversationTopic: ConversationTopic) => void}
-   */
-  setConversationTopic: (conversationTopic?: ConversationTopic) => void;
-  setConversationStatus: (conversationStatus?: ConversationStatus) => void;
-  /**
-   * Set conversation list operator view filter 
-   * @date 03/07/2023 - 11:52:05
-   *
-   * @type {(
-      conversationOperatorView: ConversationOperatorView
-    ) => void}
-   */
-  setConversationOperatorView: (
-    conversationOperatorView?: ConversationOperatorView,
+  setConversationListFilter: (
+    conversationListFilter?: ConversationFilterParams,
   ) => void;
 }
 //   setConversationId: (widgetState: WidgetState) => void;

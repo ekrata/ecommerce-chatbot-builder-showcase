@@ -6,6 +6,7 @@ import { BiSend } from 'react-icons/bi';
 import { CgSpinner } from 'react-icons/cg';
 import { v4 as uuidv4 } from 'uuid';
 
+import { ConversationItem } from '@/entities/conversation';
 import { CreateMessage } from '@/entities/entities';
 
 import { useAuthContext } from '../../(hooks)/AuthProvider';
@@ -16,15 +17,18 @@ type Inputs = {
   msg: string
 }
 
-export const OperatorChatInput: FC = () => {
+interface Props {
+  conversationItem: ConversationItem
+}
+
+export const OperatorChatInput: FC<Props> = ({ conversationItem }) => {
   const t = useTranslations('chat-widget');
   const [operatorSession] = useAuthContext();
   const searchParams = useSearchParams();
   const conversationId = searchParams?.get('conversationId')
-  const conversationItemQuery = useConversationItemQuery(operatorSession?.orgId ?? '', conversationId ?? '')
-  const conversationItem = conversationItemQuery?.data
 
-  const createMessageMut = useCreateMessageMut(operatorSession?.orgId ?? '', conversationItem?.conversation.customer?.customerId ?? '', conversationId ?? '');
+
+  const createMessageMut = useCreateMessageMut(operatorSession?.orgId ?? '', conversationItem?.customer?.customerId ?? '', conversationId ?? '');
 
   const {
     register,
@@ -34,16 +38,18 @@ export const OperatorChatInput: FC = () => {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async ({ msg }) => {
     const messageId = uuidv4()
+    console.log(conversationItem)
     const createMessage: CreateMessage = {
       messageId: messageId,
       conversationId: conversationId ?? '',
       orgId: operatorSession?.orgId ?? '',
-      customerId: conversationItem?.conversation.customer?.customerId ?? '',
-      operatorId: conversationItem?.conversation?.operator?.operatorId ?? '',
+      customerId: conversationItem?.customer?.customerId ?? '',
+      operatorId: conversationItem?.operator?.operatorId ?? '',
       content: msg,
       sentAt: Date.now(),
-      sender: 'customer'
+      sender: 'operator'
     }
+    console.log(createMessage)
     await createMessageMut.mutateAsync([operatorSession?.orgId ?? '', conversationId ?? '', messageId ?? '', createMessage])
   }
   return (

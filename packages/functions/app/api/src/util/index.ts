@@ -12,6 +12,7 @@ export type MockOrgIds = {
   ownerId: string;
   adminId: string;
   moderatorId: string;
+  mockGoogleAccountUserId: string;
   articleIds: { articleId: string; articleContentId: string }[];
   lang: string;
   operatorIds: string[];

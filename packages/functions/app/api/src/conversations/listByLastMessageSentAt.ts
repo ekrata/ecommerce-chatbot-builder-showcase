@@ -1,17 +1,31 @@
 import { EntityItem } from 'electrodb';
-import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import {
+  ApiHandler,
+  usePathParams,
+  useQueryParam,
+  useQueryParams,
+} from 'sst/node/api';
 import { useSession } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
 import {
-    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic,
-    ExpandedConversation
+  Conversation,
+  ConversationChannel,
+  ConversationItem,
+  ConversationStatus,
+  ConversationTopic,
+  ExpandedConversation,
 } from '@/entities/conversation';
+import { Message } from '@/entities/message';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
-import { ExpandableField, expandObjects } from '../util/expandObjects';
+import {
+  ExpandableField,
+  expandableField,
+  expandObjects,
+} from '../util/expandObjects';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -32,9 +46,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       status,
       channel,
     } = params;
-    params.expansionFields = JSON.parse(
-      useQueryParam('expansionFields') ?? '[]',
-    );
+    params.expansionFields = (useQueryParam('expansionFields')?.split(',') ??
+      []) as ['customerId', 'operatorId'];
 
     // minimum params
     if (!orgId) {
@@ -90,13 +103,25 @@ export const listConversations = async (params: ConversationFilterParams) => {
     // } = { cursor: null, data: [] };
 
     let data: EntityItem<typeof Conversation>[] = [];
-    const messages = await appDb.entities.messages.query
-      .byOrg({ orgId })
-      .go(
-        cursor
-          ? { cursor, limit: 100, order: 'desc' }
-          : { limit: 100, order: 'desc' },
-      );
+    let messages: {
+      cursor: string | null;
+      data: EntityItem<typeof Message>[];
+    } = {
+      cursor: null,
+      data: [],
+    };
+    if (operatorId) {
+      messages = await appDb.entities.messages.query
+        .byOrg({ orgId })
+        .where(({ operatorId }, { eq }) => {
+          return `${eq(operatorId, params.operatorId)}`;
+        })
+        .go(
+          // ? { cursor: cursor, limit: 100, order: 'desc' }
+          { limit: 100, order: 'desc' },
+        );
+      console.log(messages);
+    }
 
     const newCursor = messages.cursor;
     // make distinct per conversationId
@@ -106,7 +131,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
       ).values(),
     ];
 
-    const conversations = appDb.entities.conversations
+    const conversations = await appDb.entities.conversations
       .get(
         uniqueMessages.map(({ orgId, conversationId }) => ({
           orgId,
@@ -115,14 +140,15 @@ export const listConversations = async (params: ConversationFilterParams) => {
       )
       .go();
 
+    console.log(conversations);
     if (operatorId) {
-      data = (await conversations).data.filter(
+      data = conversations.data.filter(
         (conversation) =>
           conversation?.orgId === orgId &&
           conversation?.operatorId === operatorId,
       );
     } else if (customerId) {
-      data = (await conversations).data.filter(
+      data = conversations.data.filter(
         (conversation) =>
           conversation?.orgId === orgId &&
           conversation?.customerId === customerId &&
@@ -130,12 +156,29 @@ export const listConversations = async (params: ConversationFilterParams) => {
           (channel ? conversation.channel === channel : true),
       );
     } else if (orgId) {
-      data = (await conversations).data.filter(
+      data = conversations.data.filter(
         (conversation) =>
           conversation?.orgId === orgId &&
           (status ? conversation.status === status : true) &&
           (channel ? conversation.channel === channel : true) &&
           (topic ? conversation.topic === topic : true),
+      );
+    }
+
+    if (params.includeMessages) {
+      data = await Promise.all(
+        data.map(async (conversation) => {
+          const messages = await appDb.entities.messages.query
+            .byOrgConversation({
+              orgId,
+              conversationId: conversation.conversationId,
+            })
+            .go(
+              // ? { cursor: cursor, limit: 100, order: 'desc' }
+              { limit: 100, order: 'desc' },
+            );
+          return { ...conversation, messages: messages.data };
+        }),
       );
     }
     if (data.length && expansionFields?.length) {

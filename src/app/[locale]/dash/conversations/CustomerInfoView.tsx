@@ -19,6 +19,7 @@ import { MdEmail, MdPhone } from 'react-icons/md';
 import { useDashStore } from '../(actions)/useDashStore';
 import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
+import { useConversationItemsQuery } from '../../(hooks)/queries/useConversationItemsQuery';
 import { useVisitsQuery } from '../../(hooks)/queries/useVisitsQuery';
 import { CustomerAvatar } from './CustomerAvatar';
 
@@ -46,14 +47,16 @@ const fetchingSkeleton = (
 export const CustomerInfoView: FC = () => {
   const t = useTranslations('app.inbox.chat');
   const tDash = useTranslations('dash');
+  const { relativeTime } = useFormatter();
   const [currentTab, setCurrentTab] = useState<InfoTabs>('Profile');
-  const { conversationState, setConversationState } = useDashStore();
+  const { conversationState, setConversationState, conversationListFilter, } = useDashStore();
   const [operatorSession] = useAuthContext();
   const orgId = operatorSession?.orgId ?? ''
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()
   const conversationId = searchParams?.get('conversationId')
-  const conversationItemQuery = useConversationItemQuery(orgId, conversationId ?? '')
-  const conversationItem = conversationItemQuery?.data
+
+  const conversationItemQuery = useConversationItemsQuery(conversationListFilter)
+  const conversationItem = conversationItemQuery?.data?.data?.find(conversation => conversation.conversationId === conversationId)
   const visitsQuery = useVisitsQuery(orgId, conversationItem?.conversation?.customerId)
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
@@ -68,22 +71,19 @@ export const CustomerInfoView: FC = () => {
     return noData
   }
   const {
-    customer: {
-      profilePicture,
-      name,
-      email,
-      locale,
-      phone,
-      userAgent,
-      timezone,
-      tags,
-      properties,
-      notes,
-    },
-  } = conversationItem?.conversation;
+    profilePicture,
+    name,
+    email,
+    locale,
+    phone,
+    userAgent,
+    timezone,
+    tags,
+    properties,
+    notes,
+  } = conversationItem?.customer
   const country = ct.getCountryForTimezone(timezone ?? '');
   const tabActive = 'tab-active';
-  const { relativeTime } = useFormatter();
   return (
     <div
       data-testid='chat-info-panel'
@@ -99,7 +99,7 @@ export const CustomerInfoView: FC = () => {
         <div className='flex flex-col'>
           <p>{name ?? ''}</p>
           <p>{email}</p>
-          <p>{LocaleCode.getLanguageName(locale)}</p>
+          <p className='flex place-items-center gap-x-2'><FaLanguage className='text-xl' />{LocaleCode.getLanguageName(locale)}</p>
         </div>
       </div>
       <div>
@@ -166,14 +166,14 @@ export const CustomerInfoView: FC = () => {
                 <FaLanguage className='text-lg text-primary' />
                 <p className=''>{LocaleCode.getLanguageName(locale)}</p>
               </li>
-              <li className='flex justify-start place-items-center gap-x-4'>
+              {/* <li className='flex justify-start place-items-center gap-x-4'>
                 <HiDocumentText className='text-lg text-primary' />
                 <p className=''>{JSON.stringify(properties)}</p>
-              </li>
-              <li className='flex justify-start place-items-center gap-x-4'>
+              </li> */}
+              {/* <li className='flex justify-start place-items-center gap-x-4'>
                 <BsTagsFill className='text-lg text-primary' />
                 <p className=''>{tags?.join(', ')}</p>
-              </li>
+              </li> */}
             </ul>
           </div>
         )}

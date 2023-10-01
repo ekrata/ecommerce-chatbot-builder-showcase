@@ -1,7 +1,9 @@
 'use-client'
 import { Link, useFormatter, useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { BiSend } from 'react-icons/bi';
+import { useQueryParams } from 'sst/node/api';
 
 import { ConversationItem } from '@/entities/conversation';
 
@@ -22,24 +24,23 @@ interface Props {
  * @returns {*}
  */
 export const OperatorConversationCard: React.FC<Props> = ({ conversationItem, height = '12', rounded = false, showRecentLabel }) => {
-  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const { relativeTime } = useFormatter()
   var halfAnHourAgo = new Date(Date.now())
   halfAnHourAgo.setMinutes(halfAnHourAgo.getMinutes() - 30);
+
 
   const lastMessage = useMemo(() => {
     return conversationItem?.messages?.slice(-1)[0]
   }, [conversationItem])
 
-
   return (
-    <Link key={conversationItem.conversation.conversationId} href={{ pathname: '/dash/conversations', query: { conversationId: conversationItem.conversation.conversationId } }}>
-      <button className={`btn btn-ghost block ${rounded && 'rounded-3xl'} font-light justify-between h-${height}  normal-case place-items-center animate-fade-left w-full  text-sm`}>
-        <div className="flex justify-around place-items-center animate-fade-left">
-          <div className="w-12 h-12 p-2 rounded-full avatar shrink-0 background ring-2 ring-primary online">
+    <Link key={conversationItem?.conversationId} href={{ pathname: '/dash/conversations', query: { conversationId: conversationItem?.conversationId } }} className='flex w-full'>
+      <button className={`btn btn-ghost block rounded-none ${rounded && 'rounded-3xl'} font-light pl-0 justify-between h-${height}   normal-case place-items-center  w-full  text-sm px-2`}>
+        <div className="flex w-full place-items-center animate-fade-left">
+          <div className="w-12 h-12 p-2 ">
             <CustomerAvatar conversationItem={conversationItem} />
           </div>
-          <div className="flex flex-col w-3/5 place-items-start gap-y-1">
+          <div className="flex flex-col place-items-start gap-y-1">
             <h5 className='justify-start w-full text-base break-all truncate font-base justify-self-start'>{`${lastMessage?.content}`}</h5>
             <div className="flex text-xs text-neutral-400 gap-x-1 ">
               <OperatorMessageTimeLabel conversationItem={conversationItem} />

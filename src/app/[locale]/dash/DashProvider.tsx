@@ -1,5 +1,5 @@
 'use client'
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren, ReactNode, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
@@ -16,14 +16,14 @@ export interface Props {
 
 export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQueryClient, mockWsUrl, children }: PropsWithChildren<Props>) => {
   // Create a client
-  const queryClient = new QueryClient({
+  const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
         cacheTime: Infinity,
         staleTime: Infinity,
       }
     }
-  })
+  }))
 
   return (
     <>

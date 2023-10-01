@@ -10,15 +10,29 @@ import { RandomBackground } from '../../(helpers)/DynamicBackground';
 
 interface Props {
   conversationItem?: ConversationItem,
+  showTypingState?: boolean
 }
 
-export const CustomerAvatar: React.FC<Props> = ({ conversationItem }) => {
+export const CustomerAvatar: React.FC<Props> = ({ conversationItem, showTypingState }) => {
   const message = conversationItem?.messages?.slice(-1)?.[0]
   return (
-    <div className={`background avatar w-8 h-8  rounded-full p-2 ring-2 ring-primary ${message?.sender === 'operator' && conversationItem?.conversation.operator.online ? 'online' : 'offline'}`}>
-      <RandomBackground customerId={conversationItem?.conversation?.customer?.customerId ?? ''} />
+    <div className={`background avatar w-8 h-8  rounded-full p-2 ring-2 ring-primary ${message?.sender === 'operator' && conversationItem?.operator?.online ? 'online' : 'offline'}`}>
+      {message && showTypingState &&
+        <div className="indicator">
+          <span
+            data-testid="status-badge"
+            className={`indicator-item  badge-success badge-xs text-white dark:text-default rounded-full ${!message?.sentAt
+              ? 'mx-0 my-0 indicator-bottom animate-bounce'
+              : 'my-2 mx-2 indicator-top'
+              }`}
+          >
+            {!message?.sentAt ? '...' : ''}
+          </span>
+        </div >
+      }
+      <RandomBackground customerId={conversationItem?.customer?.customerId ?? ''} />
       {/* Gets initials of first two words in name */}
-      {conversationItem?.conversation?.customer?.name ? `${conversationItem?.conversation.customer.name?.split(' ')?.[0]?.[0]} ${conversationItem?.conversation.customer.name?.split(' ')?.[1]?.[0]}` : conversationItem?.conversation?.customer?.customerId.slice(0, 2)}
+      {conversationItem?.customer?.name ? `${conversationItem?.customer.name?.split(' ')?.[0]?.[0]} ${conversationItem?.customer.name?.split(' ')?.[1]?.[0]}` : conversationItem?.customer?.customerId.slice(0, 2)}
     </div>
 
   )

@@ -1,10 +1,5 @@
 import { EntityItem } from 'electrodb';
-import {
-  ApiHandler,
-  usePathParams,
-  useQueryParam,
-  useQueryParams,
-} from 'sst/node/api';
+import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 

@@ -55,10 +55,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     })()
   }, [authToken]);
 
-
-  return <AuthContext.Provider value={[sessionUser ?? null, setSessionUser]}>
-    {children}
-  </AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={[sessionUser, setSessionUser]}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 

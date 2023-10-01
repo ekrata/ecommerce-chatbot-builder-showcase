@@ -1,10 +1,13 @@
 'use client'
-import { EntityItem } from 'electrodb';
+
 import { useLocale, useTranslations } from 'next-intl';
-import Image from 'next/image';
-import { FC, ReactNode, useMemo, useState } from 'react';
-import { BiChevronRight, BiMailSend, BiSend } from 'react-icons/bi';
-import { BsChat, BsSearch, BsWhatsapp, BsX } from 'react-icons/bs';
+import { useSearchParams } from 'next/navigation';
+import {
+  ConversationFilterParams
+} from 'packages/functions/app/api/src/conversations/listByLastMessageSentAt';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { BiChevronRight } from 'react-icons/bi';
+import { BsChat } from 'react-icons/bs';
 import { FcSearch } from 'react-icons/fc';
 
 import { useDashStore } from '../(actions)/useDashStore';
@@ -33,16 +36,24 @@ const fetchingArticlesSkeleton = (
   </div>
 )
 
-
-
 export const ConversationsListView: FC = () => {
   const t = useTranslations('dash');
-  const { setConversationState, conversationOperatorView, conversationChannel, conversationTopic, conversationStatus } = useDashStore();
-  const [operatorSession] = useAuthContext();
-  const locale = useLocale();
-  const [cursor, setCursor] = useState<string | undefined>(undefined)
+  const { setConversationListFilter, setConversationState } = useDashStore();
+  const conversationListFilter = useDashStore((state) => state.conversationListFilter)
+  const conversationId = useSearchParams()?.get('conversationId')
 
-  const conversationItems = useConversationItemsQuery({ orgId: operatorSession?.orgId ?? '', expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true', topic: conversationTopic, channel: conversationChannel, operatorId: conversationOperatorView })
+  const [operatorSession] = useAuthContext();
+  const locale = useLocale(); const [cursor, setCursor] = useState<string | undefined>(undefined)
+
+  const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
+
+  useEffect(() => {
+    if (operatorSession?.orgId) {
+      setConversationListFilter({
+        ...conversationListFilter, orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true'
+      })
+    }
+  }, [operatorSession?.orgId, cursor])
 
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
@@ -50,21 +61,24 @@ export const ConversationsListView: FC = () => {
       {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
     </div>
   )
-  const renderContent = () => {
-    if (conversationItems.isFetching) {
+
+  const renderContent = useMemo(() => {
+    if (!operatorSession?.operatorId || conversationItems?.isFetching) {
       return fetchingArticlesSkeleton
     }
     else {
-      return conversationItems?.data?.length ? (
+      return conversationItems?.data?.data?.length ? (
         <ul className="w-full mb-10 animate-fade-left">
-          {conversationItems?.data?.map((item) => (
-            <li className="flex justify-between w-full  h-16 hover:bg-transparent  px-4 font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal">
-              <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
-            </li>)
-          )}
-        </ul>) : noData
+          {conversationItems?.data?.data?.map((item) => {
+            if (item?.conversationId) {
+              return <li key={item?.conversationId} className={`flex justify-between w-full  h-16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
+                <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
+              </li>
+            }
+          })}
+        </ul >) : noData
     }
-  }
+  }, [conversationItems?.data, conversationId])
 
   return (
     <div className="flex justify-between w-full h-full rounded-3xl">
@@ -90,9 +104,9 @@ export const ConversationsListView: FC = () => {
           </div>
         </div>
         <div
-          className={`flex flex-col place-items-center  w-full bg-white h-screen  overflow-y-scroll mx-2 `}
+          className={`flex flex-col place-items-center w-full bg-white h-screen  overflow-y-scroll mx-2 `}
         >
-          {renderContent()}
+          {renderContent}
         </div>
       </div>
     </div>

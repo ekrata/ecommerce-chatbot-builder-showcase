@@ -16,7 +16,7 @@ export default function Page() {
   const searchParams = useSearchParams();
   const operator = useAuthContext()
   const t = useTranslations('dash');
-  const { conversationState, conversationOperatorView, setConversationOperatorView } = useDashStore()
+  const { conversationState } = useDashStore()
 
   // E.g. `/dashboard?page=2&order=asc`
   const conversationId = searchParams?.get('conversationId');

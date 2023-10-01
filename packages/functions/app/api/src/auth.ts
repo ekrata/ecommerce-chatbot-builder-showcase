@@ -1,5 +1,4 @@
 import { EntityItem } from 'electrodb';
-import { GiSentryGun } from 'react-icons/gi';
 import { AuthHandler, GoogleAdapter, Session } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
@@ -25,12 +24,14 @@ export const handler = AuthHandler({
       onSuccess: async (tokenset) => {
         try {
           const claims = tokenset.claims();
-          console.log(claims);
 
           let operatorRes = await appDb.entities.operators.scan
-            .where(({ email }, { eq }) => `${eq(email, claims?.email)}`)
+            .where(({ email }, { eq }) => eq(email, claims.email))
             .go();
 
+          // if multiple operators returned, get the most recently created
+          operatorRes.data.sort((a, b) => b?.createdAt - a?.createdAt);
+          // await appDb.entities.operators.get({operatorId: operatorRes.data});
           // sign up
           if (!operatorRes?.data?.length) {
             const org = await appDb.entities.orgs

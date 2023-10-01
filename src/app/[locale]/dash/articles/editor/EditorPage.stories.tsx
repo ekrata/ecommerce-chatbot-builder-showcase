@@ -7,7 +7,6 @@ import { QueryClient } from '@tanstack/react-query';
 import LocaleLayout from '../../../layout';
 import { DashProvider } from '../../DashProvider';
 import { createRandomOperator } from '../../inbox/mocks.test';
-import Layout from '../../layout';
 import { defaultRoutes, existingConversationRoutes } from '../../mswRoutes';
 import Page from './page';
 
