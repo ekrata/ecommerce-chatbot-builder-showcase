@@ -209,6 +209,8 @@
     "Desktop": "Desktop",
     "Mobile": "Mobile",
     "Message": "Message",
+    "Topic": "Topic",
+    "Channel": "Channel",
     "Code snippet": "Code snippet",
     "Need more help?": "Need more help?",
     "Visit our Knowledge base": "Visit our Knowledge base",

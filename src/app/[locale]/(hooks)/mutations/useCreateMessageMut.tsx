@@ -2,7 +2,7 @@ import { EntityItem } from 'electrodb';
 
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { UseInfiniteQueryResult, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import {
@@ -21,12 +21,16 @@ import { QueryKey } from '../queries';
  */
 export const newMessageReducer = (newMessage: EntityItem<typeof Message>, conversationItems: ConversationItem[]) => {
   const { conversationId } = newMessage
-  const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem.conversation.conversationId !== conversationId) ?? []
-  const conversationItem = conversationItems?.find(conversationItem => conversationItem.conversation.conversationId === conversationId)
-  if (conversationItem?.conversation) {
+  console.log(conversationItems)
+  const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem?.conversationId !== conversationId) ?? []
+  const conversationItem = conversationItems?.find(conversationItem => conversationItem?.conversationId === conversationId)
+
+  if (conversationItem?.conversationId) {
     const newConversationItem: ConversationItem = { ...conversationItem, messages: [...(conversationItem?.messages ?? []), newMessage] }
-    const items = [newConversationItem, ...oldConversationItems.map((item) => ({ ...item }))]
+    console.log(newConversationItem)
+    const items = [newConversationItem, ...oldConversationItems]
     sortConversationItems(items)
+    console.log(items)
     return items
   }
   return oldConversationItems

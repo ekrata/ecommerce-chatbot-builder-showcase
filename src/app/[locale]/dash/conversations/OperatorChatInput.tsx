@@ -18,7 +18,7 @@ type Inputs = {
 }
 
 interface Props {
-  conversationItem: ConversationItem
+  conversationItem?: ConversationItem
 }
 
 export const OperatorChatInput: FC<Props> = ({ conversationItem }) => {
@@ -53,14 +53,13 @@ export const OperatorChatInput: FC<Props> = ({ conversationItem }) => {
     await createMessageMut.mutateAsync([operatorSession?.orgId ?? '', conversationId ?? '', messageId ?? '', createMessage])
   }
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='w-full'>
-      <div className="form-control">
-        <div className="input-group gap-x-1">
-          <div className="flex flex-col w-full rounded-b-lg">
-            <input
-              type="text"
+    <form onSubmit={handleSubmit(onSubmit)} className='w-full border-t-[1px] bg-white '>
+      <div className="shadow-2xl form-control">
+        <div className="flex ">
+          <div className="flex flex-col w-full pt-2 pb-2 pl-2 ">
+            <textarea
               placeholder="Enter your message..."
-              className="w-full rounded-b-lg input hover:outline-0 hover:ring-0 focus:ring-0 focus:outline-0 rounded-xs "
+              className="bg-gray-200 rounded-r-none textarea textarea-ghost text-areaw-full rounded-l-md input hover:outline-0 hover:ring-0 focus:ring-0 focus:outline-0 "
               data-testid="msg-input"
               {...register('msg', { required: true })}
             />
@@ -74,7 +73,7 @@ export const OperatorChatInput: FC<Props> = ({ conversationItem }) => {
             )}
           </div>
           <button
-            className={` btn text-xl border-0 rounded-br-lg bg-black`}
+            className={`flex mt-2 mb-2 mr-2 rounded-r-md rounded-none btn   border-0 align-center h-full   bg-black`}
             data-testid="msg-send"
             type="submit"
             disabled={createMessageMut.isLoading}

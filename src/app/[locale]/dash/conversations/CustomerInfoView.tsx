@@ -56,10 +56,10 @@ export const CustomerInfoView: FC = () => {
   const conversationId = searchParams?.get('conversationId')
 
   const conversationItemQuery = useConversationItemsQuery(conversationListFilter)
-  const conversationItem = conversationItemQuery?.data?.data?.find(conversation => conversation.conversationId === conversationId)
-  const visitsQuery = useVisitsQuery(orgId, conversationItem?.conversation?.customerId)
+  const conversationItem = conversationItemQuery?.data?.pages?.flatMap(data => data.data).find(conversation => conversation.conversationId === conversationId)
+  const visitsQuery = useVisitsQuery(orgId, conversationItem?.customerId)
   const noData = (
-    <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
+    <div className='flex flex-col justify-center w-full h-screen bg-white place-items-center gap-y-1'>
       <h5 className='flex font-semibold'><BsChat />{tDash('conversations', { count: 0 })}</h5>
       {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
     </div>
@@ -87,7 +87,7 @@ export const CustomerInfoView: FC = () => {
   return (
     <div
       data-testid='chat-info-panel'
-      className='flex flex-col w-full h-screen p-4 bg-white gap-y-2 dark:bg-gray-800 '
+      className='flex flex-col w-full h-screen max-h-screen p-4 bg-white gap-y-2 dark:bg-gray-800 '
     >
       <div className='flex gap-x-2 place-item-center'>
         {isMobile &&

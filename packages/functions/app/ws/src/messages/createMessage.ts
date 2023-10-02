@@ -1,12 +1,9 @@
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
-import { EntityItem } from 'electrodb';
-import { ApiHandler, useJsonBody } from 'sst/node/api';
+import { ApiHandler } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import { Customer } from '@/entities/customer';
-import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
 
 import { Message } from '../../../../../../stacks/entities/message';

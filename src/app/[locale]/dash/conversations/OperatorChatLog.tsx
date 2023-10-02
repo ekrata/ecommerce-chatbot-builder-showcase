@@ -41,10 +41,9 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
     <h5 className='flex font-semibold'><BsChat />{t('Select a conversation to view it here', { count: 0 })}</h5>
     {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
   </div>
+  console.log(conversationItem)
 
   const renderContent = useMemo(() => {
-    console.log(ws?.lastMessage)
-    console.log(conversationItem.messages)
     return <div
       className="flex flex-col w-full h-full py-2 pb-8 overflow-y-scroll text-sm bg-white gap-y-1 dark:bg-gray-800"
       data-testid="chat-log"
@@ -91,6 +90,6 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
       }
     </div >
 
-  }, [ws?.lastMessage])
+  }, [conversationItem?.lastMessageAt, conversationItem?.messages?.length, conversationItem?.messages?.slice(-1)?.[0]?.messageId])
   return renderContent
 }

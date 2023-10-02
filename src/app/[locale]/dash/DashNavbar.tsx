@@ -1,6 +1,6 @@
 'use client';
 
-import {  useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { IoMdChatboxes } from 'react-icons/io';
 import { MdOutlineDashboard } from 'react-icons/md';
@@ -11,11 +11,11 @@ export default function DashNavbar() {
   const unreadMessages = 5;
 
   return (
-    <ul className='text-gray-500'>
+    <ul className='left-0 flex flex-col text-gray-500 bg-black'>
       <li>
         <Link
           href="/dash"
-          key='dash'
+          key='home'
           className='flex btn btn-ghost'
         >
           <div className='tooltip lg:tooltip-right' data-tip={t('home')}>
@@ -25,8 +25,8 @@ export default function DashNavbar() {
       </li>
       <li>
         <Link
-          href="/dash"
-          key='dash'
+          href={{ pathname: "/dash/conversations" }}
+          key='conversations'
           className='flex btn btn-ghost'
         >
           <div className='tooltip lg:tooltip-right' data-tip={t('inbox')}>

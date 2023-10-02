@@ -43,9 +43,13 @@ export const ConversationsListView: FC = () => {
   const conversationId = useSearchParams()?.get('conversationId')
 
   const [operatorSession] = useAuthContext();
-  const locale = useLocale(); const [cursor, setCursor] = useState<string | undefined>(undefined)
+  const locale = useLocale();
+  const [page, setPage] = useState<string | undefined>()
+  const [cursor, setCursor] = useState<string | undefined>(undefined)
+
 
   const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
+  console.log(conversationItems.data)
 
   useEffect(() => {
     if (operatorSession?.orgId) {
@@ -67,9 +71,9 @@ export const ConversationsListView: FC = () => {
       return fetchingArticlesSkeleton
     }
     else {
-      return conversationItems?.data?.data?.length ? (
+      return conversationItems.data?.pages?.[0]?.data?.length ? (
         <ul className="w-full mb-10 animate-fade-left">
-          {conversationItems?.data?.data?.map((item) => {
+          {conversationItems?.data?.pages?.[0]?.data?.map((item) => {
             if (item?.conversationId) {
               return <li key={item?.conversationId} className={`flex justify-between w-full  h-16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
                 <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
@@ -78,13 +82,13 @@ export const ConversationsListView: FC = () => {
           })}
         </ul >) : noData
     }
-  }, [conversationItems?.data, conversationId])
+  }, [conversationItems?.data?.pages?.[0]?.data, conversationId, conversationItems?.dataUpdatedAt])
 
   return (
-    <div className="flex justify-between w-full h-full rounded-3xl">
+    <div className="flex justify-between w-full h-full ">
       <div className="flex flex-col w-full h-full place-items-center ">
         <div
-          className={` bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold gap-x-2   `}
+          className={`bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center  text-xl font-semibold gap-x-2   `}
         >
           <div className='flex justify-end w-full place-items-center'>
             <div className='flex place-items-center'>

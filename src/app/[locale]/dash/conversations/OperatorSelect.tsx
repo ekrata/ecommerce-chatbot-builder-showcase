@@ -22,8 +22,6 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const { operatorId } = conversationListFilter
   const operators = useOperatorsQuery(sessionOperator?.orgId ?? '')
 
-  console.log(operators.data)
-
   // if undefined, set to sessionOperator
   useEffect(() => {
     if (sessionOperator?.operatorId) {

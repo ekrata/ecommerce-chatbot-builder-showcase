@@ -38,7 +38,6 @@ export const OperatorMessageTimeLabel: React.FC<Props> = ({ conversationItem, up
       <p className="text-xs text-neutral-400 place-items-center">
         {message?.sender === 'customer' && (conversationItem?.customer?.name ?? conversationItem?.customer?.email)}
         {message?.sender === 'operator' && (sessionOperator?.operatorId === message.operatorId ? `${t('You')}` : lastMessageOperator?.name ?? lastMessageOperator?.email)}
-        {message?.sender === 'operator' && `${t('You')}`}
         {message?.sender === 'bot' && `${t('Bot')}`}
         {` · ${message?.sentAt && time}.`}
       </p>

@@ -3,7 +3,7 @@ import {
 } from 'packages/functions/app/api/src/conversations/listByCreatedAt';
 
 import { ConversationItem } from '@/entities/conversation';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import { QueryKey } from '../queries';
@@ -18,12 +18,13 @@ import { QueryKey } from '../queries';
  */
 export const useConversationItemsByCustomerQuery = (orgId: string, customerId: string) => useQuery<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], async () => (orgId && customerId) ? await getConversationItemsByCustomer(orgId, customerId) : [], { enabled: !!orgId && !!customerId })
 
-export const useConversationItemsQuery = (params: ConversationFilterParams) => useQuery<ConversationItem[]>(
-  {
-    queryKey: [QueryKey.conversationItems, ...Object.values(params)], queryFn: async () => {
-      return await getConversationItems(params)
-    },
-  })
+export const useConversationItemsQuery = (params: ConversationFilterParams) => useInfiniteQuery<{ cursor: string | null, data: ConversationItem[] }>({
+  queryKey: [QueryKey.conversationItems, ...Object.values(params)],
+  queryFn: async () => {
+    return await getConversationItems(params)
+  },
+  getNextPageParam: (lastPage, pages) => lastPage.cursor,
+})
 
 /**
  * Returns sorted conversations by customerId
@@ -58,13 +59,13 @@ export const getConversationItemsByCustomer = async (
  * @async
  * @param {string} orgId
  * @param {string} customerId
- * @returns {Promise<ConversationItem[]>}
+ * @returns {Promise<{cursor: string | null, data: ConversationItem[]}>}
  */
 export const getConversationItems = async (
-  params: ConversationFilterParams
-): Promise<ConversationItem[]> => {
+  params: ConversationFilterParams,
+  pageParam = 0,
+): Promise<{ cursor: string | null, data: ConversationItem[] }> => {
   params.expansionFields = ['customerId', 'operatorId']
-  console.log(params?.operatorId)
   if (params.operatorId === 'all' || params.operatorId === 'bots') {
     params.operatorId = ''
   }
@@ -74,7 +75,7 @@ export const getConversationItems = async (
   const res =
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${params.orgId}/conversations?${queryParams(params)}`
+      }/orgs/${params.orgId}/conversations?cursor=${pageParam}&${queryParams(params)}`
     )
 
   const body = await res.json()

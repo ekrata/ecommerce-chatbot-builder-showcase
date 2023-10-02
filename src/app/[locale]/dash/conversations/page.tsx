@@ -37,16 +37,16 @@ export default function Page() {
   }, [conversationState, conversationId])
 
   const render = useMemo(() => (
-    <div className="grid grid-cols-12">
-      <div className='col-span-3'>
+    <div className="grid w-screen max-h-screen grid-cols-12">
+      <div className='h-screen col-span-3'>
         {conversationState === 'list' && <ConversationsListView></ConversationsListView>}
 
         {conversationState === 'search' && <ConversationsSearchView></ConversationsSearchView>}
       </div>
-      <div className='col-span-6'>
+      <div className='h-screen col-span-6 shadow-md'>
         <ChatView />
       </div>
-      <div className='col-span-3 border-primary border-l-[1px]'>
+      <div className='col-span-3  shadow-lg border-l-[1px]'>
         <CustomerInfoView></CustomerInfoView>
       </div>
     </div>

@@ -10,7 +10,7 @@ import { getWsUrl } from '@/app/getWsUrl';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 import { Operator } from '@/entities/operator';
-import { useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, UseInfiniteQueryResult, useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../(helpers)/sortConversationItems';
 import { useAuthContext } from '../(hooks)/AuthProvider';
@@ -18,6 +18,7 @@ import { newMessageReducer } from '../(hooks)/mutations/useCreateMessageMut';
 import { QueryKey, useConfigurationQuery, useOrgQuery } from '../(hooks)/queries';
 import { useCustomerQuery } from '../(hooks)/queries/useCustomerQuery';
 import { useOperatorsQuery } from '../(hooks)/queries/useOperatorsQuery';
+import { useDashStore } from './(actions)/useDashStore';
 
 // Create a context for chat messages
 const DashSocketContext = createContext<null | ReturnType<typeof useWebSocket>>(null);
@@ -38,6 +39,7 @@ export interface Props {
 export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ children, mockWsUrl }) => {
     // Initialize the WebSocket connection and retrieve necessary properties
     const [sessionOperator] = useAuthContext()
+    const { conversationListFilter } = useDashStore()
     const ws = useWebSocket(mockWsUrl ?? getWsUrl(sessionOperator?.orgId ?? '', sessionOperator?.operatorId ?? '', 'operator'), {
         shouldReconnect: (closeEvent) => true,
     });
@@ -55,30 +57,51 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
     // Handle the incoming WebSocket messages
     useEffect(() => {
         if (lastMessage && lastMessage.data) {
-            console.log(lastMessage.data)
             const { type, body } = JSON.parse(lastMessage.data);
-            console.log(type, body)
             // Update the local chat messages state based on the message type
             switch (type) {
                 case WsAppMessage.createConversation:
-                    queryClient.setQueryData<ConversationItem[]>([...body, QueryKey.conversationItems], (data) => {
+                    queryClient.setQueryData<InfiniteData<{
+                        cursor: string | null;
+                        data: ConversationItem[];
+                    }> | undefined>([...body, QueryKey.conversationItems], (data) => {
                         return [...data ?? [], body];
                     });
                     break;
                 case WsAppMessage.createMessage:
-                    console.log('new message')
-                    console.log(body)
-                    queryClient.setQueryData<ConversationItem[]>([...body, QueryKey.conversationItems], (oldData) => {
-                        console.log('creating message', oldData)
-                        return newMessageReducer(body as EntityItem<typeof Message>, oldData ?? [])
+                    console.log(Object.values(conversationListFilter))
+                    queryClient.setQueryData<InfiniteData<{
+                        cursor: string | null;
+                        data: ConversationItem[];
+                    }> | undefined>([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
+                        const pageNumber = oldData?.pages.findIndex((data) => data?.data?.some((conversationItem) => conversationItem?.conversationId === body?.conversationId))
+                        if (pageNumber != null && oldData?.pages[pageNumber]?.data) {
+                            console.log('reducing message')
+                            oldData.pages[pageNumber].data = newMessageReducer(body as EntityItem<typeof Message>, oldData?.pages[pageNumber].data)
+                            return { ...oldData }
+                        }
+                        return { ...oldData }
                     });
+                    const queryData = queryClient.getQueryData<{ cursor: string | null, data: ConversationItem[] }>([QueryKey.conversationItems, ...Object.values(conversationListFilter)])
+                    console.log(queryData)
                     break;
                 case WsAppMessage.updateConversation:
-                    queryClient.setQueryData<ConversationItem[]>([...body, QueryKey.conversationItems], (oldData) => {
+                    queryClient.setQueryData<InfiniteData<{
+                        cursor: string | null;
+                        data: ConversationItem[];
+                    }>>([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
                         const updatedConversationItem = (body as ConversationItem)
-                        const conversationItems = [...oldData?.filter((conversationItem) => conversationItem?.conversationId !== updatedConversationItem?.conversationId) ?? [], updatedConversationItem]
-                        sortConversationItems(conversationItems)
-                        return conversationItems
+                        const pageNumber = oldData?.pages.findIndex((data) => data?.data?.some((conversationItem) => conversationItem?.conversationId === body?.conversationId))
+                        if (pageNumber && oldData?.pages?.[pageNumber]?.data) {
+                            const unUpdatedData = oldData.pages?.[pageNumber].data.filter((conversationItem) => conversationItem?.conversationId !== updatedConversationItem?.conversationId)
+                            const existingConversationItem = oldData.pages?.[pageNumber].data.find((conversationItem) => conversationItem.conversationId === updatedConversationItem?.conversationId)
+                            const mergedConversationItem: ConversationItem = { ...existingConversationItem, ...updatedConversationItem, messages: existingConversationItem?.messages ?? [] }
+                            const conversationItems = [mergedConversationItem, ...(unUpdatedData ?? [])]
+                            sortConversationItems(conversationItems)
+                            oldData.pages[pageNumber].data = conversationItems
+                            return { ...oldData }
+                        }
+                        return { ...oldData }
                     });
                     break;
                 default:
