@@ -1,16 +1,19 @@
-import { ApiHandler, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
-import { Config } from 'sst/node/config';
-import { Article, ArticleWithContent } from '@/entities/article';
 import { EntityItem } from 'electrodb';
+import { ApiHandler, usePathParams } from 'sst/node/api';
+import { Config } from 'sst/node/config';
+import { Table } from 'sst/node/table';
+
+import { Article, ArticleWithContent } from '@/entities/article';
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId, articleId, lang } = usePathParams();
+    console.log('getting with content');
     if (!orgId || !articleId || !lang) {
       return {
         statusCode: 422,
@@ -28,6 +31,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           articleContentId: articleRes?.data?.articleContentId ?? '',
         })
         .go();
+      console.log(articleRes, articleContentRes);
       if (articleRes.data && articleContentRes.data) {
         const withContent: ArticleWithContent = {
           ...articleRes.data,
@@ -51,5 +55,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

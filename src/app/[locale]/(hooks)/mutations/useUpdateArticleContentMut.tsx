@@ -13,7 +13,7 @@ export const updateArticleContent = async (
   body: UpdateArticleContent
 ): Promise<EntityItem<typeof ArticleContent>> => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/${lang}/article-contents/${articleContentId}`,
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/lang/${lang}/article-contents/${articleContentId}`,
     { method: 'PATCH', body: JSON.stringify(body) }
   );
   if (!res.ok) {

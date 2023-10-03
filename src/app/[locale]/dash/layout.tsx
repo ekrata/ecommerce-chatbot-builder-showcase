@@ -8,10 +8,10 @@ export default function Layout({ children }: PropsWithChildren) {
     <>
       <DashProvider>
         <div className="flex flex-row">
-          <div className='w-12 bg-black'>
+          <div className='w-10 h-screen bg-black shadow-2xl place-items-center'>
             <DashNavbar></DashNavbar>
           </div>
-          <div className='col-span-11'>
+          <div className='w-full col-span-11'>
             {children}
           </div>
         </div>

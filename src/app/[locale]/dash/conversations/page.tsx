@@ -37,7 +37,7 @@ export default function Page() {
   }, [conversationState, conversationId])
 
   const render = useMemo(() => (
-    <div className="grid w-screen max-h-screen grid-cols-12">
+    <div className="grid w-full max-h-screen grid-cols-12">
       <div className='h-screen col-span-3'>
         {conversationState === 'list' && <ConversationsListView></ConversationsListView>}
 

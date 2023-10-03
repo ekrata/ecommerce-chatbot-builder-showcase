@@ -3,11 +3,13 @@
 import { useTranslations } from 'next-intl';
 import { FC, ReactNode, useState } from 'react';
 import { Controller, Resolver, useForm } from 'react-hook-form';
+import { BiLogoJavascript, BiLogoWordpress } from 'react-icons/bi';
 import {
   BsChevronDown, BsChevronUp, BsClipboard, BsEye, BsPaintBucket, BsPhone
 } from 'react-icons/bs';
 import { FaDesktop, FaPaintBrush, FaShopify } from 'react-icons/fa';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
+import { SiWoocommerce } from 'react-icons/si';
 import { useCopyToClipboard } from 'usehooks-ts';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
@@ -15,7 +17,7 @@ import {
   useUpdateConfigurationMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
 import { useConfigurationQuery, useOrgQuery } from '@/app/[locale]/(hooks)/queries';
-import { ConfigLiveChatAppearance, deviceVisibility } from '@/entities/configuration';
+import { ConfigLiveChatAppearance } from '@/entities/configuration';
 import { UpdateConfiguration } from '@/entities/entities';
 
 const resolver: Resolver<ConfigLiveChatAppearance> = async (values) => {
@@ -46,10 +48,15 @@ const Collapse: FC<Props> = ({ title, content }) => {
   )
 }
 
+const supportedInstallation = ['Javascript', 'Shopify', 'Wordpress', 'Woocommerce'] as const
+export type SupportedInstallation = (typeof supportedInstallation)[number]
 
-const supportedInstallations = ['Javascript', 'Shopify', 'Wordpress', 'Woocommerce'] as const
-export type SupportedInstallation = (typeof supportedInstallations)[number]
-
+const supportedInstallations: Record<SupportedInstallation, ReactNode> = {
+  'Javascript': <BiLogoJavascript />,
+  'Shopify': <FaShopify className='text-xl text-green-600' />,
+  'Wordpress': <BiLogoWordpress />,
+  'Woocommerce': <SiWoocommerce className='text-6xl' />
+} as const
 
 export default function Page() {
   const t = useTranslations('dash.settings.installation')
@@ -80,7 +87,7 @@ export default function Page() {
 
         return (
           <div className='flex flex-col gap-y-2'>
-            {t(`Paste this code snippet just before the </body> tag.`)}
+            {t(`Paste this code snippet just before the </body> tag`)}
             <div className="mockup-code">
               <pre data-prefix="$"><code>{jsInstallUrl}</code></pre>
             </div>
@@ -125,9 +132,6 @@ export default function Page() {
   }
 
 
-
-  const selectedButton = `ring-2 outline-1 ring-primary`
-
   return (
     <form className='bg-white' onSubmit={onSubmit}>
       <div className='w-full border-b-[1px] mb-5 text-3xl '>
@@ -141,9 +145,9 @@ export default function Page() {
       </div>
       <div className='grid grid-cols-12'>
         <ul className="w-56 col-span-3 bg-white menu border-r-[1px]">
-          {supportedInstallations.map((installationTab) =>
-            installationTab === tab ? <li><a className="active" onClick={() => setTab(installationTab)}>{installationTab}</a></li> :
-              <li onClick={() => setTab(installationTab)}><a>{installationTab}</a></li>
+          {Object.entries(supportedInstallations).map(([installationTab, icon]) =>
+            installationTab === tab ? <li><a className="active" onClick={() => setTab(installationTab as SupportedInstallation)}>{icon}{installationTab}</a></li> :
+              <li onClick={() => setTab(installationTab as SupportedInstallation)}><a>{icon}{installationTab}</a></li>
           )}
         </ul>
         <div className='col-span-9'>

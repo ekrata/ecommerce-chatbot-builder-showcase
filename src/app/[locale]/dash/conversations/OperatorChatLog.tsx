@@ -41,7 +41,6 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
     <h5 className='flex font-semibold'><BsChat />{t('Select a conversation to view it here', { count: 0 })}</h5>
     {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
   </div>
-  console.log(conversationItem)
 
   const renderContent = useMemo(() => {
     return <div

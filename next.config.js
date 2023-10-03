@@ -16,7 +16,6 @@ const nextConfig = {
   // Other Next.js configuration ...
   reactStrictMode: true,
   experimental: {
-    appDir: true,
     typedRoutes: true,
   },
   webpack(config) {

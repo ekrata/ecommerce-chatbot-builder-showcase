@@ -143,7 +143,11 @@
   "app": {
     "layout": {
       "home": "Home",
-      "inbox": "Inbox"
+      "conversations": "Conversations",
+      "visitors": "Visitors",
+      "help-center": "Help center",
+      "analytics": "Analytics",
+      "settings": "Settings"
     },
     "home": {
       "customers": "{count, plural, =0 {No followers yet} =1 {One follower} other {# followers}}"
@@ -181,6 +185,7 @@
     "Start chat": "Start chat",
     "All conversations": "All conversations",
     "Bots in action": "Bots in action",
+    "No article selected": "No article selected",
     "You": "You",
     "Name": "Name",
     "Entered": "Entered",

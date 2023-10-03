@@ -21,14 +21,13 @@ type Inputs = {
 };
 
 const fetchingConversationItemSkeleton = (
-  <div className="flex flex-col w-full p-2 my-2 animate-pulse rounded-3xl gap-y-2">
+  <div className="flex flex-col w-full h-screen p-2 bg-white animate-pulse gap-y-2">
     {[...Array(15)].map(() => (
       <div className="flex w-full place-items-center animate-fade-left">
-        <div className='flex flex-col w-full gap-y-2'>
-          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-full" />
-          <div className="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
+        <div className='flex flex-col w-full gap-y-6'>
+          <div className="h-2.5 w-1/2 left-0 bg-gray-300 justify-end rounded-full dark:bg-gray-600" />
+          <div className="right-0 w-1/2 h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
         </div>
-        <BiChevronRight className="text-4xl text-gray-300 dark:text-gray-600 justify-right" />
       </div>))}
   </div>
 )
@@ -76,12 +75,16 @@ export const ChatView: FC = () => {
                 <BiChevronLeft className='text-4xl '></BiChevronLeft>
               </Link>
             }
+            {!conversationItemsQuery?.isFetched &&
+              <div className='flex flex-col w-full gap-y-2 animate-pulse'>
+                <div className="w-1/3 h-full py-1 bg-gray-300 rounded-md dark:bg-gray-600" />
+              </div>
+            }
             {conversationItem?.customer?.name}
             {conversationItem?.customer && (
               <a onClick={() => setConversationState('customerInfo')} className='flex flex-row place-items-center gap-x-2'>
                 <CustomerAvatar conversationItem={conversationItem} />
                 <p>{`${conversationItem.customer?.name ?? conversationItem?.customer?.email ?? conversationItem?.customer?.customerId}`}</p>
-                <FcImport className='text-3xl rotate-180 rounded-full' />
               </a>
             )}
           </div>
@@ -99,7 +102,7 @@ export const ChatView: FC = () => {
 
         </div>
 
-      </div>
+      </div >
     )
   }, [conversationId, searchParams?.get('conversationId'), conversationItem?.conversationId, conversationItemsQuery?.dataUpdatedAt])
 

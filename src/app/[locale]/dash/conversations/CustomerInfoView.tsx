@@ -30,7 +30,7 @@ const profile = 'Profile';
 const notesTab = 'Notes';
 
 const fetchingSkeleton = (
-  <div className="flex flex-col w-full p-2 my-2 animate-pulse rounded-3xl gap-y-2">
+  <div className="flex flex-col w-full h-screen p-2 bg-white animate-pulse gap-y-2">
     {[...Array(10)].map(() => (
       <div className="flex w-full place-items-center animate-fade-left">
         <div className='flex flex-col w-full gap-y-2'>

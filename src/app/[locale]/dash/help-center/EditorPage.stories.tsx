@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
 
-import LocaleLayout from '../../../layout';
-import { DashProvider } from '../../DashProvider';
-import { createRandomOperator } from '../../inbox/mocks.test';
-import { defaultRoutes, existingConversationRoutes } from '../../mswRoutes';
-import Page from './page';
+import LocaleLayout from '../../layout';
+import { DashProvider } from '../DashProvider';
+import { createRandomOperator } from '../inbox/mocks.test';
+import { defaultRoutes, existingConversationRoutes } from '../mswRoutes';
+import Page from './editor/page';
 
 import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof LocaleLayout> = {

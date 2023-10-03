@@ -169,7 +169,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
 
   mockOrg.operatorIds = operators.data.map((operator) => operator.operatorId);
 
-  const ownerOperatorId = uuidv4();
+  const ownerOperatorId = '';
   const createOwnerOperator: CreateOperator = {
     operatorId: ownerOperatorId,
     email: faker.internet.email(),
@@ -179,23 +179,36 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   await db.entities.operators.create(createOwnerOperator).go();
   mockOrg.ownerId = ownerOperatorId;
 
-  const adminOperatorId = uuidv4();
+  const adminOperatorId = '109111481709970940866';
   const createAdminOperator: CreateOperator = {
     operatorId: adminOperatorId,
-    email: faker.internet.email(),
+    email: 'ekrata.adm1n@gmail.com',
     orgId,
+    online: false,
+    createdAt: Date.now(),
+    name: 'Sarah',
+    language: '',
     permissionTier: 'admin',
+    profilePicture:
+      'https://lh3.googleusercontent.com/a/ACg8ocLwBwV0ujV4Tk9fkLUa6kV8J4FwU3mixe2o5K6Dd0No=s96-c',
   };
   await db.entities.operators.create(createAdminOperator).go();
   mockOrg.adminId = adminOperatorId;
 
-  const moderatorOperatorId = uuidv4();
+  const moderatorOperatorId = '117138631241434182915';
   const createModeratorOperator: CreateOperator = {
+    email: 'ekrata.moderator@gmail.com',
+    online: false,
     operatorId: moderatorOperatorId,
-    email: faker.internet.email(),
-    orgId,
+    createdAt: Date.now(),
+    name: 'David',
+    language: '',
     permissionTier: 'moderator',
+    profilePicture:
+      'https://lh3.googleusercontent.com/a/ACg8ocK4WppIGwk5SRE_MPFXFjGGM1m5InXADgwxq5Ybqeqj=s96-c',
+    orgId,
   };
+  mockOrg.moderatorId = moderatorOperatorId;
 
   if (existingOperator && orgIndex === 0) {
     console.log('creating existing operator', existingOperator, orgId);

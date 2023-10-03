@@ -118,7 +118,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
         })
         .go(
           // ? { cursor: cursor, limit: 100, order: 'desc' }
-          { limit: 100, order: 'desc' },
+          { limit: 500, order: 'desc' },
         );
       console.log(messages);
     }
@@ -175,7 +175,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
             })
             .go(
               // ? { cursor: cursor, limit: 100, order: 'desc' }
-              { limit: 100, order: 'desc' },
+              { limit: 500, order: 'asc' },
             );
           return { ...conversation, messages: messages.data };
         }),

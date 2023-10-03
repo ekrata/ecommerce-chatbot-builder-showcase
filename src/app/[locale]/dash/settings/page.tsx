@@ -8,15 +8,12 @@ import { SettingsMenu } from './SettingsMenu';
 
 export default function Page() {
   const t = useTranslations('dash');
-  const router = useRouter();
 
   if (isDesktop) {
-    router.push('/settings/channels/live-chat/appearance')
   }
 
   return (
     <div>
-      <SettingsMenu />
     </div>
   )
 }

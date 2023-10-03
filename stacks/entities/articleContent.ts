@@ -1,5 +1,6 @@
 import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+
 import { Article } from './article';
 
 /**
@@ -35,6 +36,11 @@ export const ArticleContent = new Entity({
       default: 'en',
     },
     content: {
+      type: 'string',
+      required: true,
+      default: '',
+    },
+    htmlContent: {
       type: 'string',
       required: true,
       default: '',

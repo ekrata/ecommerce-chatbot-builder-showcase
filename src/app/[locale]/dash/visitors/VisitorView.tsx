@@ -68,7 +68,6 @@ export const VisitorView: FC = () => {
   const { conversationState, setConversationState } = useDashStore();
   const [page, setPage] = useState<number>(1);
   const [pageCursor, setPageCursor] = useState<PageCursor>({ 1: undefined });
-  const router = useRouter();
 
   const { relativeTime } = useFormatter();
   const [operatorSession] = useAuthContext();
@@ -90,27 +89,27 @@ export const VisitorView: FC = () => {
   }
 
   return (
-    <div className="flex justify-between w-full h-full rounded-3xl">
+    <div className="flex justify-between w-full h-screen shadow-2xl rounded-3xl">
       <div className="flex flex-col w-full h-full place-items-center ">
         <div
           className={` bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold gap-x-2   `}
         >
-          <div className="overflow-x-auto">
-            <table className={`table ${isMobile ? 'table-xs' : 'table-sm'}`}>
+          <div className="w-full overflow-x-auto">
+            <table className={`table ${isMobile ? 'table-xs' : 'w-full h-screen'}`}>
               {/* head */}
-              <thead className='normal-case bg-transparent '>
-                <tr className='normal-case bg-transparent '>
-                  <th className='normal-case'>{t('Name')}</th>
-                  <th className='normal-case' >{t('Entered')}</th>
-                  <th className='text-2xl normal-case'><FcGlobe /></th>
-                  <th className='text-2xl normal-case '><FcClock /></th>
-                  <th></th>
+              <thead className='normal-case bg-white '>
+                <tr className='normal-case bg-white '>
+                  <th className='normal-case bg-transparent'>{t('Name')}</th>
+                  <th className='normal-case bg-transparent' >{t('Entered')}</th>
+                  <th className='text-2xl normal-case bg-transparent'><FcGlobe /></th>
+                  <th className='text-2xl normal-case bg-transparent '><FcClock /></th>
+                  <th className='text-2xl normal-case bg-transparent '></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className='content-start align-top max-h-10'>
                 {visitsQuery.isFetching ? fetchingSkeleton :
                   visitsQuery?.data?.data?.map((visit) => (
-                    <tr className='w-full max-w-screen-sm text-xs font-normal normal-case truncate btn-ghost lg:max-w-fit lg:max hover:cursor-pointer' onClick={() => {
+                    <tr className='content-start w-full text-xs font-normal normal-case truncate max-h-20 hover:cursor-pointer' onClick={() => {
                       handleStartChat(visit.customer.customerId)
                     }}>
                       <th className='bg-transparent'>
@@ -150,13 +149,13 @@ export const VisitorView: FC = () => {
                   ))}
               </tbody>
             </table>
-            <Pagination pageState={[page, setPage]} />
+
           </div>
         </div>
-        <div
-          className={`flex flex-col place-items-center  w-full bg-white h-screen  overflow-y-scroll mx-2 `}
-        >
+        <div className='fixed bottom-0'>
+          <Pagination pageState={[page, setPage]} />
         </div>
+
       </div >
     </div >
   )

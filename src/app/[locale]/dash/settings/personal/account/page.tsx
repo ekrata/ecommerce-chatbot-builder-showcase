@@ -1,3 +1,4 @@
+'use client'
 import ct from 'countries-and-timezones';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';

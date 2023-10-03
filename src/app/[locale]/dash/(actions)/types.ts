@@ -15,6 +15,7 @@ export type ConversationOperatorView = 'all' | 'bots' | string;
 
 export interface DashStateDefinition {
   conversationState?: 'search' | 'list' | 'customerInfo';
+  helpCenterState?: 'search' | 'list';
   conversationListFilter: ConversationFilterParams;
   settingsState: '';
 }
