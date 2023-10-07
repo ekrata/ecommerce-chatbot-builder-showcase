@@ -49,13 +49,13 @@ export const ConversationsListView: FC = () => {
 
 
   const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
-  console.log(conversationItems.data)
 
   useEffect(() => {
     if (operatorSession?.orgId) {
       setConversationListFilter({
         ...conversationListFilter, orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true'
       })
+      conversationItems.refetch()
     }
   }, [operatorSession?.orgId, cursor])
 

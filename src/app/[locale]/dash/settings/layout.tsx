@@ -10,7 +10,7 @@ export default function Layout({ children }: PropsWithChildren) {
     <div className=' p-2 bg-white col-span-0 lg:col-span-3 border-r-[1px]'>
       <SettingsMenu />
     </div>
-    <div className='h-screen col-span-12 p-2 bg-white lg:col-span-9'>
+    <div className='h-screen col-span-12 p-2 bg-white shadow-lg lg:col-span-9'>
       {children}
     </div>
   </div>

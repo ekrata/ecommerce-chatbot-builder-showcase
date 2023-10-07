@@ -23,7 +23,7 @@ export default function Page() {
       return <ArticlesView />
     }
     else if (articleId) {
-      return <EditorView articleId='articleId' />
+      return <EditorView />
     }
   }, [articleId])
 
@@ -33,7 +33,7 @@ export default function Page() {
         {conversationState === 'list' && <ArticlesView />}
       </div>
       <div className='h-screen col-span-9 shadow-2xl'>
-        <EditorView articleId={articleId ?? ''} />
+        <EditorView />
       </div>
     </div>
   ), [articleId])

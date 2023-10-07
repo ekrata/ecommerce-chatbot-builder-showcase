@@ -15,7 +15,6 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event: any, context) => {
-    console.log('creating message');
     try {
       const newImage = DynamoDB.Converter.unmarshall(
         event.detail?.dynamodb?.NewImage,
@@ -35,9 +34,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const conversation = await appDb.entities.conversations
         .get({ orgId, conversationId })
         .go();
-      //
-      // console.log('hi', messageData, conversation?.data);
-      // console.log('hi', conversation.data?.operatorId);
+
       // filter recipitents
       const operators = await appDb.entities.operators.query
         .byOrg({ orgId })
@@ -58,8 +55,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           return `${ne(connectionId, '')}`;
         })
         .go();
-
-      console.log('ops', operators);
 
       // filter recipitents
       const customer = await appDb.entities.customers.query

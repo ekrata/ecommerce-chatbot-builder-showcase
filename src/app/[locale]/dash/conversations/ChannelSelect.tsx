@@ -30,7 +30,6 @@ export const ChannelSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const { setConversationListFilter, conversationListFilter } = useDashStore()
   const { channel } = conversationListFilter
 
-  console.log(channel)
   return (
     <details className={`w-full h-full dropdown ${dropdownPosition ? `dropdown-${dropdownPosition}` : ''}`}>
       <summary className="flex flex-row px-2 normal-case flex-nowrap gap-x-1 place-items-center text-normal btn btn-ghost">
@@ -50,7 +49,6 @@ export const ChannelSelect: React.FC<Props> = ({ dropdownPosition }) => {
                 if (key === 'all') {
                   setConversationListFilter({ ...conversationListFilter, channel: undefined })
                 } else {
-                  console.log(channel)
                   setConversationListFilter({ ...conversationListFilter, channel: key as ConversationChannel })
                 }
               }} />

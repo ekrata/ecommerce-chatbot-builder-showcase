@@ -32,10 +32,6 @@ const fetchingConversationItemSkeleton = (
   </div>
 )
 
-interface Props {
-  conversationItem?: ConversationItem
-}
-
 export const ChatView: FC = () => {
   const t = useTranslations('chat-widget');
   const tDash = useTranslations('dash');
@@ -60,6 +56,7 @@ export const ChatView: FC = () => {
       {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
     </div>
   )
+
   const renderContent = useMemo(() => {
     return (
       <div className="flex justify-between w-full h-screen max-h-screen ">

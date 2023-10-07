@@ -1,16 +1,20 @@
 import { articleContentsStack } from 'packages/functions/app/api/src/article-contents/articleContentsStack';
 import { articlesStack } from 'packages/functions/app/api/src/articles/articlesStack';
+import { botsStack } from 'packages/functions/app/api/src/bots/botsStack';
 import { configurationStack } from 'packages/functions/app/api/src/configuration/configurationStack';
 import { conversationsStack } from 'packages/functions/app/api/src/conversations/conversationsStack';
 import { customersStack } from 'packages/functions/app/api/src/customers/customersStack';
+import { interactionsStack } from 'packages/functions/app/api/src/interactions/interactionsStack';
 import { messagesStack } from 'packages/functions/app/api/src/messages/messagesStack';
 import { operatorsStack } from 'packages/functions/app/api/src/operators/operatorsStack';
 import { orgsStack } from 'packages/functions/app/api/src/orgs/orgsStack';
 import { translationsStack } from 'packages/functions/app/api/src/translations/translationsStack';
 import { visitsStack } from 'packages/functions/app/api/src/visits/visitsStack';
+import { webhooksStack } from 'packages/functions/app/api/src/webhooks/webhooksStack';
 import { SSTConfig } from 'sst';
+import { paramStack } from 'stacks/paramStack';
 
-import { BaseStack } from './stacks/BaseStack';
+import { baseStack } from './stacks/baseStack';
 
 export default {
   config(_input) {
@@ -24,7 +28,8 @@ export default {
       app.setDefaultRemovalPolicy('destroy');
     }
     app
-      .stack(BaseStack)
+      .stack(paramStack)
+      .stack(baseStack)
       .stack(articlesStack)
       .stack(orgsStack)
       .stack(configurationStack)
@@ -34,6 +39,9 @@ export default {
       .stack(operatorsStack)
       .stack(customersStack)
       .stack(translationsStack)
-      .stack(visitsStack);
+      .stack(visitsStack)
+      .stack(webhooksStack)
+      .stack(botsStack)
+      .stack(interactionsStack);
   },
 } satisfies SSTConfig;

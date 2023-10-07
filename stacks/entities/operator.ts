@@ -28,6 +28,10 @@ export const Operator = new Entity({
       readOnly: true,
       default: () => uuidv4(),
     },
+    externalMetaId: {
+      type: 'string',
+      default: '',
+    },
     connectionId: {
       type: 'string',
       default: '',

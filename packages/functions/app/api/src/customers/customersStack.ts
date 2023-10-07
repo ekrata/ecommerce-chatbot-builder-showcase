@@ -1,8 +1,8 @@
 import { StackContext, use } from 'sst/constructs';
-import { BaseStack } from 'stacks/BaseStack';
+import { baseStack } from 'stacks/baseStack';
 
 export function customersStack({ stack }: StackContext) {
-  const { api } = use(BaseStack);
+  const { api } = use(baseStack);
 
   api.addRoutes(stack, {
     'GET /orgs/{orgId}/customers':

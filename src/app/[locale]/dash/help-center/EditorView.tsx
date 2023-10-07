@@ -2,33 +2,36 @@
 import 'react-quill/dist/quill.snow.css';
 
 import { useTranslations } from 'next-intl';
+import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Resolver, SubmitHandler, useForm } from 'react-hook-form';
 import { BiSave, BiTrash } from 'react-icons/bi';
+import { BsInfo } from 'react-icons/bs';
 import { MdOutlineArticle } from 'react-icons/md';
 import ReactQuill from 'react-quill';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
-  useCreateArticleContentMut
+    useCreateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useCreateArticleContentMut';
 import { useCreateArticleMut } from '@/app/[locale]/(hooks)/mutations/useCreateArticleMut';
 import {
-  useDeleteArticleContentMut
+    useDeleteArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useDeleteArticleContentMut';
 import { useDeleteArticleMut } from '@/app/[locale]/(hooks)/mutations/useDeleteArticleMut';
 import {
-  useUpdateArticleContentMut
+    useUpdateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleContentMut';
 import { useUpdateArticleMut } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleMut';
 import {
-  getArticleWithContent
+    getArticleWithContent
 } from '@/app/[locale]/chat-widget/(actions)/orgs/articles/getArticleWithContent';
 import { ArticleCategory, articleCategory, articleStatus, ArticleStatus } from '@/entities/article';
 import { useQuery } from '@tanstack/react-query';
 
 import { QueryKey } from '../../(hooks)/queries';
+import { useNotificationContext } from '../NotificationProvider';
 
 type FormValues = {
   title: string;
@@ -93,7 +96,13 @@ const editorSkeleton =
   </div >
   )
 
-export const EditorView: React.FC<Props> = ({ articleId }) => {
+export const EditorView: React.FC = () => {
+  const searchParams = useSearchParams()
+  const articleId = searchParams?.get('articleId')
+  const router = useRouter()
+  const pathname = usePathname()
+  const toast = useNotificationContext()
+  console.log(articleId)
   const newArticleId = uuidv4()
   const newArticleContentId = uuidv4()
   const t = useTranslations('dash');
@@ -119,30 +128,45 @@ export const EditorView: React.FC<Props> = ({ articleId }) => {
   const deleteArticleContentMut = useDeleteArticleContentMut(orgId, lang, articleWithContentQuery.data?.articleContentId ?? '');
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormValues>();
+
+  const onDelete = async () => {
+    const [articleRes, articleContentRes] = await toast.promise(() => Promise.all([deleteArticleMut.mutateAsync([orgId, lang, newArticleId]), deleteArticleContentMut.mutateAsync([orgId, lang, newArticleContentId])]), {
+      pending: t('Deleting article'),
+      success: t('Deleted article'),
+      error: t('Failed to delete article')
+    }, { position: 'bottom-right' })
+    router.push(`${pathname ?? ''}`)
+  }
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log('hiasdjjd')
-    console.log('hiii')
     if (articleId === 'new') {
-      const articleRes = await createArticleMut.mutateAsync([orgId, lang, newArticleId, { orgId, articleContentId: newArticleContentId, category: data.category, title: data.title, subtitle: data.subtitle, status: data.status }]);
-      if (articleRes.articleId) {
-        await createArticleContentMut.mutateAsync([orgId, lang, newArticleContentId, { orgId, articleId: newArticleId }]);
-      }
+      const [articleRes, articleContentRes] = await toast.promise(() => Promise.all([createArticleMut.mutateAsync([orgId, lang, newArticleId, { orgId, articleContentId: newArticleContentId, category: data.category, title: data.title, subtitle: data.subtitle, status: data.status }]), createArticleContentMut.mutateAsync([orgId, lang, newArticleContentId, { orgId, articleId: newArticleId }])]), {
+        pending: t('Creating article'),
+        success: t('Created article'),
+        error: t('Failed to create article')
+      }, { position: 'bottom-right' })
+      router.push(`${pathname ?? ''}?articleId=${articleRes?.articleId}`)
     }
     else if (articleId && articleWithContentQuery.data?.articleId && articleWithContentQuery.data?.articleContentId) {
-      const articleRes = await updateArticleMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleId, { articleContentId: articleWithContentQuery.data?.articleContentId, category: data.category, title: data.title, subtitle: data.subtitle, status: data.status }]);
-      if (articleRes.articleId) {
-        await updateArticleContentMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleContentId, { ...data }]);
-      }
+      await toast.promise(() => Promise.all([updateArticleMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleId, { articleContentId: articleWithContentQuery.data?.articleContentId, category: data.category, title: data.title, subtitle: data.subtitle, status: data.status }]), updateArticleContentMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleContentId, { ...data }])]),
+        {
+          pending: t('Updating article'),
+          success: t('Updated article'),
+          error: t('Failed to update article')
+        }, { position: 'bottom-right' })
     }
-  };
-
-  const handleDelete = async () => {
-    await deleteArticleMut.mutateAsync([orgId, lang, articleId ?? ''])
-    await deleteArticleContentMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleContentId ?? ''])
   }
+
 
   // When data loads for api
   useEffect(() => {
+    if (articleId === 'new') {
+      setValue('title', "Title for new article")
+      setValue('subtitle', "Subtitle for new article")
+      setValue('category', "General Information")
+      setValue('status', "Draft")
+      setEditorHtml('')
+    }
     if (articleWithContentQuery?.data) {
       const { title, subtitle, category, status, articleContent } = articleWithContentQuery.data
       setValue('title', title)
@@ -152,7 +176,7 @@ export const EditorView: React.FC<Props> = ({ articleId }) => {
       articleContent && setEditorHtml(articleContent.content)
     }
 
-  }, [articleWithContentQuery?.dataUpdatedAt])
+  }, [articleId, articleWithContentQuery?.dataUpdatedAt])
   /* 
   * Quill modules to attach to editor
   * See https://quilljs.com/docs/modules/ for complete options
@@ -199,8 +223,8 @@ export const EditorView: React.FC<Props> = ({ articleId }) => {
             <div className='flex flex-row justify-between'>
               <h3 className="justify-start text-2xl font-semibold justify-self-center place-items-center label-text">{t('Article')}</h3>
               <div className='flex justify-end gap-x-2'>
-                <button type="submit" className='max-w-xs normal-case gap-x-2 btn btn-sm '>{t('Save')}<BiSave className='text-xl' /></button>
-                {articleId && articleId !== 'new' && <button className='max-w-sm normal-case gap-x-2 btn btn-outline btn-error btn-sm' onClick={handleDelete}>{t('Delete article')}<BiTrash className="text-xl" /></button>}
+                <button type="submit" className='max-w-xs normal-case gap-x-2 btn btn-outline btn-ghost btn-sm '><BiSave className='text-xl' />{t('Save')}</button>
+                {articleId && articleId !== 'new' && <button type='button' className='max-w-sm normal-case gap-x-2 btn btn-outline btn-error btn-sm' onClick={onDelete}>{t('Delete article')}<BiTrash className="text-xl" /></button>}
               </div>
             </div>
             <div className="flex flex-col justify-start w-full p-2">
@@ -237,6 +261,9 @@ export const EditorView: React.FC<Props> = ({ articleId }) => {
                   {articleStatus.map((status) => (
                     <option>{t(`articleStatus.${status}`)}</option>
                   ))}
+                  <div className="tooltip" data-tip={t('Status Info')}>
+                    <button className="btn"><BsInfo /></button>
+                  </div>
                 </select>
               </div>
               <ReactQuill
@@ -246,7 +273,7 @@ export const EditorView: React.FC<Props> = ({ articleId }) => {
                 modules={modules}
                 formats={formats}
                 bounds={'.app'}
-                className='h-[420px] mt-5 mb-20'
+                className='h-[540px] bottom-0 max-h-screen min-h-full mt-5'
                 placeholder={'Write something...'
                 }
               />
@@ -254,7 +281,7 @@ export const EditorView: React.FC<Props> = ({ articleId }) => {
           </form>}
       </div >
     )
-  }, [articleWithContentQuery?.dataUpdatedAt])
+  }, [articleId, articleWithContentQuery?.dataUpdatedAt])
 
   return <div>{renderContent}</div>
 }

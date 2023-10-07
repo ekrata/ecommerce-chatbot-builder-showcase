@@ -1,5 +1,7 @@
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
+import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
   Api,
   ApiRouteProps,
@@ -10,13 +12,18 @@ import {
   EventBusRuleProps,
   FunctionInlineDefinition,
   NextjsSite,
+  Queue,
   StackContext,
   Table,
+  Topic,
+  use,
   WebSocketApi,
   WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 
-export function BaseStack({ stack, app }: StackContext) {
+import { paramStack } from './paramStack';
+
+export function baseStack({ stack, app }: StackContext) {
   // const APP_API_URL = new Config.Parameter(stack, 'APP_API_URL', {
   //   value: 'https://rwys6ma2k3.execute-api.us-east-1.amazonaws.com',
   // });
@@ -25,52 +32,18 @@ export function BaseStack({ stack, app }: StackContext) {
   //   value: 'wss://etr95nhzwk.execute-api.us-east-1.amazonaws.com/local',
   // });
 
-  const IS_LOCAL = new Config.Parameter(stack, 'IS_LOCAL', {
-    value: JSON.stringify(app.local),
-  });
-  const appName = 'eChat';
-
-  const domain = `${appName}.ekrata.com`;
-
-  const REGION = new Config.Parameter(stack, 'REGION', {
-    value: app.region,
-  });
-
-  const getFrontendUrl = () => {
-    if (app.local) {
-      return 'http://localhost:3000';
-    }
-    return stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`;
-  };
-
-  const frontendUrl = new Config.Parameter(stack, 'FRONTEND_URL', {
-    value: getFrontendUrl(),
-  });
-
-  const getAllowedOrigins = () => {
-    if (app.local) {
-      return 'http://localhost:3000';
-    }
-    return stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`;
-  };
-
-  const allowedOrigins = new Config.Parameter(stack, 'ALLOWED_ORIGINS', {
-    value: getAllowedOrigins(),
-  });
-
-  console.log('Frontend value: ', frontendUrl.value);
-
-  const oauthGoogleClientId = new Config.Parameter(
-    stack,
-    'OAUTH_GOOGLE_CLIENT_ID',
-    {
-      value: `11916374620-iveeirp449he0iocir9j15v4be5c1rjt.apps.googleusercontent.com`,
-    },
-  );
-
-  const oauthGoogleSecret = new Config.Secret(stack, 'OAUTH_GOOGLE_SECRET');
-
-  const STRIPE_KEY = new Config.Secret(stack, 'STRIPE_KEY');
+  const {
+    appName,
+    domain,
+    REGION,
+    frontendUrl,
+    allowedOrigins,
+    oauthGoogleClientId,
+    oauthGoogleSecret,
+    stripeKeySecret,
+    metaAppSecret,
+    metaVerifySecret,
+  } = use(paramStack);
 
   if (app.stage !== 'prod') {
     app.setDefaultRemovalPolicy('destroy');
@@ -230,8 +203,10 @@ export function BaseStack({ stack, app }: StackContext) {
     {},
   );
 
+  const metaRules: Record<string, EventBusRuleProps> = {};
+
   // add rules
-  appEventBus.addRules(stack, rules);
+  appEventBus.addRules(stack, { ...rules });
 
   // add permissions to allow eventbridge rules to invoke respective wsApi lambda.
   wsApi.routes.map((route) => {
@@ -296,6 +271,13 @@ export function BaseStack({ stack, app }: StackContext) {
   });
 
   const api = new Api(stack, 'appApi', {
+    customDomain: {
+      domainName:
+        stack.stage === 'prod'
+          ? `api.${domain.toLowerCase()}`
+          : `${stack.stage.toLowerCase()}.api.${domain.toLowerCase()}`,
+      hostedZone: 'ekrata.com',
+    },
     cors: {
       allowCredentials: true,
       allowHeaders: [
@@ -324,6 +306,9 @@ export function BaseStack({ stack, app }: StackContext) {
           REGION,
           oauthGoogleClientId,
           oauthGoogleSecret,
+          metaAppSecret,
+          metaVerifySecret,
+          stripeKeySecret,
           frontendUrl,
           allowedOrigins,
         ],
@@ -345,6 +330,172 @@ export function BaseStack({ stack, app }: StackContext) {
       //     permissions: [table, assets, REGION, 'events:PutEvents'],
       //   },
       // },
+    },
+  });
+
+  // meta webhook handler -> SNS -> SQS -> lambdas
+  const metaMessengerTopic = new Topic(stack, 'MetaMessengerTopic', {
+    subscribers: {
+      [MessengerEvent.Messages]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.Messages}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messages.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.Messages],
+              }),
+            },
+          },
+        },
+      },
+      [MessengerEvent.MessageDeliveries]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.MessageDeliveries}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messageDeliveries.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.MessageDeliveries],
+              }),
+            },
+          },
+        },
+      },
+      [MessengerEvent.MessageEchoes]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.MessageEchoes}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messageEchos.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.MessageEchoes],
+              }),
+            },
+          },
+        },
+      },
+      [MessengerEvent.MessageReactions]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.MessageReactions}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messageReactions.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.MessageReactions],
+              }),
+            },
+          },
+        },
+      },
+      [MessengerEvent.MessageReads]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.MessageReads}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messageReads.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.MessageReads],
+              }),
+            },
+          },
+        },
+      },
+      [MessengerEvent.MessagingFeedback]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.MessagingFeedback}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messagingFeedback.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.MessagingFeedback],
+              }),
+            },
+          },
+        },
+      },
+      [MessengerEvent.MessagingOptins]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.MessagingOptins}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messagingOptins.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.MessagingOptins],
+              }),
+            },
+          },
+        },
+      },
+      [MessengerEvent.MessagingSeen]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `meta_messenger_${MessengerEvent.MessagingSeen}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/webhooks/meta/messenger/messagingSeen.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [MessengerEvent.MessagingSeen],
+              }),
+            },
+          },
+        },
+      },
     },
   });
 
@@ -396,12 +547,15 @@ export function BaseStack({ stack, app }: StackContext) {
   //   prefix: "/auth", // optional
   // });
   // Show the API endpoint in the output
+
+  console.log(site.customDomainUrl, wsApi.customDomainUrl, api.customDomainUrl);
   stack.addOutputs({
-    SiteUrl: site.url,
-    AppWsUrl: wsApi.url,
-    AppApiUrl: api.url,
+    SiteUrl: site.customDomainUrl,
+    AppWsUrl: wsApi.customDomainUrl,
+    AppApiUrl: api.customDomainUrl,
   });
   return {
     api,
+    wsApi,
   };
 }

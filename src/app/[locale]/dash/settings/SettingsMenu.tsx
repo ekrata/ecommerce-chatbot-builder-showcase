@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { BiChevronDown, BiChevronUp, BiMailSend } from 'react-icons/bi';
 import {
-  BsArrowDown, BsArrowUp, BsChat, BsChatSquare, BsChevronUp, BsClock, BsEmojiSmile, BsPerson,
-  BsReverseLayoutSidebarInsetReverse, BsTranslate
+    BsArrowDown, BsArrowUp, BsChat, BsChatSquare, BsChevronUp, BsClock, BsEmojiSmile, BsPerson,
+    BsReverseLayoutSidebarInsetReverse, BsTranslate
 } from 'react-icons/bs';
 import { FaMoneyBill } from 'react-icons/fa';
 import { GiPaintBrush } from 'react-icons/gi';

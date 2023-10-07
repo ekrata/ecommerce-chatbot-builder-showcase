@@ -12,3 +12,7 @@ export enum WsAppMessage {
 
   createVisit = 'createVisit',
 }
+
+export enum WhatsAppEvent {}
+
+export enum InstagramEvent {}

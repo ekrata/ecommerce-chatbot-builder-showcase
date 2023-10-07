@@ -17,6 +17,10 @@ export const Org = new Entity({
       readOnly: true,
       default: () => uuidv4(),
     },
+    metaPageId: {
+      type: 'string',
+      default: '',
+    },
     name: {
       type: 'string',
       required: true,

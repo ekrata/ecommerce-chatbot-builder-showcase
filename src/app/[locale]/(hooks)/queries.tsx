@@ -27,6 +27,8 @@ export enum QueryKey {
   translation = 'translation',
   customer = 'customer',
   customers = 'customers',
+  bot = 'bot',
+  bots = 'bots',
   visits = 'visits',
   shopifyProducts = 'shopifyProducts',
   searchConversationItems = 'searchConversationItems',

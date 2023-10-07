@@ -11,7 +11,7 @@ export const deleteArticle = async (
   articleId: string,
 ): Promise<EntityItem<typeof Article>> => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${lang}/${orgId}/articles/${articleId}`,
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/lang/${lang}/articles/${articleId}`,
     { method: 'DELETE' }
   );
   if (!res.ok) {

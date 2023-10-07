@@ -8,13 +8,11 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Server Side Rendered Page, with all prop data passed into client components from a server component. This allows us to mock each client component independent of the Server Component.
 - Client Components tested using jest, in storybook
 
-## Getting Started
 
-Comes with turborepo for faster package.json script execution
-Comes with turbopack for fast development reload/builds
+# Install 
 
 ```bash
-turbo i or pnpm i
+pnpm i
 ```
 
 # Start SST locally
@@ -26,8 +24,17 @@ pnpm sst dev
 # Start next.js dev server
 
 ```bash
-turbo dev
+pnpm dev
 ```
+
+# Seed sst & next.js dev server 
+
+```bash
+pnpm seed-dev
+```
+
+# NOTE: for meta conversations, there is no conversation id on meta side.
+Instead, we use the senderId from meta, (PersonaId), PageId from meta, and operatorId from internal db to create a composite, deterministic conversationId if an action/webhook is the first interaction with this set of foreign entities.
 
 # Adding new next-intl translations
 

@@ -98,6 +98,10 @@ export const Conversation = new Entity({
       readOnly: true,
       default: () => uuidv4(),
     },
+    metaConversationId: {
+      type: 'string',
+      default: '',
+    },
     orgId: {
       type: 'string',
       required: true,

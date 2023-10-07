@@ -1,5 +1,6 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
+import { string } from 'zod';
 
 /**
  * Type of sender
@@ -32,6 +33,23 @@ export const contextType = [
   'name-prompt',
 ] as const;
 
+export const attachmentType = [
+  'image',
+  'video',
+  'audio',
+  'file',
+  'template',
+] as const;
+
+export type AttachmentType = (typeof attachmentType)[number];
+
+export const fallbackAttachment = {};
+
+export interface Template {
+  product: {
+    elements: object[];
+  };
+}
 /**
  * Entity that describes a message sent during a conversation.
  * @date 12/06/2023 - 10:43:10
@@ -50,6 +68,10 @@ export const Message = new Entity({
       required: true,
       readOnly: true,
       default: () => uuidv4(),
+    },
+    externalMetaId: {
+      type: 'string',
+      default: '',
     },
     conversationId: {
       type: 'string',
@@ -93,8 +115,50 @@ export const Message = new Entity({
     },
     seenAt: {
       type: 'number',
-      readOnly: true,
       default: Date.now(),
+    },
+    replyToMessageId: {
+      type: 'string',
+      default: '',
+    },
+    message: {
+      type: 'map',
+      properties: {},
+    },
+    attachments: {
+      type: 'list',
+      items: {
+        type: 'string',
+        properties: {
+          type: {
+            type: attachmentType,
+            default: '',
+          },
+          payload: {
+            type: 'map',
+            properties: {
+              url: {
+                type: 'string',
+                default: '',
+              },
+              title: {
+                type: 'string',
+                default: '',
+              },
+              product: {
+                elements: {
+                  type: 'list',
+                  default: [{}],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    referralProductId: {
+      type: 'string',
+      default: '',
     },
     createdAt: {
       type: 'number',

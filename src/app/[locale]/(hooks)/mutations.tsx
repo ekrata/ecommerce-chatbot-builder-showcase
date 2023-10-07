@@ -15,7 +15,10 @@ export enum MutationKey {
   deleteArticleContent = 'deleteArticleContent',
   updateOperator = "updateOperator",
   createOperator = "createOperator",
-  deleteOperator = "deleteOperator"
+  deleteOperator = "deleteOperator",
+  updateBot = "updateBot",
+  createBot = "createBot",
+  deleteBot = "deleteBot",
 }
 
 

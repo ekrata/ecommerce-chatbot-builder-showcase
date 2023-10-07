@@ -13,7 +13,7 @@ export const createArticleContent = async (
   body: CreateArticleContent
 ): Promise<EntityItem<typeof ArticleContent>> => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/${lang}/article-contents/${articleContentId}`,
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/lang/${lang}/article-contents/${articleContentId}`,
     { method: 'POST', body: JSON.stringify(body) }
   );
   if (!res.ok) {

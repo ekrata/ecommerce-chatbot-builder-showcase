@@ -21,6 +21,10 @@ export const Customer = new Entity({
       required: true,
       readOnly: true,
     },
+    metaSenderId: {
+      type: 'string',
+      required: true,
+    },
     connectionId: {
       type: 'string',
       required: true,
