@@ -13,7 +13,7 @@ export const updateBot = async (
   orgId: string,
   botId: string,
   body: UpdateBot
-): Promise<EntityItem<typeof Operator>> => {
+): Promise<EntityItem<typeof Bot>> => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/bots/${botId}`,
     { method: 'PATCH', body: JSON.stringify(body) }
@@ -38,15 +38,15 @@ const updateBotReducer = (oldBots: EntityItem<typeof Bot>[], updatedBot: EntityI
  * @param {string} operatorId
  * @returns {*}
  */
-export const useUpdateBotMut = (orgId: string, botId: string) => {
+export const useUpdateBotMut = (orgId: string) => {
   const queryClient = useQueryClient()
   const [user, setAuthContext] = useAuthContext()
   return useMutation({
-    mutationKey: [orgId, botId, MutationKey.updateBot],
+    mutationKey: [orgId, MutationKey.updateBot],
     mutationFn: async (params: Parameters<typeof updateBot>) => await updateBot(...params),
     onSuccess: (updatedBot) => {
       if (user) {
-        const oldBots = queryClient.getQueryData([orgId, botId, QueryKey.bots]) as EntityItem<typeof Bot>[]
+        const oldBots = queryClient.getQueryData([orgId, QueryKey.bots]) as EntityItem<typeof Bot>[]
         updateBotReducer(oldBots, updatedBot)
       }
     }

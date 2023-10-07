@@ -9,20 +9,20 @@ import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';
 
 /**
- * Creates a customer. 
+ * Creates a bot. 
  * @date 24/06/2023 - 12:33:18
  *
  * @param {string} orgId
  * @returns {*}
  */
-export const useCreateBotMut = (params: Parameters<typeof createBot>) => {
+export const useCreateBotMut = (orgId: string) => {
   const queryClient = useQueryClient()
-  const { orgId, botId } = params?.[0]
+
   return useMutation({
-    mutationKey: [orgId, botId, MutationKey.createCustomer],
+    mutationKey: [orgId, MutationKey.createBot],
     mutationFn: async (params: Parameters<typeof createBot>) => await createBot(...params),
     onSuccess: data => {
-      queryClient.setQueryData([...params, QueryKey.customer], () => data)
+      queryClient.setQueryData([orgId, QueryKey.bots], () => data)
     }
   })
 }

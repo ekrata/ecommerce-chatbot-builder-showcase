@@ -15,6 +15,7 @@ export type MockOrgIds = {
   mockGoogleAccountUserId: string;
   articleIds: { articleId: string; articleContentId: string }[];
   lang: string;
+  botIds: string[];
   operatorIds: string[];
   customers: {
     customerId: string;
@@ -57,6 +58,7 @@ export interface MockArgs {
   mockCustomerCount: number;
   mockOperatorCount: number;
   mockArticleCount: number;
+  mockBotCount: number;
   /**
    * Must always be less than mockArticleCount.
    * Describes how many articles contain the search phrase

@@ -22,6 +22,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const data = await appDb.entities.bots.query
         .byOrg({ orgId })
         .go(cursor ? { cursor, limit: 25 } : { limit: 25 });
+      console.log(data);
       return {
         statusCode: 200,
         body: JSON.stringify(data),

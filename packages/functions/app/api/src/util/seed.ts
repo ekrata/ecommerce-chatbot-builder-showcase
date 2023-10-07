@@ -19,6 +19,7 @@ import {
 import {
   CreateArticle,
   CreateArticleContent,
+  CreateBot,
   CreateConfiguration,
   CreateConversation,
   CreateCustomer,
@@ -42,6 +43,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockOrgCount: 3,
         mockCustomerCount: 5,
         mockOperatorCount: 2,
+        mockBotCount: 2,
         mockArticleCount: 15,
         mockArticleSearchPhraseFreq: 4,
         mockSearchPhrase: `30-Day returns`,
@@ -78,6 +80,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     mockConversationCountPerCustomer,
     mockVisitsPerCustomer,
     mockMessageCountPerConversation,
+    mockBotCount,
     existingOperator,
   } = mockArgs;
   // org
@@ -165,6 +168,19 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     }),
   );
 
+  mockOrg.botIds = await Promise.all(
+    [...Array(mockBotCount)].map(async (_, i) => {
+      const botId = uuidv4();
+      const createBot: CreateBot = {
+        botId,
+        orgId,
+        category: 'General',
+      };
+      const res = await db.entities.bots.create(createBot).go();
+      return res?.data?.botId;
+    }),
+  );
+
   const operators = await db.entities.operators.query.byOrg({ orgId }).go();
 
   mockOrg.operatorIds = operators.data.map((operator) => operator.operatorId);
@@ -220,7 +236,6 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
         updatedAt: Date.now(),
       })
       .go();
-    console.log(res.data);
     mockOrg.mockGoogleAccountUserId = existingOperator.operatorId;
   }
   await db.entities.operators.create(createModeratorOperator).go();

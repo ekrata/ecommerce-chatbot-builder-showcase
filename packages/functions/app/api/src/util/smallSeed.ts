@@ -33,6 +33,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockLang: 'en',
         mockOrgCount: 1,
         mockCustomerCount: 1,
+        mockBotCount: 1,
         mockOperatorCount: 2,
         mockArticleCount: 0,
         mockArticleSearchPhraseFreq: 4,

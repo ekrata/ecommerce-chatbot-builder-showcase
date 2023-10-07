@@ -17,7 +17,7 @@ import { DynamicBackground } from '../../(helpers)/DynamicBackground';
 import { highlightMatches } from '../../(helpers)/highlightMatches';
 import { useAuthContext } from '../../(hooks)/AuthProvider';
 import {
-    useArticlesQuery, useConfigurationQuery, useOrgQuery, useSearchArticlesQuery
+  useArticlesQuery, useConfigurationQuery, useSearchArticlesQuery
 } from '../../(hooks)/queries';
 
 type Inputs = {

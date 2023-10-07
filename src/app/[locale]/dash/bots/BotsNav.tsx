@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { FcDownload, FcIdea, FcPositiveDynamic } from 'react-icons/fc';
 import { useScreen } from 'usehooks-ts';
 
-export const BotsMenu: FC = () => {
+export const BotsNav: FC = () => {
   const tDash = useTranslations('dash')
   const tBots = useTranslations('dash.bots')
 

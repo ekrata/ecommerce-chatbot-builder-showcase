@@ -19,7 +19,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
     try {
       const res = await appDb.entities.bots.get({ orgId, botId }).go();
-      if (res.data) {
+      if (res?.data) {
         return {
           statusCode: 200,
           body: JSON.stringify(res?.data),

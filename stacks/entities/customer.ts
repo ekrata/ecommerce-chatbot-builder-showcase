@@ -23,7 +23,6 @@ export const Customer = new Entity({
     },
     metaSenderId: {
       type: 'string',
-      required: true,
     },
     connectionId: {
       type: 'string',

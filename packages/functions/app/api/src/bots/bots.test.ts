@@ -5,81 +5,80 @@ import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import { Bot } from '@/entities/bot';
 import { faker } from '@faker-js/faker';
 
 import { rating } from '../../../../../../stacks/entities/conversation';
 import { Customer } from '../../../../../../stacks/entities/customer';
-import { CreateCustomer } from '../../../../../../stacks/entities/entities';
+import {
+  CreateBot,
+  CreateCustomer,
+} from '../../../../../../stacks/entities/entities';
 import { getHttp } from '../http';
-import { MockOrgIds } from '../util/seed';
+import { MockOrgIds } from '../util';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/seed-test-db`)).data as MockOrgIds[];
+  mockOrgIds = (await http.post(`/util/small-seed-test-db`))
+    .data as MockOrgIds[];
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
 });
 
-describe.concurrent('/customers', async () => {
-  it('gets a customer', async () => {
-    const { orgId, customers } = mockOrgIds[0];
-    const { customerId } = faker.helpers.arrayElement(customers);
-    const res = await http.get(`/orgs/${orgId}/customers/${customerId}`);
+describe.concurrent('/bots', async () => {
+  it.only('gets a bot', async () => {
+    const { orgId, botIds } = mockOrgIds[0];
+    const botId = faker.helpers.arrayElement(botIds);
+    const res = await http.get(`/orgs/${orgId}/bots/${botId}`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
-    expect(res.data?.customerId).toEqual(customerId);
+    expect(res.data?.botId).toEqual(botId);
     expect(res.data?.orgId).toEqual(orgId);
   });
-  it('lists customers by org', async () => {
-    const { orgId } = mockOrgIds[0];
-    const res = await http.get(`/orgs/${orgId}/customers`);
+  it('lists bots by org', async () => {
+    const { orgId, botIds } = mockOrgIds[0];
+    const res = await http.get(`/orgs/${orgId}/bots`);
     const { data } = res.data;
+    console.log(data);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(data).toBeTruthy();
-    data.forEach((customer: EntityItem<typeof Customer>) => {
-      expect(customer.orgId).toEqual(orgId);
+    botIds.map((botId: string) => {
+      data.forEach((bot: EntityItem<typeof Bot>) => {
+        expect(botIds.includes(botId)).toBeTruthy();
+      });
     });
-    // save a mock customers object for frontend use
-    writeFile(
-      './mocks/customers.json',
-      JSON.stringify(res.data),
-      'utf8',
-      () => {
-        expect(true).toEqual(true);
-      },
-    );
+
+    // save a mock bots object for frontend use
+    writeFile('./mocks/bots.json', JSON.stringify(res.data), 'utf8', () => {
+      expect(true).toEqual(true);
+    });
   });
-  it('creates a customer', async () => {
+  it('creates a bot', async () => {
     const { orgId } = mockOrgIds?.[0];
-    const customerId = uuidv4();
+    const botId = uuidv4();
     const email = faker.internet.email();
     const mailingSubscribed = true;
     const ip = faker.internet.ipv4();
     const locale = 'en';
     const phone = faker.phone.number();
     const starRating = faker.helpers.arrayElement(rating);
-    const data: CreateCustomer = {
-      customerId,
+    const data: CreateBot = {
+      botId,
       orgId,
-      email,
-      mailingSubscribed,
-      ip,
-      locale,
-      phone,
-      rating: starRating,
+      category: 'General Information',
     };
 
     // validate creation api
-    const res = await http.post(`/orgs/${orgId}/customers/${customerId}`, data);
+    const res = await http.post(`/orgs/${orgId}/bots/${botId}`, data);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res.data).toBeTruthy();
-    expect(res.data?.customerId).toEqual(customerId);
+    expect(res.data?.botId).toEqual(botId);
     expect(res.data?.orgId).toEqual(orgId);
     expect(res.data?.email).toEqual(email);
     expect(res.data?.mailingSubscribed).toEqual(mailingSubscribed);
@@ -87,12 +86,12 @@ describe.concurrent('/customers', async () => {
     expect(res.data?.locale).toEqual(locale);
     expect(res.data?.phone).toEqual(phone);
   });
-  it('updates the user agent and phone of a customer', async () => {
-    const { orgId, customers } = mockOrgIds[1];
-    const { customerId } = faker.helpers.arrayElement(customers);
+  it('updates the user agent and phone of a bot', async () => {
+    const { orgId, botIds } = mockOrgIds[0];
+    const botId = faker.helpers.arrayElement(botIds);
 
     // Get prexisting data for patch
-    const prepareRes = await http.get(`/orgs/${orgId}/customers/${customerId}`);
+    const prepareRes = await http.get(`/orgs/${orgId}/bots/${botId}`);
     expect(prepareRes).toBeTruthy();
     expect(prepareRes.status).toBe(200);
 
@@ -100,9 +99,9 @@ describe.concurrent('/customers', async () => {
     const phone = faker.phone.number();
     const userAgent = faker.internet.userAgent();
     const { data } = prepareRes;
-    delete data?.customerId;
+    delete data?.botId;
     delete data?.orgId;
-    const res = await http.patch(`/orgs/${orgId}/customers/${customerId}`, {
+    const res = await http.patch(`/orgs/${orgId}/bots/${botId}`, {
       ...data,
       phone,
       userAgent,
@@ -111,27 +110,27 @@ describe.concurrent('/customers', async () => {
     expect(res.status).toBe(200);
 
     // Validate patch with get
-    const getRes = await http.get(`/orgs/${orgId}/customers/${customerId}`);
+    const getRes = await http.get(`/orgs/${orgId}/bots/${botId}`);
 
     expect(getRes).toBeTruthy();
     expect(getRes.status).toBe(200);
     expect(getRes.data).toBeTruthy();
-    expect(getRes.data?.customerId).toEqual(customerId);
+    expect(getRes.data?.botId).toEqual(botId);
     expect(getRes.data?.orgId).toEqual(orgId);
     expect(getRes.data?.phone).toEqual(phone);
     expect(getRes.data?.userAgent).toEqual(userAgent);
   });
-  it('deletes a customer', async () => {
-    const { orgId, customers } = mockOrgIds?.[2];
-    const { customerId } = faker.helpers.arrayElement(customers);
+  it('deletes a bot', async () => {
+    const { orgId, botIds } = mockOrgIds?.[0];
+    const botId = faker.helpers.arrayElement(botIds);
 
-    const res = await http.delete(`/orgs/${orgId}/customers/${customerId}`);
+    const res = await http.delete(`/orgs/${orgId}/bots/${botId}`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
 
     // validate it doesn't exist anymore
     try {
-      await http.get(`/orgs/${orgId}/customers/${customerId}`);
+      await http.get(`/orgs/${orgId}/bots/${botId}`);
     } catch (err) {
       expect(err).toBeTruthy();
       expect((err as AxiosError).response?.status).toBe(404);

@@ -22,6 +22,16 @@ export const nodeSubType = [
   ...Object.keys(ShopifyAction),
 ] as const;
 
+export const botCategory = [
+  'General',
+  'Sales',
+  'Customer Service',
+  'Order issues',
+  'Lead generation',
+  'Marketing',
+  'Promotions',
+];
+
 export const Bot = new Entity({
   model: {
     entity: 'bot',
@@ -43,7 +53,7 @@ export const Bot = new Entity({
     name: {
       type: 'string',
     },
-    executedCount: {
+    triggeredCount: {
       type: 'number',
     },
     helpfulnessPercent: {
@@ -54,6 +64,10 @@ export const Bot = new Entity({
     },
     active: {
       type: 'boolean',
+    },
+    category: {
+      type: botCategory,
+      default: '',
     },
     nodes: {
       type: 'list',
