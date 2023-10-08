@@ -4,7 +4,10 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import { CreateCustomer } from '../../../../../../stacks/entities/entities';
+import {
+  CreateBot,
+  CreateCustomer,
+} from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
@@ -12,14 +15,16 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId, botId } = usePathParams();
-    const body: Createbot = useJsonBody();
+    const body: CreateBot = useJsonBody();
     if (!orgId || !botId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
       };
     }
+
     try {
+      delete body?.botId;
       const res = await appDb.entities.bots
         .create({
           ...body,

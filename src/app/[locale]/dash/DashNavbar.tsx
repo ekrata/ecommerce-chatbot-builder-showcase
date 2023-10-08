@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { BiHelpCircle } from 'react-icons/bi';
+import { BsRobot } from 'react-icons/bs';
 import { CgWebsite } from 'react-icons/cg';
 import { IoMdChatboxes } from 'react-icons/io';
 import { MdOutlineDashboard } from 'react-icons/md';
@@ -55,6 +56,22 @@ export default function DashNavbar() {
                 {/* {newVisits} */}
               </span>
               <CgWebsite className='w-6 h-6' />
+            </div>
+          </div>
+        </Link>
+      </li>
+      <li>
+        <Link
+          href={{ pathname: "/dash/bots" }}
+          key='bots'
+          className='flex btn btn-ghost hover:bg-opacity-0'
+        >
+          <div className='normal-case tooltip lg:tooltip-right' data-tip={t('bots')}>
+            <div className='indicator'>
+              <span className='text-xs indicator-item badge badge-primary'>
+                {/* {newVisits} */}
+              </span>
+              <BsRobot className='w-6 h-6' />
             </div>
           </div>
         </Link>

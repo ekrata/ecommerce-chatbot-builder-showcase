@@ -19,13 +19,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
     try {
-      const data = await appDb.entities.bots.query
+      const res = await appDb.entities.bots.query
         .byOrg({ orgId })
         .go(cursor ? { cursor, limit: 25 } : { limit: 25 });
-      console.log(data);
+      console.log(res?.data);
       return {
         statusCode: 200,
-        body: JSON.stringify(data),
+        body: JSON.stringify(res?.data),
       };
     } catch (err) {
       Sentry.captureException(err);

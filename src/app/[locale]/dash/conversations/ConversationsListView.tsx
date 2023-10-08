@@ -47,7 +47,6 @@ export const ConversationsListView: FC = () => {
   const [page, setPage] = useState<string | undefined>()
   const [cursor, setCursor] = useState<string | undefined>(undefined)
 
-
   const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
 
   useEffect(() => {

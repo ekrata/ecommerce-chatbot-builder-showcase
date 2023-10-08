@@ -4,7 +4,7 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import { Updatebot } from '../../../../../../stacks/entities/entities';
+import { UpdateBot } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
@@ -17,9 +17,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       // createdAt,
-      ...updatebot
-    }: Updatebot = useJsonBody();
+      ...updateBot
+    }: UpdateBot = useJsonBody();
 
+    delete updateBot?.botId;
     if (!orgId || !botId) {
       return {
         statusCode: 422,
@@ -33,7 +34,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           orgId,
           botId,
         })
-        .set({ ...updatebot })
+        .set({ ...updateBot })
         .go();
 
       return {

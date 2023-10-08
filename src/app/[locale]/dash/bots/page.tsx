@@ -15,7 +15,6 @@ export default function Page() {
   const searchParams = useSearchParams();
   const articleId = searchParams?.get('articleId')
   const operator = useAuthContext()
-  const { conversationState } = useDashStore()
 
   const render = useMemo(() => (
     <div className="grid max-h-screen grid-cols-12 max-w-screen">
@@ -23,7 +22,7 @@ export default function Page() {
         <BotsNav />
       </div>
       <div className='h-screen col-span-10 shadow-2xl'>
-        <BotsPanel title={'General Information'} />
+        <BotsPanel title={'General'} />
       </div>
     </div>
   ), [articleId])

@@ -5,7 +5,7 @@ import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { Bot } from '@/entities/bot';
+import { Bot, BotEdgeType, BotNodeType } from '@/entities/bot';
 import { faker } from '@faker-js/faker';
 
 import { rating } from '../../../../../../stacks/entities/conversation';
@@ -16,6 +16,11 @@ import {
 } from '../../../../../../stacks/entities/entities';
 import { getHttp } from '../http';
 import { MockOrgIds } from '../util';
+import {
+  Action,
+  Condition,
+  VisitorBotInteractionTrigger,
+} from './triggers/definitions.type';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
@@ -29,9 +34,9 @@ beforeAll(async () => {
 });
 
 describe.concurrent('/bots', async () => {
-  it.only('gets a bot', async () => {
+  it('gets a bot', async () => {
     const { orgId, botIds } = mockOrgIds[0];
-    const botId = faker.helpers.arrayElement(botIds);
+    const botId = botIds[0];
     const res = await http.get(`/orgs/${orgId}/bots/${botId}`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
@@ -39,17 +44,16 @@ describe.concurrent('/bots', async () => {
     expect(res.data?.botId).toEqual(botId);
     expect(res.data?.orgId).toEqual(orgId);
   });
-  it('lists bots by org', async () => {
+  it.only('lists bots by org', async () => {
     const { orgId, botIds } = mockOrgIds[0];
+    const botId = botIds[0];
     const res = await http.get(`/orgs/${orgId}/bots`);
-    const { data } = res.data;
-    console.log(data);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
-    expect(data).toBeTruthy();
+    expect(res?.data).toBeTruthy();
     botIds.map((botId: string) => {
-      data.forEach((bot: EntityItem<typeof Bot>) => {
-        expect(botIds.includes(botId)).toBeTruthy();
+      res?.data.forEach((bot: EntityItem<typeof Bot>) => {
+        expect(botIds.includes(bot?.botId)).toBeTruthy();
       });
     });
 
@@ -59,18 +63,46 @@ describe.concurrent('/bots', async () => {
     });
   });
   it('creates a bot', async () => {
-    const { orgId } = mockOrgIds?.[0];
+    const { orgId, botIds } = mockOrgIds[0];
     const botId = uuidv4();
-    const email = faker.internet.email();
-    const mailingSubscribed = true;
-    const ip = faker.internet.ipv4();
-    const locale = 'en';
-    const phone = faker.phone.number();
-    const starRating = faker.helpers.arrayElement(rating);
+    const nodes: BotNodeType[] = [
+      {
+        id: '1',
+        nodeType: 'trigger',
+        nodeSubType: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+        position: { x: 0, y: 50 },
+      },
+      {
+        id: '2',
+        nodeType: 'condition',
+        nodeSubType: Condition.Day,
+        position: { x: -200, y: 200 },
+      },
+      {
+        id: '3',
+        nodeType: 'action',
+        nodeSubType: Action.AskAQuestion,
+        position: { x: 200, y: 200 },
+      },
+    ];
+    const edges: BotEdgeType[] = [
+      {
+        id: 'e1-2',
+        source: '1',
+        target: '2',
+      },
+      {
+        id: 'e1-3',
+        source: '1',
+        target: '3',
+      },
+    ];
     const data: CreateBot = {
       botId,
       orgId,
-      category: 'General Information',
+      category: 'General',
+      nodes,
+      edges,
     };
 
     // validate creation api
@@ -80,15 +112,10 @@ describe.concurrent('/bots', async () => {
     expect(res.data).toBeTruthy();
     expect(res.data?.botId).toEqual(botId);
     expect(res.data?.orgId).toEqual(orgId);
-    expect(res.data?.email).toEqual(email);
-    expect(res.data?.mailingSubscribed).toEqual(mailingSubscribed);
-    expect(res.data?.ip).toEqual(ip);
-    expect(res.data?.locale).toEqual(locale);
-    expect(res.data?.phone).toEqual(phone);
   });
-  it('updates the user agent and phone of a bot', async () => {
+  it('updates the nodes and edges of a bot', async () => {
     const { orgId, botIds } = mockOrgIds[0];
-    const botId = faker.helpers.arrayElement(botIds);
+    const botId = botIds[0];
 
     // Get prexisting data for patch
     const prepareRes = await http.get(`/orgs/${orgId}/bots/${botId}`);
@@ -96,15 +123,44 @@ describe.concurrent('/bots', async () => {
     expect(prepareRes.status).toBe(200);
 
     // patch
-    const phone = faker.phone.number();
-    const userAgent = faker.internet.userAgent();
     const { data } = prepareRes;
-    delete data?.botId;
+    const nodes: BotNodeType[] = [
+      {
+        id: '1',
+        nodeType: 'trigger',
+        nodeSubType: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+        position: { x: 0, y: 50 },
+      },
+      {
+        id: '2',
+        nodeType: 'condition',
+        nodeSubType: Condition.Day,
+        position: { x: -200, y: 200 },
+      },
+      {
+        id: '3',
+        nodeType: 'action',
+        nodeSubType: Action.AskAQuestion,
+        position: { x: 200, y: 200 },
+      },
+    ];
+    const edges: BotEdgeType[] = [
+      {
+        id: 'e1-2',
+        source: '1',
+        target: '2',
+      },
+      {
+        id: 'e1-3',
+        source: '1',
+        target: '3',
+      },
+    ];
     delete data?.orgId;
     const res = await http.patch(`/orgs/${orgId}/bots/${botId}`, {
       ...data,
-      phone,
-      userAgent,
+      nodes,
+      edges,
     });
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
@@ -117,12 +173,12 @@ describe.concurrent('/bots', async () => {
     expect(getRes.data).toBeTruthy();
     expect(getRes.data?.botId).toEqual(botId);
     expect(getRes.data?.orgId).toEqual(orgId);
-    expect(getRes.data?.phone).toEqual(phone);
-    expect(getRes.data?.userAgent).toEqual(userAgent);
+    expect(getRes.data?.nodes).toEqual(nodes);
+    expect(getRes.data?.edges).toEqual(edges);
   });
   it('deletes a bot', async () => {
     const { orgId, botIds } = mockOrgIds?.[0];
-    const botId = faker.helpers.arrayElement(botIds);
+    const botId = botIds[1];
 
     const res = await http.delete(`/orgs/${orgId}/bots/${botId}`);
     expect(res).toBeTruthy();

@@ -4,6 +4,7 @@ import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
 
 import { OperatorConversationCard } from '@/app/[locale]/dash/conversations/OperatorConversationCard';
+import { botCategory, BotEdgeType, BotNodeType } from '@/entities/bot';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
@@ -30,6 +31,11 @@ import {
   CreateVisit,
 } from '../../../../../../stacks/entities/entities';
 import { senderType } from '../../../../../../stacks/entities/message';
+import {
+  Action,
+  Condition,
+  VisitorBotInteractionTrigger,
+} from '../bots/triggers/definitions.type';
 import { AppDb, getAppDb } from '../db';
 import { MockArgs, mockArticleTitles, MockOrgIds } from './';
 
@@ -170,11 +176,50 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
 
   mockOrg.botIds = await Promise.all(
     [...Array(mockBotCount)].map(async (_, i) => {
+      const nodes: BotNodeType[] = [
+        {
+          id: '1',
+          nodeType: 'trigger',
+          nodeSubType: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+          position: { x: 0, y: 50 },
+        },
+        {
+          id: '2',
+          nodeType: 'condition',
+          nodeSubType: Condition.Day,
+          position: { x: -200, y: 200 },
+        },
+        {
+          id: '3',
+          nodeType: 'action',
+          nodeSubType: Action.AskAQuestion,
+          position: { x: 200, y: 200 },
+        },
+      ];
+      const edges: BotEdgeType[] = [
+        {
+          id: 'e1-2',
+          source: '1',
+          target: '2',
+        },
+        {
+          id: 'e1-3',
+          source: '1',
+          target: '3',
+        },
+      ];
       const botId = uuidv4();
       const createBot: CreateBot = {
         botId,
         orgId,
-        category: 'General',
+        category: 'Sales',
+        name: `Increase Sales ${i}`,
+        active: true,
+        triggeredCount: Math.random() * 1000,
+        helpfulnessPercent: 0.75,
+        handoffPercent: 0.2,
+        nodes,
+        edges,
       };
       const res = await db.entities.bots.create(createBot).go();
       return res?.data?.botId;

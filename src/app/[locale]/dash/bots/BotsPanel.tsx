@@ -1,10 +1,19 @@
-import { useTranslations } from 'next-intl';
-import { FC, use, useMemo, useRef } from 'react';
-import { BsRobot, BsThreeDotsVertical } from 'react-icons/bs';
+'use client'
+import { EntityItem } from 'electrodb';
+import { Link, useLocale, useTranslations } from 'next-intl';
+import router from 'next/router';
+import { FC, use, useEffect, useMemo, useRef } from 'react';
+import { BiEdit, BiExport, BiTrash } from 'react-icons/bi';
+import {
+  BsChatLeftDots, BsChatLeftDotsFill, BsFileBarGraph, BsPersonSlash, BsRobot, BsThreeDotsVertical
+} from 'react-icons/bs';
+import { FaClone, FaRegClone } from 'react-icons/fa';
 import { FcDownload, FcIdea, FcPositiveDynamic } from 'react-icons/fc';
+import { GrTest } from 'react-icons/gr';
+import { TbRobotOff } from 'react-icons/tb';
 import { useHover, useScreen } from 'usehooks-ts';
 
-import { ArticleCategory } from '@/entities/article';
+import { Bot, BotCategory } from '@/entities/bot';
 
 import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useCreateBotMut } from '../../(hooks)/mutations/useCreateBotMut';
@@ -14,109 +23,187 @@ import { useBotsQuery } from '../../(hooks)/queries/useBotsQuery';
 import { BotActionMenu } from './BotActionMenu';
 
 interface Props {
-  title: ArticleCategory | 'All'
+  title: BotCategory | 'All'
 }
 
 export const BotsPanel: FC<Props> = ({ title }) => {
   const tDash = useTranslations('dash')
   const tBots = useTranslations('dash.bots')
 
-  const [sessionOperator] = useAuthContext();
+  const [operatorSession] = useAuthContext();
+  const locale = useLocale()
 
-  const orgId = sessionOperator?.orgId ?? ''
+  const orgId = operatorSession?.orgId ?? ''
+  const skeletonLength = 6
   const bots = useBotsQuery([orgId]);
   const deleteBotMut = useDeleteBotMut(orgId)
   const createBotMut = useCreateBotMut(orgId)
   const updateBotMut = useUpdateBotMut(orgId)
 
+  useEffect(() => {
+    if (operatorSession?.orgId) {
+      bots.refetch()
+    }
+  }, [operatorSession?.orgId])
 
-  const hoverRef = useRef(null)
-  const isHover = useHover(hoverRef)
-
-  const render = useMemo(() => {
-    return (
-      < div className="flex justify-between w-full h-full bg-white " >
-        <div className='flex justify-between'>
-          <h2>{title === 'All' ? tDash('All') : tDash(`articleCategory.${title}`)}</h2>
-          <div className="flex gap-x-2" >
-            <button className="flex btn btn-outline">
-              <BsRobot />
-              {tBots('Create new bot')}
-            </button>
-            <button className="flex btn btn-primary">
-              <BsRobot />
-              {tBots('Create new bot from template')}
-            </button>
-          </div>
+  return (
+    < div className="flex flex-col justify-between w-full h-full p-2 bg-white " >
+      <div className='flex flex-row justify-between'>
+        <h2 className='text-2xl font-semibold'>{title === 'All' ? tDash('All') : tDash(`bots.categories.${title}`)}</h2>
+        <div className="flex gap-x-2" >
+          <button className="flex normal-case btn btn-sm btn-outline gap-x-2">
+            <BsRobot />
+            {tBots('Create new bot')}
+          </button>
+          <button className="flex normal-case btn btn-sm btn-primary gap-x-2">
+            <BsRobot />
+            {tBots('Create new bot from template')}
+          </button>
         </div>
-        <div className="flex flex-col w-full h-full place-items-center ">
-          <div
-            className={`bg-white flex flex-col gap-y-2 place-items-center animated-flip-down w-full justify-center  text-xl font-semibold p-3 gap-x-2   `}
-          >
-            <div className="overflow-x-auto">
-              <table className="table">
-                <thead>
-                  <tr >
-                    <th>
-                      <label>
-                        <input type="checkbox" className="checkbox" />
-                      </label>
-                    </th>
-                    <th>{tDash('Name')}</th>
-                    <th>{tBots('Triggered')}</th>
-                    <th>{tBots('Engagement')}</th>
-                    <th>{tBots('Satisfaction')}</th>
-                    <th>{tDash('Active')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bots?.data?.map((bot) => (
-                    <tr ref={hoverRef}>
-                      <td>
-                        <div className="flex items-center space-x-3">
-                          <h5 className='text-semi-bold'>
-                            {bot.name}
-                          </h5>
-                        </div>
+      </div>
+      <div className="flex flex-col w-full h-full place-items-center">
+        <div
+          className={`bg-white flex flex-col gap-y-2 place-items-center animated-flip-down w-full justify-center  text-xl font-semibold p-3 gap-x-2   `}
+        >
+          <div className="w-full h-full max-h-screen min-h-screen overflow-x-auto">
+            <table className="table w-full table-lg">
+              <thead className=''>
+                <tr className='bg-white border-b-[1px] normal-case text-xl'>
+                  <th className='text-lg normal-case bg-transparent'>{tDash('Name')}</th>
+                  <th className='text-lg normal-case bg-transparent'>{tBots('Triggered')}</th>
+                  <th className='text-lg normal-case bg-transparent'>{tBots('Engagement')}</th>
+                  <th className='text-lg normal-case bg-transparent'>{tBots('Satisfaction')}</th>
+                  <th className='text-lg normal-case bg-transparent'>{tDash('Active')}</th>
+                </tr>
+              </thead>
+              <tbody className='h-full animate-fade-left'>
+                {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data)?.map((data) => {
+
+                  const bot = (data as EntityItem<typeof Bot>)
+
+                  return (
+                    <tr className='w-full text-lg font-normal group hover:cursor-pointer'
+                    >
+                      <td className='group-hover:bg-gray-300 '>
+                        <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
+                          <div className="flex items-center space-x-3">
+                            <h5 className='text-semi-bold'>
+                              {bots?.isFetching ? <div className="h-2.5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2.5"></div> : bot?.name}
+                            </h5>
+                          </div>
+                        </Link>
                       </td>
-                      <td>
-                        <p>
-                          {bot?.triggeredCount}
-                        </p>
+                      <td className='group-hover:bg-gray-300'>
+                        <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
+                          <p>
+                            {bots?.isFetching ? <div className="h-2.5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-8 mb-2.5"></div> : bot?.triggeredCount?.toFixed()}
+                          </p>
+                        </Link>
                       </td>
-                      <td>
-                        <p>
-                          {bot?.helpfulnessPercent}
-                        </p>
+                      <td className='group-hover:bg-gray-300'>
+                        <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
+
+                          <p>
+                            {bots?.isFetching ? <div className="h-2.5 animate-pulse  bg-gray-200 rounded-full dark:bg-gray-700 w-8 mb-2.5"></div> : bot?.helpfulnessPercent?.toLocaleString(locale, { style: "percent" })}
+                          </p>
+
+                        </Link>
                       </td>
-                      <td>
-                        <p>
-                          {bot?.handoffPercent}
-                        </p>
+                      <td className='group-hover:bg-gray-300'>
+                        <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
+
+                          <p>
+                            {bots?.isFetching ? <div className="h-2.5 animate-pulse -z-10  bg-gray-200 rounded-full dark:bg-gray-700 w-8 mb-2.5"></div> : bot?.handoffPercent?.toLocaleString(locale, { style: "percent" })}
+                          </p>
+
+                        </Link>
                       </td>
-                      <td>
-                        <input type="checkbox" className="toggle" checked={bot?.active} />
+                      <td className='group-hover:bg-gray-300'>
+                        <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
+                          {bots?.isFetching ? <div className="h-2.5 animate-pulse -z-10 bg-gray-200 rounded-full dark:bg-gray-700 w-8 mb-2.5"></div> : <input type="checkbox" className="toggle toggle-primary" defaultChecked={bot?.active} />}
+                        </Link>
                       </td>
-                      <th>
-                        {isHover && (
-                          <details className='mb-32 dropdown'>
-                            <summary className="m-1 "><BsThreeDotsVertical /></summary>
-                            <div className='shadow menu dropdown-content'>
-                              <BotActionMenu bot={bot} />
-                            </div>
-                          </details>
-                        )}
-                      </th>
+                      <td className='w-full group-hover:bg-gray-300 dropdown dropdown-end'>
+                        <label tabIndex={0} className={`invisible  btn btn-ghost ${!bots?.isFetching && 'hover:bg-black group-hover:visible hover:text-white'}`}><BsThreeDotsVertical className='text-xl' /></label>
+                        <ul tabIndex={0} className="z-[1]  justify-start space-y-0 bg-white shadow-xl menu dropdown-content rounded-box gap-y-2" >
+                          <p className='border-b-[1px] py-1 justify-center rounded-t-box text-center bg-black text-white'>{tBots('Bot actions')}</p>
+                          <li className='flex flex-row justify-start '>
+                            <a className='w-full'>
+                              <BiEdit />
+                              {tDash('Edit')}
+                            </a>
+                          </li>
+                          <li className='flex flex-row justify-start '>
+                            <a className='w-full'>
+                              <FaRegClone />
+                              {tDash('Clone')}
+                            </a>
+                          </li>
+                          <li className='flex flex-row'>
+                            <a className='w-full'>
+                              <BiExport />
+                              {tDash('Export')}
+                            </a>
+                          </li>
+                          <li className='flex flex-row'>
+                            <a className='w-full'>
+                              <BiTrash />
+                              {tDash('Delete')}
+                            </a>
+                          </li>
+                          <li className='flex flex-row'>
+                            <a className='w-full'>
+                              <BsFileBarGraph />
+                              {tBots('View statistics')}
+                            </a>
+                          </li>
+                          <li className='flex flex-row'>
+                            <a className='w-full'>
+                              <GrTest />
+                              {tBots('Test & validate bot')}
+                            </a>
+                          </li>
+                          <li className='flex flex-row'>
+                            <a className='justify-between w-full'>
+                              <div className='flex place-items-center gap-x-2'>
+                                <BsPersonSlash />
+                                {tBots('Start while operators are offline')}
+                              </div>
+                              <input type="checkbox" className=" toggle toggle-primary" defaultChecked={bot?.startWhileOperatorsAreOffline} />
+                            </a>
+                          </li>
+                          <li className='flex flex-row'>
+                            <a className='justify-between w-full'>
+                              <div className='flex place-items-center gap-x-2'>
+                                <BsChatLeftDots />
+                                {tBots('Start while an operator is handling another conversation')}
+                              </div>
+                              <input type="checkbox" className="toggle toggle-primary" defaultChecked={bot?.startWhileAnOperatorIsHandlingAnotherConversation} />
+                            </a>
+                          </li>
+                          <li className='flex flex-row'>
+                            <a className='justify-between w-full'>
+                              <div className='flex place-items-center gap-x-2'>
+
+                                <TbRobotOff />
+                                {tBots('Start when another bot is running')}
+
+                              </div>
+                              <input type="checkbox" className="toggle toggle-primary" defaultChecked={bot?.startWhenAnotherBotRunning} />
+                            </a>
+                          </li>
+                        </ul>
+                      </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div >
+                  )
+                }
+                )}
+              </tbody>
+            </table>
+          </div>
         </div >
       </div >
-    )
-  }, [bots?.dataUpdatedAt])
+    </div >
+  )
 
-  return render
 }

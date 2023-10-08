@@ -149,6 +149,13 @@ export function baseStack({ stack, app }: StackContext) {
   };
 
   const wsApi = new WebSocketApi(stack, 'appWs', {
+    customDomain: {
+      domainName:
+        stack.stage === 'prod'
+          ? `ws-api.${domain.toLowerCase()}`
+          : `${stack.stage.toLowerCase()}.ws-api.${domain.toLowerCase()}`,
+      hostedZone: 'ekrata.com',
+    },
     defaults: {
       function: {
         bind: [table, REGION, appEventBus],
@@ -522,8 +529,8 @@ export function baseStack({ stack, app }: StackContext) {
   //   },
   // });
 
-  process.env.NEXT_PUBLIC_APP_API_URL = api.url;
-  process.env.NEXT_PUBLIC_WS_API_URL = wsApi.url;
+  process.env.NEXT_PUBLIC_APP_API_URL = api.customDomainUrl;
+  process.env.NEXT_PUBLIC_WS_API_URL = wsApi.customDomainUrl;
 
   const site = new NextjsSite(stack, 'site', {
     customDomain: {
@@ -531,8 +538,8 @@ export function baseStack({ stack, app }: StackContext) {
     },
     bind: [api, wsApi],
     environment: {
-      NEXT_PUBLIC_APP_API_URL: api.url,
-      NEXT_PUBLIC_APP_WS_URL: wsApi.url,
+      NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
+      NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
     },
   });
 

@@ -16,9 +16,11 @@ import { QueryKey } from '../queries';
 export const useBotsQuery = (params: Parameters<typeof getBots>) => useQuery<EntityItem<typeof Bot>[]>(
   {
     queryKey: [...params, QueryKey.bots],
-    queryFn: () => getBots(...params) ?? [],
-    keepPreviousData: true,
-    enabled: !!params[0]
+    queryFn: async () => {
+      return await getBots(...params) ?? []
+    },
+    // keepPreviousData: true,
+    // enabled: !!params[0]
   })
 
 
@@ -33,11 +35,14 @@ export const useBotsQuery = (params: Parameters<typeof getBots>) => useQuery<Ent
 export const getBots = async (
   orgId: string,
 ): Promise<EntityItem<typeof Bot>[]> => {
-  const res = await (
+  console.log('hi')
+  const res =
     await fetch(
-      `${process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${orgId}/bots`
+      `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/bots`
     )
-  ).json();
-  return res.data;
+  // console.log(res)
+  console.log('hi')
+  const data = await res.json()
+  console.log(data)
+  return data
 };

@@ -18,45 +18,6 @@ export const BotActionMenu: FC<Props> = ({ bot }) => {
   const tBots = useTranslations('dash.bots')
 
   return (
-    <div className="bg-white shadow-2xl menu rounded-box " >
-      <ul>
-        <li>
-          <BiEdit />
-          {tDash('Edit')}
-        </li>
-        <li>
-          <FaClone />
-          {tDash('Clone')}
-        </li>
-        <li>
-          <BiExport />
-          {tDash('Export')}
-        </li>
-        <li>
-          <BiTrash />
-          {tDash('Delete')}
-        </li>
-        <li>
-          <BsFileBarGraph />
-          {tBots('View statistics')}
-        </li>
-        <li>
-          <GrTest />
-          {tBots('Test & validate bot')}
-        </li>
-        <li>
-          <BsPersonSlash />
-          {tBots('Start while operators are offline')}
-        </li>
-        <li>
-          <BsChatLeftDotsFill />
-          {tBots('Start while an operator is handling another conversation')}
-        </li>
-        <li>
-          <TbRobotOff />
-          {tBots('Start when another bot is running')}
-        </li>
-      </ul>
-    </div >
+
   )
 }

@@ -1,4 +1,4 @@
-import { Entity } from 'electrodb';
+import { Entity, EntityItem } from 'electrodb';
 import {
   Action,
   Condition,
@@ -13,13 +13,13 @@ import { v4 as uuidv4 } from 'uuid';
 export const nodeType = ['trigger', 'condition', 'action'] as const;
 
 export const nodeSubType = [
-  ...Object.keys(VisitorBotInteractionTrigger),
-  ...Object.keys(VisitorPageInteractionTrigger),
-  ...Object.keys(OperatorInteractionTrigger),
-  ...Object.keys(Condition),
-  ...Object.keys(ShopifyCondition),
-  ...Object.keys(Action),
-  ...Object.keys(ShopifyAction),
+  ...Object.values(VisitorBotInteractionTrigger),
+  ...Object.values(VisitorPageInteractionTrigger),
+  ...Object.values(OperatorInteractionTrigger),
+  ...Object.values(Condition),
+  ...Object.values(ShopifyCondition),
+  ...Object.values(Action),
+  ...Object.values(ShopifyAction),
 ] as const;
 
 export const botCategory = [
@@ -30,7 +30,12 @@ export const botCategory = [
   'Lead generation',
   'Marketing',
   'Promotions',
-];
+] as const;
+
+export type BotCategory = (typeof botCategory)[number];
+
+export type BotNodeType = NonNullable<EntityItem<typeof Bot>['nodes']>[0];
+export type BotEdgeType = NonNullable<EntityItem<typeof Bot>['edges']>[0];
 
 export const Bot = new Entity({
   model: {
@@ -68,6 +73,18 @@ export const Bot = new Entity({
     category: {
       type: botCategory,
       default: '',
+    },
+    startWhenAnotherBotRunning: {
+      type: 'boolean',
+      default: false,
+    },
+    startWhileAnOperatorIsHandlingAnotherConversation: {
+      type: 'boolean',
+      default: false,
+    },
+    startWhileOperatorsAreOffline: {
+      type: 'boolean',
+      default: false,
     },
     nodes: {
       type: 'list',
