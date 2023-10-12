@@ -119,6 +119,9 @@ dependencies:
   electrodb:
     specifier: ^2.10.0
     version: 2.10.0(@aws-sdk/client-dynamodb@3.418.0)
+  emoji-picker-react:
+    specifier: ^4.5.2
+    version: 4.5.2(react@18.2.0)
   eslint-config-next:
     specifier: 13.5.3
     version: 13.5.3(eslint@8.39.0)(typescript@5.0.4)
@@ -221,6 +224,9 @@ dependencies:
   typescript:
     specifier: 5.0.4
     version: 5.0.4
+  usehooks:
+    specifier: link:@types/@uidotdev/usehooks
+    version: link:@types/@uidotdev/usehooks
   usehooks-ts:
     specifier: ^2.9.1
     version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
@@ -15028,6 +15034,16 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /emoji-picker-react@4.5.2(react@18.2.0):
+    resolution: {integrity: sha512-08v+yyFizoR9rEtLjuodTdlYQbkk0QWeKm6er0RQjks+b6Bfpw1UX9XheLcXreEAve7VVE7Tcu/kSAIm54V4zA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
+    dev: false
+
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
 
@@ -21358,7 +21374,7 @@ packages:
     resolution: {integrity: sha512-1q0oC8eRveTg5nnBEWMXAU2qpv65Gnuf2eCQzSjxpWFkPaPARwqZZDGuNE0zPAZfTCHzIk3A8dIjwlQKKLphyg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/schemas': 29.6.0
+      '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.2.0
     dev: true

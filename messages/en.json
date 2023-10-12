@@ -254,8 +254,38 @@
       "OperatorInteractionTrigger": "Operator interacts",
       "Conditions": "Conditions",
       "ShopifyCondition": "Shopify Conditions",
-      "Action": "Action",
       "ShopifyAction": "Shopify action",
+      "Templates": "Templates",
+      "My chatbots": "My chatbots",
+      "Bot actions": "Bot actions",
+      "Create new bot": "Create new bot",
+      "Create new bot from template": "Create new bot from template",
+      "Strategies": "Strategies",
+      "Grow sales": "Grow sales",
+      "Generate leads": "Generate leads",
+      "Resolve issues": "Resolve issues",
+      "Test & validate bot": "Test & validate bot",
+      "Start while operators are offline": "Start while operators are offline",
+      "Start while an operator is handling another conversation": "Start while an operator is handling another conversation",
+      "Start when another bot is running": "Start when another bot is running",
+      "View statistics": "View statistics",
+      "Trigger": "Trigger",
+      "Condition": "Condition",
+      "Action": "Action",
+      "Actions": "Actions",
+      "Triggered": "Triggered",
+      "Engagement": "Engagement",
+      "Satisfaction": "Satisfaction",
+      "ActionForms": {
+        "DecisionQuickReplies": {
+          "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "addQuickReply": "Add quick reply",
+          "facebookCatch": "Please note: Facebook Messenger displays shorter buttons. Replies with text longer than 20 characters will be shortened to 20 characters.",
+          "transferToOperatorMessage": "The transfer to operator message is sent to a visitor when they reply to a question with a text, instead of choosing one of the decision buttons"
+        }
+      },
       "nodes": {
         "VisitorBotInteractionTrigger": {
           "VisitorClicksBotsButton": "Visitor clicks the bots button",
@@ -327,27 +357,7 @@
           "CouponCode": "Coupon code"
         }
       }
-    },
-    "Templates": "Templates",
-    "My chatbots": "My chatbots",
-    "Bot actions": "Bot actions",
-    "Create new bot": "Create new bot",
-    "Create new bot from template": "Create new bot from template",
-    "Strategies": "Strategies",
-    "Grow sales": "Grow sales",
-    "Generate leads": "Generate leads",
-    "Resolve issues": "Resolve issues",
-    "Test & validate bot": "Test & validate bot",
-    "Start while operators are offline": "Start while operators are offline",
-    "Start while an operator is handling another conversation": "Start while an operator is handling another conversation",
-    "Start when another bot is running": "Start when another bot is running",
-    "View statistics": "View statistics",
-    "Trigger": "Trigger",
-    "Condition": "Condition",
-    "Action": "Action",
-    "Triggered": "Triggered",
-    "Engagement": "Engagement",
-    "Satisfaction": "Satisfaction"
+    }
   },
   "settings": {
     "appearance": {

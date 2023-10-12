@@ -1,8 +1,7 @@
 'use client'
 import { useTranslations } from 'next-intl';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
-import { isDesktop } from 'react-device-detect';
 
 import { BotEditor } from './BotEditor';
 
@@ -20,5 +19,4 @@ export default function Page() {
   ), [botId])
 
   return render
-
 }

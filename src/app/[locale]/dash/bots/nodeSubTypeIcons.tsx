@@ -18,7 +18,7 @@ import {
 } from 'react-icons/md';
 import {
   RiChatDeleteLine, RiChatForwardLine, RiChatOffLine, RiHomeOfficeFill, RiMailDownloadFill,
-  RiMailStarFill, RiRobot2Fill
+  RiMailStarFill, RiRobot2Fill, RiSettings5Line
 } from 'react-icons/ri';
 import { SiAbbrobotstudio } from 'react-icons/si';
 import {
@@ -27,8 +27,8 @@ import {
 
 import { nodeSubType } from '@/entities/bot';
 
-type subTypes = (typeof nodeSubType)[number]
-const nodeSubTypeIcons: Record<subTypes, ReactNode> = {
+export type SubNodeType = (typeof nodeSubType)[number]
+export const nodeSubTypeIcons: Record<SubNodeType, ReactNode> = {
   'Ask a question': <BsQuestion />,
   'Based on Contact Property': <BiSolidContact />,
   'Browser': <CgBrowser />,
@@ -57,7 +57,7 @@ const nodeSubTypeIcons: Record<subTypes, ReactNode> = {
   'New event': <BsCalendarEvent />,
   'Notify operators': <BsPersonCheckFill />,
   'Open website in modal': <TbWindowMaximize />,
-  'Operating system': <GrSystem />,
+  'Operating system': <RiSettings5Line />,
   "Operator doesn't respond during the conversation": <RiChatDeleteLine />,
   "Operator doesn't take the conversation": <BsChatLeft />,
   "Operator marks conversation as solved": <MdMarkChatRead />,

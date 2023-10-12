@@ -12,15 +12,26 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const nodeType = ['trigger', 'condition', 'action'] as const;
 
-export const nodeSubType = [
-  ...Object.values(VisitorBotInteractionTrigger),
-  ...Object.values(VisitorPageInteractionTrigger),
-  ...Object.values(OperatorInteractionTrigger),
-  ...Object.values(Condition),
-  ...Object.values(ShopifyCondition),
-  ...Object.values(Action),
-  ...Object.values(ShopifyAction),
+export const triggers = [
+  ...Object.keys(VisitorBotInteractionTrigger),
+  ...Object.keys(VisitorPageInteractionTrigger),
+  ...Object.keys(OperatorInteractionTrigger),
 ] as const;
+
+export type Triggers = (typeof triggers)[number];
+
+export const conditions = [
+  ...Object.keys(Condition),
+  ...Object.keys(ShopifyCondition),
+] as const;
+
+export type Conditions = (typeof conditions)[number];
+
+export const actions = [...Object.keys(Action), ...Object.keys(ShopifyAction)];
+
+export type Actions = (typeof actions)[number];
+
+export const nodeSubType = [...triggers, ...conditions, ...actions] as const;
 
 export const botCategory = [
   'General',
@@ -111,6 +122,12 @@ export const Bot = new Entity({
                 type: 'number',
               },
             },
+          },
+          // We store user configured form data here, in stringified JSON.
+          // This is parsed into a type using frontend types This is parsed into a type using frontend types.
+          data: {
+            type: 'string',
+            default: '',
           },
         },
       },

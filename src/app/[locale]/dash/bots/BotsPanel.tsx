@@ -5,13 +5,11 @@ import router from 'next/router';
 import { FC, use, useEffect, useMemo, useRef } from 'react';
 import { BiEdit, BiExport, BiTrash } from 'react-icons/bi';
 import {
-  BsChatLeftDots, BsChatLeftDotsFill, BsFileBarGraph, BsPersonSlash, BsRobot, BsThreeDotsVertical
+  BsChatLeftDots, BsFileBarGraph, BsPersonSlash, BsRobot, BsThreeDotsVertical
 } from 'react-icons/bs';
-import { FaClone, FaRegClone } from 'react-icons/fa';
-import { FcDownload, FcIdea, FcPositiveDynamic } from 'react-icons/fc';
+import { FaRegClone } from 'react-icons/fa';
 import { GrTest } from 'react-icons/gr';
 import { TbRobotOff } from 'react-icons/tb';
-import { useHover, useScreen } from 'usehooks-ts';
 
 import { Bot, BotCategory } from '@/entities/bot';
 
@@ -20,7 +18,6 @@ import { useCreateBotMut } from '../../(hooks)/mutations/useCreateBotMut';
 import { useDeleteBotMut } from '../../(hooks)/mutations/useDeleteBotMut';
 import { useUpdateBotMut } from '../../(hooks)/mutations/useUpdateBotMut';
 import { useBotsQuery } from '../../(hooks)/queries/useBotsQuery';
-import { BotActionMenu } from './BotActionMenu';
 
 interface Props {
   title: BotCategory | 'All'
@@ -78,9 +75,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
               </thead>
               <tbody className='h-full animate-fade-left'>
                 {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data)?.map((data) => {
-
                   const bot = (data as EntityItem<typeof Bot>)
-
                   return (
                     <tr className='w-full text-lg font-normal group hover:cursor-pointer'
                     >
@@ -184,7 +179,6 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                           <li className='flex flex-row'>
                             <a className='justify-between w-full'>
                               <div className='flex place-items-center gap-x-2'>
-
                                 <TbRobotOff />
                                 {tBots('Start when another bot is running')}
 

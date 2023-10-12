@@ -13,7 +13,7 @@ import { QueryKey } from '../queries';
 * @param {Parameters<typeof getBot>} params
 * @returns {*}
 */
-export const useBotQuery = (params: Parameters<typeof getBot>) => useQuery<EntityItem<typeof Bot>[]>(
+export const useBotQuery = (params: Parameters<typeof getBot>) => useQuery<EntityItem<typeof Bot>>(
   {
     queryKey: [...params, QueryKey.bot],
     queryFn: () => getBot(...params) ?? [],
@@ -34,7 +34,7 @@ export const useBotQuery = (params: Parameters<typeof getBot>) => useQuery<Entit
 export const getBot = async (
   orgId: string,
   botId: string
-): Promise<EntityItem<typeof Bot>[]> => {
+): Promise<EntityItem<typeof Bot>> => {
   const res = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL

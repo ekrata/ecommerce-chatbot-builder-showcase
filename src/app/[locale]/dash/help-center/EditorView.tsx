@@ -13,19 +13,19 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
-    useCreateArticleContentMut
+  useCreateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useCreateArticleContentMut';
 import { useCreateArticleMut } from '@/app/[locale]/(hooks)/mutations/useCreateArticleMut';
 import {
-    useDeleteArticleContentMut
+  useDeleteArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useDeleteArticleContentMut';
 import { useDeleteArticleMut } from '@/app/[locale]/(hooks)/mutations/useDeleteArticleMut';
 import {
-    useUpdateArticleContentMut
+  useUpdateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleContentMut';
 import { useUpdateArticleMut } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleMut';
 import {
-    getArticleWithContent
+  getArticleWithContent
 } from '@/app/[locale]/chat-widget/(actions)/orgs/articles/getArticleWithContent';
 import { ArticleCategory, articleCategory, articleStatus, ArticleStatus } from '@/entities/article';
 import { useQuery } from '@tanstack/react-query';
@@ -102,7 +102,6 @@ export const EditorView: React.FC = () => {
   const router = useRouter()
   const pathname = usePathname()
   const toast = useNotificationContext()
-  console.log(articleId)
   const newArticleId = uuidv4()
   const newArticleContentId = uuidv4()
   const t = useTranslations('dash');
