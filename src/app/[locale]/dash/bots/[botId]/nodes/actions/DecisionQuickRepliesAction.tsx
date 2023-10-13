@@ -5,7 +5,7 @@ import EmojiPicker, {
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { SetStateAction, useEffect, useMemo, useState } from 'react';
+import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import {
   SubmitHandler, useFieldArray, UseFieldArrayReturn, useForm, UseFormRegister
 } from 'react-hook-form';
@@ -16,6 +16,7 @@ import { MdOutlineDarkMode } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { Handle, Node, Position } from 'reactflow';
 import { json } from 'stream/consumers';
+import { useOnClickOutside } from 'usehooks-ts';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
@@ -64,6 +65,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
   const orgId = operatorSession?.orgId ?? ''
   const params = useParams();
   const botId = params?.botId as string
+  const ref = useRef(null)
 
   const tForm = useTranslations("dash.bots.ActionForms.DecisionQuickReplies")
   const { register,
@@ -71,9 +73,8 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
     control,
     watch,
     setValue,
-
-
-    formState: { errors, }, } = useForm<FormValues>({
+    getValues,
+    formState: { errors }, } = useForm<FormValues>({
       defaultValues: {
         message: '',
         quickReplies: []
@@ -85,6 +86,15 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 
+  const handleClickOutside = () => {
+    // Your custom logic here
+    console.log('clicked outside')
+    updateNodes(getValues, node, nodes, setNodes)
+  }
+
+  useOnClickOutside(ref, handleClickOutside)
+
+
   const { fields, append, update, prepend, remove, swap, move, insert } = fieldArray
 
   useEffect(() => {
@@ -94,15 +104,15 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
   }, [node])
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
-    console.log(values)
     updateNodes(values, node, nodes, setNodes)
   }
 
-
+  useEffect(() => {
+    updateNodes({}, node, nodes, setNodes)
+  }, [])
 
   return (
-    <form className='flex flex-col place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)}>
-
+    <form className='flex flex-col place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       {/* {actionNode(Action.DecisionQuickReplies)} */}
       {/* {tNodes(`Action.DecisionQuickReplies`)} */}
       <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 gap-y-1 textarea' {...register("message")} />

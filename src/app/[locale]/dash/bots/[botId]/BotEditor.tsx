@@ -25,11 +25,11 @@ import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
 import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { BotNodeType } from '@/entities/bot';
-import { useHistoryState } from '@uidotdev/usehooks';
 
 import CustomEdge from './CustomEdge';
 import { actionNode, conditionNode, triggerNode } from './nodes';
-import { formTypes, nodeTypes } from './nodes/nodeTypes';
+import { formTypes, nodeTypes, renderNodeForm } from './nodes/nodeTypes';
+import { updateNodes } from './nodes/updateNodes';
 import { onDragStart } from './onDragStart';
 
 export type NodeMenuState = '' | 'trigger' | 'condition' | 'action'
@@ -95,9 +95,9 @@ export const BotEditor: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [selectedNode, setSelectedNode] = useState<Node<any, string | undefined> | null>(null)
 
-  const { state, set, undo, redo, clear, canUndo, canRedo } = useHistoryState({
-    items: nodes,
-  });
+  // const { state, set, undo, redo, clear, canUndo, canRedo } = useHistoryState({
+  //   items: nodes,
+  // });
 
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
@@ -107,17 +107,14 @@ export const BotEditor: React.FC = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  const handleClickOutside = () => {
-    // Your custom logic here
-    console.log('clicked outside')
-  }
 
 
-  useOnClickOutside(ref, handleClickOutside)
+  const onPaneClick = () => {
+    setSelectedNode(null)
+  };
 
   const onDrop = useCallback(
     (event) => {
-      console.log('on drop  ')
       event.preventDefault();
 
       const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect();
@@ -131,15 +128,16 @@ export const BotEditor: React.FC = () => {
       const position = reactFlowInstance?.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
-      });
+      }) ?? { x: 0, y: 0 }
 
-      const newNode = {
+      const newNode: Node = {
         id: getId(),
         type,
+        data: {},
         position,
       };
 
-      setNodes((nds) => nds.concat(newNode));
+      updateNodes({}, newNode, nodes, setNodes)
     },
     [reactFlowInstance]
   );
@@ -151,9 +149,6 @@ export const BotEditor: React.FC = () => {
     else {
       setSelectedNode(null)
     }
-    if (selectedNode?.type) {
-      console.log(formTypes?.[selectedNode?.type])
-    }
   }
 
   const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => {
@@ -162,6 +157,7 @@ export const BotEditor: React.FC = () => {
       label: 'new edge'
     }, eds)
   }), []);
+
 
 
   const updateBotMut = useUpdateBotMut(orgId)
@@ -174,167 +170,170 @@ export const BotEditor: React.FC = () => {
       nodes,
       edges
     }])
-
     updateBot()
   }, [nodes, edges])
 
 
-  return (
-    <div className="w-full h-screen p-2 bg-white " >
-      <NodeContext.Provider value={[nodes, setNodes, onNodesChange]}>
-        <ReactFlowProvider>
-          <div className="h-screen reactflow-wrapper" ref={reactFlowWrapper}>
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              elementsSelectable
-              onSelectionChange={({ nodes, edges }) => onSelectionChange({ nodes, edges })}
-              nodesConnectable
-              nodesDraggable
-              onInit={setReactFlowInstance}
-              nodeTypes={nodeTypes}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              edgeTypes={edgeTypes}
-              fitView
-              className=""
-              ref={ref}
-            >
-              {/* <MiniMap /> */}
-              <Controls />
-              <Background variant={BackgroundVariant.Cross} className='-z-10' />
-              <Panel position={'top-right'}>
-                <div className='absolute right-0 mb-40'>
-                  <div className="h-screen-3/4  bg-white shadow-lg w-[400px] p-4 mb-40 pb-40 max-h-[900px] overflow-y-scroll rounded-lg">
-                    {selectedNode?.type ?
-                      <>
-                        <h5 className='justify-center text-center'>{selectedNode?.type}</h5>
-                        {formTypes?.[selectedNode?.type]}
-                      </>
-                      : (<>
-                        <ul className='flex flex-row justify-between menu dropdown-content'>
-                          <li onClick={() => setNodeMenuState('trigger')}><a>{tBots('Trigger')}</a></li>
-                          <li onClick={() => setNodeMenuState('condition')}><a>{tBots('Condition')}</a></li>
-                          <li onClick={() => setNodeMenuState('action')}><a>{tBots('Action')}</a></li>
-                        </ul>
-                        {nodeMenuState === 'trigger' &&
-                          <div className=''>
-                            <h5 className='mb-4 text-xl text-center'>
-                              {tBots('VisitorBotInteractionTrigger')}
-                            </h5>
-                            <ul className='grid justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
-                              {Object.entries(VisitorBotInteractionTrigger).map(([key, value]) => (
-                                <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
-                                  {triggerNode(value)}
-                                  <p className="text-xs font-light">
-                                    {tNodes(`VisitorBotInteractionTrigger.${key as VisitorBotInteractionTrigger}`)}
-                                  </p>
-                                </li>
-                              ))}
-                            </ul>
-                            <h5 className='mb-4 text-xl text-center'>
-                              {tBots('VisitorPageInteractionTrigger')}
-                            </h5>
-                            <ul className='grid flex-wrap justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
-                              {Object.entries(VisitorPageInteractionTrigger).map(([key, value]) => (
-                                <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
-                                  {triggerNode(value)}
-                                  <p className="text-xs font-light">
-                                    {tNodes(`VisitorPageInteractionTrigger.${key as VisitorPageInteractionTrigger}`)}
-                                  </p>
-                                </li>
-                              ))}
-                            </ul>
-                            <h5 className='mb-4 text-xl text-center'>
-                              {tBots('OperatorInteractionTrigger')}
-                            </h5>
-                            <ul className='grid flex-wrap justify-around grid-cols-12 gap-x-6 gap-y-2'>
-                              {Object.entries(OperatorInteractionTrigger).map(([key, value]) => (
-                                <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
-                                  {triggerNode(value)}
-                                  <p className="text-xs font-light">
-                                    {tNodes(`OperatorInteractionTrigger.${key as OperatorInteractionTrigger}`)}
-                                  </p>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        }
-                        {nodeMenuState === 'condition' &&
-                          <div>
-                            <h5 className='text-xl text-center'>
-                              {tBots('Conditions')}
-                            </h5>
-                            <ul className='grid flex-wrap justify-around grid-cols-12 gap-x-6 gap-y-2'>
-                              {...Object.entries(Condition).map(([key, value]) => (
-                                <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
-                                  {conditionNode(value)}
-                                  <p className="text-xs font-light">
-                                    {tNodes(`Condition.${key}`)}
-                                  </p>
-                                </li>
-                              ))}
-                            </ul>
-                            <h5 className='text-xl text-center'>
-                              {tBots('ShopifyCondition')}
-                            </h5>
-                            <ul className='flex flex-wrap justify-around gap-x-6 gap-y-2'>
-                              {...Object.entries(ShopifyCondition).map(([key, value]) => (
-                                <li className='flex flex-col flex-wrap justify-center gap-y-2 place-items-center'>
-                                  <a className='flex flex-row w-16 h-16 p-2 text-3xl normal-case bg-warning pointer-grab gap-x-2 btn btn-outline mask mask-diamond' onDragStart={(event) => onDragStart(event, 'input')} draggable>
+  const render = useMemo(() => {
+    return (
+      <div className="w-full h-screen p-2 bg-white " ref={ref} >
+        <NodeContext.Provider value={[nodes, setNodes, onNodesChange]}>
+          <ReactFlowProvider>
+            <div className="h-screen reactflow-wrapper" ref={reactFlowWrapper}>
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                elementsSelectable
+                onSelectionChange={({ nodes, edges }) => onSelectionChange({ nodes, edges })}
+                nodesConnectable
+                nodesDraggable
+                onInit={setReactFlowInstance}
+                nodeTypes={nodeTypes}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                edgeTypes={edgeTypes}
+                onPaneClick={onPaneClick}
+                fitView
+                className=""
+                ref={ref}
+              >
+                {/* <MiniMap /> */}
+                <Controls />
+                <Background variant={BackgroundVariant.Cross} className='-z-10' />
+                <Panel position={'top-right'}>
+                  <div className='absolute right-0 mb-40'>
+                    <div className="h-screen-3/4  bg-white shadow-lg w-[400px] p-4 mb-40 pb-40 max-h-[900px] overflow-y-scroll rounded-lg">
+                      {selectedNode?.type ?
+                        <>
+                          <h5 className='justify-center text-center'>{selectedNode?.type}</h5>
+                          {renderNodeForm(selectedNode)}
+                        </>
+                        : (<>
+                          <ul className='flex flex-row justify-between menu dropdown-content'>
+                            <li onClick={() => setNodeMenuState('trigger')}><a>{tBots('Trigger')}</a></li>
+                            <li onClick={() => setNodeMenuState('condition')}><a>{tBots('Condition')}</a></li>
+                            <li onClick={() => setNodeMenuState('action')}><a>{tBots('Action')}</a></li>
+                          </ul>
+                          {nodeMenuState === 'trigger' &&
+                            <div className=''>
+                              <h5 className='mb-4 text-xl text-center'>
+                                {tBots('VisitorBotInteractionTrigger')}
+                              </h5>
+                              <ul className='grid justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
+                                {Object.entries(VisitorBotInteractionTrigger).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
+                                    {triggerNode(value)}
+                                    <p className="text-xs font-light">
+                                      {tNodes(`VisitorBotInteractionTrigger.${key as VisitorBotInteractionTrigger}`)}
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
+                              <h5 className='mb-4 text-xl text-center'>
+                                {tBots('VisitorPageInteractionTrigger')}
+                              </h5>
+                              <ul className='grid flex-wrap justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
+                                {Object.entries(VisitorPageInteractionTrigger).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
+                                    {triggerNode(value)}
+                                    <p className="text-xs font-light">
+                                      {tNodes(`VisitorPageInteractionTrigger.${key as VisitorPageInteractionTrigger}`)}
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
+                              <h5 className='mb-4 text-xl text-center'>
+                                {tBots('OperatorInteractionTrigger')}
+                              </h5>
+                              <ul className='grid flex-wrap justify-around grid-cols-12 gap-x-6 gap-y-2'>
+                                {Object.entries(OperatorInteractionTrigger).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
+                                    {triggerNode(value)}
+                                    <p className="text-xs font-light">
+                                      {tNodes(`OperatorInteractionTrigger.${key as OperatorInteractionTrigger}`)}
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          }
+                          {nodeMenuState === 'condition' &&
+                            <div>
+                              <h5 className='text-xl text-center'>
+                                {tBots('Conditions')}
+                              </h5>
+                              <ul className='grid flex-wrap justify-around grid-cols-12 gap-x-6 gap-y-2'>
+                                {...Object.entries(Condition).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
                                     {conditionNode(value)}
-                                  </a>
-                                  <p className="text-xs font-light">
-                                    {tNodes(`ShopifyCondition.${key}`)}
-                                  </p>
-                                </li>
-                              ))
-                              }
-                            </ul>
-                          </div>
-                        }
-                        {nodeMenuState === 'action' &&
-                          <div className=''>
-                            <h5 className='mb-4 text-xl text-center'>
-                              {tBots('Action')}
-                            </h5>
-                            <ul className='grid justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
-                              {Object.entries(Action).map(([key, value]) => (
-                                <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
-                                  {actionNode(value)}
-                                  <p className="text-xs font-light">
-                                    {tNodes(`Action.${key as Action}`)}
-                                  </p>
-                                </li>
-                              ))}
-                            </ul>
-                            <h5 className='mb-4 text-xl text-center'>
-                              {tBots('ShopifyAction')}
-                            </h5>
-                            <ul className='grid justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
-                              {Object.entries(ShopifyAction).map(([key, value]) => (
-                                <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
-                                  {actionNode(value)}
-                                  <p className="text-xs font-light">
-                                    {tNodes(`ShopifyAction.${key as Action}`)}
-                                  </p>
-                                </li>
-                              ))}
-                            </ul>
+                                    <p className="text-xs font-light">
+                                      {tNodes(`Condition.${key}`)}
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
+                              <h5 className='text-xl text-center'>
+                                {tBots('ShopifyCondition')}
+                              </h5>
+                              <ul className='flex flex-wrap justify-around gap-x-6 gap-y-2'>
+                                {...Object.entries(ShopifyCondition).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center gap-y-2 place-items-center'>
+                                    <a className='flex flex-row w-16 h-16 p-2 text-3xl normal-case bg-warning pointer-grab gap-x-2 btn btn-outline mask mask-diamond' onDragStart={(event) => onDragStart(event, 'input')} draggable>
+                                      {conditionNode(value)}
+                                    </a>
+                                    <p className="text-xs font-light">
+                                      {tNodes(`ShopifyCondition.${key}`)}
+                                    </p>
+                                  </li>
+                                ))
+                                }
+                              </ul>
+                            </div>
+                          }
+                          {nodeMenuState === 'action' &&
+                            <div className=''>
+                              <h5 className='mb-4 text-xl text-center'>
+                                {tBots('Action')}
+                              </h5>
+                              <ul className='grid justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
+                                {Object.entries(Action).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
+                                    {actionNode(value)}
+                                    <p className="text-xs font-light">
+                                      {tNodes(`Action.${key as Action}`)}
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
+                              <h5 className='mb-4 text-xl text-center'>
+                                {tBots('ShopifyAction')}
+                              </h5>
+                              <ul className='grid justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
+                                {Object.entries(ShopifyAction).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
+                                    {actionNode(value)}
+                                    <p className="text-xs font-light">
+                                      {tNodes(`ShopifyAction.${key as Action}`)}
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
 
-                          </div>
-                        }
-                      </>)}
+                            </div>
+                          }
+                        </>)}
+                    </div>
                   </div>
-                </div>
-              </Panel>
-            </ReactFlow >
-          </div >
-        </ReactFlowProvider >
-      </NodeContext.Provider >
-    </div >
-  )
+                </Panel>
+              </ReactFlow >
+            </div >
+          </ReactFlowProvider >
+        </NodeContext.Provider >
+      </div >
+    )
+  }, [nodes, nodeMenuState])
+  return render
 }

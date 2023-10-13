@@ -239,6 +239,16 @@
     "Clone": "Clone",
     "Visit our Knowledge base": "Visit our Knowledge base",
     "The help screen, articles and our in-built CMS is only available to + users": "The help screen, articles and our in-built CMS is only available to + users",
+    "operator": {
+      "name": "name",
+      "firstName": "first name",
+      "phone": "phone",
+      "email": "email",
+      "countryCode": "country code",
+      "city": "city",
+      "projectDomain": "project domain",
+      "projectName": "project name"
+    },
     "bots": {
       "categories": {
         "General": "General",

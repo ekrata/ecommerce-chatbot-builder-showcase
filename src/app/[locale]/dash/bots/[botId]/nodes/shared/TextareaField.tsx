@@ -1,6 +1,8 @@
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
+import { useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
 import { FieldArray, FieldValues, UseFieldArrayReturn, UseFormRegister } from 'react-hook-form';
+import { BiCodeCurly } from 'react-icons/bi';
 import { BsX } from 'react-icons/bs';
 import { HiOutlineEmojiHappy } from 'react-icons/hi';
 import { useOnClickOutside } from 'usehooks-ts';
@@ -13,6 +15,7 @@ interface Props<T extends FieldValues> {
 }
 
 export function TextareaField<T extends FieldValues>({ fieldArray, field, index, register, }: Props<T>) {
+  const tOperator = useTranslations('dash.operator');
   const ref = useRef(null)
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const [fieldValue, setFieldValue] = useState<string>();
@@ -27,15 +30,21 @@ export function TextareaField<T extends FieldValues>({ fieldArray, field, index,
   useOnClickOutside(ref, handleClickOutside)
 
   return (
-    <div className='group form-control'>
-      <textarea key={field.id} className="bg-gray-200 min-h-8 textarea-sm textarea" {...register(`${field.id}.${index.toString()}` as const)} onChange={e => setFieldValue(e.target.value)} ></textarea>
-      < label className="justify-end label" >
+    <div className='bg-gray-200 h-22 group form-control textarea textarea-sm'>
+      <textarea key={field.id} className="flex h-10 text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0" {...register(`${field.id}.${index.toString()}` as const)} onChange={e => setFieldValue(e.target.value)} ></textarea>
+      <label className="justify-end text-gray-100 label place-items-center" >
         <span className="flex flex-row justify-end label-text-alt">
-          <div className="dropdown dropdown-bottom dropdown-end">
-            <label tabIndex={0} className="m-1 btn">Click</label>
-            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-              <li><a>{contact}</a></li>
-              <li><a>Item 2</a></li>
+          <div className="invisible text-xl cursor-pointer dropdown dropdown-bottom dropdown-end group-hover:visible">
+            <label tabIndex={0} className=""><BiCodeCurly className='text-xl' /></label>
+            <ul tabIndex={0} className="dropdown-content -[1] menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
+              {/* <li onClick={() => update(index, `${fieldValue}{name}`)}><a>{tOperator('name')}</a></li> */}
+              <li><a>{tOperator('firstName')}</a></li>
+              <li><a>{tOperator('phone')}</a></li>
+              <li><a>{tOperator('email')}</a></li>
+              <li><a>{tOperator('countryCode')}</a></li>
+              <li><a>{tOperator('city')}</a></li>
+              <li><a>{tOperator('projectDomain')}</a></li>
+              <li><a>{tOperator('projectName')}</a></li>
             </ul>
           </div>
           <HiOutlineEmojiHappy onClick={() => setShowEmoji(true)} className='invisible text-xl cursor-pointer group-hover:visible' />
@@ -51,7 +60,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, field, index,
           </div>
           <BsX onClick={() => remove(index)} className='invisible text-xl cursor-pointer group-hover:visible' />
         </span>
-      </label >
+      </label>
     </div >)
 
 }

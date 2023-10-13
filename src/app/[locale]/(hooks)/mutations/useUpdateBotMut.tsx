@@ -27,7 +27,7 @@ export const updateBot = async (
 
 
 const updateBotReducer = (oldBots: EntityItem<typeof Bot>[], updatedBot: EntityItem<typeof Bot>) => {
-  [...oldBots, updatedBot]
+  return [...(oldBots ?? []), updatedBot]
 }
 
 /**

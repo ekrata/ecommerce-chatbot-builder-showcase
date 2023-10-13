@@ -19,13 +19,13 @@ export const nodeTypes: NodeTypes = {
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionNode,
 };
 
-export const formTypes = {
-  // [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: VisitorClicksBotsButtonTriggerForm,
-  // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
-  // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
-  // [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
-  [`${Action.DecisionQuickReplies}`]: <DecisionQuickRepliesActionForm />
-};
+// export const formTypes = {
+//   // [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: VisitorClicksBotsButtonTriggerForm,
+//   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
+//   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
+//   // [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
+//   [`${Action.DecisionQuickReplies}`]: <DecisionQuickRepliesActionForm />
+// };
 
 
 
@@ -33,9 +33,7 @@ export const renderNodeForm = (node: Node) => {
   switch (node.type) {
     case Action.DecisionQuickReplies:
       return <DecisionQuickRepliesActionForm node={node} />
-
   }
-  formTypes.node
 
 
 

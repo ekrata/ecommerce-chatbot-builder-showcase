@@ -32,7 +32,25 @@ export const Customer = new Entity({
     name: {
       type: 'string',
     },
+    first_name: {
+      type: 'string',
+    },
+    phone: {
+      type: 'string',
+    },
     email: {
+      type: 'string',
+    },
+    countryCode: {
+      type: 'string',
+    },
+    city: {
+      type: 'string',
+    },
+    projectDomain: {
+      type: 'string',
+    },
+    projectName: {
       type: 'string',
     },
     profilePicture: {
@@ -52,9 +70,6 @@ export const Customer = new Entity({
       default: 'en',
     },
     timezone: {
-      type: 'string',
-    },
-    phone: {
       type: 'string',
     },
     rating: {

@@ -16,7 +16,7 @@ import { QueryKey } from '../queries';
 export const useBotQuery = (params: Parameters<typeof getBot>) => useQuery<EntityItem<typeof Bot>>(
   {
     queryKey: [...params, QueryKey.bot],
-    queryFn: () => getBot(...params) ?? [],
+    queryFn: () => getBot(...params),
     keepPreviousData: true,
     enabled: !!params[0]
   })
@@ -41,5 +41,5 @@ export const getBot = async (
       }/orgs/${orgId}/bots/${botId}`
     )
   ).json();
-  return res.data;
+  return res?.data ?? {};
 };
