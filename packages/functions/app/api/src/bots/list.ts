@@ -22,10 +22,18 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const res = await appDb.entities.bots.query
         .byOrg({ orgId })
         .go(cursor ? { cursor, limit: 25 } : { limit: 25 });
-      console.log(res?.data);
+      const bots = res.data;
       return {
         statusCode: 200,
-        body: JSON.stringify(res?.data),
+        body: JSON.stringify(
+          res?.data?.map((bot) => ({
+            ...bot,
+            nodes: bot?.nodes?.map((node) => ({
+              ...node,
+              data: JSON.parse(node?.data ?? '{}'),
+            })),
+          })),
+        ),
       };
     } catch (err) {
       Sentry.captureException(err);

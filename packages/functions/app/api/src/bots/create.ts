@@ -28,6 +28,11 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const res = await appDb.entities.bots
         .create({
           ...body,
+          nodes: body.nodes?.map((node) => ({
+            ...node,
+            data: JSON.stringify(node.data),
+          })),
+
           orgId,
           botId,
         })

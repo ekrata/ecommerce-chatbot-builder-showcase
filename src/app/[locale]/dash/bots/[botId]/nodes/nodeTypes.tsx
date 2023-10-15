@@ -28,13 +28,3 @@ export const nodeTypes: NodeTypes = {
 // };
 
 
-
-export const renderNodeForm = (node: Node) => {
-  switch (node.type) {
-    case Action.DecisionQuickReplies:
-      return <DecisionQuickRepliesActionForm node={node} />
-  }
-
-
-
-}

@@ -13,21 +13,24 @@ import { v4 as uuidv4 } from 'uuid';
 export const nodeType = ['trigger', 'condition', 'action'] as const;
 
 export const triggers = [
-  ...Object.keys(VisitorBotInteractionTrigger),
-  ...Object.keys(VisitorPageInteractionTrigger),
-  ...Object.keys(OperatorInteractionTrigger),
+  ...Object.values(VisitorBotInteractionTrigger),
+  ...Object.values(VisitorPageInteractionTrigger),
+  ...Object.values(OperatorInteractionTrigger),
 ] as const;
 
 export type Triggers = (typeof triggers)[number];
 
 export const conditions = [
-  ...Object.keys(Condition),
-  ...Object.keys(ShopifyCondition),
+  ...Object.values(Condition),
+  ...Object.values(ShopifyCondition),
 ] as const;
 
 export type Conditions = (typeof conditions)[number];
 
-export const actions = [...Object.keys(Action), ...Object.keys(ShopifyAction)];
+export const actions = [
+  ...Object.values(Action),
+  ...Object.values(ShopifyAction),
+];
 
 export type Actions = (typeof actions)[number];
 
@@ -105,12 +108,11 @@ export const Bot = new Entity({
         properties: {
           id: {
             type: 'string',
+            default: '',
           },
-          nodeType: {
-            type: nodeType,
-          },
-          nodeSubType: {
+          type: {
             type: nodeSubType,
+            default: '',
           },
           position: {
             type: 'map',
@@ -122,12 +124,12 @@ export const Bot = new Entity({
                 type: 'number',
               },
             },
+            default: { x: 0, y: 0 },
           },
-          // We store user configured form data here, in stringified JSON.
-          // This is parsed into a type using frontend types This is parsed into a type using frontend types.
+          // getters and setters allow us to keep the node data as stringified JSON only at database level
           data: {
             type: 'string',
-            default: '',
+            default: '{}',
           },
         },
       },

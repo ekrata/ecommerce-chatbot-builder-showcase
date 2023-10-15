@@ -22,7 +22,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       if (res?.data) {
         return {
           statusCode: 200,
-          body: JSON.stringify(res?.data),
+          body: JSON.stringify({
+            ...res?.data,
+            nodes: res?.data.nodes?.map((node) => ({
+              ...node,
+              data: JSON.parse(node?.data ?? '{}'),
+            })),
+          }),
         };
       }
       return {

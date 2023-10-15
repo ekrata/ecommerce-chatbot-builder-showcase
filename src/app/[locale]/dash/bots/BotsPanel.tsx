@@ -74,6 +74,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                 </tr>
               </thead>
               <tbody className='h-full animate-fade-left'>
+                {console.log(bots?.data)}
                 {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data)?.map((data) => {
                   const bot = (data as EntityItem<typeof Bot>)
                   return (

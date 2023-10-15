@@ -68,20 +68,20 @@ describe.concurrent('/bots', async () => {
     const nodes: BotNodeType[] = [
       {
         id: '1',
-        nodeType: 'trigger',
-        nodeSubType: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+        type: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+        data: '',
         position: { x: 0, y: 50 },
       },
       {
         id: '2',
-        nodeType: 'condition',
-        nodeSubType: Condition.Day,
+        type: Condition.ChatStatus,
+        data: '',
         position: { x: -200, y: 200 },
       },
       {
         id: '3',
-        nodeType: 'action',
-        nodeSubType: Action.AskAQuestion,
+        type: Action.SendAChatMessage,
+        data: '',
         position: { x: 200, y: 200 },
       },
     ];

@@ -35,14 +35,11 @@ export const useBotsQuery = (params: Parameters<typeof getBots>) => useQuery<Ent
 export const getBots = async (
   orgId: string,
 ): Promise<EntityItem<typeof Bot>[]> => {
-  console.log('hi')
   const res =
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/bots`
     )
   // console.log(res)
-  console.log('hi')
   const data = await res.json()
-  console.log(data)
   return data
 };

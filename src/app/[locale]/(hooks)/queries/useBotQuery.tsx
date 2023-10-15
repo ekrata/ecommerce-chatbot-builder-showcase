@@ -35,11 +35,11 @@ export const getBot = async (
   orgId: string,
   botId: string
 ): Promise<EntityItem<typeof Bot>> => {
-  const res = await (
+  const res =
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
       }/orgs/${orgId}/bots/${botId}`
     )
-  ).json();
-  return res?.data ?? {};
+  const data = await res.json()
+  return data ?? {}
 };
