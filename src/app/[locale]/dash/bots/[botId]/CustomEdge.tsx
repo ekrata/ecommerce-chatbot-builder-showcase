@@ -11,6 +11,7 @@ const CustomEdge: FC<EdgeProps> = ({
   targetPosition,
   data,
 }) => {
+  console.log(data)
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,

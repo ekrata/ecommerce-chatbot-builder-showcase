@@ -5,7 +5,7 @@ import { Handle, Position } from 'reactflow';
 
 import { Conditions } from '@/entities/bot';
 
-import { conditionNode } from '../nodes';
+import { conditionNode } from '../collections';
 
 const handleStyle = { left: 10 };
 

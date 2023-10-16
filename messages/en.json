@@ -207,17 +207,24 @@
     "Copy to clipboard": "Delete article",
     "Export": "Export",
     "Delete": "Delete",
+    "This node contains fields with errors, please ensure these errors are fixed or the bot will not run": "This node contains fields with errors, please ensure these errors are fixed or the bot will not run",
     "Copied to clipboard": "Copied to clipboard",
     "Import": "Import",
     "Remove": "Remove",
     "Save": "Save",
     "Fetching": "Fetching",
+    "Undo": "Undo",
+    "Redo": "Redo",
     "Saving": "Saving",
     "Saved": "Saved",
     "Error": "Error",
+    "Deleting": "Deleting",
+    "Deleted": "Deleted",
+    "Failed to delete": "Failed to delete",
     "Back": "Back",
     "Next": "Next",
     "Edit": "Edit",
+    "Can't be empty": "Can't be empty",
     "New Article": "New Article",
     "Done": "Done",
     "Region": "Region",
@@ -298,6 +305,12 @@
           "addQuickReply": "Add quick reply",
           "facebookCatch": "Please note: Facebook Messenger displays shorter buttons. Replies with text longer than 20 characters will be shortened to 20 characters.",
           "transferToOperatorMessage": "The transfer to operator message is sent to a visitor when they reply to a question with a text, instead of choosing one of the decision buttons"
+        }
+      },
+      "TriggerForms": {
+        "VisitorClicksBotsButton": {
+          "fieldLabel": "What is the button's name",
+          "placeholder": "Type the button's name"
         }
       },
       "nodes": {

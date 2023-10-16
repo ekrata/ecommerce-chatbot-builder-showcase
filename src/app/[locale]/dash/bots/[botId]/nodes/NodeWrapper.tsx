@@ -1,29 +1,41 @@
+import { isEmpty } from 'lodash';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { FieldErrors } from 'react-hook-form';
+import { BiSolidError } from 'react-icons/bi';
 
 import { useNodeContext } from '../BotEditor';
-import { actionNode } from '../nodes';
 
 interface Props {
   nodeElement: JSX.Element,
-  nodeName: string
+  nodeName: string,
+  hasErrors?: boolean
 }
 
-export const NodeWrapper: React.FC<Props> = ({ nodeElement, nodeName }) => {
+export const NodeWrapper: React.FC<Props> = ({ nodeElement, nodeName, hasErrors }) => {
+  const tDash = useTranslations('dash')
   const [_, __, ____, selectedNode] = useNodeContext()
   const [selected, setSelected] = useState<boolean>();
 
   useEffect(() => {
     setSelected(false)
   }, [selectedNode])
-  // ${selected ? 'ring-2   ring-offset-2  ring-blue-500  rounded-2xl animate-jump  ' : 'ring-4   ring-offset-2  ring-transparent  rounded-2xl   '}
+
   return (
-    < div className='flex flex-col justify-center w-20 text-center gap-y-1 place-items-center' onClick={() => setSelected(!selected)}>
-      <div className={`justify-center mt-2 focus:animate-jump`}>
-        {nodeElement}
-      </div>
-      <p className="text-xs font-light text-center bg-white shadow-2xl select-none">
-        {nodeName}
-      </p>
+    <div className="indicator">
+      {hasErrors &&
+        <div className="z-10 text-sm tooltip tooltip-error" data-tip={tDash("This node contains fields with errors, please ensure these errors are fixed or the bot will not run")}>
+          <span className="mt-1 shadow-2xl indicator-item indicator-start badge badge-error"><BiSolidError /></span>
+        </div>
+      }
+      <div className='flex flex-col justify-center w-20 text-center gap-y-1 place-items-center' onClick={() => setSelected(!selected)}>
+        <div className={`justify-center mt-2 focus:animate-jump`}>
+          {nodeElement}
+        </div>
+        <p className="text-xs font-light text-center bg-white shadow-2xl select-none">
+          {nodeName}
+        </p>
+      </div >
     </div >
   )
 }
