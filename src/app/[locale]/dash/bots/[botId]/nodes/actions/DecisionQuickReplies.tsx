@@ -129,7 +129,7 @@ export const DecisionQuickRepliesActionEdge = (
 
   return (
     <div key={id}>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style} />
+      <BaseEdge id={id} path={edgePath} />
       <EdgeLabelRenderer>
         <div
           style={{

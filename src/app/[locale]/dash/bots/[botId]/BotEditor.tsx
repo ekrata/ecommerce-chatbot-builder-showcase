@@ -8,20 +8,21 @@ import 'reactflow/dist/style.css';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
-  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import {
-  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
-  useState
+    createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
+    useState
 } from 'react';
 import { BiLoaderAlt, BiRedo, BiTrash, BiUndo } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-  addEdge, Background, BackgroundVariant, Connection, Controls, Edge, EdgeTypes, MiniMap, Node,
-  NodeTypes, OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance,
-  ReactFlowProvider, useEdges, useEdgesState, useNodesState, useOnSelectionChange
+    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+    Controls, Edge, EdgeTypes, MiniMap, Node, NodeTypes, OnConnectStartParams,
+    OnSelectionChangeParams, Panel, ReactFlowInstance, ReactFlowProvider, useEdges, useEdgesState,
+    useNodesState, useOnSelectionChange
 } from 'reactflow';
 import { useDebounce, useOnClickOutside } from 'usehooks-ts';
 
@@ -34,7 +35,7 @@ import { useHistoryState } from '@uidotdev/usehooks';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import {
-  actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, triggerNode
+    actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, triggerNode
 } from './collections';
 import { updateNodes } from './nodes/updateNodes';
 import { onDragStart } from './onDragStart';
@@ -75,8 +76,17 @@ export const BotEditor: React.FC = () => {
 
   const [nodeMenuState, setNodeMenuState] = useState<NodeMenuState>('')
 
-  const [nodes, setNodes, onNodesChange] = useNodesState();
-  const [edges, setEdges, onEdgesChange] = useEdgesState();
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
+
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    []
+  );
 
   // const { state, set, undo, redo, clear, canUndo, canRedo } = useHistoryState<{ nodes: Node[], edges: Edge[] }>({
   //   ...nodes,
@@ -86,15 +96,15 @@ export const BotEditor: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
 
 
-  useEffect(() => {
-    if (Array.isArray(botQuery?.data?.nodes)) {
-      setNodes([...botQuery?.data?.nodes])
-      console.log(nodes)
-    }
-    if (Array.isArray(botQuery?.data?.edges)) {
-      setEdges([...(botQuery?.data?.edges)])
-    }
-  }, [botQuery?.dataUpdatedAt])
+  // useEffect(() => {
+  //   if (botQuery?.data?.nodes != null && Array.isArray(botQuery?.data?.nodes)) {
+  //     setNodes([...botQuery?.data?.nodes])
+  //     console.log(nodes)
+  //   }
+  //   if (botQuery?.data?.edges != null && Array.isArray(botQuery?.data?.edges)) {
+  //     setEdges([...(botQuery?.data?.edges)])
+  //   }
+  // }, [botQuery?.dataUpdatedAt])
 
   const connectionLineStyle: React.CSSProperties = {
     display: 'flex',
@@ -113,8 +123,6 @@ export const BotEditor: React.FC = () => {
   const onDragOver = useCallback((event: any) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-    console.log(nodes)
-    console.log(edges)
   }, []);
 
   const onPaneClick = () => {
@@ -139,7 +147,6 @@ export const BotEditor: React.FC = () => {
       }) ?? { x: 0, y: 0 }
 
 
-      console.log(type)
       const newNode: Node = {
         id: getId(),
         type,
@@ -148,7 +155,9 @@ export const BotEditor: React.FC = () => {
       };
 
 
-      setNodes((nds) => nds.concat(newNode));
+      console.log(nodes)
+      setNodes([...nodes, newNode]);
+      console.log(nodes)
       setSelectedNode(newNode as Node)
     },
     [reactFlowInstance]
@@ -219,10 +228,6 @@ export const BotEditor: React.FC = () => {
   //   setEdges(edges)
   //   console.log('real now: ', nodes)
   // }, [redo, undo])
-
-  useEffect(() => {
-    console.log(edges)
-  }, [edges])
 
   const renderNodeForm = useCallback(() => {
     if (selectedNode) {

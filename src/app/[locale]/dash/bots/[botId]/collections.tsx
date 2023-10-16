@@ -46,12 +46,12 @@ export const nodeTypes: NodeTypes = {
   [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
 };
 
-export const connectionLineComponent = (node: Node): ConnectionLineComponent | undefined => {
-  switch (node.type) {
-    case Action.DecisionQuickReplies:
-      return DecisionQuickRepliesActionConnection
-  }
-}
+// export const connectionLineComponent = (node: Node): ConnectionLineComponent | undefined => {
+//   switch (node.type) {
+//     case Action.DecisionQuickReplies:
+//       return DecisionQuickRepliesActionConnection
+//   }
+// }
 
 export const edgeTypes: EdgeTypes = {
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionEdge,
