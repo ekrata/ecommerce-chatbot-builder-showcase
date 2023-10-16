@@ -1,17 +1,19 @@
+import 'reactflow/dist/style.css';
+
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, EdgeLabelRenderer,
-  EdgeProps, getBezierPath, Handle, Node, Position, useEdges, useNodeId, useNodes
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, EdgeLabelRenderer,
+    EdgeProps, getBezierPath, Handle, Node, Position, useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 
@@ -76,7 +78,7 @@ export const DecisionQuickRepliesActionConnection: ConnectionLineComponent = ({
   );
 };
 
-export const DecisionQuickRepliesActionEdge = (
+export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
   {
     id,
     sourceX,
@@ -87,7 +89,7 @@ export const DecisionQuickRepliesActionEdge = (
     targetPosition,
     style = {},
     markerEnd,
-  }: EdgeProps) => {
+  }) => {
   const edges = useEdges()
   const nodes = useNodes()
   const [edgePath, labelX, labelY] = getBezierPath({
@@ -127,25 +129,30 @@ export const DecisionQuickRepliesActionEdge = (
 
   }, [edges])
 
+  console.log(edgePath)
   return (
-    <div key={id}>
-      <BaseEdge id={id} path={edgePath} />
+    < >
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style} />
       <EdgeLabelRenderer>
         <div
           style={{
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             fontSize: 12,
+            border: 2,
+            padding: 10,
+            borderRadius: 5,
+            pointerEvents: 'all',
+            fontWeight: 700,
             // everything inside EdgeLabelRenderer has no pointer events by default
             // if you have an interactive element, set pointer-events: all
-            pointerEvents: 'all',
           }}
-          className="nodrag nopan"
+          className=" nodrag nopan"
         >
           {label}
         </div>
       </EdgeLabelRenderer>
-    </div>
+    </>
   );
 }
 

@@ -154,13 +154,10 @@ export const BotEditor: React.FC = () => {
         position,
       };
 
-
-      console.log(nodes)
       setNodes([...nodes, newNode]);
-      console.log(nodes)
       setSelectedNode(newNode as Node)
     },
-    [reactFlowInstance]
+    [reactFlowInstance, nodes, edges]
   );
 
   const onSelectionChange = (params: OnSelectionChangeParams): void => {
@@ -189,7 +186,7 @@ export const BotEditor: React.FC = () => {
         label: 'new edge'
       }, eds)
     }
-  }), []);
+  }), [nodes, edges]);
 
   const updateBotMut = useUpdateBotMut(orgId)
 

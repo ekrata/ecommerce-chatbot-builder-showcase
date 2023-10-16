@@ -1,20 +1,22 @@
+import 'reactflow/dist/style.css';
+
 import {
-  Action, VisitorBotInteractionTrigger
+    Action, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { ConnectionLineComponent, EdgeTypes, Node, NodeTypes } from 'reactflow';
+import { EdgeTypes, Node, NodeTypes } from 'reactflow';
 
 import { Actions, Conditions, Triggers } from '@/entities/bot';
 
-import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
+import { nodeSubTypeIcons } from '../nodeSubTypeIcons';
 import {
-  DecisionQuickRepliesActionConnection, DecisionQuickRepliesActionEdge,
-  DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
+    DecisionQuickRepliesActionConnection, DecisionQuickRepliesActionEdge,
+    DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
 } from './nodes/actions/DecisionQuickReplies';
 import {
-  SendAChatMessageActionForm, SendAChatMessageActionNode
+    SendAChatMessageActionForm, SendAChatMessageActionNode
 } from './nodes/actions/SendAChatMessage';
 import {
-  VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
+    VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
 import { onDragStart } from './onDragStart';
 
@@ -55,7 +57,6 @@ export const nodeTypes: NodeTypes = {
 
 export const edgeTypes: EdgeTypes = {
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionEdge,
-
 }
 
 
