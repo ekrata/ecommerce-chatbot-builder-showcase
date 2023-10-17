@@ -27,6 +27,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEdgeContext, useInteractionContext, useNodeContext } from '../../BotEditor';
 import { actionNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
+import { createTargetHandles } from '../shared/createTargetHandles';
 import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';
 import { getNextUnusedLabel } from '../shared/getNextUnusedLabel';
 import { TextareaField } from '../shared/TextareaField';
@@ -61,98 +62,86 @@ export const DecisionQuickRepliesActionNode = (node: Node) => {
   const hasTooManyConnections: boolean = useMemo(() => nodeEdges?.length > node?.data?.quickReplies?.length, [nodeEdges?.length, node]);
 
   // const removeEdgeOnDecisionDelete
-  useEffect(() => {
-    if (nodeEdges?.length > node?.data?.quickReplies?.length) {
-      console.log(nodeEdges)
-      const allLabels = node?.data?.quickReplies?.map((reply, i) => `${reply}`)
-      const oldLabels = nodeEdges.map((edge) => edge?.data?.label)
-      // remove edge where the label can no longer be created from quickReplies ()
-      console.log(allLabels, nodeEdges.map((edge) => edge?.data?.label), oldLabels)
+  // useEffect(() => {
+  //   console.log('in')
+  //   if (nodeEdges?.length >= node?.data?.quickReplies?.length) {
+  //     console.log(nodeEdges)
+  //     const allLabels = node?.data?.quickReplies?.map((reply, i) => `${reply}`)
+  //     const oldLabels = nodeEdges.filter((edge) => edge?.source)?.map((edge) => edge?.data?.label)
+  //     console.log('oldlabels', oldLabels)
 
-      // deincrement node target labels on delete
-      const remainingEdges = nodeEdges.filter((edge) => allLabels.includes(edge?.data?.label))
-      // get index where edge was removed, indexes higher need to be deincremented by 1
-      const edgeRemovedIndex = oldLabels.findIndex((oldLabel) => !allLabels.includes(oldLabel))
-      console.log(edgeRemovedIndex)
-      // can assume this will always be one, as length change will retrigger
-      const edgeDelta = nodeEdges.length - remainingEdges.length
+  //     // if there are no node edges defined, we don't have to transpose and can just remove the last nodeEdge
+  //     if (!oldLabels.length) {
+  //       console.log(edges)
+  //       setEdges([...edges.filter((edge) => edge.target !== node?.id)])
+  //       console.log(edges)
+  //       return
+  //     }
+  //     // remove edge where the label can no longer be created from quickReplies ()
+  //     console.log(allLabels, nodeEdges.map((edge) => edge?.data?.label), oldLabels)
 
-
-      // ie. 1a, 1b, 2a
-      // remove 1b
-      // becomes 1a, 1b
-      // deincrement target handle id
-      console.log(nodeEdges?.slice(edgeRemovedIndex + 1))
-      console.log(nodeEdges?.slice(0, edgeRemovedIndex))
-      const newNodeEdges = [...nodeEdges?.slice(0, edgeRemovedIndex), ...nodeEdges?.slice(edgeRemovedIndex + 1)].map((edge, i) => {
-        console.log('hiii')
-        if (edge?.targetHandle) {
-          // const num = parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10)
-          // const letter = edge?.targetHandle?.replace(/[0-9]/g, '') as 'a' | 'b'
-          // console.log(num, letter)
-          // const labelText = edge?.data?.label.split(': ')[1]
-          // preventing deincrementing the first index
-          const pairIndex = (i + 1) > 1 ? Math.round((i + 1) / 2) : 1
-          console.log(i, pairIndex)
-          if (i % 2 == 0) {
-            const newId = `${pairIndex}a`
-            console.log(newId)
-            return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
-          }
-          else {
-            const newId = `${pairIndex}b`
-            console.log(newId)
-            console.log(edge?.targetHandle, newId, edge.id.replace(edge?.targetHandle, newId))
-            return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
-          }
-        }
-      })
-      console.log(newNodeEdges)
-      // old node edges ids 
-      const oldNodeEdgesIds = nodeEdges.map((edge) => edge.id)
+  //     // deincrement node target labels on delete
+  //     const remainingEdges = nodeEdges.filter((edge) => allLabels.includes(edge?.data?.label))
+  //     // get index where edge was removed, indexes higher need to be deincremented by 1
+  //     const edgeRemovedIndex = oldLabels.findIndex((oldLabel) => !allLabels.includes(oldLabel))
+  //     console.log(edgeRemovedIndex)
+  //     // can assume this will always be one, as length change will retrigger
+  //     const edgeDelta = nodeEdges.length - remainingEdges.length
 
 
+  //     // ie. 1a, 1b, 2a
+  //     // remove 1b
+  //     // becomes 1a, 1b
+  //     // deincrement target handle id
+  //     console.log(nodeEdges?.slice(edgeRemovedIndex + 1))
+  //     console.log(nodeEdges?.slice(0, edgeRemovedIndex))
+  //     const newNodeEdges = [...nodeEdges?.slice(0, edgeRemovedIndex), ...nodeEdges?.slice(edgeRemovedIndex + 1)].map((edge, i) => {
+  //       console.log('hiii')
+  //       if (edge?.targetHandle) {
+  //         // const num = parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10)
+  //         // const letter = edge?.targetHandle?.replace(/[0-9]/g, '') as 'a' | 'b'
+  //         // console.log(num, letter)
+  //         // const labelText = edge?.data?.label.split(': ')[1]
+  //         // preventing deincrementing the first index
+  //         const pairIndex = (i + 1) > 1 ? Math.round((i + 1) / 2) : 1
+  //         console.log(i, pairIndex)
+  //         if (i % 2 == 0) {
+  //           const newId = `${pairIndex}a`
+  //           console.log(newId)
+  //           return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
+  //         }
+  //         else {
+  //           const newId = `${pairIndex}b`
+  //           console.log(newId)
+  //           console.log(edge?.targetHandle, newId, edge.id.replace(edge?.targetHandle, newId))
+  //           return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
+  //         }
+  //       }
+  //     })
+  //     console.log(newNodeEdges)
+  //     // old node edges ids 
+  //     const oldNodeEdgesIds = nodeEdges.map((edge) => edge.id)
 
-      // get all edges without old node edges
-      const otherEdges = edges.filter((oldEdge) => !oldNodeEdgesIds.includes(oldEdge.id))
-      console.log(otherEdges, newNodeEdges)
-      const newEdges = [...otherEdges as Edge<unknown>[], ...(newNodeEdges?.length ? newNodeEdges as Edge<unknown>[] : [])].filter(Boolean)
 
-      setEdges(newEdges)
 
-    }
-  }, [node, node?.data?.quickReplies?.length])
+  //     // get all edges without old node edges
+  //     const otherEdges = edges.filter((oldEdge) => !oldNodeEdgesIds.includes(oldEdge.id))
+  //     console.log(otherEdges, newNodeEdges)
+  //     const newEdges = [...otherEdges as Edge<unknown>[], ...(newNodeEdges?.length ? newNodeEdges as Edge<unknown>[] : [])].filter(Boolean)
+
+  //     setEdges(newEdges)
+
+  //   }
+  // }, [node, node?.data?.quickReplies?.length])
   // Add two new target nodes for every quick reply that exists.
   // Allows the user to drag from same visible target handle to the same source handle.
   // hide handle on connect if there is more than one handle so the user cannot connect an already connected handle which leads bugs
-  const renderHandles = useCallback(() => {
-    const updateNodeInternals = useUpdateNodeInternals()
-    // get edges of node
-    const handles = node?.data?.quickReplies?.map((quickReply, i) => {
-      const pairIndex = (i + 1) > 1 ? Math.round((i + 1) / 2) : 1
-      const leftId = `${pairIndex}a`
-      const rightId = `${pairIndex}b`
-      // if edge count 
-
-      const isConnectable = node?.data?.quickReplies?.length >= nodeEdges.length
-      return (
-        <>
-          <Handle type="target" position={Position.Left} isConnectable={isConnectable} id={leftId} className={`w-2 h-2 ${edges?.find((edge) => edge?.targetHandle === leftId) && 'invisible'}`} />
-          <Handle type="target" position={Position.Right} isConnectable={isConnectable} id={rightId} className={`w-2 h-2 ${edges?.find((edge) => edge?.targetHandle === rightId) && 'invisible'}`} />
-        </>
-      )
-    })
-    updateNodeInternals(node?.id)
-    return handles
-
-  }, [node?.data?.quickReplies?.length, node, edges, nodeEdges])
 
   return (
     <div className={`w-16 animate-fade `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
       <NodeWrapper nodeElement={actionNode(Action.DecisionQuickReplies)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
-      {renderHandles()}
-
+      {createTargetHandles(node, nodeEdges, 'quickReplies')}
     </div >
   );
 }
@@ -267,6 +256,7 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
 
 
   const edge = useMemo(() => edges?.find((edge) => edge?.id === id), [edges, id])
+  const node = useMemo(() => nodes.find((node) => node.id === edge?.target), [nodes])
 
   // do not render if 
   const [edgePath, labelX, labelY] = getBezierPath({
@@ -283,32 +273,17 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
 
   // set a node 
   useEffect(() => {
-    if (edge) {
-      const unusedLabel = getNextUnusedLabel(edges, nodes, 'quickReplies', edge)
-      if (unusedLabel != null && edge?.label !== unusedLabel)
-        updateEdges(
-          { ...(edge?.data as object), label: unusedLabel },
-          edge,
-          edges,
-          setEdges,
-        );
-      // check for any edges that are between the same defacto target handle and the exact same source handle
-      // setDuplicateEdges(edges.filter(edgeIteration => {
-      //   console.log(edge)
-      //   // remove the number prefix from the target node id
-      //   const edgeTargetHandleId = edge?.targetHandle?.replace(/[0-9]/g, '');
-      //   const edgeIterationTargetHandleId = edgeIteration?.targetHandle?.replace(/[0-9]/g, '');
+    const edge = edges?.find((edge) => edge?.id === id)
+    const node = nodes?.find((node) => node.id === edge?.target)
+    if (edge?.target) {
+      const unusedLabel = getNextUnusedLabel(edges, edge?.target, node?.data?.quickReplies)
+      if (unusedLabel) {
 
-      //   // build new edge id 
-      //   const newEdgeId = `reactflow__edge-${edge.source}-${edge.target}${edgeTargetHandleId}`
-      //   const iterationEdgeId = `reactflow__edge-${edgeIteration.source}-${edge.target}${edgeIterationTargetHandleId}`
-      //   console.log(newEdgeId, iterationEdgeId)
-
-      //   // filter, get duplicates
-      //   return newEdgeId === iterationEdgeId
-      // }))
+        setEdges([...edges.filter((edge) => edge?.id !== id), { ...edge, data: { label: unusedLabel } }])
+      }
     }
-  }, [edges?.length, id])
+  }, [node?.data?.quickReplies])
+
 
   return (
     <>
@@ -317,7 +292,7 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
         <div
           style={{
             position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 20 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1}px)`,
+            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 2 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1}px)`,
             fontSize: 12,
             padding: 10,
             borderRadius: 5,
@@ -369,6 +344,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
       mode: 'onBlur',
     });
 
+
   const fieldArray = useFieldArray({
     name: 'quickReplies',
     control, // control props comes from useForm (optional: if you are using FormContext)
@@ -376,7 +352,6 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
   const handleClickOutside = () => {
     // Your custom logic here
-    console.log('clicked outside')
     updateNodes(getValues(), node, nodes, setNodes)
   }
 
@@ -402,8 +377,9 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
     updateNodes(values, node, nodes, setNodes)
   }
 
-
-
+  useEffect(() => {
+    handleSubmit(onSubmit)
+  }, [])
 
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
@@ -411,12 +387,12 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
       {/* {tNodes(`Action.DecisionQuickReplies`)} */}
       {/* {node?.id} */}
       {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
-      <TextareaField fieldName={'message'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea' />
+      <TextareaField fieldName={'message'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea' />
       {errors.message && <p className='justify-start text-xs text-red-500'>{errors.message.message}</p>}
       <div className='mb-10 divider'></div>
       {fields.map((field, index) => (
         <>
-          <TextareaField fieldName={'quickReplies'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
+          <TextareaField fieldName={'quickReplies'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
           {errors?.quickReplies?.[index] && <p className='justify-start mb-6 text-xs text-red-500'>{errors?.quickReplies?.[index]?.message}</p>}
         </>
       ))}

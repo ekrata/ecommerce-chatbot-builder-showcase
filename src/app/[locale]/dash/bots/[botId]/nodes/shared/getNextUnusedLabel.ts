@@ -2,45 +2,18 @@ import { Edge, Node } from 'reactflow';
 
 export const getNextUnusedLabel = (
   edges: Edge[],
-  nodes: Node[],
-  arrayName: string,
-  edge?: Edge,
-  targetNodeId?: string,
+  nodeId: string,
+  nodeFormLabels: string[] = [],
 ) => {
-  if (!edge && !targetNodeId) {
-    throw new Error('Please supply an edge or targetNodeId');
-  }
-  // get all edges of target node
-  const nodeEdges = edges.filter(
-    (edgeIteration) =>
-      edgeIteration.targetNode?.id === edge?.targetNode?.id ||
-      edgeIteration.targetNode?.id === targetNodeId,
+  const edgeLabels = edges
+    .filter((edgeIteration) => edgeIteration?.target === nodeId)
+    .map((edge) => edge?.data?.label as string);
+  // get form labels that are not an edge
+  const unusedLabels = (nodeFormLabels ?? [])?.filter(
+    (formLabel) => !edgeLabels.includes(formLabel),
   );
-  const nodeData = nodes.find(
-    (node) => node.id === edge?.target || node.id === targetNodeId,
-  );
-  if (nodeData?.data?.[arrayName]) {
-    // get index of current node
-    const position =
-      nodeEdges?.findIndex((nodeEdge) => nodeEdge.id === edge?.id) ?? 0;
-    if (position < nodeData?.data?.[arrayName].length) {
-      // get unused labels by comparing edges state and allLabels
-      const allLabels = nodeData.data?.[arrayName].map(
-        (reply, i) => `${reply}`,
-      );
-      const existingLabels = nodeEdges.map(({ data }) => data?.label);
-      const unusedLabels = allLabels.filter(
-        (label) => !existingLabels.includes(label),
-      );
-
-      // if there are still unassigned labels, assign the firstmost label
-      if (unusedLabels.length) {
-        return unusedLabels?.[0];
-      } else {
-        return undefined;
-      }
-      // updateEdge(edgeData, `${position + 1}: ${nodeData?.data?.quickReplies[position]}`, + 1}: ${ nodeData?.data?.quickReplies[position] } `
-    }
+  console.log(unusedLabels);
+  if (unusedLabels?.length) {
+    return unusedLabels[0];
   }
-  return undefined;
 };

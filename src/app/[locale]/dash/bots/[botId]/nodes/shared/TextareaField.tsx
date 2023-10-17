@@ -1,7 +1,7 @@
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { snakeCase } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { FormEventHandler, useId, useReducer, useRef, useState } from 'react';
+import { FormEventHandler, useEffect, useId, useReducer, useRef, useState } from 'react';
 import {
     Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
     UseFormRegister, UseFormSetValue, useWatch
@@ -9,14 +9,18 @@ import {
 import { BiCodeCurly } from 'react-icons/bi';
 import { BsX } from 'react-icons/bs';
 import { HiOutlineEmojiHappy } from 'react-icons/hi';
+import { Node, useEdges } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
+
+import { useEdgeContext } from '../../BotEditor';
 
 interface Props<T extends FieldValues> {
   fieldArray?: UseFieldArrayReturn<T, never, "id">,
   fieldName: string,
   index?: number,
-  handleSubmit: FormEventHandler<HTMLFormElement> | undefined,
+  node: Node,
   control: Control<T, any>,
+  handleSubmit: FormEventHandler<HTMLFormElement> | undefined,
   setValue: UseFormSetValue<T>
   register: UseFormRegister<T>,
   textareaStyle?: string
@@ -38,7 +42,8 @@ interface Props<T extends FieldValues> {
  * @param {Control<T, any>} param0.control
  * @returns {*}
  */
-export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, setValue, index, register, handleSubmit, control, textareaStyle }: Props<T>) {
+export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, node, setValue, index, register, handleSubmit, control, textareaStyle }: Props<T>) {
+  const [edges, setEdges] = useEdgeContext()
   const name = index != null ? `${fieldName}.${index}` as Path<T> : fieldName as Path<T>
   const data = useWatch({
     control,
@@ -66,6 +71,10 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, se
       setValue('message' as Path<T>, contactField as PathValue<T, Path<T>>)
     }
   }
+
+  useEffect(() => {
+    handleSubmit?.(event)
+  }, [])
 
   return (
     <div className='w-full bg-gray-200 h-22 group form-control textarea textarea-sm'>
@@ -104,6 +113,10 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, se
           <BsX onClick={(event) => {
             if (index != null && fieldArray) {
               fieldArray.remove(index)
+              console.log(data)
+              console.log(edges)
+              setEdges(edges.filter((edge) => edge?.data?.label !== data || edge.target !== node.id))
+              console.log(edges)
               handleSubmit?.(event)
             }
           }} className='invisible text-xl cursor-pointer group-hover:visible' />

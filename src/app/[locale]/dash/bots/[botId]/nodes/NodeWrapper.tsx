@@ -31,7 +31,7 @@ export const NodeWrapper: React.FC<Props> = ({ nodeElement, nodeName, hasErrors,
         </div>
       }
       {hasTooManyConnections &&
-        <div className="z-10 text-sm tooltip tooltip-warning" data-tip={tBots("This node has connections that are cannot be triggered. Add more output nodes(such as decisions), to fix this")}>
+        <div className="z-10 text-sm tooltip tooltip-warning" data-tip={tBots("This node has connections that are cannot be triggered, add more output nodes(such as decisions), to fix this")}>
           <span className="mt-1 shadow-2xl indicator-item indicator-end badge badge-warning"><BiSolidError /></span>
         </div>
       }

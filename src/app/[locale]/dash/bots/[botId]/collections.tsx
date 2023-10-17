@@ -66,7 +66,10 @@ export const renderConnectionLine = (params: ConnectionLineComponentProps, edges
   if (params?.fromNode?.id && params?.fromNode?.type) {
     switch (params?.fromNode?.type) {
       case Action.DecisionQuickReplies: {
-        const unusedLabel = getNextUnusedLabel(edges, nodes, 'quickReplies', undefined, params?.fromNode?.id)
+        const nodeFormLabels = params?.fromNode?.data?.quickReplies
+        console.log(nodeFormLabels)
+        const unusedLabel = getNextUnusedLabel(edges, params?.fromNode?.id, nodeFormLabels)
+        console.log(edges)
         if (unusedLabel) {
           return <DecisionQuickRepliesActionConnection params={params} label={unusedLabel} />
         }
