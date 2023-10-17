@@ -8,13 +8,12 @@ import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-    useNodeId, useNodes, useUpdateNodeInternals
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, EdgeLabelRenderer,
+    EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 
@@ -25,8 +24,6 @@ import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { useEdgeContext, useInteractionContext, useNodeContext } from '../../BotEditor';
 import { actionNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
-import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';
-import { getNextUnusedLabel } from '../shared/getNextUnusedLabel';
 import { TextareaField } from '../shared/TextareaField';
 import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
@@ -40,51 +37,21 @@ type FormValues = {
 
 type NodeData = FormValues & FieldErrors<FormValues>
 
-export const DecisionQuickRepliesActionNode = (node: Node) => {
+export const AskAQuestionActionNode = (node: Node) => {
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
 
-  // prevent nodes from connecting when edge count exceeds quick reply decision count.
-  const nodeEdges = useMemo<Edge[]>(() => (
-    edges?.filter((edge) => edge?.target === node.id)
-  ), [edges])
-
   const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.quickReplies?.some((quickReply: object | undefined) => quickReply)
-
-
-  // Add two new target nodes for every quick reply that exists.
-  // Allows the user to drag from same visible target handle to the same source handle.
-  // hide handle on connect if there is more than one handle so the user cannot connect an already connected handle which leads bugs
-  const renderHandles = useCallback(() => {
-    const updateNodeInternals = useUpdateNodeInternals()
-    // get edges of node
-    const handles = node?.data?.quickReplies?.map((quickReply, i) => {
-      const leftId = `${i}a`
-      const rightId = `${i}b`
-      // if edge count 
-
-      return (
-        <>
-          <Handle type="target" position={Position.Left} isConnectable={node?.data?.quickReplies?.length > nodeEdges.length} id={leftId} className={`w-2 h-2 ${edges.find((edge) => edge.targetHandle === leftId) && 'invisible'}`} />
-          <Handle type="target" position={Position.Right} isConnectable={node?.data?.quickReplies?.length > nodeEdges.length} id={rightId} className={`w-2 h-2 ${edges.find((edge) => edge.targetHandle === rightId) && 'invisible'}`} />
-        </>
-      )
-    })
-    updateNodeInternals(node?.id)
-    return handles
-
-  }, [node?.data?.quickReplies?.length, edges, nodeEdges])
 
   return (
     <div className={`w-16 animate-fade `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
-      <NodeWrapper nodeElement={actionNode(Action.DecisionQuickReplies)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} />
-      {renderHandles()}
-
+      <NodeWrapper nodeElement={actionNode(Action.AskAQuestion)} nodeName={tNodes(`Action.AskAQuestion`)} hasErrors={hasErrors} />
+      <Handle type="target" position={Position.Left} id="a" className='w-2 h-2' />
+      <Handle type="target" position={Position.Right} id="b" className='w-2 h-2' />
     </div >
   );
 }
-
 const resolver: Resolver<FormValues> = async (values) => {
   const errors: FieldErrors<FormValues> = { message: undefined, quickReplies: [] }
   if (!values?.message) {
@@ -119,63 +86,54 @@ const resolver: Resolver<FormValues> = async (values) => {
   }
 }
 
-interface ConnectionProps {
-  params: ConnectionLineComponentProps,
-  label: string
-}
 
-export const DecisionQuickRepliesActionConnection: FC<ConnectionProps> = (props) => {
-  if (props?.params) {
-    const { params } = props
-    if (params?.fromX && params?.fromY && params?.fromPosition && params?.toX && params?.toY && params?.toPosition) {
-      const {
-        fromX,
-        fromY,
-        fromPosition,
-        toX,
-        toY,
-        toPosition,
-        connectionLineStyle
-      } = params
-      const [edgePath, labelX, labelY] = getBezierPath({
-        sourceX: fromX ?? 0,
-        sourceY: fromY ?? 0,
-        sourcePosition: fromPosition ?? 0,
-        targetX: toX ?? 0,
-        targetY: toY ?? 0,
-        targetPosition: toPosition ?? 0,
-      });
-
-      return (
-        <>
-          {edgePath && <BaseEdge path={edgePath} style={connectionLineStyle} />}
-          <EdgeLabelRenderer>
-            <div
-              style={{
-                position: 'absolute',
-                transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-                fontSize: 12,
-                padding: 10,
-                borderRadius: 5,
-                pointerEvents: 'all',
-                fontWeight: 700,
-                // everything inside EdgeLabelRenderer has no pointer events by default
-                // if you have an interactive element, set pointer-events: all
-              }}
-              className=" nodrag nopan"
-            >
-              {props?.label}
-            </div>
-          </EdgeLabelRenderer>
-          {/* <circle cx={toX} cy={toY} fill="#222" r={3} stroke="#222" strokeWidth={1.5} /> */}
-        </>
-      );
-    }
-  }
-  return null
+export const AskAQuestionActionConnection: ConnectionLineComponent = ({
+  fromX,
+  fromY,
+  fromPosition,
+  toX,
+  toY,
+  toPosition,
+  connectionLineType,
+  connectionLineStyle,
+}) => {
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX: fromX,
+    sourceY: fromY,
+    sourcePosition: fromPosition,
+    targetX: toX,
+    targetY: toY,
+    targetPosition: toPosition,
+  });
+  return (
+    <>
+      <BaseEdge path={edgePath} style={connectionLineStyle} />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
+            fontSize: 12,
+            padding: 10,
+            borderRadius: 5,
+            pointerEvents: 'all',
+            fontWeight: 700,
+            // everything inside EdgeLabelRenderer has no pointer events by default
+            // if you have an interactive element, set pointer-events: all
+          }}
+          className=" nodrag nopan"
+        >
+          adjasjdasjk
+          {/* {label} */}
+          {/* {edge?.data?.label} */}
+        </div>
+      </EdgeLabelRenderer>
+      <circle cx={toX} cy={toY} fill="#222" r={3} stroke="#222" strokeWidth={1.5} />
+    </>
+  );
 };
 
-export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
+export const AskAQuestionActionEdge: FC<EdgeProps> = (
   {
     id,
     sourceX,
@@ -188,12 +146,6 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
     markerEnd,
   }) => {
   const nodes = useNodes()
-  const [edges, setEdges] = useEdgeContext()
-  const [label, setLabel] = useState<string>('')
-
-
-  const edge = edges.find((edge) => edge.id === id)
-  // do not render if 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -201,36 +153,42 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
     targetX,
     targetY,
     targetPosition,
-    // increase curvurture to differentiate duplicated edges
-    curvature: 0.5 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1,
   });
+  const [edges, setEdges] = useEdgeContext()
+
+  const duplicateEdges = () => {
+    return edges.filter((edge) => {
+      console.log(edge, sourceX, sourceY)
+      return (edge?.sourceNode?.position.x === sourceX && edge?.sourceNode?.position.y === sourceY && edge?.targetNode?.position.x === targetX && edge?.targetNode?.position.y === targetY)
+    })
+  }
+
+  const edge = edges.find((edge) => edge.id === id)
+  const [label, setLabel] = useState<string>('')
 
 
   // set a node 
   useEffect(() => {
-    if (edge) {
-      const unusedLabel = getNextUnusedLabel(edges, nodes, 'quickReplies', edge)
-      updateEdges(
-        { ...(edge?.data as object), label: unusedLabel },
-        edge,
-        edges,
-        setEdges,
-      );
-      // check for any edges that are between the same defacto target handle and the exact same source handle
-      // setDuplicateEdges(edges.filter(edgeIteration => {
-      //   console.log(edge)
-      //   // remove the number prefix from the target node id
-      //   const edgeTargetHandleId = edge?.targetHandle?.replace(/[0-9]/g, '');
-      //   const edgeIterationTargetHandleId = edgeIteration?.targetHandle?.replace(/[0-9]/g, '');
+    // get all edges of target node
+    const nodeEdges = edges.filter((edge) => edge.targetNode?.id === edge?.targetNode?.id)
+    const nodeData = nodes.find((node) => node.id === edge?.target)
+    if (nodeData?.data?.quickReplies) {
+      const edgeCount = nodeEdges.length
+      // get index of current node
+      const position = nodeEdges?.findIndex((nodeEdge) => nodeEdge.id === id)
+      if (position < nodeData?.data?.quickReplies.length && edge) {
 
-      //   // build new edge id 
-      //   const newEdgeId = `reactflow__edge-${edge.source}-${edge.target}${edgeTargetHandleId}`
-      //   const iterationEdgeId = `reactflow__edge-${edgeIteration.source}-${edge.target}${edgeIterationTargetHandleId}`
-      //   console.log(newEdgeId, iterationEdgeId)
+        // get unused labels by comparing edges state and allLabels
+        const allLabels = nodeData.data?.quickReplies.map((reply, i) => `${i + 1}: ${reply}`)
+        const existingLabels = nodeEdges.map(({ data }) => data?.label)
+        const unusedLabels = allLabels.filter((label) => !existingLabels.includes(label))
 
-      //   // filter, get duplicates
-      //   return newEdgeId === iterationEdgeId
-      // }))
+        // if there are still unassigned labels, assign the firstmost label
+        if (unusedLabels.length) {
+          updateEdges({ ...edge?.data as object, label: unusedLabels?.[0] }, edge, edges, setEdges)
+        }
+        // updateEdge(edgeData, `${position + 1}: ${nodeData?.data?.quickReplies[position]}`, + 1}: ${ nodeData?.data?.quickReplies[position] } `
+      }
     }
   }, [])
 
@@ -241,7 +199,7 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
         <div
           style={{
             position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 20 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1}px)`,
+            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             fontSize: 12,
             padding: 10,
             borderRadius: 5,
@@ -249,7 +207,6 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
             fontWeight: 700,
             // everything inside EdgeLabelRenderer has no pointer events by default
             // if you have an interactive element, set pointer-events: all
-            // change curv
           }}
           className=" nodrag nopan"
         >
@@ -266,7 +223,7 @@ interface Props {
   node: Node
 }
 
-export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
+export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
   const tNodes = useTranslations('dash.bots.nodes')
   const tDash = useTranslations('dash.bots')
   const [operatorSession] = useAuthContext()
@@ -276,7 +233,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
   const botId = params?.botId as string
   const ref = useRef(null)
 
-  const tForm = useTranslations("dash.bots.ActionForms.DecisionQuickReplies")
+  const tForm = useTranslations("dash.bots.ActionForms.AskAQuestion")
   const { register,
     handleSubmit,
     control,
@@ -327,13 +284,10 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
   }
 
 
-
-
-
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
-      {/* {actionNode(Action.DecisionQuickReplies)} */}
-      {/* {tNodes(`Action.DecisionQuickReplies`)} */}
+      {/* {actionNode(Action.AskAQuestion)} */}
+      {/* {tNodes(`Action.AskAQuestion`)} */}
       {/* {node?.id} */}
       {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
       <TextareaField fieldName={'message'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea' />

@@ -20,9 +20,9 @@ import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
     addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-    Controls, Edge, EdgeTypes, MiniMap, Node, NodeTypes, OnConnectStartParams,
-    OnSelectionChangeParams, Panel, ReactFlowInstance, ReactFlowProvider, useEdges, useEdgesState,
-    useNodesState, useOnSelectionChange
+    ConnectionLineComponent, Controls, Edge, EdgeTypes, MiniMap, Node, NodeTypes,
+    OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance, ReactFlowProvider,
+    useEdges, useEdgesState, useNodesState, useOnSelectionChange
 } from 'reactflow';
 import { useDebounce, useOnClickOutside } from 'usehooks-ts';
 
@@ -35,8 +35,11 @@ import { useHistoryState } from '@uidotdev/usehooks';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import {
-    actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, triggerNode
+    actionNode, conditionNode, connectionLineTypes, edgeTypes, getConnectionLineComponent, NodeForm,
+    nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
+import { DecisionQuickRepliesActionConnection } from './nodes/actions/DecisionQuickReplies';
+import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import { updateNodes } from './nodes/updateNodes';
 import { onDragStart } from './onDragStart';
 
@@ -94,6 +97,7 @@ export const BotEditor: React.FC = () => {
   // });
 
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+  const [connectionLineComponent, setConnectionLineComponent] = useState<ConnectionLineComponent | undefined>(undefined);
 
 
   // useEffect(() => {
@@ -112,11 +116,13 @@ export const BotEditor: React.FC = () => {
   }
 
   const onConnectStart = useCallback((event: _, params: OnConnectStartParams) => {
-    console.log(params)
-
-    // find node drag started at
-    // const node = nodes.find((node) => node.id === params.nodeId)
-  }, [])
+    const node = nodes.find((node) => node.id === params.nodeId)
+    if (node?.type) {
+      setConnectionLineComponent(connectionLineTypes[node?.type as string])
+    } else {
+      setConnectionLineComponent(undefined)
+    }
+  }, [nodes, edges])
 
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
 
@@ -170,11 +176,7 @@ export const BotEditor: React.FC = () => {
   }
 
   const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => {
-    console.log('hiii', params)
-    console.log(nodes)
     const nodeTarget = nodes?.find((node) => node.id === params?.target)
-    console.log(nodeTarget)
-    console.log(edgeTypes)
     if (nodeTarget?.type) {
       return addEdge({
         ...params,
@@ -187,6 +189,10 @@ export const BotEditor: React.FC = () => {
       }, eds)
     }
   }), [nodes, edges]);
+
+  useEffect(() => {
+    console.log(edges)
+  }, [edges])
 
   const updateBotMut = useUpdateBotMut(orgId)
 
@@ -288,8 +294,8 @@ export const BotEditor: React.FC = () => {
                 edgeTypes={edgeTypes}
                 onPaneClick={onPaneClick}
                 attributionPosition='bottom-left'
-                // onConnectStart={onConnectStart}
-                // connectionLineComponent={ }
+                onConnectStart={onConnectStart}
+                connectionLineComponent={(params) => renderConnectionLine(params, edges, nodes)}
                 fitView
                 className=""
                 ref={ref}

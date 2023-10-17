@@ -3,7 +3,11 @@ import 'reactflow/dist/style.css';
 import {
     Action, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { EdgeTypes, Node, NodeTypes } from 'reactflow';
+import { ComponentType, ReactElement } from 'react';
+import {
+    ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
+    Node, NodeTypes
+} from 'reactflow';
 
 import { Actions, Conditions, Triggers } from '@/entities/bot';
 
@@ -15,6 +19,7 @@ import {
 import {
     SendAChatMessageActionForm, SendAChatMessageActionNode
 } from './nodes/actions/SendAChatMessage';
+import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
     VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
@@ -48,12 +53,28 @@ export const nodeTypes: NodeTypes = {
   [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
 };
 
-// export const connectionLineComponent = (node: Node): ConnectionLineComponent | undefined => {
-//   switch (node.type) {
-//     case Action.DecisionQuickReplies:
-//       return DecisionQuickRepliesActionConnection
-//   }
-// }
+
+
+export const connectionLineTypes: {
+  [key: string]: ComponentType<ConnectionLineComponentProps>;
+} = {
+  [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionConnection,
+}
+
+
+export const renderConnectionLine = (params: ConnectionLineComponentProps, edges: Edge[], nodes: Node[]) => {
+  if (params?.fromNode?.id && params?.fromNode?.type) {
+    switch (params?.fromNode?.type) {
+      case Action.DecisionQuickReplies: {
+        const unusedLabel = getNextUnusedLabel(edges, nodes, 'quickReplies', undefined, params?.fromNode?.id)
+        if (unusedLabel) {
+          return <DecisionQuickRepliesActionConnection params={params} label={unusedLabel} />
+        }
+      }
+    }
+  }
+  return null
+}
 
 export const edgeTypes: EdgeTypes = {
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionEdge,

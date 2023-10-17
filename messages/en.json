@@ -305,6 +305,14 @@
           "addQuickReply": "Add quick reply",
           "facebookCatch": "Please note: Facebook Messenger displays shorter buttons. Replies with text longer than 20 characters will be shortened to 20 characters.",
           "transferToOperatorMessage": "The transfer to operator message is sent to a visitor when they reply to a question with a text, instead of choosing one of the decision buttons"
+        },
+        "AskAQuestion": {
+          "questionForTheUser": "Hi 👋 Would you like to take a closer look at our offer?",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "addQuickReply": "Add quick reply",
+          "facebookCatch": "Please note: Facebook Messenger displays shorter buttons. Replies with text longer than 20 characters will be shortened to 20 characters.",
+          "transferToOperatorMessage": "The transfer to operator message is sent to a visitor when they reply to a question with a text, instead of choosing one of the decision buttons"
         }
       },
       "TriggerForms": {

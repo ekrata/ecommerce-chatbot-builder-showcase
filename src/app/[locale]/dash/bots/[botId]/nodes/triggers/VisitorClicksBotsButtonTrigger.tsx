@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import {
-  Action, VisitorBotInteractionTrigger
+    Action, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useEffect, useMemo, useRef } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';

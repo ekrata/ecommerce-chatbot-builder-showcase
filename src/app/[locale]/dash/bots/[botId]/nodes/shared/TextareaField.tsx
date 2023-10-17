@@ -3,8 +3,8 @@ import { snakeCase } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { FormEventHandler, useId, useReducer, useRef, useState } from 'react';
 import {
-  Control, Controller, FieldArray, FieldValues, Path, UseFieldArrayReturn, UseFormRegister,
-  useWatch
+    Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
+    UseFormRegister, UseFormSetValue, useWatch
 } from 'react-hook-form';
 import { BiCodeCurly } from 'react-icons/bi';
 import { BsX } from 'react-icons/bs';
@@ -12,26 +12,43 @@ import { HiOutlineEmojiHappy } from 'react-icons/hi';
 import { useOnClickOutside } from 'usehooks-ts';
 
 interface Props<T extends FieldValues> {
-  fieldArray: UseFieldArrayReturn<T, never, "id">,
+  fieldArray?: UseFieldArrayReturn<T, never, "id">,
   fieldName: string,
-  index: number,
+  index?: number,
   handleSubmit: FormEventHandler<HTMLFormElement> | undefined,
   control: Control<T, any>,
+  setValue: UseFormSetValue<T>
   register: UseFormRegister<T>,
+  textareaStyle?: string
 }
 
-export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, index, register, handleSubmit, control }: Props<T>) {
+/**
+ * fieldArray and index need to be passed for fieldArray fields, leave undefined for a standard a field
+ *
+ * @date 16/10/2023 - 22:28:02
+ *
+ * @export
+ * @template {FieldValues} T
+ * @param {Props<T>} param0
+ * @param {UseFieldArrayReturn<T, never, "id">} param0.fieldArray
+ * @param {string} param0.fieldName
+ * @param {number} param0.index
+ * @param {UseFormRegister<T>} param0.register
+ * @param {*} param0.handleSubmit
+ * @param {Control<T, any>} param0.control
+ * @returns {*}
+ */
+export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, setValue, index, register, handleSubmit, control, textareaStyle }: Props<T>) {
+  const name = index != null ? `${fieldName}.${index}` as Path<T> : fieldName as Path<T>
   const data = useWatch({
     control,
-    name: `${fieldName}.${index}` as Path<T>
+    name
   });
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const tOperator = useTranslations('dash.operator');
   const ref = useRef(null)
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
-  const [fieldValue, setFieldValue] = useState<string>();
-  const { fields, append, update, prepend, remove, swap, move, insert, } = fieldArray
 
   const handleClickOutside = () => {
     // Your custom logic here
@@ -42,12 +59,17 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, in
   useOnClickOutside(ref, handleClickOutside)
 
   const addContactField = (field: string) => {
-    update(index, `${data}{${snakeCase(field)}}` as FieldArray<T, never>)
+    const contactField = `${data}{${snakeCase(field)}}`
+    if (index != null && fieldArray) {
+      fieldArray.update(index, contactField as FieldArray<T, never>)
+    } else {
+      setValue('message' as Path<T>, contactField as PathValue<T, Path<T>>)
+    }
   }
 
   return (
-    <div className='bg-gray-200 h-22 group form-control textarea textarea-sm'>
-      <textarea key={useId()} className="flex h-10 text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0" {...register(`${fieldName}.${index.toString()}` as Path<T>)} value={data} onBlur={(event) => handleSubmit?.(event)} />
+    <div className='w-full bg-gray-200 h-22 group form-control textarea textarea-sm'>
+      <textarea key={useId()} className={`${textareaStyle ?? 'flex h-10 text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event)} />
       <label className="justify-end text-gray-100 label place-items-center" >
         <span className="flex flex-row justify-end label-text-alt">
           <div className="invisible text-xl cursor-pointer dropdown dropdown-bottom dropdown-end group-hover:visible">
@@ -68,14 +90,22 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, in
             {showEmoji &&
               <EmojiPicker
                 onEmojiClick={(emojiData: EmojiClickData, event: MouseEvent) => {
-                  update(index, `${data}${emojiData.emoji}` as FieldArray<T, never>)
+                  if (index != null && fieldArray) {
+                    fieldArray?.update(index, `${data}${emojiData.emoji}` as FieldArray<T, never>)
+                  } else {
+                    setValue('message' as Path<T>, `${data}${emojiData.emoji}` as PathValue<T, Path<T>>)
+                  }
                   setShowEmoji(false)
                 }}
                 autoFocusSearch={false}
                 emojiStyle={EmojiStyle.NATIVE}
               />}
           </div>
-          <BsX onClick={() => remove(index)} className='invisible text-xl cursor-pointer group-hover:visible' />
+          <BsX onClick={() => {
+            if (index != null && fieldArray) {
+              fieldArray.remove(index)
+            }
+          }} className='invisible text-xl cursor-pointer group-hover:visible' />
         </span >
       </label >
     </div >

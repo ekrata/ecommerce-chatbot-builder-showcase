@@ -1,6 +1,6 @@
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -10,8 +10,8 @@ import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, EdgeLabelRenderer,
-  EdgeProps, getBezierPath, Handle, Node, Position, useEdges, useNodeId, useNodes
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, EdgeLabelRenderer,
+    EdgeProps, getBezierPath, Handle, Node, Position, useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 
@@ -41,7 +41,7 @@ export const SendAChatMessageActionNode = (node: Node) => {
 
   return (
     <div className={`w-16 animate-fade `} >
-      <Handle type="source" id='a' position={Position.Top} className='w-3 h-3 mask mask-diamond' />
+      <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
       <NodeWrapper nodeElement={actionNode(Action.SendAChatMessage)} nodeName={tNodes(`Action.SendAChatMessage`)} hasErrors={hasErrors} />
       <Handle type="target" position={Position.Left} id="b" className='w-2 h-2' />
       <Handle type="target" position={Position.Right} id="c" className='w-2 h-2' />
@@ -231,8 +231,6 @@ export const SendAChatMessageActionForm: React.FC<Props> = ({ node }) => {
     updateNodes(values, node, nodes, setNodes)
   }
 
-
-
   return (
     <form className='flex flex-col place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       {/* {actionNode(Action.DecisionQuickReplies)} */}
@@ -241,7 +239,7 @@ export const SendAChatMessageActionForm: React.FC<Props> = ({ node }) => {
       <div className='mb-10 divider'></div>
       {fields.map((field, index) => (
         <div key={field.id}>
-          <TextareaField key={field.id} fieldName={'messages'} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
+          <TextareaField key={field.id} fieldName={'messages'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
           {errors?.messages?.[index] && <p className='justify-start mb-6 text-xs text-red-500'>{errors?.messages?.[index]?.message}</p>}
         </div>
       ))}
