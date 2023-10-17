@@ -129,9 +129,9 @@ export const DecisionQuickRepliesActionNode = (node: Node) => {
     const updateNodeInternals = useUpdateNodeInternals()
     // get edges of node
     const handles = node?.data?.quickReplies?.map((quickReply, i) => {
-      const pairIndex = i > 1 ? Math.round(i / 2) : 1
-      const leftId = `${i}a`
-      const rightId = `${i}b`
+      const pairIndex = (i + 1) > 1 ? Math.round((i + 1) / 2) : 1
+      const leftId = `${pairIndex}a`
+      const rightId = `${pairIndex}b`
       // if edge count 
 
       const isConnectable = node?.data?.quickReplies?.length >= nodeEdges.length
