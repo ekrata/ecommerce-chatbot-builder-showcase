@@ -17,10 +17,12 @@ import {
     useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
+import { z } from 'zod';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
 import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useInteractionContext, useNodeContext } from '../../BotEditor';
 import { actionNode } from '../../collections';
@@ -33,25 +35,93 @@ import { updateNodes } from '../updateNodes';
 
 // const handleStyle = { left: 10 };
 
-type FormValues = {
-  message: string
-  quickReplies: string[]
-}
 
+
+const schema = z.object({
+  message: z.string(),
+  quickReplies: z.array(z.string()).refine(items => new Set(items).size === items.length, {
+    message: 'Must be an array of unique strings',
+  }),
+})
+
+type FormValues = z.infer<typeof schema>
 type NodeData = FormValues & FieldErrors<FormValues>
 
 export const DecisionQuickRepliesActionNode = (node: Node) => {
-  const edges = [...useEdges()];
+  const [edges, setEdges] = useEdgeContext()
   const tNodes = useTranslations('dash.bots.nodes')
 
   // prevent nodes from connecting when edge count exceeds quick reply decision count.
   const nodeEdges = useMemo<Edge[]>(() => (
     edges?.filter((edge) => edge?.target === node.id)
-  ), [edges])
+  ), [edges]);
 
-  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.quickReplies?.some((quickReply: object | undefined) => quickReply)
+  // (node?.data?.errors?.quickReplies ?? [])((quickReply: object | undefined) => quickReply);
+  const hasErrors: boolean = node?.data?.errors?.message
+  const hasTooManyConnections: boolean = useMemo(() => nodeEdges?.length > node?.data?.quickReplies?.length, [nodeEdges?.length, node]);
+
+  // const removeEdgeOnDecisionDelete
+  useEffect(() => {
+    if (nodeEdges?.length > node?.data?.quickReplies?.length) {
+      console.log(nodeEdges)
+      const allLabels = node?.data?.quickReplies?.map((reply, i) => `${reply}`)
+      const oldLabels = nodeEdges.map((edge) => edge?.data?.label)
+      // remove edge where the label can no longer be created from quickReplies ()
+      console.log(allLabels, nodeEdges.map((edge) => edge?.data?.label), oldLabels)
+
+      // deincrement node target labels on delete
+      const remainingEdges = nodeEdges.filter((edge) => allLabels.includes(edge?.data?.label))
+      // get index where edge was removed, indexes higher need to be deincremented by 1
+      const edgeRemovedIndex = oldLabels.findIndex((oldLabel) => !allLabels.includes(oldLabel))
+      console.log(edgeRemovedIndex)
+      // can assume this will always be one, as length change will retrigger
+      const edgeDelta = nodeEdges.length - remainingEdges.length
 
 
+      // ie. 1a, 1b, 2a
+      // remove 1b
+      // becomes 1a, 1b
+      // deincrement target handle id
+      console.log(nodeEdges?.slice(edgeRemovedIndex + 1))
+      console.log(nodeEdges?.slice(0, edgeRemovedIndex))
+      const newNodeEdges = [...nodeEdges?.slice(0, edgeRemovedIndex), ...nodeEdges?.slice(edgeRemovedIndex + 1)].map((edge, i) => {
+        console.log('hiii')
+        if (edge?.targetHandle) {
+          // const num = parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10)
+          // const letter = edge?.targetHandle?.replace(/[0-9]/g, '') as 'a' | 'b'
+          // console.log(num, letter)
+          // const labelText = edge?.data?.label.split(': ')[1]
+          // preventing deincrementing the first index
+          const pairIndex = (i + 1) > 1 ? Math.round((i + 1) / 2) : 1
+          console.log(i, pairIndex)
+          if (i % 2 == 0) {
+            const newId = `${pairIndex}a`
+            console.log(newId)
+            return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
+          }
+          else {
+            const newId = `${pairIndex}b`
+            console.log(newId)
+            console.log(edge?.targetHandle, newId, edge.id.replace(edge?.targetHandle, newId))
+            return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
+          }
+        }
+      })
+      console.log(newNodeEdges)
+      // old node edges ids 
+      const oldNodeEdgesIds = nodeEdges.map((edge) => edge.id)
+
+
+
+      // get all edges without old node edges
+      const otherEdges = edges.filter((oldEdge) => !oldNodeEdgesIds.includes(oldEdge.id))
+      console.log(otherEdges, newNodeEdges)
+      const newEdges = [...otherEdges as Edge<unknown>[], ...(newNodeEdges?.length ? newNodeEdges as Edge<unknown>[] : [])].filter(Boolean)
+
+      setEdges(newEdges)
+
+    }
+  }, [node, node?.data?.quickReplies?.length])
   // Add two new target nodes for every quick reply that exists.
   // Allows the user to drag from same visible target handle to the same source handle.
   // hide handle on connect if there is more than one handle so the user cannot connect an already connected handle which leads bugs
@@ -59,65 +129,34 @@ export const DecisionQuickRepliesActionNode = (node: Node) => {
     const updateNodeInternals = useUpdateNodeInternals()
     // get edges of node
     const handles = node?.data?.quickReplies?.map((quickReply, i) => {
+      const pairIndex = i > 1 ? Math.round(i / 2) : 1
       const leftId = `${i}a`
       const rightId = `${i}b`
       // if edge count 
 
+      const isConnectable = node?.data?.quickReplies?.length >= nodeEdges.length
       return (
         <>
-          <Handle type="target" position={Position.Left} isConnectable={node?.data?.quickReplies?.length > nodeEdges.length} id={leftId} className={`w-2 h-2 ${edges.find((edge) => edge.targetHandle === leftId) && 'invisible'}`} />
-          <Handle type="target" position={Position.Right} isConnectable={node?.data?.quickReplies?.length > nodeEdges.length} id={rightId} className={`w-2 h-2 ${edges.find((edge) => edge.targetHandle === rightId) && 'invisible'}`} />
+          <Handle type="target" position={Position.Left} isConnectable={isConnectable} id={leftId} className={`w-2 h-2 ${edges?.find((edge) => edge?.targetHandle === leftId) && 'invisible'}`} />
+          <Handle type="target" position={Position.Right} isConnectable={isConnectable} id={rightId} className={`w-2 h-2 ${edges?.find((edge) => edge?.targetHandle === rightId) && 'invisible'}`} />
         </>
       )
     })
     updateNodeInternals(node?.id)
     return handles
 
-  }, [node?.data?.quickReplies?.length, edges, nodeEdges])
+  }, [node?.data?.quickReplies?.length, node, edges, nodeEdges])
 
   return (
     <div className={`w-16 animate-fade `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
-      <NodeWrapper nodeElement={actionNode(Action.DecisionQuickReplies)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} />
+      <NodeWrapper nodeElement={actionNode(Action.DecisionQuickReplies)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
       {renderHandles()}
 
     </div >
   );
 }
 
-const resolver: Resolver<FormValues> = async (values) => {
-  const errors: FieldErrors<FormValues> = { message: undefined, quickReplies: [] }
-  if (!values?.message) {
-    errors.message = {
-      type: 'required',
-      message: 'This is required'
-    }
-  }
-  values.quickReplies.forEach((quickReply, i) => {
-    if (errors.quickReplies) {
-      if (!quickReply) {
-        errors.quickReplies[i] = {
-          type: 'required',
-          message: 'This is required'
-        }
-      };
-      if (quickReply) {
-        errors.quickReplies[i] = undefined
-      };
-    }
-  })
-
-  if (errors.quickReplies && values?.quickReplies.length < 1) {
-    errors.quickReplies[0] = {
-      type: 'required',
-      message: 'You must create at least one quick reply'
-    }
-  }
-  return {
-    values,
-    errors
-  }
-}
 
 interface ConnectionProps {
   params: ConnectionLineComponentProps,
@@ -175,6 +214,41 @@ export const DecisionQuickRepliesActionConnection: FC<ConnectionProps> = (props)
   return null
 };
 
+const resolver: Resolver<FormValues> = async (values) => {
+  const errors: FieldErrors<FormValues> = { message: undefined, quickReplies: [] }
+  if (!values?.message) {
+    errors.message = {
+      type: 'required',
+      message: 'This is required'
+    }
+  }
+  values.quickReplies.forEach((quickReply, i) => {
+    if (errors.quickReplies) {
+      if (!quickReply) {
+        errors.quickReplies[i] = {
+          type: 'required',
+          message: 'This is required'
+        }
+      };
+      if (quickReply) {
+        errors.quickReplies[i] = undefined
+      };
+    }
+  })
+
+  if (errors.quickReplies && values?.quickReplies.length < 1) {
+    errors.quickReplies[0] = {
+      type: 'required',
+      message: 'You must create at least one quick reply'
+    }
+  }
+  return {
+    values,
+    errors
+  }
+}
+
+
 export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
   {
     id,
@@ -192,7 +266,8 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
   const [label, setLabel] = useState<string>('')
 
 
-  const edge = edges.find((edge) => edge.id === id)
+  const edge = useMemo(() => edges?.find((edge) => edge?.id === id), [edges, id])
+
   // do not render if 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -210,12 +285,13 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
   useEffect(() => {
     if (edge) {
       const unusedLabel = getNextUnusedLabel(edges, nodes, 'quickReplies', edge)
-      updateEdges(
-        { ...(edge?.data as object), label: unusedLabel },
-        edge,
-        edges,
-        setEdges,
-      );
+      if (unusedLabel != null && edge?.label !== unusedLabel)
+        updateEdges(
+          { ...(edge?.data as object), label: unusedLabel },
+          edge,
+          edges,
+          setEdges,
+        );
       // check for any edges that are between the same defacto target handle and the exact same source handle
       // setDuplicateEdges(edges.filter(edgeIteration => {
       //   console.log(edge)
@@ -232,7 +308,7 @@ export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
       //   return newEdgeId === iterationEdgeId
       // }))
     }
-  }, [])
+  }, [edges?.length, id])
 
   return (
     <>
@@ -285,7 +361,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
     getValues,
     setError,
     formState: { errors }, } = useForm<FormValues>({
-      resolver,
+      resolver: zodResolver(schema),
       defaultValues: {
         message: '',
         quickReplies: []
@@ -312,8 +388,8 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
     const apiValues: FormValues = node?.data
     setValue('message', apiValues?.message ?? tForm('defaultMessage'))
     setValue('quickReplies', apiValues?.quickReplies ?? [tForm('defaultReply1'), tForm('defaultReply2')])
-    setError('message', node?.data?.errors?.message)
-    setError('quickReplies', node?.data?.errors?.quickReplies)
+    // setError('message', node?.data?.errors?.message)
+    // setError('quickReplies', node?.data?.errors?.quickReplies)
   }, [node])
 
   // on error, set errors to nodes so they can be displayed on the node component
@@ -325,7 +401,6 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     updateNodes(values, node, nodes, setNodes)
   }
-
 
 
 

@@ -26,7 +26,7 @@ export const getNextUnusedLabel = (
     if (position < nodeData?.data?.[arrayName].length) {
       // get unused labels by comparing edges state and allLabels
       const allLabels = nodeData.data?.[arrayName].map(
-        (reply, i) => `${i + 1}: ${reply}`,
+        (reply, i) => `${reply}`,
       );
       const existingLabels = nodeEdges.map(({ data }) => data?.label);
       const unusedLabels = allLabels.filter(
@@ -36,8 +36,11 @@ export const getNextUnusedLabel = (
       // if there are still unassigned labels, assign the firstmost label
       if (unusedLabels.length) {
         return unusedLabels?.[0];
+      } else {
+        return undefined;
       }
       // updateEdge(edgeData, `${position + 1}: ${nodeData?.data?.quickReplies[position]}`, + 1}: ${ nodeData?.data?.quickReplies[position] } `
     }
   }
+  return undefined;
 };

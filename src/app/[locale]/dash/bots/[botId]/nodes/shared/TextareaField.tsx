@@ -101,9 +101,10 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, se
                 emojiStyle={EmojiStyle.NATIVE}
               />}
           </div>
-          <BsX onClick={() => {
+          <BsX onClick={(event) => {
             if (index != null && fieldArray) {
               fieldArray.remove(index)
+              handleSubmit?.(event)
             }
           }} className='invisible text-xl cursor-pointer group-hover:visible' />
         </span >

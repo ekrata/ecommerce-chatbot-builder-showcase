@@ -207,7 +207,6 @@
     "Copy to clipboard": "Delete article",
     "Export": "Export",
     "Delete": "Delete",
-    "This node contains fields with errors, please ensure these errors are fixed or the bot will not run": "This node contains fields with errors, please ensure these errors are fixed or the bot will not run",
     "Copied to clipboard": "Copied to clipboard",
     "Import": "Import",
     "Remove": "Remove",
@@ -270,6 +269,8 @@
         "Lead generation": "Lead generation",
         "Promotions": "Promotions"
       },
+      "This node contains fields with errors, please ensure these errors are fixed or the bot will not run": "This node contains fields with errors, please ensure these errors are fixed or the bot will not run.",
+      "This node has connections that are cannot be triggered, add more output nodes(such as decisions), to fix this": "This node has connections that are cannot be triggered. Add more output nodes(such as decisions), to fix this.",
       "VisitorBotInteractionTrigger": "Visitor interacts with bot",
       "VisitorPageInteractionTrigger": "Visitor interacts with the page",
       "OperatorInteractionTrigger": "Operator interacts",
