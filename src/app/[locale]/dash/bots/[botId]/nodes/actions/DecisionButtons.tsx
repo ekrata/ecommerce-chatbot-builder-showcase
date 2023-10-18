@@ -9,8 +9,11 @@ import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { BsPlus } from 'react-icons/bs';
+import {
+    FieldErrors, Path, Resolver, SubmitHandler, useFieldArray, useForm
+} from 'react-hook-form';
+import { BsPlus, BsX } from 'react-icons/bs';
+import { FcInfo } from 'react-icons/fc';
 import {
     addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
     EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
@@ -31,25 +34,27 @@ import { createTargetHandles } from '../shared/createTargetHandles';
 import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';
 import { GenericEdge } from '../shared/GenericEdge';
 import { TextareaField } from '../shared/TextareaField';
-import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
-import { DecisionQuickRepliesActionConnection } from './SendAChatMessage';
+
+// const handleStyle = { left: 10 };
+
+
 
 const schema = z.object({
   message: z.string()?.min(1),
-  transferToOperatorMessage: z?.boolean(),
-  quickReplies: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
+  transferToOperatorMessage: z.boolean(),
+  choiceLinks: z.array(z.string()?.optional()),
+  choices: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
     message: 'Each option must be unique.',
   }),
 })
 
-const type = Action.DecisionQuickReplies
+const type = Action.DecisionButtons
 
-export type DecisionQuickRepliesData = z.infer<typeof schema>
-type FormValues = DecisionQuickRepliesData
-type NodeData = FormValues & FieldErrors<FormValues>
+export type DecisionButtonsData = z.infer<typeof schema>
+type FormValues = DecisionButtonsData
 
-export const DecisionQuickRepliesActionNode = (node: Node) => {
+export const DecisionButtonsActionNode = (node: Node) => {
   const [edges, setEdges] = useEdgeContext()
   const tNodes = useTranslations('dash.bots.nodes')
 
@@ -65,13 +70,13 @@ export const DecisionQuickRepliesActionNode = (node: Node) => {
   return (
     <div className={`w-16  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
-      <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
-      {createTargetHandles(node, nodeEdges, 'quickReplies')}
+      <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.DecisionButtons`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
+      {createTargetHandles(node, nodeEdges, OutputFieldsKeys[type])}
     </div >
   )
 }
 
-export const DecisionQuickRepliesActionEdge: React.FC<EdgeProps> = (params) => {
+export const DecisionButtonsActionEdge: React.FC<EdgeProps> = (params) => {
   return <GenericEdge {...params} outputKey={OutputFieldsKeys[type]} />
 }
 
@@ -79,15 +84,18 @@ interface Props {
   node: Node
 }
 
-export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
+export const DecisionButtonsActionForm: React.FC<Props> = ({ node }) => {
   const tNodes = useTranslations('dash.bots.nodes')
   const tDash = useTranslations('dash.bots')
+  const [edges, setEdges] = useEdgeContext()
   const [operatorSession] = useAuthContext()
   const [nodes, setNodes, onNodesChange] = useNodeContext()
+  const orgId = operatorSession?.orgId ?? ''
   const params = useParams();
+  const botId = params?.botId as string
   const ref = useRef(null)
 
-  const tForm = useTranslations("dash.bots.ActionForms.DecisionQuickReplies")
+  const tForm = useTranslations("dash.bots.ActionForms.DecisionButtons")
   const tDecisionForm = useTranslations("dash.bots.ActionForms.GenericDecision")
   const { register,
     handleSubmit,
@@ -100,15 +108,21 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
       resolver: zodResolver(schema),
       defaultValues: {
         message: '',
-        quickReplies: []
+        choiceLinks: [],
+        choices: []
       },
       mode: 'onBlur',
     });
 
 
 
-  const fieldArray = useFieldArray({
-    name: 'quickReplies',
+  const choicesFieldArray = useFieldArray({
+    name: 'choices',
+    control, // control props comes from useForm (optional: if you are using FormContext)
+  });
+
+  const choiceLinksFieldArray = useFieldArray({
+    name: 'choiceLinks',
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 
@@ -119,20 +133,19 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
   useOnClickOutside(ref, handleClickOutside)
 
-  const { fields, append, update, prepend, remove, swap, move, insert } = fieldArray
 
   useEffect(() => {
     const apiValues: FormValues = node?.data
-    setValue('message', apiValues?.message ?? tForm('defaultMessage'))
-    setValue('quickReplies', apiValues?.quickReplies ?? [tForm('defaultReply1'), tForm('defaultReply2')])
-    setValue('transferToOperatorMessage', apiValues?.transferToOperatorMessage ?? false)
+    setValue('message', apiValues?.message ?? tForm('messagePlaceholder'))
+    setValue('choiceLinks', apiValues?.choiceLinks ?? [tForm('urlPlaceholder')])
+    setValue('choices', apiValues?.choices ?? [tForm('buttonNamePlaceholder')])
     // setError('message', node?.data?.errors?.message)
     // setError('quickReplies', node?.data?.errors?.quickReplies)
   }, [node])
 
   // on error, set errors to nodes so they can be displayed on the node component
   // useEffect(() => {
-  //   updateNodes(getValues(), node, nodes, setNodes, errors)
+
   // }, [errors])
 
 
@@ -144,6 +157,8 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
   //   handleSubmit(onSubmit)
   // }, [])
 
+
+
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       {/* {actionNode(Action.DecisionQuickReplies)} */}
@@ -154,21 +169,44 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
       {errors.message && <p className='justify-start text-xs text-error'>{errors.message.message}</p>}
       <div className='mb-10 divider'></div>
 
-      {errors?.quickReplies && <p className='justify-start mb-6 text-xs text-error'>{errors?.quickReplies?.message}</p>}
-      {fields.map((field, index) => (
-        <>
-          <TextareaField fieldName={'quickReplies'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
-          {errors?.quickReplies?.[index] && <p className='justify-start mb-6 text-xs text-error'>{errors?.quickReplies?.[index]?.message}</p>}
-        </>
+      {choicesFieldArray.fields?.map((field, index) => (
+        <div className="flex flex-row group place-items-centers border-[1px] border-info p-6 rounded-full ">
+          <div className="w-full max-w-xs form-control gap-y-2">
+            <input type="text" placeholder={tForm('buttonNamePlaceholder')} {...register(`choices.${index}`)} className="w-full max-w-xs bg-gray-200 input-sm input focus:outline-0" />
+            {errors?.choices && <p className='justify-start mb-1 text-xs text-error'>{errors?.choices?.message}</p>}
+            <input type="text" placeholder={tForm('urlPlaceholder')} {...register(`choiceLinks.${index}`)} className="w-full max-w-xs bg-gray-200 input-sm input focus:outline-0" />
+            {errors?.choiceLinks && <p className='justify-start mb-1 text-xs text-error'>{errors?.choiceLinks?.message}</p>}
+          </div>
+          <BsX className='invisible text-2xl hover:cursor-pointer group-hover:visible' onClick={() => {
+            const value = choicesFieldArray.fields?.[index]
+            choicesFieldArray?.remove(index)
+            choiceLinksFieldArray?.remove(index)
+            // remove respective edge
+            console.log(value)
+            setEdges(edges.filter((edge) => edge?.data?.label !== value || edge.target !== node.id))
+          }}></BsX>
+
+          <div className='mb-1 divider'></div>
+
+        </div>
       ))}
-      <button onClick={() => append('New reply')} className='justify-center normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('addQuickReply')}</button>
-      <div className="form-control">
-        <label className="cursor-pointer label">
-          <span className="label-text">{tDecisionForm("transferToOperatorMessage")}</span>
+      <button onClick={() => {
+        choicesFieldArray?.append(`${tForm('buttonNamePlaceholder')} ${choicesFieldArray.fields?.length}`)
+        choiceLinksFieldArray?.append(`${tForm('urlPlaceholder')} ${choiceLinksFieldArray.fields?.length}`)
+      }} className='justify-center normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('addButton')}</button>
+      <div className=" form-control">
+        <label className="flex flex-row cursor-pointer label gap-x-2">
+          <span className="flex label-text place-items-center">
+            <div className="tooltip" data-tip={tDecisionForm("transferToOperatorMessageDescription")}>
+              <FcInfo className='text-lg'></FcInfo>
+            </div>
+            {tDecisionForm("transferToOperatorMessageLabel")}
+          </span>
           <input type="checkbox" className="toggle"  {...register('transferToOperatorMessage')} />
         </label>
       </div>
       {errors?.transferToOperatorMessage && <p className='justify-start text-xs text-red-500'>{errors?.transferToOperatorMessage?.message}</p>}
+
     </form >
   )
 }

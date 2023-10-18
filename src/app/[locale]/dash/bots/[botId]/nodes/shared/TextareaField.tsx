@@ -115,10 +115,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
             <BsX onClick={(event) => {
               if (index != null && fieldArray) {
                 fieldArray.remove(index)
-                console.log(data)
-                console.log(edges)
                 setEdges(edges.filter((edge) => edge?.data?.label !== data || edge.target !== node.id))
-                console.log(edges)
                 handleSubmit?.(event)
               }
             }} className='invisible text-xl cursor-pointer group-hover:visible' />

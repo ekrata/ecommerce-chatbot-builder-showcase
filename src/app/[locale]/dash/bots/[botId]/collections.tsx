@@ -19,6 +19,9 @@ import {
     CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
 } from './nodes/actions/CouponCode';
 import {
+    DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode
+} from './nodes/actions/DecisionButtons';
+import {
     DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
 } from './nodes/actions/DecisionQuickReplies';
 import {
@@ -59,6 +62,7 @@ export const nodeTypes: NodeTypes = {
   // [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
   // [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionNode,
+  [`${Action.DecisionButtons}`]: DecisionButtonsActionNode,
   [`${Action.AskAQuestion}`]: AskAQuestionActionNode,
   [`${Action.CouponCode}`]: CouponCodeActionNode,
   [`${Action.SubscribeForMailing}`]: SubscribeForMailingNode,
@@ -72,6 +76,7 @@ export const OutputFieldsKeys = {
   [`${Action.AskAQuestion}`]: 'outputs',
   [`${Action.CouponCode}`]: 'outputs',
   [`${Action.DecisionQuickReplies}`]: 'quickReplies',
+  [`${Action.DecisionButtons}`]: 'choices',
 } as const
 
 export type OutputFieldKey = typeof OutputFieldsKeys[keyof typeof OutputFieldsKeys]
@@ -89,6 +94,7 @@ export const renderConnectionLine = (params: ConnectionLineComponentProps, edges
 
 export const edgeTypes: EdgeTypes = {
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionEdge,
+  [`${Action.DecisionButtons}`]: DecisionButtonsActionEdge,
   [`${Action.CouponCode}`]: CouponCodeActionEdge,
   [`${Action.SubscribeForMailing}`]: SubscribeForMailingEdge,
   [`${Action.AskAQuestion}`]: AskAQuestionActionEdge
@@ -102,6 +108,8 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
   switch (node.type) {
     case Action.DecisionQuickReplies:
       return <DecisionQuickRepliesActionForm node={node} />
+    case Action.DecisionButtons:
+      return <DecisionButtonsActionForm node={node} />
     case Action.SendAChatMessage:
       return <SendAChatMessageActionForm node={node} />
     case Action.AskAQuestion:
