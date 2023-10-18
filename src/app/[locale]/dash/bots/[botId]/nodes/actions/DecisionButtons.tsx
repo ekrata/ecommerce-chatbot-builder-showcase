@@ -170,7 +170,7 @@ export const DecisionButtonsActionForm: React.FC<Props> = ({ node }) => {
       <div className='mb-10 divider'></div>
 
       {choicesFieldArray.fields?.map((field, index) => (
-        <div className="flex flex-row group place-items-centers border-[1px] border-info p-6 rounded-full ">
+        <div key={field.id} className="flex flex-row group place-items-centers border-[1px] border-info p-6 rounded-full ">
           <div className="w-full max-w-xs form-control gap-y-2">
             <input type="text" placeholder={tForm('buttonNamePlaceholder')} {...register(`choices.${index}`)} className="w-full max-w-xs bg-gray-200 input-sm input focus:outline-0" />
             {errors?.choices && <p className='justify-start mb-1 text-xs text-error'>{errors?.choices?.message}</p>}
@@ -178,7 +178,8 @@ export const DecisionButtonsActionForm: React.FC<Props> = ({ node }) => {
             {errors?.choiceLinks && <p className='justify-start mb-1 text-xs text-error'>{errors?.choiceLinks?.message}</p>}
           </div>
           <BsX className='invisible text-2xl hover:cursor-pointer group-hover:visible' onClick={() => {
-            const value = choicesFieldArray.fields?.[index]
+            const value = getValues().choices[index]
+
             choicesFieldArray?.remove(index)
             choiceLinksFieldArray?.remove(index)
             // remove respective edge
