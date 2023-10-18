@@ -310,6 +310,12 @@
           "defaultReply2": "No, thanks.",
           "addQuickReply": "Add quick reply"
         },
+        "SendAChatMessage": {
+          "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "New message": "New message"
+        },
         "DecisionButtons": {
           "messagePlaceholder": "Type in the message that will be sent to the user.",
           "buttonNamePlaceholder": "Type in a button name",

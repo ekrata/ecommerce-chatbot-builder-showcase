@@ -49,12 +49,11 @@ const schema = z.object({
 })
 
 type FormValues = z.infer<typeof schema>
-type NodeData = FormValues & FieldErrors<FormValues>
 
 const type = Action.CouponCode
 
 export const CouponCodeActionNode = (node: Node) => {
-  const outputKey = 'outputs'
+  const outputKey = OutputFieldsKeys[type]
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
 
