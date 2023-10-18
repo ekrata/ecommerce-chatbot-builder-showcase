@@ -25,25 +25,29 @@ import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useInteractionContext, useNodeContext } from '../../BotEditor';
-import { actionNode } from '../../collections';
+import { actionNode, OutputFieldsKeys } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';
+import { GenericEdge } from '../shared/GenericEdge';
 import { getNextUnusedLabel } from '../shared/getNextUnusedLabel';
 import { TextareaField } from '../shared/TextareaField';
 import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
+import { DecisionQuickRepliesActionConnection } from './SendAChatMessage';
 
 // const handleStyle = { left: 10 };
 
 
 
 const schema = z.object({
-  message: z.string(),
-  quickReplies: z.array(z.string()).refine(items => new Set(items).size === items.length, {
-    message: 'Must be an array of unique strings',
+  message: z.string()?.min(1),
+  quickReplies: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
+    message: 'Each option must be unique.',
   }),
 })
+
+const type = Action.DecisionQuickReplies
 
 type FormValues = z.infer<typeof schema>
 type NodeData = FormValues & FieldErrors<FormValues>
@@ -58,260 +62,21 @@ export const DecisionQuickRepliesActionNode = (node: Node) => {
   ), [edges]);
 
   // (node?.data?.errors?.quickReplies ?? [])((quickReply: object | undefined) => quickReply);
-  const hasErrors: boolean = node?.data?.errors?.message
+  const hasErrors: boolean = node?.data?.errors?.message && node?.data?.errors?.quickReplies?.some((label) => label)
   const hasTooManyConnections: boolean = useMemo(() => nodeEdges?.length > node?.data?.quickReplies?.length, [nodeEdges?.length, node]);
-
-  // const removeEdgeOnDecisionDelete
-  // useEffect(() => {
-  //   console.log('in')
-  //   if (nodeEdges?.length >= node?.data?.quickReplies?.length) {
-  //     console.log(nodeEdges)
-  //     const allLabels = node?.data?.quickReplies?.map((reply, i) => `${reply}`)
-  //     const oldLabels = nodeEdges.filter((edge) => edge?.source)?.map((edge) => edge?.data?.label)
-  //     console.log('oldlabels', oldLabels)
-
-  //     // if there are no node edges defined, we don't have to transpose and can just remove the last nodeEdge
-  //     if (!oldLabels.length) {
-  //       console.log(edges)
-  //       setEdges([...edges.filter((edge) => edge.target !== node?.id)])
-  //       console.log(edges)
-  //       return
-  //     }
-  //     // remove edge where the label can no longer be created from quickReplies ()
-  //     console.log(allLabels, nodeEdges.map((edge) => edge?.data?.label), oldLabels)
-
-  //     // deincrement node target labels on delete
-  //     const remainingEdges = nodeEdges.filter((edge) => allLabels.includes(edge?.data?.label))
-  //     // get index where edge was removed, indexes higher need to be deincremented by 1
-  //     const edgeRemovedIndex = oldLabels.findIndex((oldLabel) => !allLabels.includes(oldLabel))
-  //     console.log(edgeRemovedIndex)
-  //     // can assume this will always be one, as length change will retrigger
-  //     const edgeDelta = nodeEdges.length - remainingEdges.length
-
-
-  //     // ie. 1a, 1b, 2a
-  //     // remove 1b
-  //     // becomes 1a, 1b
-  //     // deincrement target handle id
-  //     console.log(nodeEdges?.slice(edgeRemovedIndex + 1))
-  //     console.log(nodeEdges?.slice(0, edgeRemovedIndex))
-  //     const newNodeEdges = [...nodeEdges?.slice(0, edgeRemovedIndex), ...nodeEdges?.slice(edgeRemovedIndex + 1)].map((edge, i) => {
-  //       console.log('hiii')
-  //       if (edge?.targetHandle) {
-  //         // const num = parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10)
-  //         // const letter = edge?.targetHandle?.replace(/[0-9]/g, '') as 'a' | 'b'
-  //         // console.log(num, letter)
-  //         // const labelText = edge?.data?.label.split(': ')[1]
-  //         // preventing deincrementing the first index
-  //         const pairIndex = (i + 1) > 1 ? Math.round((i + 1) / 2) : 1
-  //         console.log(i, pairIndex)
-  //         if (i % 2 == 0) {
-  //           const newId = `${pairIndex}a`
-  //           console.log(newId)
-  //           return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
-  //         }
-  //         else {
-  //           const newId = `${pairIndex}b`
-  //           console.log(newId)
-  //           console.log(edge?.targetHandle, newId, edge.id.replace(edge?.targetHandle, newId))
-  //           return { ...edge, targetHandle: newId, id: edge.id.replace(edge?.targetHandle, newId) }
-  //         }
-  //       }
-  //     })
-  //     console.log(newNodeEdges)
-  //     // old node edges ids 
-  //     const oldNodeEdgesIds = nodeEdges.map((edge) => edge.id)
-
-
-
-  //     // get all edges without old node edges
-  //     const otherEdges = edges.filter((oldEdge) => !oldNodeEdgesIds.includes(oldEdge.id))
-  //     console.log(otherEdges, newNodeEdges)
-  //     const newEdges = [...otherEdges as Edge<unknown>[], ...(newNodeEdges?.length ? newNodeEdges as Edge<unknown>[] : [])].filter(Boolean)
-
-  //     setEdges(newEdges)
-
-  //   }
-  // }, [node, node?.data?.quickReplies?.length])
-  // Add two new target nodes for every quick reply that exists.
-  // Allows the user to drag from same visible target handle to the same source handle.
-  // hide handle on connect if there is more than one handle so the user cannot connect an already connected handle which leads bugs
 
   return (
     <div className={`w-16 animate-fade `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
-      <NodeWrapper nodeElement={actionNode(Action.DecisionQuickReplies)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
+      <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
       {createTargetHandles(node, nodeEdges, 'quickReplies')}
     </div >
-  );
+  )
 }
 
-
-interface ConnectionProps {
-  params: ConnectionLineComponentProps,
-  label: string
+export const DecisionQuickRepliesActionEdge: React.FC<EdgeProps> = (params) => {
+  return <GenericEdge {...params} outputKey={OutputFieldsKeys[type]} />
 }
-
-export const DecisionQuickRepliesActionConnection: FC<ConnectionProps> = (props) => {
-  if (props?.params) {
-    const { params } = props
-    if (params?.fromX && params?.fromY && params?.fromPosition && params?.toX && params?.toY && params?.toPosition) {
-      const {
-        fromX,
-        fromY,
-        fromPosition,
-        toX,
-        toY,
-        toPosition,
-        connectionLineStyle
-      } = params
-      const [edgePath, labelX, labelY] = getBezierPath({
-        sourceX: fromX ?? 0,
-        sourceY: fromY ?? 0,
-        sourcePosition: fromPosition ?? 0,
-        targetX: toX ?? 0,
-        targetY: toY ?? 0,
-        targetPosition: toPosition ?? 0,
-      });
-
-      return (
-        <>
-          {edgePath && <BaseEdge path={edgePath} style={connectionLineStyle} />}
-          <EdgeLabelRenderer>
-            <div
-              style={{
-                position: 'absolute',
-                transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-                fontSize: 12,
-                padding: 10,
-                borderRadius: 5,
-                pointerEvents: 'all',
-                fontWeight: 700,
-                // everything inside EdgeLabelRenderer has no pointer events by default
-                // if you have an interactive element, set pointer-events: all
-              }}
-              className=" nodrag nopan"
-            >
-              {props?.label}
-            </div>
-          </EdgeLabelRenderer>
-          {/* <circle cx={toX} cy={toY} fill="#222" r={3} stroke="#222" strokeWidth={1.5} /> */}
-        </>
-      );
-    }
-  }
-  return null
-};
-
-const resolver: Resolver<FormValues> = async (values) => {
-  const errors: FieldErrors<FormValues> = { message: undefined, quickReplies: [] }
-  if (!values?.message) {
-    errors.message = {
-      type: 'required',
-      message: 'This is required'
-    }
-  }
-  values.quickReplies.forEach((quickReply, i) => {
-    if (errors.quickReplies) {
-      if (!quickReply) {
-        errors.quickReplies[i] = {
-          type: 'required',
-          message: 'This is required'
-        }
-      };
-      if (quickReply) {
-        errors.quickReplies[i] = undefined
-      };
-    }
-  })
-
-  if (errors.quickReplies && values?.quickReplies.length < 1) {
-    errors.quickReplies[0] = {
-      type: 'required',
-      message: 'You must create at least one quick reply'
-    }
-  }
-  return {
-    values,
-    errors
-  }
-}
-
-
-export const DecisionQuickRepliesActionEdge: FC<EdgeProps> = (
-  {
-    id,
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
-    style = {},
-    markerEnd,
-  }) => {
-  const nodes = useNodes()
-  const [edges, setEdges] = useEdgeContext()
-  const [label, setLabel] = useState<string>('')
-
-
-  const edge = useMemo(() => edges?.find((edge) => edge?.id === id), [edges, id])
-  const node = useMemo(() => nodes.find((node) => node.id === edge?.target), [nodes])
-
-  // do not render if 
-  const [edgePath, labelX, labelY] = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-    // increase curvurture to differentiate duplicated edges
-    curvature: 0.5 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1,
-  });
-
-
-  // set a node 
-  useEffect(() => {
-    const edge = edges?.find((edge) => edge?.id === id)
-    const node = nodes?.find((node) => node.id === edge?.target)
-    if (edge?.target) {
-      const unusedLabel = getNextUnusedLabel(edges, edge?.target, node?.data?.quickReplies)
-      if (unusedLabel) {
-
-        setEdges([...edges.filter((edge) => edge?.id !== id), { ...edge, data: { label: unusedLabel } }])
-      }
-    }
-  }, [node?.data?.quickReplies])
-
-
-  return (
-    <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style} />
-      <EdgeLabelRenderer>
-        <div
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 2 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1}px)`,
-            fontSize: 12,
-            padding: 10,
-            borderRadius: 5,
-            pointerEvents: 'all',
-            fontWeight: 700,
-            // everything inside EdgeLabelRenderer has no pointer events by default
-            // if you have an interactive element, set pointer-events: all
-            // change curv
-          }}
-          className=" nodrag nopan"
-        >
-          {/* {label} */}
-          {edge?.data?.label}
-        </div>
-      </EdgeLabelRenderer>
-    </>
-  );
-}
-
 
 interface Props {
   node: Node
@@ -345,6 +110,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
     });
 
 
+
   const fieldArray = useFieldArray({
     name: 'quickReplies',
     control, // control props comes from useForm (optional: if you are using FormContext)
@@ -369,6 +135,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
   // on error, set errors to nodes so they can be displayed on the node component
   useEffect(() => {
+    console.log(errors)
     updateNodes(getValues(), node, nodes, setNodes, errors)
   }, [errors])
 
@@ -387,9 +154,11 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
       {/* {tNodes(`Action.DecisionQuickReplies`)} */}
       {/* {node?.id} */}
       {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
-      <TextareaField fieldName={'message'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea' />
+      <TextareaField fieldName={'message'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
       {errors.message && <p className='justify-start text-xs text-red-500'>{errors.message.message}</p>}
       <div className='mb-10 divider'></div>
+
+      {errors?.quickReplies && <p className='justify-start mb-6 text-xs text-red-500'>{errors?.quickReplies?.message}</p>}
       {fields.map((field, index) => (
         <>
           <TextareaField fieldName={'quickReplies'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />

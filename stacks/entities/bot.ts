@@ -1,12 +1,7 @@
 import { Entity, EntityItem } from 'electrodb';
 import {
-  Action,
-  Condition,
-  OperatorInteractionTrigger,
-  ShopifyAction,
-  ShopifyCondition,
-  VisitorBotInteractionTrigger,
-  VisitorPageInteractionTrigger,
+    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -50,6 +45,17 @@ export type BotCategory = (typeof botCategory)[number];
 
 export type BotNodeType = NonNullable<EntityItem<typeof Bot>['nodes']>[0];
 export type BotEdgeType = NonNullable<EntityItem<typeof Bot>['edges']>[0];
+
+export const validationType = [
+  'None',
+  'Name',
+  'Email',
+  'Number',
+  'Phone Number',
+  'URL',
+] as const;
+
+export type ValidationType = (typeof validationType)[number];
 
 export const Bot = new Entity({
   model: {

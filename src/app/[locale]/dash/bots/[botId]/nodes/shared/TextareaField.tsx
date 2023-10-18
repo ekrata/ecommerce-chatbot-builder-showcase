@@ -24,6 +24,7 @@ interface Props<T extends FieldValues> {
   setValue: UseFormSetValue<T>
   register: UseFormRegister<T>,
   textareaStyle?: string
+  deletable: boolean
 }
 
 /**
@@ -42,7 +43,7 @@ interface Props<T extends FieldValues> {
  * @param {Control<T, any>} param0.control
  * @returns {*}
  */
-export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, node, setValue, index, register, handleSubmit, control, textareaStyle }: Props<T>) {
+export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, node, setValue, index, register, handleSubmit, control, textareaStyle, deletable = true }: Props<T>) {
   const [edges, setEdges] = useEdgeContext()
   const name = index != null ? `${fieldName}.${index}` as Path<T> : fieldName as Path<T>
   const data = useWatch({
@@ -110,16 +111,18 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
                 emojiStyle={EmojiStyle.NATIVE}
               />}
           </div>
-          <BsX onClick={(event) => {
-            if (index != null && fieldArray) {
-              fieldArray.remove(index)
-              console.log(data)
-              console.log(edges)
-              setEdges(edges.filter((edge) => edge?.data?.label !== data || edge.target !== node.id))
-              console.log(edges)
-              handleSubmit?.(event)
-            }
-          }} className='invisible text-xl cursor-pointer group-hover:visible' />
+          {deletable &&
+            <BsX onClick={(event) => {
+              if (index != null && fieldArray) {
+                fieldArray.remove(index)
+                console.log(data)
+                console.log(edges)
+                setEdges(edges.filter((edge) => edge?.data?.label !== data || edge.target !== node.id))
+                console.log(edges)
+                handleSubmit?.(event)
+              }
+            }} className='invisible text-xl cursor-pointer group-hover:visible' />
+          }
         </span >
       </label >
     </div >
