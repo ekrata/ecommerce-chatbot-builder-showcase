@@ -19,8 +19,7 @@ import {
     CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
 } from './nodes/actions/CouponCode';
 import {
-    DecisionQuickRepliesActionConnection, DecisionQuickRepliesActionEdge,
-    DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
+    DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
 } from './nodes/actions/DecisionQuickReplies';
 import {
     SendAChatMessageActionForm, SendAChatMessageActionNode
@@ -28,7 +27,7 @@ import {
 import {
     SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
 } from './nodes/actions/SubscribeForMailing';
-import { GenericConnectionLine } from './nodes/shared/genericConnectionLine';
+import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
     VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
@@ -66,13 +65,6 @@ export const nodeTypes: NodeTypes = {
   [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
 };
 
-
-
-export const connectionLineTypes: {
-  [key: string]: ComponentType<ConnectionLineComponentProps>;
-} = {
-  [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionConnection,
-}
 
 
 export const OutputFieldsKeys = {

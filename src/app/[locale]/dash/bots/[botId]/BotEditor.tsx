@@ -22,7 +22,7 @@ import ReactFlow, {
     addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
     ConnectionLineComponent, Controls, Edge, EdgeTypes, MiniMap, Node, NodeTypes,
     OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance, ReactFlowProvider,
-    useEdges, useEdgesState, useNodesState, useOnSelectionChange
+    useEdges, useEdgesState, useNodesState, useOnSelectionChange, useStoreApi
 } from 'reactflow';
 import { useDebounce, useOnClickOutside } from 'usehooks-ts';
 
@@ -62,7 +62,6 @@ export const useEdgeContext = () => useContext(EdgeContext)
 
 export const BotEditor: React.FC = () => {
   const ref = useRef(null)
-  const edgeUpdateSuccessful = useRef(true);
 
   const router = useRouter()
   const params = useParams()
@@ -96,8 +95,7 @@ export const BotEditor: React.FC = () => {
   //   ...edges
   // });
 
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null)
-  const [connectionLineComponent, setConnectionLineComponent] = useState<ConnectionLineComponent | undefined>(undefined);
+  const [selectedFormNode, setSelectedFormNode] = useState<Node | null>(null)
 
 
   // useEffect(() => {
@@ -115,15 +113,6 @@ export const BotEditor: React.FC = () => {
     flexDirection: 'column'
   }
 
-  const onConnectStart = useCallback((event: _, params: OnConnectStartParams) => {
-    const node = nodes.find((node) => node.id === params.nodeId)
-    if (node?.type) {
-      setConnectionLineComponent(connectionLineTypes[node?.type as string])
-    } else {
-      setConnectionLineComponent(undefined)
-    }
-  }, [nodes, edges])
-
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
 
   const onDragOver = useCallback((event: any) => {
@@ -132,7 +121,11 @@ export const BotEditor: React.FC = () => {
   }, []);
 
   const onPaneClick = () => {
-    setSelectedNode(null)
+    setSelectedFormNode(null)
+    setNodes(nodes.map((node) => {
+      return { ...node, selected: false }
+
+    }))
   };
 
 
@@ -161,19 +154,34 @@ export const BotEditor: React.FC = () => {
       };
 
       setNodes([...nodes, newNode]);
-      setSelectedNode(newNode as Node)
+      // setSelectedFormNode([newNode as Node])
     },
     [reactFlowInstance, nodes, edges]
   );
 
-  const onSelectionChange = (params: OnSelectionChangeParams): void => {
-    if (params?.nodes?.[0]) {
-      setSelectedNode(params?.nodes?.[0])
+  const onSelectionChange = useCallback((params: OnSelectionChangeParams): void => {
+    console.log(params?.nodes)
+    // find existing selected node
+    const newNode = params?.nodes?.[0]
+    if (newNode) {
+      const oldNode = selectedFormNode
+      setSelectedFormNode(newNode)
+      setNodes(nodes.map((node) => {
+        if (node.id === newNode?.id) {
+          return { ...node, selected: true }
+        } else {
+          return { ...node, selected: false }
+        }
+      }))
+
+    } else {
+      setSelectedFormNode(null)
+      setNodes(nodes.map((node) => ({
+        ...node, selected: false
+      })))
     }
-    else {
-      setSelectedNode(null)
-    }
-  }
+    console.log(selectedFormNode)
+  }, [nodes])
 
   const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => {
     const nodeTarget = nodes?.find((node) => node.id === params?.target)
@@ -189,10 +197,6 @@ export const BotEditor: React.FC = () => {
       }, eds)
     }
   }), [nodes, edges]);
-
-  useEffect(() => {
-    console.log(edges)
-  }, [edges])
 
   const updateBotMut = useUpdateBotMut(orgId)
 
@@ -233,7 +237,8 @@ export const BotEditor: React.FC = () => {
   // }, [redo, undo])
 
   const renderNodeForm = useCallback(() => {
-    if (selectedNode) {
+    if (selectedFormNode) {
+      const selectedNode = selectedFormNode
       return (
         <>
           <h5 className='flex flex-row justify-center lex-between place-items-center gap-x-2'>
@@ -259,7 +264,7 @@ export const BotEditor: React.FC = () => {
         </>
       )
     }
-  }, [selectedNode?.id])
+  }, [selectedFormNode])
 
   const onDelete = async () => {
     const res = await toast.promise(() => deleteBotMut.mutateAsync([orgId, botId]), {
@@ -273,7 +278,7 @@ export const BotEditor: React.FC = () => {
 
   return (
     <div className="w-full h-screen p-2 bg-white " ref={ref} >
-      <NodeContext.Provider value={[nodes, setNodes, onNodesChange, selectedNode, setSelectedNode as Dispatch<SetStateAction<Node | null | undefined>>]}>
+      <NodeContext.Provider value={[nodes, setNodes, onNodesChange, selectedFormNode, setSelectedFormNode as Dispatch<SetStateAction<Node | null | undefined>>]}>
         <EdgeContext.Provider value={[edges, setEdges, onEdgesChange]}>
           <ReactFlowProvider>
             <div className="h-screen reactflow-wrapper" ref={reactFlowWrapper}>
@@ -284,7 +289,7 @@ export const BotEditor: React.FC = () => {
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 elementsSelectable
-                onSelectionChange={({ nodes, edges }) => onSelectionChange({ nodes, edges })}
+                onSelectionChange={onSelectionChange}
                 nodesConnectable
                 nodesDraggable
                 onInit={setReactFlowInstance}
@@ -294,7 +299,6 @@ export const BotEditor: React.FC = () => {
                 edgeTypes={edgeTypes}
                 onPaneClick={onPaneClick}
                 attributionPosition='bottom-left'
-                onConnectStart={onConnectStart}
                 connectionLineComponent={(params) => renderConnectionLine(params, edges, nodes)}
                 fitView
                 className=""
@@ -335,7 +339,7 @@ export const BotEditor: React.FC = () => {
                 <Panel position={'top-right'}>
                   <div className='absolute right-0 mb-40'>
                     <div className="h-screen-3/4  bg-white shadow-lg w-[360px] p-4 mb-40 mt-10 pb-40 h-[800px] overflow-y-scroll rounded-lg">
-                      {selectedNode ?
+                      {selectedFormNode ?
                         renderNodeForm()
                         : (<>
                           <ul className='flex flex-row justify-between mb-10 tabs tabs-boxed'>

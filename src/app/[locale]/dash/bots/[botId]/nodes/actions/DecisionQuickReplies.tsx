@@ -66,7 +66,7 @@ export const DecisionQuickRepliesActionNode = (node: Node) => {
   const hasTooManyConnections: boolean = useMemo(() => nodeEdges?.length > node?.data?.quickReplies?.length, [nodeEdges?.length, node]);
 
   return (
-    <div className={`w-16 animate-fade `} >
+    <div className={`w-16  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
       <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.DecisionQuickReplies`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
       {createTargetHandles(node, nodeEdges, 'quickReplies')}
@@ -134,19 +134,18 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
   }, [node])
 
   // on error, set errors to nodes so they can be displayed on the node component
-  useEffect(() => {
-    console.log(errors)
-    updateNodes(getValues(), node, nodes, setNodes, errors)
-  }, [errors])
+  // useEffect(() => {
+  //   updateNodes(getValues(), node, nodes, setNodes, errors)
+  // }, [errors])
 
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     updateNodes(values, node, nodes, setNodes)
   }
 
-  useEffect(() => {
-    handleSubmit(onSubmit)
-  }, [])
+  // useEffect(() => {
+  //   handleSubmit(onSubmit)
+  // }, [])
 
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
@@ -155,14 +154,14 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
       {/* {node?.id} */}
       {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
       <TextareaField fieldName={'message'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
-      {errors.message && <p className='justify-start text-xs text-red-500'>{errors.message.message}</p>}
+      {errors.message && <p className='justify-start text-xs text-error'>{errors.message.message}</p>}
       <div className='mb-10 divider'></div>
 
-      {errors?.quickReplies && <p className='justify-start mb-6 text-xs text-red-500'>{errors?.quickReplies?.message}</p>}
+      {errors?.quickReplies && <p className='justify-start mb-6 text-xs text-error'>{errors?.quickReplies?.message}</p>}
       {fields.map((field, index) => (
         <>
           <TextareaField fieldName={'quickReplies'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
-          {errors?.quickReplies?.[index] && <p className='justify-start mb-6 text-xs text-red-500'>{errors?.quickReplies?.[index]?.message}</p>}
+          {errors?.quickReplies?.[index] && <p className='justify-start mb-6 text-xs text-error'>{errors?.quickReplies?.[index]?.message}</p>}
         </>
       ))}
       <button onClick={() => append('New reply')} className='justify-center normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('addQuickReply')}</button>

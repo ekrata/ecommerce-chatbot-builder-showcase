@@ -68,7 +68,7 @@ export const AskAQuestionActionNode = (node: Node) => {
   const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label) => label)
 
   return (
-    <div className={`w-16 animate-fade `} >
+    <div className={`w-16  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
       <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.AskAQuestion`)} hasErrors={hasErrors} />
       {createTargetHandles(node, nodeEdges, outputKey)}
@@ -133,9 +133,7 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
     // setError('quickReplies', node?.data?.errors?.quickReplies)
   }, [node])
 
-  // on error, set errors to nodes so they can be displayed on the node component
   useEffect(() => {
-    console.log(errors)
     updateNodes(getValues(), node, nodes, setNodes, errors)
   }, [errors])
 
@@ -147,10 +145,6 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
 
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-8' onSubmit={handleSubmit(onSubmit)} ref={ref}>
-      {/* {actionNode(Action.AskAQuestion)} */}
-      {/* {tNodes(`Action.AskAQuestion`)} */}
-      {/* {node?.id} */}
-      {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
       <TextareaField deletable={false} node={node} fieldName={'message'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
       {errors?.message && <p className='justify-start text-xs text-red-500'>{errors?.message?.message}</p>}
       <div className="w-full max-w-xs form-control">
@@ -158,9 +152,8 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
           <span className="label-text">{tForm('validationTypeLabel')}</span>
         </label>
         <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm" {...register('validationType')} >
-          <option disabled selected>{tForm('validationTypeLabel')}</option>
           {validationType.map((item) =>
-            <option>{item}</option>
+            <option key={item}>{item}</option>
           )}
         </select>
       </div>

@@ -44,13 +44,13 @@ export const GenericEdge: FC<GenericEdgeProps> = (
   useEffect(() => {
     const edge = edges?.find((edge) => edge?.id === id)
     const node = nodes?.find((node) => node.id === edge?.target)
-    if (edge?.target) {
+    if (node?.data?.[outputKey] && edge?.target) {
       const unusedLabel = getNextUnusedLabel(edges, edge?.target, node?.data?.[outputKey])
       if (unusedLabel) {
         setEdges([...edges.filter((edge) => edge?.id !== id), { ...edge, data: { label: unusedLabel } }])
       }
     }
-  }, [node?.data?.[outputKey]])
+  }, [id])
 
 
   return (

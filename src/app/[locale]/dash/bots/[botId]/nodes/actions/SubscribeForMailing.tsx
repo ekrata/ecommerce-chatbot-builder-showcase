@@ -58,7 +58,7 @@ export const SubscribeForMailingNode = (node: Node) => {
   const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label) => label)
 
   return (
-    <div className={`w-16 animate-fade `} >
+    <div className={`w-16  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
       <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.SubscribeForMailing`)} hasErrors={hasErrors} />
       {createTargetHandles(node, nodeEdges, outputKey)}
