@@ -67,13 +67,16 @@ export const nodeTypes: NodeTypes = {
 
 
 
+
 export const OutputFieldsKeys = {
   [`${Action.AskAQuestion}`]: 'outputs',
   [`${Action.CouponCode}`]: 'outputs',
   [`${Action.DecisionQuickReplies}`]: 'quickReplies',
-}
+} as const
 
-export const renderConnectionLine = (params: ConnectionLineComponentProps, edges: Edge[], nodes: Node[]) => {
+export type OutputFieldKey = typeof OutputFieldsKeys[keyof typeof OutputFieldsKeys]
+
+export const renderConnectionLine = (params: ConnectionLineComponentProps, edges: Edge[]) => {
   if (params?.fromNode?.id && params?.fromNode?.type) {
     const nodeFormLabels = params?.fromNode?.data?.[OutputFieldsKeys[params?.fromNode?.type]]
     const unusedLabel = getNextUnusedLabel(edges, params?.fromNode?.id, nodeFormLabels)
@@ -114,6 +117,8 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
       return null
   }
 }
+
+export const defaultOutputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
 
 

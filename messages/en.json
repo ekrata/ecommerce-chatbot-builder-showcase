@@ -315,14 +315,14 @@
           "Save the answer as a contact property": "Save the answer as a contact property",
           "validationTypeLabel": "Validation Type Label"
         },
-        "CouponCode": {
+        "SubscribeForMailing": {
           "description": "Allows you to subscribe the visitor to your mailing list",
           "Quick Tip": "Quick Tip",
           "tip1": "Insert 'Ask A Question' and add a decision to ask for the visitor's email address ",
           "tip2": "Link it to a subscribe for mailing node",
           "tip3": "Once the flow is triggered, the visitor's will be subscribed to your mailing list!"
         },
-        "SubscribeForMailing": {
+        "CouponCode": {
           "label": "Send a coupon code to a user",
           "defaultMessage": "Here is your code, enjoy shopping!",
           "defaultCouponCode": "X1A83B012",

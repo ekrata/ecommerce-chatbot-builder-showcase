@@ -24,13 +24,12 @@ import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMu
 import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useEdgeContext, useInteractionContext, useNodeContext } from '../../BotEditor';
+import { useEdgeContext, useNodeContext } from '../../BotEditor';
 import { actionNode, OutputFieldsKeys } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';
 import { GenericEdge } from '../shared/GenericEdge';
-import { getNextUnusedLabel } from '../shared/getNextUnusedLabel';
 import { TextareaField } from '../shared/TextareaField';
 import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';

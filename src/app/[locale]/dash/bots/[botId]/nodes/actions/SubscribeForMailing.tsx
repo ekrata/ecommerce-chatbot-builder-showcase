@@ -23,9 +23,10 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys } from '../../collections';
+import { actionNode, defaultOutputs, OutputFieldsKeys } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
+import { GenericEdge } from '../shared/GenericEdge';
 import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
 
@@ -79,7 +80,7 @@ export const SubscribeForMailingForm: React.FC<Props> = ({ node }) => {
   const [nodes, setNodes] = useNodeContext()
   const ref = useRef(null)
 
-  const tForm = useTranslations("dash.bots.ActionForms.CouponCode")
+  const tForm = useTranslations("dash.bots.ActionForms.SubscribeForMailing")
   const { register,
     handleSubmit,
     control,
@@ -88,7 +89,7 @@ export const SubscribeForMailingForm: React.FC<Props> = ({ node }) => {
     formState: { errors }, } = useForm<FormValues>({
       resolver: zodResolver(schema),
       defaultValues: {
-        outputs: ['1', '2']
+        outputs: defaultOutputs
       },
       mode: 'onBlur',
     });
@@ -102,7 +103,7 @@ export const SubscribeForMailingForm: React.FC<Props> = ({ node }) => {
 
   useEffect(() => {
     const apiValues: FormValues = node?.data
-    setValue('outputs', ['1', '2'])
+    setValue('outputs', apiValues?.outputs ?? defaultOutputs)
     // setError('quickReplies', node?.data?.errors?.quickReplies)
   }, [node])
 

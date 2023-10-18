@@ -27,7 +27,7 @@ import { validationType } from '@/entities/bot';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys } from '../../collections';
+import { actionNode, defaultOutputs, OutputFieldsKeys } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -96,7 +96,7 @@ export const CouponCodeActionForm: React.FC<Props> = ({ node }) => {
     formState: { errors }, } = useForm<FormValues>({
       resolver: zodResolver(schema),
       defaultValues: {
-        outputs: ['1', '2']
+        outputs: defaultOutputs
       },
       mode: 'onBlur',
     });
@@ -112,7 +112,7 @@ export const CouponCodeActionForm: React.FC<Props> = ({ node }) => {
     const apiValues: FormValues = node?.data
     setValue('message', apiValues?.message ?? tForm('defaultMessage'))
     setValue('couponCode', apiValues?.couponCode ?? tForm('defaultCouponCode'))
-    setValue('outputs', ['1', '2'])
+    setValue('outputs', apiValues?.outputs ?? defaultOutputs)
     // setError('quickReplies', node?.data?.errors?.quickReplies)
   }, [node])
 

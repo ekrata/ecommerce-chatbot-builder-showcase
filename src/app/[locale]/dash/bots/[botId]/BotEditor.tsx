@@ -20,9 +20,9 @@ import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
     addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-    ConnectionLineComponent, Controls, Edge, EdgeTypes, MiniMap, Node, NodeTypes,
-    OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance, ReactFlowProvider,
-    useEdges, useEdgesState, useNodesState, useOnSelectionChange, useStoreApi
+    ConnectionLineComponent, ConnectionLineComponentProps, Controls, Edge, EdgeTypes, MiniMap, Node,
+    NodeTypes, OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance,
+    ReactFlowProvider, useEdges, useEdgesState, useNodesState, useOnSelectionChange, useStoreApi
 } from 'reactflow';
 import { useDebounce, useOnClickOutside } from 'usehooks-ts';
 
@@ -36,7 +36,7 @@ import { useHistoryState } from '@uidotdev/usehooks';
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import {
     actionNode, conditionNode, connectionLineTypes, edgeTypes, getConnectionLineComponent, NodeForm,
-    nodeTypes, renderConnectionLine, triggerNode
+    nodeTypes, OutputFieldsKeys, renderConnectionLine, triggerNode
 } from './collections';
 import { DecisionQuickRepliesActionConnection } from './nodes/actions/DecisionQuickReplies';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
@@ -129,6 +129,10 @@ export const BotEditor: React.FC = () => {
   };
 
 
+
+
+
+
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
@@ -159,8 +163,7 @@ export const BotEditor: React.FC = () => {
     [reactFlowInstance, nodes, edges]
   );
 
-  const onSelectionChange = useCallback((params: OnSelectionChangeParams): void => {
-    console.log(params?.nodes)
+  const onSelectionChange = (params: OnSelectionChangeParams): void => {
     // find existing selected node
     const newNode = params?.nodes?.[0]
     if (newNode) {
@@ -180,11 +183,26 @@ export const BotEditor: React.FC = () => {
         ...node, selected: false
       })))
     }
-    console.log(selectedFormNode)
-  }, [nodes])
+  }
 
   const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => {
     const nodeTarget = nodes?.find((node) => node.id === params?.target)
+
+    // Outputs is not bound to a field count, so we allow the user to draw infinite lines by programmatically creating new outputs
+    // (and subsequently, handles) when a connection is successful, here.
+    // if (nodeTarget?.type) {
+    //   const arrayKey = OutputFieldsKeys[nodeTarget.type]
+    //   if (arrayKey === 'outputs') {
+    //     console.log('adding output')
+    //     const max = Math.max(...nodeTarget?.data?.[arrayKey].map((i: string) => Number(i)))
+    //     console.log(max)
+    //     console.log(nodeTarget?.data?.[arrayKey])
+    //     const updatedNode = { ...nodeTarget, data: { ...nodeTarget?.data, outputs: [...nodeTarget?.data?.[arrayKey], (max + 1).toString()] } }
+    //     console.log(updatedNode)
+    //     setNodes([...nodes.filter((node) => node?.id !== params?.target), updatedNode])
+    //   }
+    // }
+
     if (nodeTarget?.type) {
       return addEdge({
         ...params,
@@ -275,6 +293,10 @@ export const BotEditor: React.FC = () => {
     router.push(`/dash/bots`)
   }
 
+  const onConnectionLine = useCallback((params: ConnectionLineComponentProps) => (
+    renderConnectionLine(params, edges)
+  ), [nodes, edges])
+
 
   return (
     <div className="w-full h-screen p-2 bg-white " ref={ref} >
@@ -299,7 +321,7 @@ export const BotEditor: React.FC = () => {
                 edgeTypes={edgeTypes}
                 onPaneClick={onPaneClick}
                 attributionPosition='bottom-left'
-                connectionLineComponent={(params) => renderConnectionLine(params, edges, nodes)}
+                connectionLineComponent={onConnectionLine}
                 fitView
                 className=""
                 ref={ref}

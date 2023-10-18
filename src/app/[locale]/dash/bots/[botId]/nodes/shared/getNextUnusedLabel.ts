@@ -12,7 +12,6 @@ export const getNextUnusedLabel = (
   const unusedLabels = (nodeFormLabels ?? [])?.filter(
     (formLabel) => !edgeLabels.includes(formLabel),
   );
-  console.log(unusedLabels);
   if (unusedLabels?.length) {
     return unusedLabels[0];
   }
