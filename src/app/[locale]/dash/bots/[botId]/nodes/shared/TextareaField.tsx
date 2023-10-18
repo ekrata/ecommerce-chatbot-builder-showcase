@@ -24,7 +24,7 @@ interface Props<T extends FieldValues> {
   setValue: UseFormSetValue<T>
   register: UseFormRegister<T>,
   textareaStyle?: string
-  deletable: boolean
+  deletable?: boolean
 }
 
 /**

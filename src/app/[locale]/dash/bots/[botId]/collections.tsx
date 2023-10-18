@@ -16,12 +16,18 @@ import {
     AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode
 } from './nodes/actions/AskAQuestion';
 import {
+    CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
+} from './nodes/actions/CouponCode';
+import {
     DecisionQuickRepliesActionConnection, DecisionQuickRepliesActionEdge,
     DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
 } from './nodes/actions/DecisionQuickReplies';
 import {
     SendAChatMessageActionForm, SendAChatMessageActionNode
 } from './nodes/actions/SendAChatMessage';
+import {
+    SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
+} from './nodes/actions/SubscribeForMailing';
 import { GenericConnectionLine } from './nodes/shared/genericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
@@ -55,6 +61,8 @@ export const nodeTypes: NodeTypes = {
   // [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionNode,
   [`${Action.AskAQuestion}`]: AskAQuestionActionNode,
+  [`${Action.CouponCode}`]: CouponCodeActionNode,
+  [`${Action.SubscribeForMailing}`]: SubscribeForMailingNode,
   [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
 };
 
@@ -69,29 +77,16 @@ export const connectionLineTypes: {
 
 export const OutputFieldsKeys = {
   [`${Action.AskAQuestion}`]: 'outputs',
+  [`${Action.CouponCode}`]: 'outputs',
   [`${Action.DecisionQuickReplies}`]: 'quickReplies',
-
 }
 
 export const renderConnectionLine = (params: ConnectionLineComponentProps, edges: Edge[], nodes: Node[]) => {
   if (params?.fromNode?.id && params?.fromNode?.type) {
-    switch (params?.fromNode?.type) {
-      case Action.DecisionQuickReplies: {
-        const nodeFormLabels = params?.fromNode?.data?.quickReplies
-        const unusedLabel = getNextUnusedLabel(edges, params?.fromNode?.id, nodeFormLabels)
-        if (unusedLabel) {
-          return <GenericConnectionLine params={params} label={unusedLabel} />
-        }
-      }
-      case Action.AskAQuestion: {
-        const nodeFormLabels = params?.fromNode?.data?.outputs
-        console.log(nodeFormLabels)
-        const unusedLabel = getNextUnusedLabel(edges, params?.fromNode?.id, nodeFormLabels)
-        console.log(edges)
-        if (unusedLabel) {
-          return <GenericConnectionLine params={params} label={unusedLabel} />
-        }
-      }
+    const nodeFormLabels = params?.fromNode?.data?.[OutputFieldsKeys[params?.fromNode?.type]]
+    const unusedLabel = getNextUnusedLabel(edges, params?.fromNode?.id, nodeFormLabels)
+    if (unusedLabel) {
+      return <GenericConnectionLine params={params} label={unusedLabel} />
     }
   }
   return null
@@ -99,9 +94,10 @@ export const renderConnectionLine = (params: ConnectionLineComponentProps, edges
 
 export const edgeTypes: EdgeTypes = {
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionEdge,
+  [`${Action.CouponCode}`]: CouponCodeActionEdge,
+  [`${Action.SubscribeForMailing}`]: SubscribeForMailingEdge,
   [`${Action.AskAQuestion}`]: AskAQuestionActionEdge
 }
-
 
 interface Props {
   node: Node
@@ -115,6 +111,10 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
       return <SendAChatMessageActionForm node={node} />
     case Action.AskAQuestion:
       return <AskAQuestionActionForm node={node} />
+    case Action.CouponCode:
+      return <CouponCodeActionForm node={node} />
+    case Action.SubscribeForMailing:
+      return <SubscribeForMailingForm node={node} />
     case VisitorBotInteractionTrigger.VisitorClicksBotsButton:
       return <VisitorClicksBotsButtonForm node={node} />
 

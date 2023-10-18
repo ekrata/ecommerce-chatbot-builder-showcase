@@ -292,7 +292,6 @@ export const BotEditor: React.FC = () => {
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 edgeTypes={edgeTypes}
-                edge
                 onPaneClick={onPaneClick}
                 attributionPosition='bottom-left'
                 onConnectStart={onConnectStart}

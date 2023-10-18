@@ -36,7 +36,7 @@ export default function DashNavbar() {
         >
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('conversations')}>
             <div className='indicator'>
-              <span className='text-xs indicator-item badge badge-primary'>
+              <span className='text-xs indicator-item badge badge-info'>
                 {unreadMessages}
               </span>
               <IoMdChatboxes className='w-6 h-6' />
@@ -52,9 +52,9 @@ export default function DashNavbar() {
         >
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('visitors')}>
             <div className='indicator'>
-              <span className='text-xs indicator-item badge badge-primary'>
-                {/* {newVisits} */}
-              </span>
+              {/* <span className='text-xs indicator-item badge badge-info'>
+                0
+              </span> */}
               <CgWebsite className='w-6 h-6' />
             </div>
           </div>
@@ -68,9 +68,9 @@ export default function DashNavbar() {
         >
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('bots')}>
             <div className='indicator'>
-              <span className='text-xs indicator-item badge badge-primary'>
-                {/* {newVisits} */}
-              </span>
+              {/* <span className='text-xs indicator-item badge badge-info'>
+                0
+              </span> */}
               <BsRobot className='w-6 h-6' />
             </div>
           </div>
