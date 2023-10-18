@@ -164,8 +164,8 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
       <button onClick={() => append('New reply')} className='justify-center normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('addQuickReply')}</button>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">{tDecisionForm("transferToOperatorMessage")}</span>
-          <input type="checkbox" className="toggle"  {...register('transferToOperatorMessage')} />
+          <span className="label-text">{tDecisionForm("transferToOperatorMessageLabel")}</span>
+          <input type="checkbox" className="toggle toggle-info"  {...register('transferToOperatorMessage')} />
         </label>
       </div>
       {errors?.transferToOperatorMessage && <p className='justify-start text-xs text-red-500'>{errors?.transferToOperatorMessage?.message}</p>}
