@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-    SuggestionMode, Theme
+  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+  SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -12,9 +12,9 @@ import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState }
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-    useNodeId, useNodes, useUpdateNodeInternals
+  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
+  useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -119,7 +119,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
   useOnClickOutside(ref, handleClickOutside)
 
-  const { fields, append, update, prepend, remove, swap, move, insert } = fieldArray
+  const { fields, append, update, prepend, remove, swap, ddmove, insert } = fieldArray
 
   useEffect(() => {
     const apiValues: FormValues = node?.data
@@ -146,11 +146,8 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
-      {/* {actionNode(Action.DecisionQuickReplies)} */}
-      {/* {tNodes(`Action.DecisionQuickReplies`)} */}
-      {/* {node?.id} */}
-      {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
-      <TextareaField fieldName={'message'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
+      <TextareaField fieldName={'title'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea textarea-sm focus:outline-0' />
+      <TextareaField fieldName={'message'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea textarea-xs focus:outline-0' />
       {errors.message && <p className='justify-start text-xs text-error'>{errors.message.message}</p>}
       <div className='mb-10 divider'></div>
 

@@ -1,39 +1,42 @@
 import 'reactflow/dist/style.css';
 
 import {
-    Action, VisitorBotInteractionTrigger
+  Action, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { ComponentType, ReactElement } from 'react';
 import {
-    ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
-    Node, NodeTypes
+  ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
+  Node, NodeTypes
 } from 'reactflow';
 
 import { Actions, Conditions, Triggers } from '@/entities/bot';
 
 import { nodeSubTypeIcons } from '../nodeSubTypeIcons';
 import {
-    AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode
+  AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode
 } from './nodes/actions/AskAQuestion';
 import {
-    CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
+  CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
 } from './nodes/actions/CouponCode';
 import {
-    DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode
+  DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode
 } from './nodes/actions/DecisionButtons';
 import {
-    DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
+  DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode
+} from './nodes/actions/DecisionCardMessages';
+import {
+  DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
 } from './nodes/actions/DecisionQuickReplies';
 import {
-    SendAChatMessageActionForm, SendAChatMessageActionNode
+  SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
 } from './nodes/actions/SendAChatMessage';
 import {
-    SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
+  SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
 } from './nodes/actions/SubscribeForMailing';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
-    VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
+  VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
 import { onDragStart } from './onDragStart';
 
@@ -62,6 +65,7 @@ export const nodeTypes: NodeTypes = {
   // [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
   // [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionNode,
+  [`${Action.DecisionCardMessages}`]: DecisionCardMessagesActionNode,
   [`${Action.DecisionButtons}`]: DecisionButtonsActionNode,
   [`${Action.AskAQuestion}`]: AskAQuestionActionNode,
   [`${Action.CouponCode}`]: CouponCodeActionNode,
@@ -75,7 +79,9 @@ export const nodeTypes: NodeTypes = {
 export const OutputFieldsKeys = {
   [`${Action.AskAQuestion}`]: 'outputs',
   [`${Action.CouponCode}`]: 'outputs',
+  [`${Action.SendAChatMessage}`]: 'outputs',
   [`${Action.DecisionQuickReplies}`]: 'quickReplies',
+  [`${Action.DecisionCardMessages}`]: 'choices',
   [`${Action.DecisionButtons}`]: 'choices',
 } as const
 
@@ -95,7 +101,9 @@ export const renderConnectionLine = (params: ConnectionLineComponentProps, edges
 export const edgeTypes: EdgeTypes = {
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionEdge,
   [`${Action.DecisionButtons}`]: DecisionButtonsActionEdge,
+  [`${Action.DecisionCardMessages}`]: DecisionCardMessagesActionEdge,
   [`${Action.CouponCode}`]: CouponCodeActionEdge,
+  [`${Action.SendAChatMessage}`]: SendAChatMessageActionEdge,
   [`${Action.SubscribeForMailing}`]: SubscribeForMailingEdge,
   [`${Action.AskAQuestion}`]: AskAQuestionActionEdge
 }
@@ -108,6 +116,8 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
   switch (node.type) {
     case Action.DecisionQuickReplies:
       return <DecisionQuickRepliesActionForm node={node} />
+    case Action.DecisionCardMessages:
+      return <DecisionCardMessagesActionForm node={node} />
     case Action.DecisionButtons:
       return <DecisionButtonsActionForm node={node} />
     case Action.SendAChatMessage:

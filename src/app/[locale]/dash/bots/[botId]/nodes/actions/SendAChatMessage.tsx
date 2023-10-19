@@ -1,6 +1,6 @@
 import EmojiPicker, {
-    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-    SuggestionMode, Theme
+  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+  SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -10,9 +10,9 @@ import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, useEdges, useNodeId,
-    useNodes
+  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, useEdges, useNodeId,
+  useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -63,7 +63,7 @@ export const SendAChatMessageActionNode = (node: Node) => {
   );
 }
 
-export const CouponCodeActionEdge: React.FC<EdgeProps> = (params) => {
+export const SendAChatMessageActionEdge: React.FC<EdgeProps> = (params) => {
   return <GenericEdge {...params} outputKey={OutputFieldsKeys[type]} />
 }
 
@@ -116,6 +116,7 @@ export const SendAChatMessageActionForm: React.FC<Props> = ({ node }) => {
   useEffect(() => {
     const apiValues: FormValues = node?.data
     setValue('messages', apiValues?.messages ?? tForm('defaultMessage'))
+    setValue('outputs', apiValues?.outputs ?? defaultOutputs)
   }, [node])
 
   // on error, set errors to nodes so they can be displayed on the node component
@@ -137,7 +138,7 @@ export const SendAChatMessageActionForm: React.FC<Props> = ({ node }) => {
           {errors?.messages?.[index] && <p className='justify-start mb-6 text-xs text-red-500'>{errors?.messages?.[index]?.message}</p>}
         </div>
       ))}
-      <button onClick={() => append('New nessage')} className='justify-center w-1/2 normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('New message')}</button>
+      <button onClick={() => append(tForm('New message'))} className='justify-center w-1/2 normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('New message')}</button>
     </form >
   )
 }

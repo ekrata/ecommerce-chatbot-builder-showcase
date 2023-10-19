@@ -36,7 +36,7 @@ export const GenericEdge: FC<GenericEdgeProps> = (
     targetY,
     targetPosition,
     // increase curvurture to differentiate duplicated edges
-    curvature: 0.5 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1,
+    curvature: 0.04 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1,
   });
 
 
@@ -60,7 +60,7 @@ export const GenericEdge: FC<GenericEdgeProps> = (
         <div
           style={{
             position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 2 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1}px)`,
+            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 0.2 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 1}px)`,
             fontSize: 12,
             padding: 10,
             borderRadius: 5,

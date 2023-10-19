@@ -8,21 +8,21 @@ import 'reactflow/dist/style.css';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
-    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import {
-    createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
-    useState
+  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
+  useState
 } from 'react';
 import { BiLoaderAlt, BiRedo, BiTrash, BiUndo } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-    ConnectionLineComponent, ConnectionLineComponentProps, Controls, Edge, EdgeTypes, MiniMap, Node,
-    NodeTypes, OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance,
-    ReactFlowProvider, useEdges, useEdgesState, useNodesState, useOnSelectionChange, useStoreApi
+  addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+  ConnectionLineComponent, ConnectionLineComponentProps, Controls, Edge, EdgeTypes, MiniMap, Node,
+  NodeTypes, OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance,
+  ReactFlowProvider, useEdges, useEdgesState, useNodesState, useOnSelectionChange, useStoreApi
 } from 'reactflow';
 import { useDebounce, useOnClickOutside } from 'usehooks-ts';
 
@@ -35,8 +35,8 @@ import { useHistoryState } from '@uidotdev/usehooks';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import {
-    actionNode, conditionNode, connectionLineTypes, edgeTypes, getConnectionLineComponent, NodeForm,
-    nodeTypes, OutputFieldsKeys, renderConnectionLine, triggerNode
+  actionNode, conditionNode, connectionLineTypes, edgeTypes, getConnectionLineComponent, NodeForm,
+  nodeTypes, OutputFieldsKeys, renderConnectionLine, triggerNode
 } from './collections';
 import { DecisionQuickRepliesActionConnection } from './nodes/actions/DecisionQuickReplies';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';

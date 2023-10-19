@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-    SuggestionMode, Theme
+  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+  SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -10,14 +10,14 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-    FieldErrors, Path, Resolver, SubmitHandler, useFieldArray, useForm
+  FieldErrors, Path, Resolver, SubmitHandler, useFieldArray, useForm
 } from 'react-hook-form';
 import { BsPlus, BsX } from 'react-icons/bs';
 import { FcInfo } from 'react-icons/fc';
 import {
-    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-    useNodeId, useNodes, useUpdateNodeInternals
+  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
+  useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -165,8 +165,11 @@ export const DecisionButtonsActionForm: React.FC<Props> = ({ node }) => {
       {errors.message && <p className='justify-start text-xs text-error'>{errors.message.message}</p>}
       <div className='mb-10 divider'></div>
 
+      <label className="cursor-pointer label">
+        <span className="label-text">{tDecisionForm('Choices')}</span>
+      </label>
       {choicesFieldArray.fields?.map((field, index) => (
-        <div key={field.id} className="flex flex-row group place-items-centers border-[1px] border-info p-6 rounded-full ">
+        <div key={field.id} className="flex flex-row group place-items-centers shadow-md border-[1px] border-info p-6 rounded-full ">
           <div className="w-full max-w-xs form-control gap-y-2">
             <input type="text" placeholder={tForm('buttonNamePlaceholder')} {...register(`choices.${index}`)} className="w-full max-w-xs bg-gray-200 input-sm input focus:outline-0" />
             {errors?.choices && <p className='justify-start mb-1 text-xs text-error'>{errors?.choices?.message}</p>}
@@ -179,7 +182,6 @@ export const DecisionButtonsActionForm: React.FC<Props> = ({ node }) => {
             choicesFieldArray?.remove(index)
             choiceLinksFieldArray?.remove(index)
             // remove respective edge
-            console.log(value)
             setEdges(edges.filter((edge) => edge?.data?.label !== value || edge.target !== node.id))
           }}></BsX>
 

@@ -302,13 +302,28 @@
         "GenericDecision": {
           "facebookCatch": "Please note: Facebook Messenger displays shorter buttons. Replies with text longer than 20 characters will be shortened to 20 characters.",
           "transferToOperatorMessageLabel": "Transfer to operator message",
-          "transferToOperatorMessageDescription": "The transfer to operator message is sent to a visitor when they reply to a question with a text, instead of choosing one of the decision buttons"
+          "transferToOperatorMessageDescription": "The transfer to operator message is sent to a visitor when they reply to a question with a text, instead of choosing one of the decision buttons",
+          "Choices": "Choices",
+          "Message": "Message",
+          "Title": "Title"
         },
         "DecisionQuickReplies": {
           "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
           "defaultReply1": "Yes, please!",
           "defaultReply2": "No, thanks.",
           "addQuickReply": "Add quick reply"
+        },
+        "DecisionCardMessages": {
+          "defaultTitle": "Enter a title here..",
+          "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
+          "messagePlaceholder": "Type in the message that will be sent to the user.",
+          "buttonNamePlaceholder": "Type in a button name",
+          "urlPlaceholder": "Enter url here (Optional)",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "Message": "Message",
+          "addQuickReply": "Add quick reply",
+          "addButton": "Add button"
         },
         "SendAChatMessage": {
           "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
@@ -319,12 +334,12 @@
         "DecisionButtons": {
           "messagePlaceholder": "Type in the message that will be sent to the user.",
           "buttonNamePlaceholder": "Type in a button name",
-          "urlPlaceholder": "Enter url here...",
+          "urlPlaceholder": "Enter url here (Optional)",
           "action": "Action",
           "description": "The visitor will be asked to choose between the buttons specified below.",
           "defaultReply1": "Yes, please!",
           "defaultReply2": "No, thanks.",
-          "addButton": "Add button"
+          "addButton": "Add decision button"
         },
         "AskAQuestion": {
           "defaultQuestion": "Hi 👋 Would you like to take a closer look at our offer?",
