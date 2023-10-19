@@ -19,6 +19,24 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         // CREATE
         if (record.eventName === 'INSERT') {
           if (
+            record.dynamodb.NewImage.context?.S === 'interaction' ||
+            record.dynamodb.NewImage.__edb_e__?.S === 'interaction'
+          ) {
+            const entries = await client
+              .putEvents({
+                Entries: [
+                  {
+                    EventBusName: EventBus.appEventBus.eventBusName,
+                    Source: 'ddbStream',
+                    DetailType: 'createInteraction',
+                    Detail: JSON.stringify(record),
+                  },
+                ],
+              })
+              .promise();
+          }
+
+          if (
             record.dynamodb.NewImage.context?.S === 'message' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'message'
           ) {

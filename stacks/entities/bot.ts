@@ -1,7 +1,12 @@
 import { Entity, EntityItem } from 'electrodb';
 import {
-    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action,
+  Condition,
+  OperatorInteractionTrigger,
+  ShopifyAction,
+  ShopifyCondition,
+  VisitorBotInteractionTrigger,
+  VisitorPageInteractionTrigger,
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -27,10 +32,24 @@ export const actions = [
   ...Object.values(ShopifyAction),
 ];
 
+export const botNodeEvent = {
+  ...Condition,
+  ...ShopifyCondition,
+  ...Action,
+  ...ShopifyAction,
+};
+
+export type BotNodeEvent =
+  | Condition
+  | ShopifyCondition
+  | Action
+  | ShopifyAction;
+
 export type Actions = (typeof actions)[number];
 
 export const nodeSubType = [...triggers, ...conditions, ...actions] as const;
 
+export const nodeMap = { ...triggers, ...conditions, ...actions } as const;
 export const botCategory = [
   'General',
   'Sales',
@@ -153,6 +172,12 @@ export const Bot = new Entity({
             type: 'string',
           },
           target: {
+            type: 'string',
+          },
+          sourceHandle: {
+            type: 'string',
+          },
+          targetHandle: {
             type: 'string',
           },
         },

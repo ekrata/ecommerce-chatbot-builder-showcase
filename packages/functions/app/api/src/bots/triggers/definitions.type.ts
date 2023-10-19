@@ -27,6 +27,12 @@ export enum OperatorInteractionTrigger {
   WhenYouStartIt = 'When you start it',
 }
 
+export const Triggers = {
+  ...VisitorBotInteractionTrigger,
+  ...VisitorPageInteractionTrigger,
+  ...OperatorInteractionTrigger,
+};
+
 export enum Condition {
   BasedOnContactProperty = 'Based on Contact Property',
   Browser = 'Browser',

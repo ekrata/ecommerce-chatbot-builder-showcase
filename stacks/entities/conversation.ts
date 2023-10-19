@@ -113,6 +113,10 @@ export const Conversation = new Entity({
     operatorId: {
       type: 'string',
     },
+    // Current Operator
+    botId: {
+      type: 'string',
+    },
     channel: {
       type: conversationChannel,
       required: true,

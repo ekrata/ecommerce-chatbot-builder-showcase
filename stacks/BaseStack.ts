@@ -1,6 +1,7 @@
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
+import { snakeCase } from 'lodash';
 import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
   Api,
@@ -21,6 +22,7 @@ import {
   WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 
+import { botNodeEvent } from './entities/bot';
 import { paramStack } from './paramStack';
 
 export function baseStack({ stack, app }: StackContext) {
@@ -337,6 +339,31 @@ export function baseStack({ stack, app }: StackContext) {
       //     permissions: [table, assets, REGION, 'events:PutEvents'],
       //   },
       // },
+    },
+  });
+
+  const botNodeTopic = new Topic(stack, 'BotNodeTopic', {
+    subscribers: {
+      [botNodeEvent.AskAQuestion]: {
+        type: 'queue',
+        queue: new Queue(
+          stack,
+          `bot_node_${snakeCase(botNodeEvent.AskAQuestion)}_queue`,
+          {
+            consumer:
+              'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
+          },
+        ),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.AskAQuestion],
+              }),
+            },
+          },
+        },
+      },
     },
   });
 

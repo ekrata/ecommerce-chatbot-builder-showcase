@@ -49,8 +49,8 @@ const schema = z.object({
   }),
 })
 
-type FormValues = z.infer<typeof schema>
-type NodeData = FormValues & FieldErrors<FormValues>
+type AskAQuestionData = z.infer<typeof schema>
+export type FormValues = AskAQuestionData
 
 const type = Action.AskAQuestion
 
