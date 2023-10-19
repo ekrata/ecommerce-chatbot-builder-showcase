@@ -146,7 +146,6 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
-      <TextareaField fieldName={'title'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea textarea-sm focus:outline-0' />
       <TextareaField fieldName={'message'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea textarea-xs focus:outline-0' />
       {errors.message && <p className='justify-start text-xs text-error'>{errors.message.message}</p>}
       <div className='mb-10 divider'></div>

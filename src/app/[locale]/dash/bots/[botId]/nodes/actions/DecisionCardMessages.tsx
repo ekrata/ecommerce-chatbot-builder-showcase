@@ -11,7 +11,7 @@ import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions
 import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus, BsX } from 'react-icons/bs';
-import { FcInfo } from 'react-icons/fc';
+import { FcFile, FcInfo, FcPicture } from 'react-icons/fc';
 import {
   addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
   EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
@@ -36,17 +36,15 @@ import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
 
 const schema = z.object({
-  banner: z?.custom<File>()?.optional(),
+  banner: z?.custom<FileList>()?.optional(),
   title: z.string()?.min(1),
   message: z.string()?.min(1),
-  url: z?.string()?.url()?.optional(),
+  url: z.string().url().optional().or(z.literal('')),
   transferToOperatorMessage: z.boolean(),
   choices: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
     message: 'Each option must be unique.',
   }),
-  choiceLinks: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
-    message: 'Each option must be unique.',
-  }),
+  choiceLinks: z.array(z.string()?.optional()),
 })
 
 const type = Action.DecisionCardMessages
@@ -92,7 +90,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
   const [nodes, setNodes, onNodesChange] = useNodeContext()
   const params = useParams();
   const ref = useRef(null)
-  const [image, setImage] = useState(null)
+  const [image, setImage] = useState<File | undefined>()
 
   const tForm = useTranslations("dash.bots.ActionForms.DecisionCardMessages")
   const tDecisionForm = useTranslations("dash.bots.ActionForms.GenericDecision")
@@ -139,7 +137,8 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
     console.log(apiValues?.banner)
     setValue('banner', apiValues?.banner)
     if (apiValues?.banner) {
-      setImage(URL?.createObjectURL(apiValues?.banner));
+      console.log(apiValues?.banner)
+      setImage(URL?.createObjectURL(apiValues?.banner?.[0]));
     }
     setValue('title', apiValues?.title ?? tForm('defaultTitle'))
     setValue('message', apiValues?.message ?? tForm('defaultMessage'))
@@ -159,7 +158,8 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
 
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
-    console.log(getValues());
+    console.log(values)
+    onImageChange(values?.banner)
     updateNodes(values, node, nodes, setNodes)
   }
 
@@ -167,10 +167,9 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
   //   handleSubmit(onSubmit)
   // }, [])
 
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL?.createObjectURL(event.target.files[0]));
-    }
+  const onImageChange = (files: FileList | undefined) => {
+    console.log(files)
+    setImage(URL?.createObjectURL(files?.[0]))
   }
 
 
@@ -181,9 +180,15 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
       {/* {node?.id} */}
       {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
       <div className='flex flex-col justify-center p-2 border-[1px] border-black rounded-md shadow-lg'>
-        <div className='w-full bg-gray-200/10' >
+        <div className='relative w-full bg-gray-200/10 group' >
+          {image && <BsX onClick={() => {
+            setImage(undefined)
+          }} className='absolute top-0 right-0 z-10 invisible text-2xl hover:cursor-pointer group-hover:visible'></BsX>}
           <img src={image} className='w-full h-[160px] aspect-square'></img>
-          <input type="file" className="w-full max-w-xs h-200 file-input file-input-ghost"  {...register('banner')} onBlur={handleSubmit(onSubmit)} onChange={onImageChange} />
+          <div className='flex flex-row'>
+            <input type="file" accept=".jpg, .jpeg, .png, .pdf, .docx, .gif" className="w-full max-w-xs h-200 file-input file-input-sm input-ghost"  {...register('banner')} name={'banner'} />
+            <FcPicture className='text-2xl' />
+          </div>
 
         </div>
         {errors?.banner && <p className='justify-start text-xs text-error'>{errors?.banner?.message}</p>}
@@ -207,7 +212,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
           </label>
           <input type='text' className='bg-gray-200 input input-sm' placeholder={tForm('urlPlaceholder')} {...register('url')} />
         </div>
-        {errors?.message && <p className='justify-start mb-6 text-xs text-error'>{errors?.message?.message}</p>}
+        {errors?.url && <p className='justify-start mb-6 text-xs text-error'>{errors?.url?.message}</p>}
         <label className="cursor-pointer label">
           <span className="label-text">{tDecisionForm('Choices')}</span>
         </label>
@@ -244,7 +249,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
               </div>
               {tDecisionForm("transferToOperatorMessageLabel")}
             </span>
-            <input type="checkbox" className="toggle toggle-info"  {...register('transferToOperatorMessage')} />
+            <input type="checkbox" className="toggle toggle-info"  {...register('transferToOperatorMessage')} onBlur={handleSubmit(onSubmit)} />
           </label>
         </div>
         {errors?.transferToOperatorMessage && <p className='justify-start text-xs text-red-500'>{errors?.transferToOperatorMessage?.message}</p>}
