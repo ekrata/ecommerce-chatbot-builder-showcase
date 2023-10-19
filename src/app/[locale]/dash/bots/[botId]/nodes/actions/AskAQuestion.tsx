@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-    SuggestionMode, Theme
+  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+  SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -12,9 +12,8 @@ import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-    useNodeId, useNodes
+  Edge, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges, useNodeId,
+  useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -25,8 +24,8 @@ import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { validationType } from '@/entities/bot';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useEdgeContext, useInteractionContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys } from '../../collections';
+import { useEdgeContext, useNodeContext } from '../../BotEditor';
+import { actionNode, OutputFieldsKeys, successFailure } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -107,7 +106,7 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
       resolver: zodResolver(schema),
       defaultValues: {
         message: '',
-        outputs: ['✓ Success', '⤫ Failure']
+        outputs: successFailure
       },
       mode: 'onBlur',
     });
@@ -127,7 +126,7 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
     setValue('message', apiValues?.message ?? tForm('defaultQuestion'))
     setValue('validationType', apiValues?.validationType ?? 'Email')
     setValue('errorMessage', apiValues?.errorMessage ?? tForm('defaultError'))
-    setValue('outputs', ['✓ Success', '⤫ Failure'])
+    setValue('outputs', successFailure)
     setValue('numberOfRepeats', apiValues?.numberOfRepeats ?? 1)
     setValue('saveTheAnswerAsAContactProperty', apiValues?.saveTheAnswerAsAContactProperty ?? false)
     // setError('quickReplies', node?.data?.errors?.quickReplies)

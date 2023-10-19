@@ -1,7 +1,7 @@
 import 'reactflow/dist/style.css';
 
 import {
-  Action, VisitorBotInteractionTrigger
+  Action, Condition, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { ComponentType, ReactElement } from 'react';
 import {
@@ -33,6 +33,10 @@ import {
 import {
   SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
 } from './nodes/actions/SubscribeForMailing';
+import {
+  BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
+  BasedOnContactPropertyConditionNode
+} from './nodes/conditions/BasedOnContactProperty';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
@@ -62,7 +66,7 @@ export const nodeTypes: NodeTypes = {
   [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: VisitorClicksBotsButtonTriggerNode,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
-  // [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
+  [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
   // [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
   [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionNode,
   [`${Action.DecisionCardMessages}`]: DecisionCardMessagesActionNode,
@@ -83,6 +87,7 @@ export const OutputFieldsKeys = {
   [`${Action.DecisionQuickReplies}`]: 'quickReplies',
   [`${Action.DecisionCardMessages}`]: 'choices',
   [`${Action.DecisionButtons}`]: 'choices',
+  [`${Condition.BasedOnContactProperty}`]: 'outputs',
 } as const
 
 export type OutputFieldKey = typeof OutputFieldsKeys[keyof typeof OutputFieldsKeys]
@@ -105,7 +110,8 @@ export const edgeTypes: EdgeTypes = {
   [`${Action.CouponCode}`]: CouponCodeActionEdge,
   [`${Action.SendAChatMessage}`]: SendAChatMessageActionEdge,
   [`${Action.SubscribeForMailing}`]: SubscribeForMailingEdge,
-  [`${Action.AskAQuestion}`]: AskAQuestionActionEdge
+  [`${Action.AskAQuestion}`]: AskAQuestionActionEdge,
+  [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionEdge,
 }
 
 interface Props {
@@ -128,6 +134,8 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
       return <CouponCodeActionForm node={node} />
     case Action.SubscribeForMailing:
       return <SubscribeForMailingForm node={node} />
+    case Condition.BasedOnContactProperty:
+      return <BasedOnContactPropertyConditionForm node={node} />
     case VisitorBotInteractionTrigger.VisitorClicksBotsButton:
       return <VisitorClicksBotsButtonForm node={node} />
 
@@ -137,6 +145,8 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
 }
 
 export const defaultOutputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+export const successFailure = ['✓ Success', '⤫ Failure']
+export const yesNo = ['✓ Yes', '⤫ No']
 
 
 

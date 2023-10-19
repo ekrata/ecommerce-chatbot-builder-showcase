@@ -241,6 +241,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
           choiceLinksFieldArray?.append(`${tForm('urlPlaceholder')} ${choiceLinksFieldArray.fields?.length}`)
         }} className='justify-center mt-2 normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('addButton')}</button>
         {/* <button onClick={() => append('New reply')} className='justify-center normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('addQuickReply')}</button> */}
+        <span className="text-xs text-gray-200 label-text">{tDecisionForm("facebookCatch")}</span>
         <div className="form-control">
           <label className="cursor-pointer label ">
             <span className="label-text place-items-center">

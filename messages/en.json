@@ -210,6 +210,7 @@
     "Copied to clipboard": "Copied to clipboard",
     "Import": "Import",
     "Remove": "Remove",
+    "Value": "Value",
     "Save": "Save",
     "Fetching": "Fetching",
     "Undo": "Undo",
@@ -268,6 +269,24 @@
         "Order issues": "Order issues",
         "Lead generation": "Lead generation",
         "Promotions": "Promotions"
+      },
+      "contactProperties": {
+        "name": "Name",
+        "firstName": "First Name",
+        "phone": "Phone",
+        "email": "Email",
+        "countryCode": "Country Code",
+        "city": "City",
+        "projectDomain": "Project Domain",
+        "projectName": "Project Name"
+      },
+      "contactSelectors": {
+        "isEqualTo": "Is Equal To",
+        "isSet": "Is Set",
+        "is": "Is",
+        "contains": "Contains",
+        "startsWith": "Starts With",
+        "endsWith": "Ends With"
       },
       "This node contains fields with errors, please ensure these errors are fixed or the bot will not run": "This node contains fields with errors, please ensure these errors are fixed or the bot will not run.",
       "This node has connections that are cannot be triggered, add more output nodes(such as decisions), to fix this": "This node has connections that are cannot be triggered. Add more output nodes(such as decisions), to fix this.",
@@ -368,6 +387,12 @@
         "VisitorClicksBotsButton": {
           "fieldLabel": "What is the button's name",
           "placeholder": "Type the button's name"
+        }
+      },
+      "ConditionForms": {
+        "BasedOnContactProperty": {
+          "Contact Property": "Contact Property",
+          "Contact Selector": "Contact Selector"
         }
       },
       "nodes": {

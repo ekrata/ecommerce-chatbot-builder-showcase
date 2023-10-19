@@ -3,6 +3,30 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { rating } from './conversation';
 
+export const contactProperties = [
+  'name',
+  'firstName',
+  'phone',
+  'email',
+  'countryCode',
+  'city',
+  'projectDomain',
+  'projectName',
+  'projectDomain',
+] as const;
+
+export const contactSelector = [
+  'isEqualTo',
+  'isSet',
+  'is',
+  'contains',
+  'startsWith',
+  'endsWith',
+] as const;
+
+export type ContactProperty = (typeof contactProperties)[number];
+export type ContactSelector = (typeof contactSelector)[number];
+
 export const Customer = new Entity({
   model: {
     entity: 'customer',
@@ -32,7 +56,7 @@ export const Customer = new Entity({
     name: {
       type: 'string',
     },
-    first_name: {
+    firstName: {
       type: 'string',
     },
     phone: {
