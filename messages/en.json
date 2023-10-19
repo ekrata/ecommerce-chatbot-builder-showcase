@@ -288,6 +288,32 @@
         "startsWith": "Starts With",
         "endsWith": "Ends With"
       },
+      "triggerInterval": {
+        "send once per 24 hours": "send once per 24 hours",
+        "send only once per unique visitor": "send only once per unique visitor",
+        "send on every visit": "send on every visit"
+      },
+      "languageCodes": {
+        "en": "English",
+        "es": "Spanish",
+        "de": "German",
+        "zh": "Chinese",
+        "fr": "French",
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "pa": "Punjabi (Panjabi)"
+      },
+      "visitorSaysTopic": {
+        "custom": "Custom",
+        "greetings": "Greetings",
+        "criticism": "Criticism",
+        "gratitude": "Gratitude",
+        "praise": "Praise",
+        "products": "Products",
+        "orderStatus": "Order Status",
+        "orderIssues": "Order Issues",
+        "shippingPolicy": "Shipping Policy"
+      },
       "This node contains fields with errors, please ensure these errors are fixed or the bot will not run": "This node contains fields with errors, please ensure these errors are fixed or the bot will not run.",
       "This node has connections that are cannot be triggered, add more output nodes(such as decisions), to fix this": "This node has connections that are cannot be triggered. Add more output nodes(such as decisions), to fix this.",
       "VisitorBotInteractionTrigger": "Visitor interacts with bot",
@@ -387,17 +413,33 @@
         "VisitorClicksBotsButton": {
           "fieldLabel": "What is the button's name",
           "placeholder": "Type the button's name"
+        },
+        "VisitorSays": {
+          "description": "The visitor will trigger that chatbot when they send a similar message to the phrases listed below. Once triggered, the bot will take control of the conversation.",
+          "conversationLanguage": "Conversation Language",
+          "conversationTopic": "Conversation Topic",
+          "phraseDescription": "Type phrases in the fields below. Use the most natural, conversational language possible to help our AI detect with greater accuracy",
+          "phrase1": "ie. When will my order be shipped",
+          "phrase2": "do you have any discounts available right now?",
+          "addPhrase": "Add phrase"
         }
       },
       "ConditionForms": {
         "BasedOnContactProperty": {
           "Contact Property": "Contact Property",
           "Contact Selector": "Contact Selector"
+        },
+        "ChatStatus": {
+          "description": "Adjusts the chat status depending on whether you are offline or online"
+        },
+        "TriggerInterval": {
+          "label": "Trigger Interval"
         }
       },
       "nodes": {
         "VisitorBotInteractionTrigger": {
           "VisitorClicksBotsButton": "Visitor clicks the bots button",
+          "VisitorClicksChatIcon": "Visitor clicks the chat button",
           "VisitorSays": "Visitor says",
           "InstagramStoryReply": "Instagram - Story Reply",
           "VisitorSelectsDepartment": "Visitor selects department"

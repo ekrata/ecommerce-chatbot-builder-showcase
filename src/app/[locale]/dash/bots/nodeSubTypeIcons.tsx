@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { BiMailSend, BiSolidContact, BiSolidCoupon, BiSolidTagX, BiTimer } from 'react-icons/bi';
 import {
-  BsCalendarDay, BsCalendarEvent, BsCardChecklist, BsChatLeft, BsChatSquareTextFill, BsChatText,
-  BsFillBuildingFill, BsFillCartCheckFill, BsFillSendFill, BsFolderSymlink, BsPersonCheckFill,
-  BsQuestion
+  BsCalendarDay, BsCalendarEvent, BsCardChecklist, BsChat, BsChatLeft, BsChatSquareTextFill,
+  BsChatText, BsFillBuildingFill, BsFillCartCheckFill, BsFillSendFill, BsFolderSymlink,
+  BsPersonCheckFill, BsQuestion
 } from 'react-icons/bs';
 import { CgBrowser, CgScrollV } from 'react-icons/cg';
 import {
@@ -75,6 +75,7 @@ export const nodeSubTypeIcons: Record<SubNodeType, ReactNode> = {
   'Shipping Zones': <FaShippingFast />,
   'Subscribe for mailing': <RiMailDownloadFill />,
   "The visitor hasn't contacted you for some time": <RiChatOffLine />,
+  'Visitor clicks on the chat icon': <BsChat />,
   'To another chatbot': <RiChatForwardLine />,
   'Visitor clicks the bots button': <RiRobot2Fill />,
   'Visitor opens a specific page': <MdOutlinePageview />,

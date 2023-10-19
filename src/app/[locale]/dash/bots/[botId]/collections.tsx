@@ -37,11 +37,19 @@ import {
   BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
   BasedOnContactPropertyConditionNode
 } from './nodes/conditions/BasedOnContactProperty';
+import { ChatStatusConditionEdge } from './nodes/conditions/ChatStatus';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
   VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
+import {
+  VisitorClicksOnChatIconTriggerEdge, VisitorClicksOnChatIconTriggerForm,
+  VisitorClicksOnChatIconTriggerNode
+} from './nodes/triggers/VisitorClicksOnChatIcon';
+import {
+  VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
+} from './nodes/triggers/VisitorSays';
 import { onDragStart } from './onDragStart';
 
 export const conditionNode = (value: Conditions) => (
@@ -64,6 +72,8 @@ export const actionNode = (value: Actions) => (
 
 export const nodeTypes: NodeTypes = {
   [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: VisitorClicksBotsButtonTriggerNode,
+  [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: VisitorClicksOnChatIconTriggerNode,
+  [`${VisitorBotInteractionTrigger.VisitorSays}`]: VisitorSaysTriggerNode,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
@@ -77,9 +87,6 @@ export const nodeTypes: NodeTypes = {
   [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
 };
 
-
-
-
 export const OutputFieldsKeys = {
   [`${Action.AskAQuestion}`]: 'outputs',
   [`${Action.CouponCode}`]: 'outputs',
@@ -88,6 +95,10 @@ export const OutputFieldsKeys = {
   [`${Action.DecisionCardMessages}`]: 'choices',
   [`${Action.DecisionButtons}`]: 'choices',
   [`${Condition.BasedOnContactProperty}`]: 'outputs',
+  [`${Condition.ChatStatus}`]: 'outputs',
+  [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: 'outputs',
+  [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: 'outputs',
+  [`${VisitorBotInteractionTrigger.VisitorSays}`]: 'outputs',
 } as const
 
 export type OutputFieldKey = typeof OutputFieldsKeys[keyof typeof OutputFieldsKeys]
@@ -112,6 +123,9 @@ export const edgeTypes: EdgeTypes = {
   [`${Action.SubscribeForMailing}`]: SubscribeForMailingEdge,
   [`${Action.AskAQuestion}`]: AskAQuestionActionEdge,
   [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionEdge,
+  [`${Condition.ChatStatus}`]: ChatStatusConditionEdge,
+  [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: VisitorClicksOnChatIconTriggerEdge,
+  [`${VisitorBotInteractionTrigger.VisitorSays}`]: VisitorSaysTriggerEdge,
 }
 
 interface Props {
@@ -138,6 +152,10 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
       return <BasedOnContactPropertyConditionForm node={node} />
     case VisitorBotInteractionTrigger.VisitorClicksBotsButton:
       return <VisitorClicksBotsButtonForm node={node} />
+    case VisitorBotInteractionTrigger.VisitorClicksChatIcon:
+      return <VisitorClicksOnChatIconTriggerForm node={node} />
+    case VisitorBotInteractionTrigger.VisitorSays:
+      return <VisitorSaysTriggerForm node={node} />
 
     default:
       return null
@@ -145,8 +163,9 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
 }
 
 export const defaultOutputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-export const successFailure = ['✓ Success', '⤫ Failure']
-export const yesNo = ['✓ Yes', '⤫ No']
+export const successFailureOutput = ['✓ Success', '⤫ Failure']
+export const yesNoOutput = ['✓ Yes', '⤫ No']
+export const onlineOfflineOutput = ['✓ Online', '⤫ Offline']
 
 
 

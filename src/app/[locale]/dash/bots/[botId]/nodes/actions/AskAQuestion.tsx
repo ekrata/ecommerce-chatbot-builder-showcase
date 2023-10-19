@@ -25,7 +25,7 @@ import { validationType } from '@/entities/bot';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys, successFailure } from '../../collections';
+import { actionNode, OutputFieldsKeys, successFailureOutput } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -106,7 +106,7 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
       resolver: zodResolver(schema),
       defaultValues: {
         message: '',
-        outputs: successFailure
+        outputs: successFailureOutput
       },
       mode: 'onBlur',
     });
@@ -126,7 +126,7 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
     setValue('message', apiValues?.message ?? tForm('defaultQuestion'))
     setValue('validationType', apiValues?.validationType ?? 'Email')
     setValue('errorMessage', apiValues?.errorMessage ?? tForm('defaultError'))
-    setValue('outputs', successFailure)
+    setValue('outputs', successFailureOutput)
     setValue('numberOfRepeats', apiValues?.numberOfRepeats ?? 1)
     setValue('saveTheAnswerAsAContactProperty', apiValues?.saveTheAnswerAsAContactProperty ?? false)
     // setError('quickReplies', node?.data?.errors?.quickReplies)

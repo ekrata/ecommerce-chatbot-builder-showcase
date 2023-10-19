@@ -1,5 +1,6 @@
 export enum VisitorBotInteractionTrigger {
   VisitorClicksBotsButton = 'Visitor clicks the bots button',
+  VisitorClicksChatIcon = 'Visitor clicks on the chat icon',
   VisitorSays = 'Visitor says',
   InstagramStoryReply = 'Instagram - Story Reply',
   VisitorSelectsDepartment = 'Visitor selects department',
@@ -73,3 +74,10 @@ export enum ShopifyAction {
   ShippingZones = 'Shipping Zones',
   CouponCode = 'Coupon code',
 }
+
+export const triggerInterval = [
+  'send once per 24 hours',
+  'send only once per unique visitor',
+  'send on every visit',
+] as const;
+export type TriggerInterval = (typeof triggerInterval)[number];

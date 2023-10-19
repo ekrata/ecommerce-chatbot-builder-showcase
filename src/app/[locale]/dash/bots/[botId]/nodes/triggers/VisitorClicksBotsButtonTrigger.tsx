@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import {
-    Action, VisitorBotInteractionTrigger
+  Action, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useEffect, useMemo, useRef } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
@@ -34,19 +34,7 @@ export const VisitorClicksBotsButtonTriggerNode = (node: Node, edges: Edge[]) =>
   );
 }
 
-const resolver: Resolver<FormValues> = async (values) => {
-  const errors: FieldErrors<FormValues> = { buttonName: undefined }
-  if (!values?.buttonName) {
-    errors.buttonName = {
-      type: 'required',
-      message: "Can't be empty"
-    }
-  }
-  return {
-    values,
-    errors
-  }
-}
+
 
 
 interface Props {

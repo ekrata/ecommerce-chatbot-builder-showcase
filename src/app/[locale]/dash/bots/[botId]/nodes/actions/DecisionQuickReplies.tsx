@@ -112,6 +112,8 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 
+  const { fields, append, update, prepend, remove, swap, move, insert } = fieldArray
+
   const handleClickOutside = () => {
     // Your custom logic here
     updateNodes(getValues(), node, nodes, setNodes)
@@ -119,7 +121,6 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
   useOnClickOutside(ref, handleClickOutside)
 
-  const { fields, append, update, prepend, remove, swap, ddmove, insert } = fieldArray
 
   useEffect(() => {
     const apiValues: FormValues = node?.data

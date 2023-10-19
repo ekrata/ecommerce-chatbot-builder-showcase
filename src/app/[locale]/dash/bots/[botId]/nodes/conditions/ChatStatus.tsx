@@ -29,7 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
 import {
-  actionNode, conditionNode, defaultOutputs, OutputFieldsKeys, yesNoOutput
+  conditionNode, defaultOutputs, onlineOfflineOutput, OutputFieldsKeys, yesNoOutput
 } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
@@ -44,19 +44,17 @@ import { updateNodes } from '../updateNodes';
 
 
 const schema = z.object({
-  fieldName: z.enum(contactProperties),
-  fieldSelector: z.enum(contactSelector),
-  fieldValue: z.string()?.min(1)?.optional(),
   outputs: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
     message: 'Each option must be unique.',
   }),
 })
 
-type FormValues = z.infer<typeof schema>
+export type ChatStatus = z.infer<typeof schema>
+type FormValues = ChatStatus
 
-const type = Condition.BasedOnContactProperty
+const type = Condition.ChatStatus
 
-export const BasedOnContactPropertyConditionNode = (node: Node) => {
+export const ChatStatusConditionNode = (node: Node) => {
   const outputKey = OutputFieldsKeys[type]
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
@@ -71,14 +69,14 @@ export const BasedOnContactPropertyConditionNode = (node: Node) => {
   return (
     <div className={`w-16 place-items-center  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 left-[48.5%] place-items-center mask mask-diamond' />
-      <NodeWrapper nodeElement={conditionNode(type)} nodeName={tNodes(`Condition.BasedOnContactProperty`)} hasErrors={hasErrors} />
+      <NodeWrapper nodeElement={conditionNode(type)} nodeName={tNodes(`Condition.ChatStatus`)} hasErrors={hasErrors} />
       {createTargetHandles(node, nodeEdges, outputKey)}
     </div >
   );
 }
 
 
-export const BasedOnContactPropertyConditionEdge: React.FC<EdgeProps> = (params) => {
+export const ChatStatusConditionEdge: React.FC<EdgeProps> = (params) => {
   return <GenericEdge {...params} outputKey={OutputFieldsKeys[type]} />
 }
 
@@ -86,14 +84,11 @@ interface Props {
   node: Node
 }
 
-export const BasedOnContactPropertyConditionForm: React.FC<Props> = ({ node }) => {
+export const ChatStatusConditionForm: React.FC<Props> = ({ node }) => {
   const [nodes, setNodes] = useNodeContext()
   const ref = useRef(null)
 
-  const tDash = useTranslations("dash")
-  const tForm = useTranslations("dash.bots.ConditionForms.BasedOnContactProperty")
-  const tContactProperties = useTranslations('dash.bots.contactProperties')
-  const tContactSelectors = useTranslations('dash.bots.contactSelectors')
+  const tForm = useTranslations("dash.bots.ConditionForms.ChatStatus")
   const { register,
     handleSubmit,
     control,
@@ -102,7 +97,7 @@ export const BasedOnContactPropertyConditionForm: React.FC<Props> = ({ node }) =
     formState: { errors }, } = useForm<FormValues>({
       resolver: zodResolver(schema),
       defaultValues: {
-        outputs: yesNoOutput
+        outputs: onlineOfflineOutput
       },
       mode: 'onBlur',
     });
@@ -116,10 +111,7 @@ export const BasedOnContactPropertyConditionForm: React.FC<Props> = ({ node }) =
 
   useEffect(() => {
     const apiValues: FormValues = node?.data
-    setValue('fieldName', apiValues?.fieldName)
-    setValue('fieldSelector', apiValues?.fieldSelector)
-    setValue('fieldValue', apiValues?.fieldValue)
-    setValue('outputs', apiValues?.outputs ?? yesNoOutput)
+    setValue('outputs', apiValues.outputs ?? onlineOfflineOutput)
     // setError('quickReplies', node?.data?.errors?.quickReplies)
   }, [node])
 
@@ -134,40 +126,13 @@ export const BasedOnContactPropertyConditionForm: React.FC<Props> = ({ node }) =
     updateNodes(values, node, nodes, setNodes)
   }
 
-  const selectorHasValue = contactSelector
 
 
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
-      <div className="w-full max-w-xs form-control gap-y-2">
-        <label className="label">
-          <span className="label-text">{tForm('Contact Property')}</span>
-        </label>
-        <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm" {...register('fieldName')}>
-          {contactProperties?.map((property) => (
-            <option key={property} label={tContactProperties(property)} value={property}></option>
-          ))}
-        </select>
-
-        <label className="label">
-          <span className="label-text">{tForm('Contact Selector')}</span>
-        </label>
-
-        <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm" {...register('fieldSelector')}>
-          {contactSelector.map((selector) => (
-            <option key={selector} label={tContactSelectors(selector)} value={selector}></option>
-          ))}
-        </select>
-
-        {getValues()?.fieldSelector !== 'isSet' &&
-          <div>
-            <label className="label">
-              <span className="label-text">{tDash('Value')}</span>
-            </label>
-            <input type="text" className="w-full max-w-xs bg-gray-200 input-sm input input-ghost" {...register('fieldValue')} />
-          </div>}
-        {errors?.fieldValue && <p className='justify-start text-xs text-error'>{errors?.fieldValue?.message}</p>}
-      </div>
+      <label className="label">
+        <span className="label-text">{tForm('description')}</span>
+      </label>
     </form >
   )
 }
