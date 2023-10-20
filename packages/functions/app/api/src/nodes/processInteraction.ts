@@ -88,6 +88,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             bot?.nodes,
             bot?.edges,
           );
+
           const messages = nextNodes?.map((nextNode) => ({
             type: nextNode?.type,
             bot: bot,
@@ -95,8 +96,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             nextNode: nextNode,
             currentNode: triggerMatch[1],
             nodeContext: { currentId: triggerMatch?.[0] },
-            ordered: true,
           }));
+          console.log(
+            new Blob([
+              JSON.stringify({
+                messages: messages,
+              }),
+            ]).size,
+          );
           await sns
             .publish({
               // Get the topic from the environment variable

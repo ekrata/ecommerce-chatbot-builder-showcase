@@ -1,7 +1,7 @@
+import codeartifact from 'aws-cdk-lib/aws-codeartifact';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
-import { snakeCase } from 'lodash';
 import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
   Api,
@@ -348,7 +348,7 @@ export function baseStack({ stack, app }: StackContext) {
         type: 'queue',
         queue: new Queue(
           stack,
-          `bot_node_${snakeCase(botNodeEvent.AskAQuestion)}_queue`,
+          `bot_node_${botNodeEvent.AskAQuestion.replaceAll(' ', '_')}_queue`,
           {
             consumer:
               'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
@@ -570,17 +570,36 @@ export function baseStack({ stack, app }: StackContext) {
     },
   });
 
-  // const auth = new Auth(stack, "auth", {
-  //   authenticator: {
-  //     handler: "packages/functions/src/auth.handler",
-  //   },
-  // });
+  // console.log(widgetDomainName);
+  const widgetDomain = new codeartifact.CfnDomain(stack, 'chatWidgetDomain', {
+    domainName: 'widget-echat-ekrata',
+  });
 
-  // auth.attach(stack, {
-  //   api,
-  //   prefix: "/auth", // optional
-  // });
-  // Show the API endpoint in the output
+  // Create a public repository
+  const publicWidgetRepo = new codeartifact.CfnRepository(
+    stack,
+    'publicChatWidgetRepo',
+    {
+      repositoryName: 'publicChatWidgetRepoStore',
+      externalConnections: ['public:npmjs'],
+      domainName: widgetDomain.domainName,
+    },
+  );
+
+  publicWidgetRepo.addDependency(widgetDomain);
+
+  // Create a custom repository
+  const widgetCustomRepo = new codeartifact.CfnRepository(
+    stack,
+    'chatWidgetRepo',
+    {
+      repositoryName: 'chatWidgetRepoStore',
+      upstreams: [publicWidgetRepo.repositoryName],
+      domainName: widgetDomain.domainName,
+    },
+  );
+
+  widgetCustomRepo.addDependency(publicWidgetRepo);
 
   console.log(site.customDomainUrl, wsApi.customDomainUrl, api.customDomainUrl);
   stack.addOutputs({

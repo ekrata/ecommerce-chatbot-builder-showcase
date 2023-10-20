@@ -19,7 +19,7 @@ import { QueryClient } from '@tanstack/react-query';
 
 import { QueryKey } from '../(hooks)/queries';
 import {
-    createRandomConversation, createRandomCustomer, createRandomMessage, createRandomOperator
+  createRandomConversation, createRandomCustomer, createRandomMessage, createRandomOperator
 } from '../dash/inbox/mocks.test';
 // import customerConversationItems from 'mocks/'
 import { ChatWidget } from './ChatWidget';

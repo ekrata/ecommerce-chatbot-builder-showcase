@@ -3,7 +3,7 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
 
-import { OperatorConversationCard } from '@/app/[locale]/dash/conversations/OperatorConversationCard';
+import { OperatorConversationCard } from '@/app/[locale]/(root)/conversations/OperatorConversationCard';
 import { botCategory, BotEdgeType, BotNodeType } from '@/entities/bot';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';

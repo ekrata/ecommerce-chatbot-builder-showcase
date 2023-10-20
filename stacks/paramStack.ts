@@ -4,7 +4,7 @@ export function paramStack({ stack, app }: StackContext) {
   const IS_LOCAL = new Config.Parameter(stack, 'IS_LOCAL', {
     value: JSON.stringify(app.local),
   });
-  const appName = 'eChat';
+  const appName = 'echat';
 
   const domain = `${appName}.ekrata.com`;
 

@@ -5,10 +5,10 @@ import { Client, Server, ServerOptions } from 'mock-socket';
 import { within } from '@storybook/testing-library';
 import { QueryClient } from '@tanstack/react-query';
 
-import { createRandomOperator } from '../dash/inbox/mocks.test';
 import LocaleLayout from '../layout';
 import Page from './conversations/page';
 import { DashProvider } from './DashProvider';
+import { createRandomOperator } from './inbox/mocks.test';
 import Layout from './layout';
 import { defaultRoutes, existingConversationRoutes } from './mswRoutes';
 
