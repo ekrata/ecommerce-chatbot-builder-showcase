@@ -30,6 +30,10 @@ export type ConfigLiveChatAppearance = NonNullable<
   NonNullable<ConfigLiveChat>['appearance']
 >;
 
+export type WidgetAppearance = NonNullable<
+  NonNullable<ConfigLiveChatAppearance>['widgetAppearance']
+>;
+
 export type ConfigTicketing = NonNullable<
   NonNullable<ConfigChannels>['ticketing']
 >;
@@ -43,12 +47,6 @@ export const Configuration = new Entity({
     orgId: {
       type: 'string',
       readOnly: true,
-      required: true,
-    },
-    personal: {
-      type: 'map',
-      default: {},
-      properties: {},
     },
     channels: {
       type: 'map',
@@ -99,7 +97,6 @@ export const Configuration = new Entity({
               properties: {
                 widgetAppearance: {
                   type: 'map',
-                  default: {},
                   properties: {
                     logo: {
                       type: 'string',

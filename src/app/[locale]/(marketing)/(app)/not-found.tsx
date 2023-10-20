@@ -1,5 +1,5 @@
 import { Route } from 'next';
-import Link from 'next/link';
+import Link from 'next/navigation';
 
 import { Button } from '../components/Button';
 import { Logo } from '../components/Logo';
@@ -9,7 +9,7 @@ export default function NotFound() {
   return (
     <SlimLayout>
       <div className="flex">
-        <Link href={"/" as Route} aria-label="Home">
+        <Link href={{ pathname: "/" as Route }} aria-label="Home">
           <Logo className="w-auto h-10" />
         </Link>
       </div>

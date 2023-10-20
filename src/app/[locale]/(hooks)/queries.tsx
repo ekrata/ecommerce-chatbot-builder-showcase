@@ -5,10 +5,12 @@ import { Configuration } from '@/entities/configuration';
 import { Org } from '@/entities/org';
 import { useQuery } from '@tanstack/react-query';
 
-import { getArticles } from '../chat-widget/(actions)/orgs/articles/getArticles';
-import { searchArticles } from '../chat-widget/(actions)/orgs/articles/searchArticles';
-import { getConfiguration } from '../chat-widget/(actions)/orgs/configurations/getConfiguration';
-import { getOrg } from '../chat-widget/(actions)/orgs/getOrg';
+import { getArticles } from '../(echat-widget)/src/app/(actions)/orgs/articles/getArticles';
+import { searchArticles } from '../(echat-widget)/src/app/(actions)/orgs/articles/searchArticles';
+import {
+  getConfiguration
+} from '../(echat-widget)/src/app/(actions)/orgs/configurations/getConfiguration';
+import { getOrg } from '../(echat-widget)/src/app/(actions)/orgs/getOrg';
 
 /**
  * Contains the values used for query keys. This should always be used.
@@ -46,7 +48,7 @@ export enum QueryKey {
  * @param {string} orgId
  * @returns {*}
  */
-export const useConfigurationQuery = (orgId: string) => useQuery<EntityItem<typeof Configuration>>([orgId, QueryKey.configuration], async () => getConfiguration(orgId));
+export const useConfigurationQuery = (orgId: string) => useQuery<EntityItem<typeof Configuration>>([orgId, QueryKey.configuration], async () => await getConfiguration(orgId));
 /**
  * Returns org query 
  * @date 24/06/2023 - 10:45:39

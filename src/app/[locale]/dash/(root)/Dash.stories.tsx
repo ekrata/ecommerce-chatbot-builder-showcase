@@ -163,7 +163,6 @@ export const VisitorsView: Story = {
   render: () => {
     const props = { overrideQueryProvider: queryClient, mockWsUrl };
     const mockServer = new Server(mockWsUrl);
-    console.log(window.location.pathname)
     // const router = useRouter();
     // router.push(`/dash/conversations?conversationId${'asdjasdjsad'}`)
     if (mockServer) {

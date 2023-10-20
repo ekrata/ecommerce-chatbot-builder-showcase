@@ -1,33 +1,23 @@
 'use client';
 
-import { createElement, useEffect, useState } from 'react';
-import {
-  HiOutlineBars2,
-  HiOutlineChevronDown,
-  HiOutlineCog6Tooth,
-  HiOutlineInboxArrowDown,
-  HiOutlineLifebuoy,
-  HiOutlinePower,
-  HiOutlineUserCircle,
-} from 'react-icons/hi2';
-import { GoBrowser } from 'react-icons/go';
-import { BiTimer } from 'react-icons/bi';
-import Image from 'next/image';
 import { Link, useTranslations } from 'next-intl';
-import {
-  BsChatLeftText,
-  BsChevronRight,
-  BsRobot,
-  BsTags,
-} from 'react-icons/bs';
+import Image from 'next/image';
+import { createElement, useEffect, useState } from 'react';
 import { IconContext } from 'react-icons';
-import { TbChartGridDots } from 'react-icons/tb';
+import { BiTimer } from 'react-icons/bi';
+import { BsChatLeftText, BsChevronRight, BsRobot, BsTags } from 'react-icons/bs';
+import { GoBrowser } from 'react-icons/go';
+import {
+  HiOutlineBars2, HiOutlineChevronDown, HiOutlineCog6Tooth, HiOutlineInboxArrowDown,
+  HiOutlineLifebuoy, HiOutlinePower, HiOutlineUserCircle
+} from 'react-icons/hi2';
 import { RiCheckboxMultipleBlankFill, RiMailSendLine } from 'react-icons/ri';
+import { TbChartGridDots } from 'react-icons/tb';
 
-import { MegaMenu, MenuItemData } from '../MegaMenu';
 import chattingImage from '../../../../public/graphics/chatting.png';
 import plansImage from '../../../../public/graphics/plans.png';
 import logoImage from '../../../../public/logo.png';
+import { MegaMenu, MenuItemData } from '../MegaMenu';
 
 // profile menu component
 const profileMenuItems = [
@@ -66,13 +56,12 @@ function ProfileMenu() {
           className='btn btn-hidden flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto'
         >
           <div className='avatar border border-purple-500 p-0.5'>
-            <div className='w-6 rounded-full bg-black' />
+            <div className='w-6 bg-black rounded-full' />
           </div>
           <HiOutlineChevronDown
             strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
-              isMenuOpen ? 'rotate-180' : ''
-            }`}
+            className={`h-3 w-3 transition-transform ${isMenuOpen ? 'rotate-180' : ''
+              }`}
           />
         </button>
         <ul className='p-1 dropdown-content dropdown-bottom'>
@@ -81,11 +70,10 @@ function ProfileMenu() {
             return (
               <li
                 key={label}
-                className={`flex items-center gap-2 rounded ${
-                  isLastItem
-                    ? 'hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10'
-                    : ''
-                }`}
+                className={`flex items-center gap-2 rounded ${isLastItem
+                  ? 'hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10'
+                  : ''
+                  }`}
               >
                 {createElement(icon, {
                   className: `h-4 w-4 ${isLastItem ? 'text-red-500' : ''}`,
@@ -114,9 +102,9 @@ export default function Navbar() {
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
   useEffect(() => {
-    window.addEventListener(
+    window?.addEventListener(
       'resize',
-      () => window.innerWidth >= 960 && setIsNavOpen(false)
+      () => window?.innerWidth >= 960 && setIsNavOpen(false)
     );
   }, []);
 
@@ -200,10 +188,10 @@ export default function Navbar() {
   return (
     <section
       id='navbar'
-      className='navbar mx-auto bg-white dark:bg-black space-around max-w-full rounded-none  border-2 border-black/25 shadow-2xl relative lg:flex items-center text-black'
+      className='relative items-center max-w-full mx-auto text-black bg-white border-2 rounded-none shadow-2xl navbar dark:bg-black space-around border-black/25 lg:flex'
     >
       <div className='navbar-start '>
-        <h2 className='flex place-items-center gap-2 mr-4 ml-2 cursor-pointer text-lg font-medium'>
+        <h2 className='flex gap-2 ml-2 mr-4 text-lg font-medium cursor-pointer place-items-center'>
           <Image
             src={logoImage}
             alt='Logo'
@@ -216,12 +204,12 @@ export default function Navbar() {
         <NavList />
       </div>
 
-      <div className='navbar-end flex'>
+      <div className='flex navbar-end'>
         <ProfileMenu />
         <Link href={{ pathname: '/dash/home' }} key='dash'>
           <button
             type='button'
-            className='btn btn-outline flex place-items-center'
+            className='flex btn btn-outline place-items-center'
           >
             Dash
             <BsChevronRight />

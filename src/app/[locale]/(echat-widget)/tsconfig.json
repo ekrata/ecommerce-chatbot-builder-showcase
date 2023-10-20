@@ -1,0 +1,90 @@
+{
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    // same as the --compilerOptions flag and the TS_NODE_COMPILER_OPTIONS environment variable
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
+  "compilerOptions": {
+    "target": "es6",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "types": [
+      "jest",
+      "node",
+      "@testing-library/jest-dom"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/marketing/*": [
+        "./src/app/[locale]/(marketing)/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ],
+      "@/styles": [
+        ""
+      ],
+      "@/entities/*": [
+        "../../../../stacks/entities/*"
+      ],
+      "@/packages/*": [
+        "../../../../packages/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "app-api": [
+        "./packages/functions/app/api/src"
+      ],
+      "app-wsApi": [
+        "./packages/functions/app/ws/src"
+      ],
+      "mocks": [
+        "./mocks"
+      ],
+      "@/public": [
+        "./public"
+      ],
+      "chat-widget": [
+        "src/app/[locale]/(chat-widget)"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.d.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "jest.setup.js",
+    "src/app/[locale]/dash/inbox/conversations/[chat]/ConversationSocket.tsx",
+    "src/app/[locale]/(chat-widget)/ChatWidgetCard.dtsx",
+    "src/app/[locale]/(marketing)/tsconfig.json",
+    "next.config.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

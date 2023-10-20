@@ -1,11 +1,10 @@
-import {
-  ConversationFilterParams
-} from 'packages/functions/app/api/src/conversations/listByCreatedAt';
-
 import { ConversationItem } from '@/entities/conversation';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
+import {
+  ConversationFilterParams
+} from '../../../../../packages/functions/app/api/src/conversations/listByCreatedAt';
 import { QueryKey } from '../queries';
 
 /**

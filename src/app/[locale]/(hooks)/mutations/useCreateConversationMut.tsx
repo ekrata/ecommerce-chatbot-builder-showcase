@@ -1,10 +1,9 @@
-import { ConversationItem, ExpandedConversation } from '@/entities/conversation';
+import { ConversationItem } from '@/entities/conversation';
 import { CreateConversation } from '@/entities/entities';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import { MutationKey } from '../mutations';
-import { QueryKey } from '../queries';
 
 export const createConversation = async (
   orgId: string,
@@ -20,7 +19,7 @@ export const createConversation = async (
     throw new Error('Failed to fetch data');
   }
   return {
-    conversation: (await res.json()) as ExpandedConversation,
+    ...await res.json(),
     messages: [],
   };
 };
@@ -35,9 +34,9 @@ export const createConversation = async (
  * @returns {*}
  */
 export const newConversationItemReducer = (newConversationItem: ConversationItem, conversationItems: ConversationItem[]) => {
-  const { conversationId } = newConversationItem.conversation
+  const { conversationId } = newConversationItem
   // remove duplicates just in case?
-  const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem.conversation.conversationId !== conversationId) ?? []
+  const oldConversationItems = conversationItems?.filter(conversationItem => conversationItem.conversationId !== conversationId) ?? []
   const newConversationItems = [...oldConversationItems, newConversationItem]
   sortConversationItems(newConversationItems)
   return newConversationItems

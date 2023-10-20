@@ -4,10 +4,10 @@ import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 import { UseInfiniteQueryResult, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import {
   createMessage
-} from '../../chat-widget/(actions)/orgs/conversations/messages/createMessage';
+} from '../../(echat-widget)/src/app/(actions)/orgs/conversations/messages/createMessage';
+import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';
 
@@ -27,10 +27,8 @@ export const newMessageReducer = (newMessage: EntityItem<typeof Message>, conver
 
   if (conversationItem?.conversationId) {
     const newConversationItem: ConversationItem = { ...conversationItem, messages: [...(conversationItem?.messages ?? []), newMessage] }
-    console.log(newConversationItem)
     const items = [newConversationItem, ...oldConversationItems]
     sortConversationItems(items)
-    console.log(items)
     return items
   }
   return oldConversationItems

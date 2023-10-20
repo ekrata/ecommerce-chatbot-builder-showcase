@@ -1,4 +1,6 @@
 import { Entity, EntityItem } from 'electrodb';
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   Action,
   Condition,
@@ -7,8 +9,7 @@ import {
   ShopifyCondition,
   VisitorBotInteractionTrigger,
   VisitorPageInteractionTrigger,
-} from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { v4 as uuidv4 } from 'uuid';
+} from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 export const nodeType = ['trigger', 'condition', 'action'] as const;
 

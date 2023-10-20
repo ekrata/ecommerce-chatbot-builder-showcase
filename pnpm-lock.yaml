@@ -123,8 +123,8 @@ dependencies:
     specifier: ^2.52.0
     version: 2.52.0(autoprefixer@10.4.14)(postcss@8.4.23)
   electrodb:
-    specifier: ^2.10.0
-    version: 2.10.0(@aws-sdk/client-dynamodb@3.418.0)
+    specifier: ^2.10.3
+    version: 2.10.3(@aws-sdk/client-dynamodb@3.418.0)
   emoji-picker-react:
     specifier: ^4.5.2
     version: 4.5.2(react@18.2.0)
@@ -15116,8 +15116,8 @@ packages:
     dependencies:
       jake: 10.8.7
 
-  /electrodb@2.10.0(@aws-sdk/client-dynamodb@3.418.0):
-    resolution: {integrity: sha512-E6zC2m0e9O5VscuDNL3ALeTfoitVchiM1/AtnCyStM0caqzHSU+ccYV6+QJA/3xivl4b8RkMK/y8EyZPtDX+VA==}
+  /electrodb@2.10.3(@aws-sdk/client-dynamodb@3.418.0):
+    resolution: {integrity: sha512-kV5hugsYSZJGNNmumFTFLvXNHAqvqNHoD5yPyVjhj8XWMkRJIaLTpnzdVhVwZHz6N8jrqAvqsVgMhuyqDvZiNQ==}
     dependencies:
       '@aws-sdk/lib-dynamodb': 3.418.0(@aws-sdk/client-dynamodb@3.418.0)
       jsonschema: 1.2.7

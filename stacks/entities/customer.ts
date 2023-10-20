@@ -48,8 +48,6 @@ export const Customer = new Entity({
     // set if customer is interacting with a bot
     botId: {
       type: 'string',
-      required: true,
-      readOnly: true,
     },
     metaSenderId: {
       type: 'string',

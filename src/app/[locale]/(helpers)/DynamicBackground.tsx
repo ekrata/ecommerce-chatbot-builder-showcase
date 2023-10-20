@@ -1,7 +1,8 @@
 import { EntityItem } from 'electrodb';
 
-import { Configuration } from '@/entities/configuration';
 import { faker } from '@faker-js/faker';
+
+import { Configuration } from '../../../../stacks/entities/configuration';
 
 interface Props {
   configuration: EntityItem<typeof Configuration>
@@ -28,8 +29,6 @@ export const DynamicBackground: React.FC<Props> = ({ configuration }) => {
   `;
   return <style>{background}</style>;
 };
-
-
 
 const colors = ["#f8002e", '#f92', '#f62', '#f99', '#f09']
 

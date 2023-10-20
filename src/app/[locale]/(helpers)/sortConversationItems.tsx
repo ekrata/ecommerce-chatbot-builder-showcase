@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { ConversationItem } from '@/entities/conversation';
+import { ConversationItem } from '../../../../stacks/entities/conversation';
 
 export /**
  * sorts conversations by last message in place 

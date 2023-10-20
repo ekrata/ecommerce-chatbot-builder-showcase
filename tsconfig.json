@@ -46,6 +46,9 @@
       "@/styles": [
         ""
       ],
+      "@/packages/*": [
+        "./packages/*"
+      ],
       "@/entities/*": [
         "./stacks/entities/*"
       ],
@@ -65,7 +68,7 @@
         "./public"
       ],
       "chat-widget": [
-        "src/app/[locale]/chat-widget"
+        "src/app/[locale]/(chat-widget)"
       ]
     }
   },
@@ -77,7 +80,7 @@
     ".next/types/**/*.ts",
     "jest.setup.js",
     "src/app/[locale]/dash/inbox/conversations/[chat]/ConversationSocket.tsx",
-    "src/app/[locale]/chat-widget/ChatWidgetCard.dtsx",
+    "src/app/[locale]/(chat-widget)/ChatWidgetCard.dtsx",
     "src/app/[locale]/(marketing)/tsconfig.json",
     "next.config.js"
   ],

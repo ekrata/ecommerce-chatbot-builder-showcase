@@ -9,14 +9,14 @@ import {
 import { useLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Operator } from '@/entities/operator';
+import { Operator } from '../../../../stacks/entities/operator';
 
 export const AuthContext = createContext<ReturnType<typeof useLocalStorage < EntityItem<typeof Operator> | null>>>([null, () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
 export const signoutSession = () => {
-  window.localStorage.removeItem('sessionUser')
-  window.localStorage.removeItem('session')
+  window?.localStorage?.removeItem('sessionUser')
+  window?.localStorage?.removeItem('session')
 }
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const token = searchParams?.get("token");
     if (token && token !== authToken) {
       setAuthToken(token)
-      window.location.replace(window.location.origin);
+      window?.location?.replace(window?.location?.origin);
     }
   }, [searchParams?.get('token')])
 

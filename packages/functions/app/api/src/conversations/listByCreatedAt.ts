@@ -1,19 +1,29 @@
 import { EntityItem } from 'electrodb';
-import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import {
+  ApiHandler,
+  usePathParams,
+  useQueryParam,
+  useQueryParams,
+} from 'sst/node/api';
 import { useSession } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
 import {
-    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic,
-    ExpandedConversation
+  Conversation,
+  ConversationChannel,
+  ConversationItem,
+  ConversationStatus,
+  ConversationTopic,
+  ExpandedConversation,
 } from '@/entities/conversation';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
 import { ExpandableField, expandObjects } from '../util/expandObjects';
 
-const appDb = getAppDb(Config.REGION, Table.app.tableName);
+// @ts-ignore
+const appDb = getAppDb(Config.REGION, Table.app.tableName); // eslint-disable-line
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -144,7 +154,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
               .go();
 
             const conversationItem: ConversationItem = {
-              conversation: item,
+              ...item,
               messages: messagesRes.data,
             };
 
