@@ -10,10 +10,11 @@ export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const queryDomain = useQueryParam('domain')
     const headers = useHeaders()
-    const domain = new URL(headers?.origin ?? '').hostname
+    const domain = queryDomain ?? new URL(headers?.origin ?? '').hostname
+    console.log(domain)
     try {
       const appDb = getAppDb(Config?.REGION, Table?.app.tableName);
-      const res = await appDb.entities.orgs.scan.where((org, {eq}) => `${eq(org?.domain, queryDomain ?? domain)}`).go();
+      const res = await appDb.entities.orgs.scan.where((org, {eq}) => `${eq(org?.domain, domain )}`).go();
       if (res.data?.[0]) {
         return {
           statusCode: 200,
@@ -22,7 +23,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       }
       return {
         statusCode: 404,
-        body: `No conversation with domain: ${domain} exists. `,
+        body: `No org with domain: ${domain} exists. `,
       };
     } catch (err) {
       Sentry.captureException(err);

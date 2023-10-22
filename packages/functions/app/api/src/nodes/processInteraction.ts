@@ -1,4 +1,5 @@
 import AWS, { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
+import { EntityItem } from 'electrodb';
 import { postToConnection } from 'packages/functions/app/ws/src/postToConnection';
 import { ApiHandler, useJsonBody } from 'sst/node/api';
 import { Config } from 'sst/node/config';
@@ -7,12 +8,14 @@ import { Topic } from 'sst/node/topic';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
 import {
+  Bot,
   BotEdgeType,
+  BotNodeEvent,
   botNodeEvent,
   BotNodeType,
   nodeMap,
 } from '@/entities/bot';
-import { Conversation } from '@/entities/conversation';
+import { Conversation, ConversationItem } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Interaction } from '@/entities/interaction';
 import * as Sentry from '@sentry/serverless';
@@ -25,6 +28,23 @@ import {
 } from '../bots/triggers/definitions.type';
 
 const sns = new AWS.SNS();
+
+export type BotStateContext = {
+  type: BotNodeEvent;
+  bot: EntityItem<typeof Bot>;
+  conversation: ConversationItem;
+  nextNode: BotNodeType;
+  currentNode: BotNodeType;
+  nodeContext: { currentId: string };
+};
+
+// console.log(
+//   new Blob([
+//     JSON.stringify({
+//       messages: botState,
+//     }),
+//   ]).size,
+// );
 
 // import { postToConnection } from '../postToConnection';
 
@@ -43,7 +63,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           body: 'Failed to parse the eventbridge event into a usable entity.',
         };
       }
-      const { orgId, customerId, nodeSubType } = interactionData;
+      const { orgId, customerId, type } = interactionData;
 
       const bots = await appDb.entities.bots.query.byOrg({ orgId }).go();
 
@@ -64,7 +84,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
       console.log(triggers);
 
-      if (nodeSubType === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
+      if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
         // find the first trigger to match across all the bots
         const triggerMatch = Object.entries(triggers).find(
           ([botId, botTriggers]) =>
@@ -89,35 +109,36 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             bot?.edges,
           );
 
-          const messages = nextNodes?.map((nextNode) => ({
-            type: nextNode?.type,
-            bot: bot,
-            conversation: conversation,
-            nextNode: nextNode,
-            currentNode: triggerMatch[1],
-            nodeContext: { currentId: triggerMatch?.[0] },
-          }));
-          console.log(
-            new Blob([
-              JSON.stringify({
-                messages: messages,
-              }),
-            ]).size,
+          // create a botState for each connecting node
+          const botStates: BotStateContext[] | undefined = nextNodes?.map(
+            (nextNode) =>
+              ({
+                type: nextNode?.type,
+                bot: bot,
+                conversation: conversation?.data as ConversationItem,
+                nextNode: nextNode,
+                currentNode: triggerMatch[1],
+                nodeContext: { currentId: triggerMatch?.[0] },
+              }) as BotStateContext,
           );
-          await sns
-            .publish({
-              // Get the topic from the environment variable
-              TopicArn: Topic.BotNodeTopic.topicArn,
-              Message: JSON.stringify({
-                messages: messages,
-              }),
-              MessageStructure: 'string',
-            })
-            .promise();
+
+          botStates?.forEach(
+            async (botState) =>
+              await sns
+                .publish({
+                  // Get the topic from the environment variable
+                  TopicArn: Topic.BotNodeTopic.topicArn,
+                  Message: JSON.stringify({
+                    botState,
+                  }),
+                  MessageStructure: 'string',
+                })
+                .promise(),
+          );
         }
       }
 
-      if (nodeSubType === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
+      if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
       }
       const customer = await appDb.entities.customers.query
         .primary({ orgId, customerId: customerId ?? '' })

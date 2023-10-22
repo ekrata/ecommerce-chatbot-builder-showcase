@@ -1,9 +1,7 @@
 'use client'
 import 'react-toastify/dist/ReactToastify.css';
 
-import { PropsWithChildren, useEffect } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import { useEffectOnce } from 'usehooks-ts';
+import { PropsWithChildren } from 'react';
 
 import DashNavbar from './DashNavbar';
 import { DashProvider } from './DashProvider';

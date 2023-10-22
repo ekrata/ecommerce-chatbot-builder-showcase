@@ -30,7 +30,7 @@ export const StartChatButton: FC = () => {
   const handleClick = async () => {
     if (widgetVisibility === 'minimized') {
       setWidgetVisibility('open')
-      await createInteractionMut.mutateAsync(orgId, { customerId: customerQuery?.data?.customerId })
+      await createInteractionMut.mutateAsync([orgId, { customerId: customerQuery?.data?.customerId }])
 
     } else {
       setWidgetVisibility('minimized')

@@ -1,12 +1,10 @@
 import { EntityItem } from 'electrodb';
+import { createMessage } from 'widget/src/app/(actions)/orgs/conversations/messages/createMessage';
 
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 import { UseInfiniteQueryResult, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  createMessage
-} from '../../(echat-widget)/src/app/(actions)/orgs/conversations/messages/createMessage';
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';

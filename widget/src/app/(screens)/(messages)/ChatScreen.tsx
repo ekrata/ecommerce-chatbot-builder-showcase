@@ -46,6 +46,7 @@ export const ChatScreen: FC = ({ }) => {
 
   const widgetAppearance = { ...configuration.data?.channels?.liveChat?.appearance }
 
+  console.log(conversationItem?.operator?.name)
   return (
     <div className="flex justify-between w-full h-full rounded-3xl animate-fade-left">
       <div className="flex flex-col w-full h-full justify-stretch">
@@ -54,14 +55,14 @@ export const ChatScreen: FC = ({ }) => {
         >
           {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
           <button><BiChevronLeft className='text-5xl' onClick={() => setSelectedConversationId()}></BiChevronLeft></button>
-          {conversationItem?.operator && (
+          {conversationItem?.operator?.operatorId && (
             <>
               <Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} />
-              {`${conversationItem?.operator.name ?? `${org?.data?.name} staff`}`}
+              <h4>{`${conversationItem?.operator?.name ?? `${org?.data?.name} staff`}`}</h4>
             </>
           )
           }
-          {!conversationItem?.operator && (<>
+          {!conversationItem?.operator?.operatorId && (<>
             <div className=''><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} /> </div>
             <div className='-ml-4'><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} /> </div>
             <div className='mr-4 -ml-4'><Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} /> </div>

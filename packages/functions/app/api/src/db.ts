@@ -27,7 +27,7 @@ export const getAppDb = (region: string, tableName: string) =>
       messages: Message,
       orgs: Org,
       bots: Bot,
-      interaction: Interaction,
+      interactions: Interaction,
       articles: Article,
       articleContents: ArticleContent,
     },

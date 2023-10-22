@@ -1,5 +1,4 @@
 'use client'
-import { getCookie } from 'cookies-next';
 import { EntityItem } from 'electrodb';
 import { WsAppMessage } from 'packages/functions/app/ws/src/WsMessage';
 // Import necessary hooks and libraries
@@ -9,15 +8,12 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { getWsUrl } from '@/app/getWsUrl';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
-import { Operator } from '@/entities/operator';
 import { InfiniteData, UseInfiniteQueryResult, useQueryClient } from '@tanstack/react-query';
 
-import { sortConversationItems } from '../(helpers)/sortConversationItems';
-import { useAuthContext } from '../(hooks)/AuthProvider';
-import { newMessageReducer } from '../(hooks)/mutations/useCreateMessageMut';
-import { QueryKey, useConfigurationQuery, useOrgQuery } from '../(hooks)/queries';
-import { useCustomerQuery } from '../(hooks)/queries/useCustomerQuery';
-import { useOperatorsQuery } from '../(hooks)/queries/useOperatorsQuery';
+import { sortConversationItems } from '../../(helpers)/sortConversationItems';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
+import { newMessageReducer } from '../../(hooks)/mutations/useCreateMessageMut';
+import { QueryKey } from '../../(hooks)/queries';
 import { useDashStore } from './(actions)/useDashStore';
 
 // Create a context for chat messages

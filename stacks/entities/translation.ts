@@ -893,7 +893,7 @@ export const Translation = new Entity({
             },
             orgName: {
               type: 'string',
-              default: 'Gymshark',
+              default: 'Test Corp',
               required: true,
             },
             'Recent message': {

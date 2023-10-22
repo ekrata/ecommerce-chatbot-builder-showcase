@@ -22,6 +22,7 @@ import { useCustomerQuery } from './(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from './(actions)/queries/useOrgQuery';
 import { sortConversationItems } from './(helpers)/sortConversationItems';
 import { getWsUrl } from './getWsUrl';
+import { WsAppMessage } from './WsMessage';
 
 // import { useDashStore } from './(actions)/useDashStore';
 

@@ -4,8 +4,22 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
-    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
-    NextjsSite, Queue, StackContext, Table, Topic, use, WebSocketApi, WebSocketApiFunctionRouteProps
+  Api,
+  ApiRouteProps,
+  Auth,
+  Bucket,
+  Config,
+  EventBus,
+  EventBusRuleProps,
+  FunctionInlineDefinition,
+  NextjsSite,
+  Queue,
+  StackContext,
+  Table,
+  Topic,
+  use,
+  WebSocketApi,
+  WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 
 import { botNodeEvent } from './entities/bot';
@@ -219,12 +233,12 @@ export function baseStack({ stack, app }: StackContext) {
     }
     const fn = wsApi.getFunction(route);
     // fn?.addPermission(new iam.ServicePrincipal('events.amazonaws.com'));
-    fn?.attachPermissions(['events'])
-    // fn?.addPermission(`eb-invoke`, {
-    //   action: 'lambda:InvokeFunction',
-    //   principal: new iam.ServicePrincipal('events.amazonaws.com'),
-    //   sourceArn: routeRule.ruleArn,
-    // });
+    // fn?.attachPermissions(['events'])
+    fn?.addPermission(`eb-invoke`, {
+      action: 'lambda:InvokeFunction',
+      principal: new iam.ServicePrincipal('events.amazonaws.com'),
+      sourceArn: routeRule.ruleArn,
+    });
     // wsApi.attachPermissionsToRoute(route, [
     //   new iam.PolicyStatement({
     //     actions: ['lambda:InvokeFunction'],
@@ -333,19 +347,31 @@ export function baseStack({ stack, app }: StackContext) {
     subscribers: {
       [botNodeEvent.AskAQuestion]: {
         type: 'queue',
-        queue: new Queue(
-          stack,
-          `bot_node_${botNodeEvent.AskAQuestion.replaceAll(' ', '_')}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
-          },
-        ),
+        queue: new Queue(stack, `bot_node_action_AskAQuestion_queue`, {
+          consumer:
+            'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
+        }),
         cdk: {
           subscription: {
             filterPolicy: {
               type: SubscriptionFilter.stringFilter({
                 allowlist: [botNodeEvent.AskAQuestion],
+              }),
+            },
+          },
+        },
+      },
+      [botNodeEvent.DecisionCardMessages]: {
+        type: 'queue',
+        queue: new Queue(stack, `bot_node_action_DecisionCardMessages_queue`, {
+          consumer:
+            'packages/functions/app/api/src/nodes/actions/decisionCardMessages.handler',
+        }),
+        cdk: {
+          subscription: {
+            filterPolicy: {
+              type: SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.DecisionCardMessages],
               }),
             },
           },
@@ -548,8 +574,11 @@ export function baseStack({ stack, app }: StackContext) {
 
   const site = new NextjsSite(stack, 'site', {
     customDomain: {
-      domainName: stack.stage === 'prod' ? domain.toLowerCase() : `${stack.stage}-${domain}`.toLowerCase(),
-      hostedZone: 'ekrata.com'
+      domainName:
+        stack.stage === 'prod'
+          ? domain.toLowerCase()
+          : `${stack.stage}-${domain}`.toLowerCase(),
+      hostedZone: 'ekrata.com',
     },
     bind: [api, wsApi],
     environment: {
@@ -558,12 +587,15 @@ export function baseStack({ stack, app }: StackContext) {
     },
   });
 
-  const widgetSiteDomain = `widget-${domain}`
+  const widgetSiteDomain = `widget-${domain}`;
   const widget = new NextjsSite(stack, 'widget', {
     path: 'widget',
     customDomain: {
-      domainName: stack.stage === 'prod' ? widgetSiteDomain.toLowerCase() : `${stack.stage}-${widgetSiteDomain}`.toLowerCase(),
-      hostedZone: 'ekrata.com'
+      domainName:
+        stack.stage === 'prod'
+          ? widgetSiteDomain.toLowerCase()
+          : `${stack.stage}-${widgetSiteDomain}`.toLowerCase(),
+      hostedZone: 'ekrata.com',
     },
     bind: [api, wsApi],
     environment: {
@@ -605,8 +637,8 @@ export function baseStack({ stack, app }: StackContext) {
 
   console.log('Site url', site.url);
   console.log('widget url', widget.customDomainUrl);
-  console.log('WsApi url', wsApi.customDomainUrl)
-  console.log('api url', api.customDomainUrl)
+  console.log('WsApi url', wsApi.customDomainUrl);
+  console.log('api url', api.customDomainUrl);
 
   stack.addOutputs({
     SiteUrl: site.customDomainUrl,

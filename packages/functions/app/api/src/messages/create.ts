@@ -29,7 +29,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         })
         .go();
       await appDb.entities.conversations
-        .patch({
+        .update({
           ...body,
           orgId,
           conversationId,

@@ -45,7 +45,7 @@ export const StartConversationCard: React.FC = () => {
   }
 
   return (
-    <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light normal-case btn btn-ghost hover:bg-transparent rounded-3xl place-items-center animate-fade-left animate-once " onClick={async () => await onClick()} >
+    <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light text-black normal-case btn btn-ghost hover:bg-transparent rounded-3xl place-items-center animate-fade-left animate-once " onClick={async () => await onClick()} >
       <div className="flex justify-around place-items-center">
         <div className="w-12 h-12 p-2 rounded-full avatar background ring-2 ring-info online">
           {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />}
@@ -53,7 +53,7 @@ export const StartConversationCard: React.FC = () => {
         </div>
         <div className="flex flex-col place-items-start gap-y-1 ">
           <h5 className='justify-start text-base font-semibold justify-self-start '>{t('Send us a message')}</h5>
-          <div className="flex text-xs dark:text-neutral-400 gap-x-1 ">
+          <div className="flex text-xs  gap-x-1 ">
             <p>{`${t('We typically reply in under')} `}</p>
             <p className="">
               {` ${relativeTime(halfAnHourAgo,
@@ -62,7 +62,7 @@ export const StartConversationCard: React.FC = () => {
             </p>
           </div>
         </div>
-        <BiSend className="ml-1 text-2xl justify-self-end animate-pulse animate-infinite justify-right " />
+        <BiSend className="ml-1 text-2xl justify-self-end  justify-right " />
       </div>
     </button>
   )

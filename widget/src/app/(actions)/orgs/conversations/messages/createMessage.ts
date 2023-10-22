@@ -1,7 +1,4 @@
-import { EntityItem } from 'electrodb';
-
-import { CreateMessage } from '../../../../../../../../../../stacks/entities/entities';
-import { Message } from '../../../../../../../../../../stacks/entities/message';
+import { CreateMessage } from '../../../../../../../stacks/entities/entities';
 
 export const createMessage = async (
   orgId: string,

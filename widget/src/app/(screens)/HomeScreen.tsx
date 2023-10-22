@@ -57,15 +57,15 @@ export const HomeScreen: FC = () => {
 
         <div className="sticky flex p-4 -mb-40 background pb-60 rounded-t-3xl animate-fade-left">
           {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />}
-          <div className='mr-6 justify-left animate-fade-left'>{<img src={widgetAppearance?.botLogo ?? ''} className='object-cover h-10 mt-10' /> ?? (<h1>{org?.data?.name ?? 'Your org'}</h1>)}</div>
+          <div className='mr-6 justify-left animate-fade-left'>{<img src={widgetAppearance?.logo ?? ''} className='object-cover h-16 mt-10' /> ?? (<h1>{org?.data?.name ?? 'Your org'}</h1>)}</div>
           {/* <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[0]} message={conversationItems.data?.[0]?.messages?.slice(-1)[0]} /> </div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[1]} message={conversationItems.data?.[1]?.messages?.slice(-1)[0]} /> </div>
           <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[2]} message={conversationItems.data?.[2]?.messages?.slice(-1)[0]} /> </div> */}
         </div>
-        <h1 className='z-10 mx-4 text-3xl font-bold'>
+        <h1 className='z-10 mx-4 text-3xl font-bold text-white'>
           {translationQuery?.data?.translations?.chatWidget?.['Chat with us'] ?? 'Welcome! 👋'}
         </h1>
-        <h1 className='z-10 mx-4 font-semibold texl-xl'>
+        <h1 className='z-10 mx-4 font-semibold texl-xl text-white'>
           {translationQuery?.data?.translations?.chatWidget?.['How can we help you?'] ?? 'How can we help you? '}
         </h1>
         {mostRecentConversationItem && mostRecentConversationItem?.messages?.length && (

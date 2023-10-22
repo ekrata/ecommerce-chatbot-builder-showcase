@@ -80,8 +80,8 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   const orgId = uuidv4();
   const createOrg: CreateOrg = {
     orgId,
-    name: faker.company.name(),
-    domain: 'ekrata',
+    name: `Test corp ${orgIndex}`,
+    domain: 'localhost',
     email: faker.internet.email(),
   };
   await db.entities.orgs.create(createOrg).go();
@@ -114,7 +114,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
         appearance: {
           widgetAppearance: {
             botLogo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${avatarKey}`,
-            logo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${logoCommand}`
+            logo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${logoKey}`
           }
         }
       }
