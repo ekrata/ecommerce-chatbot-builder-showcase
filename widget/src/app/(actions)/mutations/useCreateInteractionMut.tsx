@@ -3,11 +3,11 @@ import { useLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
 import { createCustomer } from '@/app/actions';
-import { CreateInteraction } from '@/entities/entities';
-import { Interaction } from '@/entities/interaction';
-import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import {
+  Triggers
+} from '../../../../../packages/functions/app/api/src/bots/triggers/definitions.type';
 import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';
 

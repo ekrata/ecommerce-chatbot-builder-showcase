@@ -1,44 +1,28 @@
+import AWS from 'aws-sdk';
 import { ApiHandler } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
 
-import { OperatorConversationCard } from '@/app/[locale]/(root)/conversations/OperatorConversationCard';
-import { botCategory, BotEdgeType, BotNodeType } from '@/entities/bot';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
+import { ArticleCategory, articleStatus } from '../../../../../../stacks/entities/article';
+import { botCategory, BotEdgeType, BotNodeType } from '../../../../../../stacks/entities/bot';
 import {
-  ArticleCategory,
-  articleStatus,
-} from '../../../../../../stacks/entities/article';
-import {
-  conversationChannel,
-  conversationStatus,
-  conversationTopic,
+    conversationChannel, conversationStatus, conversationTopic
 } from '../../../../../../stacks/entities/conversation';
 import {
-  CreateArticle,
-  CreateArticleContent,
-  CreateBot,
-  CreateConfiguration,
-  CreateConversation,
-  CreateCustomer,
-  CreateMessage,
-  CreateOperator,
-  CreateOrg,
-  CreateTranslation,
-  CreateVisit,
+    CreateArticle, CreateArticleContent, CreateBot, CreateConfiguration, CreateConversation,
+    CreateCustomer, CreateMessage, CreateOperator, CreateOrg, CreateTranslation, CreateVisit
 } from '../../../../../../stacks/entities/entities';
 import { senderType } from '../../../../../../stacks/entities/message';
-import {
-  Action,
-  Condition,
-  VisitorBotInteractionTrigger,
-} from '../bots/triggers/definitions.type';
+import { Action, Condition, VisitorBotInteractionTrigger } from '../bots/triggers/definitions.type';
 import { AppDb, getAppDb } from '../db';
 import { MockArgs, mockArticleTitles, MockOrgIds } from './';
 
+const s3 = new S3Client({})
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
@@ -100,8 +84,23 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
   mockOrg.orgId = orgId;
   mockOrg.lang = mockLang;
+  const command = new PutObjectCommand({
+    Bucket: Bucket,
+    Key: `${orgId}-configuration-botLogo`,
+    Body: "Hello S3!",
+  });
+  s3.
   const createConfiguration: CreateConfiguration = {
     orgId,
+    channels: {
+      liveChat: {
+        appearance: {
+          widgetAppearance: {
+            botLogo: ''
+          }
+        }
+      }
+    }
   };
 
   const createTranslation: CreateTranslation = {

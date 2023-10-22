@@ -4,22 +4,8 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
-  Api,
-  ApiRouteProps,
-  Auth,
-  Bucket,
-  Config,
-  EventBus,
-  EventBusRuleProps,
-  FunctionInlineDefinition,
-  NextjsSite,
-  Queue,
-  StackContext,
-  Table,
-  Topic,
-  use,
-  WebSocketApi,
-  WebSocketApiFunctionRouteProps,
+    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
+    NextjsSite, Queue, StackContext, Table, Topic, use, WebSocketApi, WebSocketApiFunctionRouteProps
 } from 'sst/constructs';
 
 import { botNodeEvent } from './entities/bot';
@@ -561,7 +547,22 @@ export function baseStack({ stack, app }: StackContext) {
 
   const site = new NextjsSite(stack, 'site', {
     customDomain: {
-      domainName: stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`,
+      domainName: stack.stage === 'prod' ? domain.toLowerCase() : `${stack.stage}-${domain}`.toLowerCase(),
+      hostedZone: 'ekrata.com'
+    },
+    bind: [api, wsApi],
+    environment: {
+      NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
+      NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
+    },
+  });
+
+  const widgetSiteDomain = `widget-${domain}`
+  const widget = new NextjsSite(stack, 'widget', {
+    path: 'widget',
+    customDomain: {
+      domainName: stack.stage === 'prod' ? widgetSiteDomain.toLowerCase() : `${stack.stage}-${widgetSiteDomain}`.toLowerCase(),
+      hostedZone: 'ekrata.com'
     },
     bind: [api, wsApi],
     environment: {
@@ -601,7 +602,11 @@ export function baseStack({ stack, app }: StackContext) {
 
   widgetCustomRepo.addDependency(publicWidgetRepo);
 
-  console.log(site.customDomainUrl, wsApi.customDomainUrl, api.customDomainUrl);
+  console.log('Site url', site.url);
+  console.log('widget url', widget.customDomainUrl);
+  console.log('WsApi url', wsApi.customDomainUrl)
+  console.log('api url', api.customDomainUrl)
+
   stack.addOutputs({
     SiteUrl: site.customDomainUrl,
     AppWsUrl: wsApi.customDomainUrl,

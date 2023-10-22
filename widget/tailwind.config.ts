@@ -1,20 +1,32 @@
-import type { Config } from 'tailwindcss'
+/** @type {import('tailwindcss').Config} */
 
-const config: Config = {
+module.exports = {
+  important: true,
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'bg-gradient-to-r',
+    'from-green-300',
+    'via-blue-500',
+    'to-purple-600',
+  ],
   theme: {
-    extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
-    },
+    // extend: {
+    //   fontFamily: {
+    //     sans: ['var(--font-inter)'],
+    //     mono: ['var(--font-roboto-mono)'],
+    //   },
+    // },
   },
-  plugins: [],
-}
-export default config
+  daisyui: {
+    themes: ['lofi', 'dark'],
+  },
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('tailwindcss-animated'),
+    require('daisyui'),
+  ],
+};

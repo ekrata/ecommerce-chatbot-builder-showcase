@@ -1,6 +1,8 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+
 import { nodeSubType } from './bot';
 
 export const Interaction = new Entity({
@@ -21,8 +23,8 @@ export const Interaction = new Entity({
       required: true,
       readOnly: true,
     },
-    nodeSubType: {
-      type: nodeSubType,
+    type: {
+      type: Object.values(Triggers),
     },
     customerId: {
       type: 'string',

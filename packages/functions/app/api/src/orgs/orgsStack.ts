@@ -7,6 +7,8 @@ export function orgsStack({ stack }: StackContext) {
   api.addRoutes(stack, {
     'GET /orgs': 'packages/functions/app/api/src/orgs/list.handler',
     'GET /orgs/{orgId}': 'packages/functions/app/api/src/orgs/get.handler',
+    'GET /orgs/by-domain':
+      'packages/functions/app/api/src/orgs/getByDomain.handler',
     'DELETE /orgs/{orgId}':
       'packages/functions/app/api/src/orgs/delete.handler',
     'POST /orgs/{orgId}': 'packages/functions/app/api/src/orgs/create.handler',

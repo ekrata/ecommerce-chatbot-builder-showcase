@@ -131,8 +131,7 @@ export const Conversation = new Entity({
       type: rating,
     },
     topic: {
-      type: conversationTopic,
-      required: true,
+      type: [...conversationTopic, ''] as const,
       default: '',
     },
     read: {

@@ -1,12 +1,14 @@
 {
-  "name": "echat-widget",
+  "name": "widget",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "sst bind next dev",
+    "seed-dev": "sst bind ts-node populate.ts && sst bind next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build-widget": "next build './src/app/[locale]/(chat-widget)'",
+    "publish-widget": "pnpm publish './src/app/[locale]/(chat-widget)'",
+    "start": "sst bind next start"
   },
   "dependencies": {
     "@aws-cdk/aws-codeartifact": "^1.204.0",

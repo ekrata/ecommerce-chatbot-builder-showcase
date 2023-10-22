@@ -14,6 +14,7 @@ export type MockOrgIds = {
   moderatorId: string;
   mockGoogleAccountUserId: string;
   articleIds: { articleId: string; articleContentId: string }[];
+  domain: string;
   lang: string;
   botIds: string[];
   operatorIds: string[];

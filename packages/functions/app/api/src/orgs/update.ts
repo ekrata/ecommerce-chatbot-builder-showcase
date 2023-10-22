@@ -1,9 +1,11 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
+import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
+
+import * as Sentry from '@sentry/serverless';
+
 import { UpdateOrg } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
-import { Config } from 'sst/node/config';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {

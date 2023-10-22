@@ -97,6 +97,7 @@ export const Configuration = new Entity({
               properties: {
                 widgetAppearance: {
                   type: 'map',
+                  default: {},
                   properties: {
                     logo: {
                       type: 'string',

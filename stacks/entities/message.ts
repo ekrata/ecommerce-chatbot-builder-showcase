@@ -93,12 +93,6 @@ export const Message = new Entity({
       required: true,
       readOnly: true,
     },
-    context: {
-      type: contextType,
-      default: 'message',
-      required: true,
-      readOnly: true,
-    },
     sender: {
       type: senderType,
       required: true,
@@ -108,6 +102,9 @@ export const Message = new Entity({
       type: 'string',
       required: true,
       readOnly: true,
+    },
+    contentHtml: {
+      type: 'string',
     },
     sentAt: {
       type: 'number',

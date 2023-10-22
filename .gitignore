@@ -12,10 +12,11 @@
 # next.js
 /.next/
 /out/
+.sst/
 
 **/.next/
 **/out/
-**/node_modules
+**/node_modules/
 
 # production
 /build

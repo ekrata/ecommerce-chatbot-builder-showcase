@@ -34,6 +34,14 @@ export const Org = new Entity({
       required: true,
       default: 'free',
     },
+    helpCenterEnabled: {
+      type: 'boolean',
+      default: false,
+    },
+    chatbotEnabled: {
+      type: 'boolean',
+      default: false,
+    },
     planOperatorSeats: {
       type: 'number',
       required: true,

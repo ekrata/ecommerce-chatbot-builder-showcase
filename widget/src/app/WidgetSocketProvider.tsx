@@ -9,12 +9,11 @@ import {
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { v4 as uuidv4 } from 'uuid';
 
-import { getWsUrl } from '@/app/getWsUrl';
-import { ConversationItem } from '@/entities/conversation';
-import { Message } from '@/entities/message';
-import { Operator } from '@/entities/operator';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { ConversationItem } from '../../../stacks/entities/conversation';
+import { Message } from '../../../stacks/entities/message';
+import { Operator } from '../../../stacks/entities/operator';
 import { useCreateCustomerMut } from './(actions)/mutations/useCreateCustomerMut';
 import { newMessageReducer, useCreateMessageMut } from './(actions)/mutations/useCreateMessageMut';
 import { QueryKey } from './(actions)/queries';
@@ -22,8 +21,9 @@ import { useConfigurationQuery } from './(actions)/queries/useConfigurationQuery
 import { useCustomerQuery } from './(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from './(actions)/queries/useOrgQuery';
 import { sortConversationItems } from './(helpers)/sortConversationItems';
+import { getWsUrl } from './getWsUrl';
+
 // import { useDashStore } from './(actions)/useDashStore';
-import { WsAppMessage } from './WsMessage';
 
 // Create a context for chat messages
 const ChatMessagesContext = createContext(null);

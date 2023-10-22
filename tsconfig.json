@@ -83,7 +83,7 @@
     "src/app/[locale]/(chat-widget)/ChatWidgetCard.dtsx",
     "src/app/[locale]/(marketing)/tsconfig.json",
     "next.config.js"
-  ],
+, "widget/tailwind.config.js"  ],
   "exclude": [
     "node_modules"
   ]

@@ -1,0 +1,681 @@
+{
+  "marketing": {
+    "Sign in": "Sign in",
+    "Start free trial": "Start free trial",
+    "View demo": "View demo",
+    "Sign out": "Sign out",
+    "Go to app": "Go to app",
+    "cta": {
+      "login": "Log in",
+      "trial": "Get started for free"
+    }
+  },
+  "chat-widget": {
+    "Name": "Staff",
+    "orgName": "Gymshark",
+    "Recent message": "Recent message",
+    "We're online": "We're online",
+    "Chat with us": "Chat with us 👋",
+    "Chat with": "Chat with us 👋",
+    "We typically reply in under": "We typically reply in under",
+    "Messages": "Messages",
+    "Send us a message": "Send us a message",
+    "just now": "just now",
+    "Bot": "Bot",
+    "You": "You",
+    "Help": "Help",
+    "Search for help": "Search for help",
+    "collections": "{count} collections",
+    "General Information": "General Information",
+    "Orders & Delivery": "Orders & Delivery",
+    "Returns & Refunds": "Returns & Refunds",
+    "Payments & Promotions": "Payments & Promotions",
+    "Technical": "Technical",
+    "Product": "Product",
+    "articles": "{count, plural, \n              =0 {No articles found}\n              =1 {One article}\n              other {# articles}\n            }",
+    "categories": "{count, plural, \n              =0 {No categories found}\n              =1 {One category}\n              other {# categories}\n              }",
+    "No results for": "No results for",
+    "Try again": "Try again",
+    "Updated": "Updated"
+  },
+  "navbar": {
+    "products": {
+      "title": "Product & Features",
+      "customer-service": {
+        "title": "Customer Service",
+        "live-chat": {
+          "title": "Live chat",
+          "description": "Chat live with your users as they browse your site, recommend products, and more."
+        },
+        "chat-bot": {
+          "title": "Chat Bots",
+          "description": "Automate Customer Service and acclerate growth with AI Chatbots!"
+        },
+        "multichannel": {
+          "title": "Multichannel",
+          "description": "Communicate with customers; FB Messenger, Instagram, Email And more."
+        }
+      },
+      "sales-analytics": {
+        "title": "Analytics",
+        "live-analytics": {
+          "title": "Live Visitors",
+          "description": "Live, Real-time Visitor Analytics to enhance your live sales."
+        },
+        "intelligent-analytics": {
+          "title": "Pro Analytics",
+          "description": "Track and Implement Strategies to supercharge your growth over time."
+        }
+      },
+      "marketing-advertising": {
+        "title": "Marketing & Advertising",
+        "email-marketing": {
+          "title": "Email Marketing",
+          "description": "Integrated Email Marketing Suite to make sure your customers never miss a sale!"
+        },
+        "multichannel-marketing": {
+          "title": "Multichannel Marketing",
+          "description": "Create and Manage Ad Campaigns across several Ad Networks(Facebook Ads, Google Ads)."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Pricing & Plans",
+      "free": {
+        "title": "Free",
+        "description": "Get started today for free!"
+      },
+      "starter": {
+        "title": "Starter",
+        "description": "Kickstart your growth with our comprehensive Starter plan"
+      },
+      "scale": {
+        "title": "Scale",
+        "description": "Acclerate your sales and scale with our Scale Plan"
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "description": "A custom, bespoke plan made for your business."
+      }
+    },
+    "resources": {
+      "title": "Resources",
+      "learn": {
+        "title": "Learn",
+        "blog": {
+          "title": "Blog",
+          "description": "Read our Crow Commerce blog"
+        },
+        "customer": {
+          "title": "Customer Success",
+          "description": "Learn how Crow Commerce drives growth across all our customers"
+        }
+      },
+      "compare": {
+        "title": "Compare",
+        "tidio": {
+          "title": "vs. Tidio",
+          "description": "Skip months of their chatbot nightmare with our outperforming, automated no code solution,"
+        },
+        "livechat": {
+          "title": "vs. Livechat",
+          "description": "A poor shopify integration means lower conversions. Fix that with Crow Commerce."
+        },
+        "intercom": {
+          "title": "vs. Intercom",
+          "description": "Don't spend months and hundreds of thousands setting up their chatbots manually"
+        }
+      },
+      "help-center": {
+        "title": "Help Center",
+        "cta": "See all articles",
+        "installation": {
+          "title": "Installation",
+          "description": "Start here to begin your crow commerce journey."
+        },
+        "chatbots": {
+          "title": "Crow Chatbot Guide",
+          "description": "Signed up? Get Started Here"
+        }
+      }
+    }
+  },
+  "app": {
+    "layout": {
+      "home": "Home",
+      "conversations": "Conversations",
+      "visitors": "Visitors",
+      "help-center": "Help center",
+      "analytics": "Analytics",
+      "bots": "Bots",
+      "settings": "Settings"
+    },
+    "home": {
+      "customers": "{count, plural, =0 {No followers yet} =1 {One follower} other {# followers}}"
+    },
+    "inbox": {
+      "layout": {
+        "live-chats": "Live chats",
+        "unassigned": "Unassigned",
+        "my-open": "My Open",
+        "solved": "Solved",
+        "operators": "Operators",
+        "all": "All",
+        "upgrade": "Upgrade",
+        "mark-as-solved": "Mark as Solved"
+      },
+      "chat": {
+        "instagram": "Instagram",
+        "live-chat": "Live Chat",
+        "email": "Email",
+        "messanger": "Messenger",
+        "today": "Today",
+        "send": "Send",
+        "generate-response": "Generate Response",
+        "attach-document": "Add an Attachment",
+        "msg-placeholder": "Write your message or use '/' to search for a canned response",
+        "profile": "Profile",
+        "visited-pages": "Visited Pages",
+        "notes": "Notes",
+        "notes-placeholder": "Write some notes about your customer here for future reference."
+      }
+    }
+  },
+  "dash": {
+    "conversations": "{count, plural, \n              =0 {No conversations found}\n              =1 {One conversation}\n              other {# conversations}\n              }",
+    "Start chat": "Start chat",
+    "All conversations": "All conversations",
+    "Bots in action": "Bots in action",
+    "No article selected": "No article selected",
+    "You": "You",
+    "Name": "Name",
+    "Entered": "Entered",
+    "Last Visited Page": "Last Visited Page",
+    "tickets": "{count, plural, \n              =0 {No tickets found}\n              =1 {One ticket}\n              other {# tickets}\n              }",
+    "Email": "Email",
+    "at": "at",
+    "Article": "Article",
+    "Title": "Title",
+    "Download": "Download",
+    "Subtitle": "Subtitle",
+    "Category": "Category",
+    "Status": "Status",
+    "Create": "Create",
+    "Active": "Active",
+    "Select a conversation to view it here": "Select a conversation to view it here",
+    "Delete article": "Delete article",
+    "Copy to clipboard": "Delete article",
+    "Export": "Export",
+    "Delete": "Delete",
+    "Copied to clipboard": "Copied to clipboard",
+    "Import": "Import",
+    "Remove": "Remove",
+    "Value": "Value",
+    "Save": "Save",
+    "Fetching": "Fetching",
+    "Undo": "Undo",
+    "Redo": "Redo",
+    "Saving": "Saving",
+    "Saved": "Saved",
+    "Error": "Error",
+    "Deleting": "Deleting",
+    "Deleted": "Deleted",
+    "Failed to delete": "Failed to delete",
+    "Back": "Back",
+    "Next": "Next",
+    "Edit": "Edit",
+    "Can't be empty": "Can't be empty",
+    "New Article": "New Article",
+    "Done": "Done",
+    "Region": "Region",
+    "Language": "Region",
+    "Desktop": "Desktop",
+    "Mobile": "Mobile",
+    "Message": "Message",
+    "Topic": "Topic",
+    "Channel": "Channel",
+    "All": "All",
+    "Creating article": "Creating article",
+    "Created article": "Created article",
+    "Failed to create article": "Failed to create article",
+    "Updating article": "Updating article",
+    "Updated article": "Updated article",
+    "Failed to update article": "Failed to update article",
+    "Deleting article": "Deleting article",
+    "Deleted article": "Deleted article",
+    "Failed to delete article": "Failed to delete article",
+    "Status Info": "Articles start in the draft state. On save, they are moved to 'In Review'. They can now be viewed and published by Moderators, Admins and Owners.",
+    "Code snippet": "Code snippet",
+    "Need more help?": "Need more help?",
+    "Clone": "Clone",
+    "Visit our Knowledge base": "Visit our Knowledge base",
+    "The help screen, articles and our in-built CMS is only available to + users": "The help screen, articles and our in-built CMS is only available to + users",
+    "operator": {
+      "name": "name",
+      "firstName": "first name",
+      "phone": "phone",
+      "email": "email",
+      "countryCode": "country code",
+      "city": "city",
+      "projectDomain": "project domain",
+      "projectName": "project name"
+    },
+    "bots": {
+      "categories": {
+        "General": "General",
+        "Sales": "Sales",
+        "Customer Service": "Customer Service",
+        "Marketing": "Marketing",
+        "Order issues": "Order issues",
+        "Lead generation": "Lead generation",
+        "Promotions": "Promotions"
+      },
+      "contactProperties": {
+        "name": "Name",
+        "firstName": "First Name",
+        "phone": "Phone",
+        "email": "Email",
+        "countryCode": "Country Code",
+        "city": "City",
+        "projectDomain": "Project Domain",
+        "projectName": "Project Name"
+      },
+      "contactSelectors": {
+        "isEqualTo": "Is Equal To",
+        "isSet": "Is Set",
+        "is": "Is",
+        "contains": "Contains",
+        "startsWith": "Starts With",
+        "endsWith": "Ends With"
+      },
+      "triggerInterval": {
+        "send once per 24 hours": "send once per 24 hours",
+        "send only once per unique visitor": "send only once per unique visitor",
+        "send on every visit": "send on every visit"
+      },
+      "languageCodes": {
+        "en": "English",
+        "es": "Spanish",
+        "de": "German",
+        "zh": "Chinese",
+        "fr": "French",
+        "ar": "Arabic",
+        "bn": "Bengali",
+        "pa": "Punjabi (Panjabi)"
+      },
+      "visitorSaysTopic": {
+        "custom": "Custom",
+        "greetings": "Greetings",
+        "criticism": "Criticism",
+        "gratitude": "Gratitude",
+        "praise": "Praise",
+        "products": "Products",
+        "orderStatus": "Order Status",
+        "orderIssues": "Order Issues",
+        "shippingPolicy": "Shipping Policy"
+      },
+      "This node contains fields with errors, please ensure these errors are fixed or the bot will not run": "This node contains fields with errors, please ensure these errors are fixed or the bot will not run.",
+      "This node has connections that are cannot be triggered, add more output nodes(such as decisions), to fix this": "This node has connections that are cannot be triggered. Add more output nodes(such as decisions), to fix this.",
+      "VisitorBotInteractionTrigger": "Visitor interacts with bot",
+      "VisitorPageInteractionTrigger": "Visitor interacts with the page",
+      "OperatorInteractionTrigger": "Operator interacts",
+      "Conditions": "Conditions",
+      "ShopifyCondition": "Shopify Conditions",
+      "ShopifyAction": "Shopify action",
+      "Templates": "Templates",
+      "My chatbots": "My chatbots",
+      "Bot actions": "Bot actions",
+      "Create new bot": "Create new bot",
+      "Create new bot from template": "Create new bot from template",
+      "Strategies": "Strategies",
+      "Grow sales": "Grow sales",
+      "Generate leads": "Generate leads",
+      "Resolve issues": "Resolve issues",
+      "Test & validate bot": "Test & validate bot",
+      "Start while operators are offline": "Start while operators are offline",
+      "Start while an operator is handling another conversation": "Start while an operator is handling another conversation",
+      "Start when another bot is running": "Start when another bot is running",
+      "View statistics": "View statistics",
+      "Trigger": "Trigger",
+      "Condition": "Condition",
+      "Action": "Action",
+      "Actions": "Actions",
+      "Triggered": "Triggered",
+      "Engagement": "Engagement",
+      "Satisfaction": "Satisfaction",
+      "ActionForms": {
+        "GenericDecision": {
+          "facebookCatch": "Please note: Facebook Messenger displays shorter buttons. Replies with text longer than 20 characters will be shortened to 20 characters.",
+          "transferToOperatorMessageLabel": "Transfer to operator message",
+          "transferToOperatorMessageDescription": "The transfer to operator message is sent to a visitor when they reply to a question with a text, instead of choosing one of the decision buttons",
+          "Choices": "Choices",
+          "Message": "Message",
+          "Title": "Title"
+        },
+        "DecisionQuickReplies": {
+          "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "addQuickReply": "Add quick reply"
+        },
+        "DecisionCardMessages": {
+          "defaultTitle": "Enter a title here..",
+          "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
+          "messagePlaceholder": "Type in the message that will be sent to the user.",
+          "buttonNamePlaceholder": "Type in a button name",
+          "urlPlaceholder": "Enter url here (Optional)",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "Message": "Message",
+          "addQuickReply": "Add quick reply",
+          "addButton": "Add button"
+        },
+        "SendAChatMessage": {
+          "defaultMessage": "Hi 👋 Would you like to take a closer look at our offer?",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "New message": "New message"
+        },
+        "DecisionButtons": {
+          "messagePlaceholder": "Type in the message that will be sent to the user.",
+          "buttonNamePlaceholder": "Type in a button name",
+          "urlPlaceholder": "Enter url here (Optional)",
+          "action": "Action",
+          "description": "The visitor will be asked to choose between the buttons specified below.",
+          "defaultReply1": "Yes, please!",
+          "defaultReply2": "No, thanks.",
+          "addButton": "Add decision button"
+        },
+        "AskAQuestion": {
+          "defaultQuestion": "Hi 👋 Would you like to take a closer look at our offer?",
+          "defaultError": "Oops... that doesn't look correct, try again.",
+          "errorMessageLabel": "Display this message when there is a validation type error",
+          "numberOfRepeatsLabel": "Number of repeats",
+          "Save the answer as a contact property": "Save the answer as a contact property",
+          "validationTypeLabel": "Validation Type Label"
+        },
+        "SubscribeForMailing": {
+          "description": "Allows you to subscribe the visitor to your mailing list",
+          "Quick Tip": "Quick Tip",
+          "tip1": "Insert 'Ask A Question' and add a decision to ask for the visitor's email address ",
+          "tip2": "Link it to a subscribe for mailing node",
+          "tip3": "Once the flow is triggered, the visitor's will be subscribed to your mailing list!"
+        },
+        "CouponCode": {
+          "label": "Send a coupon code to a user",
+          "defaultMessage": "Here is your code, enjoy shopping!",
+          "defaultCouponCode": "X1A83B012",
+          "couponCodeDescription": "Customers must enter this coupon code on checkout",
+          "couponCodeLabel": "Coupon code"
+        }
+      },
+      "TriggerForms": {
+        "VisitorClicksBotsButton": {
+          "fieldLabel": "What is the button's name",
+          "placeholder": "Type the button's name"
+        },
+        "VisitorSays": {
+          "description": "The visitor will trigger that chatbot when they send a similar message to the phrases listed below. Once triggered, the bot will take control of the conversation.",
+          "conversationLanguage": "Conversation Language",
+          "conversationTopic": "Conversation Topic",
+          "phraseDescription": "Type phrases in the fields below. Use the most natural, conversational language possible to help our AI detect with greater accuracy",
+          "phrase1": "ie. When will my order be shipped",
+          "phrase2": "do you have any discounts available right now?",
+          "addPhrase": "Add phrase"
+        }
+      },
+      "ConditionForms": {
+        "BasedOnContactProperty": {
+          "Contact Property": "Contact Property",
+          "Contact Selector": "Contact Selector"
+        },
+        "ChatStatus": {
+          "description": "Adjusts the chat status depending on whether you are offline or online"
+        },
+        "TriggerInterval": {
+          "label": "Trigger Interval"
+        }
+      },
+      "nodes": {
+        "VisitorBotInteractionTrigger": {
+          "VisitorClicksBotsButton": "Visitor clicks the bots button",
+          "VisitorClicksChatIcon": "Visitor clicks the chat button",
+          "VisitorSays": "Visitor says",
+          "InstagramStoryReply": "Instagram - Story Reply",
+          "VisitorSelectsDepartment": "Visitor selects department"
+        },
+        "VisitorPageInteractionTrigger": {
+          "ByActionMadeOnYourPage": "By action they made on your page",
+          "FirstVisitOnSite": "First visit on site",
+          "VisitorReturnsToTheSite": "Visitor returns to the site",
+          "MouseLeavesWindow": "Mouse leaves window",
+          "VisitorScrollsPage": "Visitor scrolls page",
+          "NewEvent": "New event",
+          "FormAbandoned": "Form abandoned",
+          "VisitorHasntContactedForSomeTime": "The visitor hasn't contacted you for some time",
+          "VisitorOpensSpecificPage": "Visitor opens a specific page"
+        },
+        "OperatorInteractionTrigger": {
+          "OperatorDoesNotRespondDuringTheConversation": "Operator doesn't respond during the conversation",
+          "OperatorStarted": "Operator starts the chatbot",
+          "OperatorDoesNotTakeTheConversation": "Operator doesn't take the conversation",
+          "AllOperatorsLeftConversation": "Operator marks conversation as solved",
+          "FromAnotherChatBot": "From another chatbot",
+          "WhenYouStartIt": "When you start it"
+        },
+        "Condition": {
+          "BasedOnContactProperty": "Based on Contact Property",
+          "Browser": "Browser",
+          "OperatingSystem": "Operating system",
+          "Mobile": "Mobile",
+          "ReturningVisitor": "Returning visitor",
+          "Day": "Day",
+          "CurrentURL": "Current URL",
+          "Language": "Language",
+          "MailingSubscriber": "Mailing Subscriber",
+          "ChatStatus": "Chat status"
+        },
+        "ShopifyCondition": {
+          "CartValue": "Cart Value"
+        },
+        "Action": {
+          "SendAChatMessage": "Send a chat message",
+          "AskAQuestion": "Ask a question",
+          "DecisionQuickReplies": "Decision (Quick Replies)",
+          "DecisionButtons": "Decision (Buttons)",
+          "OpenWebsiteInModal": "Open website in modal",
+          "DecisionCardMessages": "Decision (Card Messages)",
+          "SendAnEmail": "Send an email",
+          "Delay": "Delay",
+          "Randomize": "Randomize",
+          "SetContactProperty": "Set contact property",
+          "RemoveATag": "Remove a tag",
+          "ChatWithBotEnded": "Chat with bot ended",
+          "SubscribeForMailing": "Subscribe for mailing",
+          "DisableTextInput": "Disable text input",
+          "EnableTextInput": "Enable text input",
+          "NotifyOperators": "Notify operators",
+          "ToAnotherChatbot": "To another chatbot",
+          "ReassignToADepartment": "Reassign to a department",
+          "CouponCode": "Coupon code",
+          "SendAnEventToGoogleAnalytics": "Send an event to google analytics",
+          "SendAForm": "Send a form"
+        },
+        "ShopifyAction": {
+          "CheckOrderStatus": "Check Order Status",
+          "ProductAvailability": "Product Availability",
+          "ShippingZones": "Shipping Zones",
+          "CouponCode": "Coupon code"
+        }
+      }
+    }
+  },
+  "settings": {
+    "appearance": {
+      "Appearance": "Appearance",
+      "Widget Appearance": "Widget Appearance",
+      "Background Color": "Background Color",
+      "Welcome Image": "Welcome Image",
+      "Online Status": "Online Status",
+      "Widget Position": "Widget Position",
+      "Show Button Label": "Button Label",
+      "Label Text": "Label Text",
+      "Enable widget sounds": "Enable widget sounds",
+      "Left": "Left",
+      "Right": "Right",
+      "Brand Logo": "Brand Logo",
+      "Custom branding in widget and emails": "Custom branding in widget and emails",
+      "Custom branding is available on the Plus plan": "Custom branding is available on the Plus plan",
+      "Widget Visibility": "Widget Visibility",
+      "Devices": "Devices",
+      "Mobile Widget": "Mobile Widget",
+      "Button Position": "Button Position",
+      "Button Size": "Button Size",
+      "small": "small",
+      "medium": "medium",
+      "large": "large",
+      "On both desktop and mobile devices": "On both desktop and mobile devices",
+      "Only on desktop devices": "Only on desktop devices",
+      "Only on mobile devices": "Only on mobile devices",
+      "Hide on specific pages": "Hide on specific pages",
+      "Display the Chat When You're Offline": "Display the Chat When You're Offline",
+      "Display Widget": "Display Widget",
+      "Let visitors create a Ticket when you’re offline": "Display the Chat When You're Offline",
+      "Offline Status": "Offline Status",
+      "adjust online hours": "adjust online hours",
+      "Get Started": "Get Started",
+      "Offline Message": "Offline Message"
+    },
+    "sidebar": {
+      "Sidebar": "Sidebar",
+      "Enable": "Enable"
+    },
+    "translations": {
+      "Translations": "Translations",
+      "Multilanguage": "Multilanguage",
+      "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser": "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser.",
+      "Delete language": "Delete language"
+    },
+    "installation": {
+      "Installation": "Installation",
+      "The chat code is not installed properly": "The chat code is not installed properly",
+      "The chat code is installed": "The chat code is installed",
+      "Paste this code snippet just before the </body> tag": "Paste this code snippet just before the </body> tag.",
+      "Provide your Shopify domain to connect with eChat": "Provide your Shopify domain to connect with eChat",
+      "Copy to clipboard": "Copy to clipboard",
+      "Your store name": "Your store name",
+      "Connect to": "Connect to",
+      "Wordpress installation instructions": "Log in to your WordPress account and go to Dashboard\n                      Navigate to the “Plugins” section and select “Add New”.\n                      Type “eChat” in the search bar and hit the “Install New” button\n                      Once installed, make sure to hit the “Activate” button before moving on\n                      Click “eChat Chat” in the left-hand side menu. Choose “Log in” and enter your email and password\n                      Choose the project you want to integrate with your website\n                      You’re all set! Hit “Open eChat Panel” to start using live chat & chatbots"
+    },
+    "Ticketing": {
+      "Ticketing": "Ticketing",
+      "Connecting email": "Connecting email",
+      "Connect new email": "Connect new email",
+      "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability": "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability.",
+      "Send from": "Paste this code snippet just before the </body> tag.",
+      "Sender address": "Sender address",
+      "Automatic response": "Automatic response",
+      "Custom email signature": "Custom email signature",
+      "Filtered emails": "Filtered emails",
+      "Add new email filter": "Add new email filter",
+      "Own": "Paste this code snippet just before the </body> tag.",
+      "Domain": "Paste this code snippet just before the </body> tag.",
+      "Connect with your existing email": "Connect with your existing email",
+      "Create a new email address": "Create a new email address",
+      "Email address": "Email address",
+      "Choose email type": "Choose email type",
+      "Choose provider": "Choose provider",
+      "Follow email instructions": "Follow email instructions",
+      "Other email provider": "Other email provider",
+      "Email type": "Email type",
+      "You can connect your existing mailbox or create a new one with a eChat domain": "You can connect your existing mailbox or create a new one with a eChat domain.",
+      "Alias": "Alias",
+      "Other mailbox provider": "Other mailbox provider",
+      "Set up an automatic reply that customers will receive when they create a ticket": "Set up an automatic reply that customers will receive when they create a ticket.",
+      "List of filtered out emails from which you won't receive any tickets": "List of filtered out emails from which you won’t receive any tickets",
+      "google": {
+        "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings": "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings",
+        "Choose the 'Forwarding and POP/IMAP' tab in the settings and click on the 'Add a forwarding address' button in the middle": "Choose the \"Forwarding and POP/IMAP\" tab in the settings and click on the \"Add a forwarding address\" button in the middle",
+        "Copy the following email address and paste it in the 'Please enter a new forwarding email address:' field and click on the 'Next button'": "Copy the following email address and paste it in the 'Please enter a new forwarding email address:' field and click on the 'Next button'",
+        "Please wait for a confirmation email and click on the Verification link to activate the forwarding Also, make sure that you have selected the 'Forward a copy of incoming mail to' checkbox in your Forwarding settings in Gmail": "Please wait for a confirmation email and click on the Verification link to activate the forwarding. Also, make sure that you have selected the 'Forward a copy of incoming mail to...' checkbox in your Forwarding settings in Gmail"
+      },
+      "microsoft": {
+        "Select the Gear icon from the top right corner of your Inbox and choose 'Options'": "Select the Gear icon from the top right corner of your Inbox and choose 'Options'",
+        "From the Options page, click on 'Forwarding' tab in 'Account' section": "Select the Gear icon from the top right corner of your Inbox and choose 'Options'",
+        "Copy the following email address and paste it in the 'Forward my email to:' field and click on the 'Save' button": "Copy the following email address and paste it in the 'Forward my email to:' field and click on the 'Save' button"
+      },
+      "other": {
+        "To integrate your mailbox, set up automatic forwarding in your current email, to the email address below": "To integrate your mailbox, set up automatic forwarding in your current email, to the email address below",
+        "if you need any help": "if you need any help",
+        "click here to read the webmail integration guides": "click here to read the webmail integration guides"
+      }
+    },
+    "Account": {
+      "Account": "Account",
+      "Personal Details": "Personal details",
+      "Your picture": "Your picture",
+      "Name": "Name",
+      "Region": "Region",
+      "Language": "Language"
+    },
+    "customerSatisfaction": {
+      "Customer satisfaction": "Customer satisfaction",
+      "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience, It will be shown whenever an operator closes a conversation, You will be able to check results in the Analytics section": "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience. It will be shown whenever an operator closes a conversation. You will be able to check results in the Analytics section.",
+      "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled": "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled.",
+      "Automated survey": "Automated survey",
+      "Message about rating": "Message about rating",
+      "How would you rate your experience talking to us today?": "How would you rate your experience talking to us today?",
+      "Additional comment": "Additional comment",
+      "Share your feedback for this rating": "Share your feedback for this rating"
+    },
+    "operatingHours": {
+      "Operating Hours": "Operating Hours",
+      "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status": "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status.",
+      "Operating hours are enabled": "Operating hours are enabled",
+      "Operating hours are disabled": "Operating hours are disabled",
+      "When all operators are offline, chat widget will be seen as offline, You can decide how it should behave in": "When all operators are offline, chat widget will be seen as offline. You can decide how it should behave in"
+    },
+    "Operators": {
+      "Operators": "Operators",
+      "Add an operator": "Add an operator",
+      "Role": "Role",
+      "Resend invitation": "Resend Invitation",
+      "Edit permissions": "Edit permissions"
+    },
+    "Chat Page": "Chat Page",
+    "Translations": "Translations",
+    "Instagram": "Instagram",
+    "Live Chat": "Live Chat",
+    "Channels": "Channels",
+    "Personal": "Personal",
+    "General": "General",
+    "Notifications": "Notifications",
+    "Canned Responses": "Canned Responses",
+    "Workflow": "Workflow",
+    "Team": "Team",
+    "Email Marketing": "Email Marketing",
+    "Integrations": "Integrations",
+    "Desktop & Mobile": {
+      "Desktop & Mobile": "Desktop & Mobile",
+      "Download our mobile app and stay in touch with your customers on the go": "Download our mobile app and stay in touch with your customers on the go.",
+      "Download desktop app to use the chat whenever you are on your computer, You don’t need to keep your browser open to stay online": "Download desktop app to use the chat whenever you are on your computer. You don’t need to keep your browser open to stay online."
+    },
+    "Contact Properties": "Contact Properties",
+    "Project & Billing": "Project & Billing",
+    "Domains": "Domains",
+    "Tracking": "Domains"
+  },
+  "articleCategory": {
+    "General Information": "General Information",
+    "Orders & Delivery": "Orders & Delivery",
+    "Returns & Refunds": "Returns & Refunds",
+    "Payments & Promotions": "Payments & Promotions",
+    "Technical": "Technical",
+    "Product": "Product"
+  },
+  "articleStatus": {
+    "Published": "Published",
+    "Draft": "Draft",
+    "In Review": "In Review"
+  }
+}

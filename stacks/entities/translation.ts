@@ -42,6 +42,14 @@ export const Translation = new Entity({
               type: 'string',
               default: 'Start chat',
             },
+            'Welcome! 👋': {
+              type: 'string',
+              default: 'Welcome! 👋',
+            },
+            'How can we help you?': {
+              type: 'string',
+              default: 'How can we help you? ',
+            },
             'All conversations': {
               type: 'string',
               default: 'All conversations',

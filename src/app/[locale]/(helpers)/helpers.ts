@@ -6,5 +6,5 @@ export const getItem = (
 ) =>
   ConversationItem.find(
     (conversationItem) =>
-      conversationItem.conversation.conversationId === conversationId
+      conversationItem.conversationId === conversationId
   );
