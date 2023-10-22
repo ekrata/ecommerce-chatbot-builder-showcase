@@ -559,7 +559,7 @@ export function baseStack({ stack, app }: StackContext) {
 
   const widgetSiteDomain = `widget-${domain}`
   const widget = new NextjsSite(stack, 'widget', {
-    path: 'widget',
+    path: './widget',
     customDomain: {
       domainName: stack.stage === 'prod' ? widgetSiteDomain.toLowerCase() : `${stack.stage}-${widgetSiteDomain}`.toLowerCase(),
       hostedZone: 'ekrata.com'
