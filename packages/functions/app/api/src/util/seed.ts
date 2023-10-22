@@ -1,5 +1,7 @@
 import AWS from 'aws-sdk';
+import fs from 'fs';
 import { ApiHandler } from 'sst/node/api';
+import { Bucket } from 'sst/node/bucket';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,7 +24,6 @@ import { Action, Condition, VisitorBotInteractionTrigger } from '../bots/trigger
 import { AppDb, getAppDb } from '../db';
 import { MockArgs, mockArticleTitles, MockOrgIds } from './';
 
-const s3 = new S3Client({})
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
@@ -74,29 +75,46 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     existingOperator,
   } = mockArgs;
   // org
+
+  const s3 = new S3Client(Config.REGION)
   const orgId = uuidv4();
   const createOrg: CreateOrg = {
     orgId,
     name: faker.company.name(),
+    domain: 'ekrata',
     email: faker.internet.email(),
   };
   await db.entities.orgs.create(createOrg).go();
   const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
   mockOrg.orgId = orgId;
   mockOrg.lang = mockLang;
-  const command = new PutObjectCommand({
-    Bucket: Bucket,
-    Key: `${orgId}-configuration-botLogo`,
-    Body: "Hello S3!",
+  const avatarKey = `${orgId}-configuration-botLogo`
+  const logoKey = `${orgId}-configuration-logo`
+  const avatarCommand = new PutObjectCommand({
+    ACL: "public-read",
+    Bucket: Bucket?.['echat-app-assets'].bucketName,
+    Key: avatarKey,
+    Body: fs.readFileSync('packages/functions/app/api/src/util/test-avatar.png'),
   });
-  s3.
+  const logoCommand = new PutObjectCommand({
+    ACL: "public-read",
+    Bucket: Bucket?.['echat-app-assets'].bucketName,
+    Key: logoKey,
+    Body: fs.readFileSync('packages/functions/app/api/src/util/test-logo.png'),
+  });
+
+
+  await s3.send(avatarCommand)
+  await s3.send(logoCommand)
+
   const createConfiguration: CreateConfiguration = {
     orgId,
     channels: {
       liveChat: {
         appearance: {
           widgetAppearance: {
-            botLogo: ''
+            botLogo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${avatarKey}`,
+            logo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${logoCommand}`
           }
         }
       }
@@ -178,20 +196,17 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
       const nodes: BotNodeType[] = [
         {
           id: '1',
-          nodeType: 'trigger',
-          nodeSubType: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+          type: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
           position: { x: 0, y: 50 },
         },
         {
           id: '2',
-          nodeType: 'condition',
-          nodeSubType: Condition.Day,
+          type: Condition.Day,
           position: { x: -200, y: 200 },
         },
         {
           id: '3',
-          nodeType: 'action',
-          nodeSubType: Action.AskAQuestion,
+          type: Action.AskAQuestion,
           position: { x: 200, y: 200 },
         },
       ];

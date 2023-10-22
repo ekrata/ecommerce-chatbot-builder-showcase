@@ -33,20 +33,21 @@ export default {
     if (app.stage !== 'prod') {
       app.setDefaultRemovalPolicy('destroy');
     }
-    app.stack(paramStack)
-    app.stack(baseStack)
-    app.stack(articlesStack)
-    app.stack(orgsStack)
-    app.stack(configurationStack)
-    app.stack(conversationsStack)
-    app.stack(messagesStack)
-    app.stack(articleContentsStack)
-    app.stack(operatorsStack)
-    app.stack(customersStack)
-    app.stack(translationsStack)
-    app.stack(visitsStack)
-    app.stack(webhooksStack)
-    app.stack(botsStack)
-    app.stack(interactionsStack);
+    app
+      .stack(paramStack)
+      .stack(baseStack)
+      .stack(articlesStack)
+      .stack(orgsStack)
+      .stack(configurationStack)
+      .stack(conversationsStack)
+      .stack(messagesStack)
+      .stack(articleContentsStack)
+      .stack(operatorsStack)
+      .stack(customersStack)
+      .stack(translationsStack)
+      .stack(visitsStack)
+      .stack(webhooksStack)
+      .stack(botsStack)
+      .stack(interactionsStack);
   },
 } satisfies SSTConfig;

@@ -1,4 +1,4 @@
-import codeartifact from 'aws-cdk-lib/aws-codeartifact';
+import * as codeartifact from 'aws-cdk-lib/aws-codeartifact';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
@@ -41,7 +41,7 @@ export function baseStack({ stack, app }: StackContext) {
     const sentry = lambda.LayerVersion.fromLayerVersionArn(
       stack,
       'SentryLayer',
-      `arn:aws:lambda:${app.region}:943013980633:layer:SentryNodeServerlessSDK:132`,
+      `arn:aws:lambda:${app.region}:943013980633:layer:SentryNodeServerlessSDK:175`,
     );
     stack.addDefaultFunctionLayers([sentry]);
     stack.addDefaultFunctionEnv({
@@ -219,11 +219,12 @@ export function baseStack({ stack, app }: StackContext) {
     }
     const fn = wsApi.getFunction(route);
     // fn?.addPermission(new iam.ServicePrincipal('events.amazonaws.com'));
-    fn?.addPermission(`eb-invoke`, {
-      action: 'lambda:InvokeFunction',
-      principal: new iam.ServicePrincipal('events.amazonaws.com'),
-      sourceArn: routeRule.ruleArn,
-    });
+    fn?.attachPermissions(['events'])
+    // fn?.addPermission(`eb-invoke`, {
+    //   action: 'lambda:InvokeFunction',
+    //   principal: new iam.ServicePrincipal('events.amazonaws.com'),
+    //   sourceArn: routeRule.ruleArn,
+    // });
     // wsApi.attachPermissionsToRoute(route, [
     //   new iam.PolicyStatement({
     //     actions: ['lambda:InvokeFunction'],
@@ -559,7 +560,7 @@ export function baseStack({ stack, app }: StackContext) {
 
   const widgetSiteDomain = `widget-${domain}`
   const widget = new NextjsSite(stack, 'widget', {
-    path: './widget',
+    path: 'widget',
     customDomain: {
       domainName: stack.stage === 'prod' ? widgetSiteDomain.toLowerCase() : `${stack.stage}-${widgetSiteDomain}`.toLowerCase(),
       hostedZone: 'ekrata.com'
