@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -13,9 +13,9 @@ import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 're
 import { BsPlus } from 'react-icons/bs';
 import { FcInfo } from 'react-icons/fc';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-  useNodeId, useNodes
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+    useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -29,7 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
 import {
-  actionNode, conditionNode, defaultOutputs, OutputFieldsKeys, yesNoOutput
+    actionNode, conditionNode, defaultOutputs, OutputFieldKey, OutputFieldsKeys, yesNoOutput
 } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
@@ -56,7 +56,7 @@ type FormValues = z.infer<typeof schema>
 
 const type = Condition.BasedOnContactProperty
 
-export const BasedOnContactPropertyConditionNode = (node: Node) => {
+export const BasedOnContactPropertyConditionNode: FC<NodeProps> = (node) => {
   const outputKey = OutputFieldsKeys[type]
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
@@ -66,7 +66,7 @@ export const BasedOnContactPropertyConditionNode = (node: Node) => {
     edges?.filter((edge) => edge?.target === node.id)
   ), [edges]);
 
-  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label: string) => label)
 
   return (
     <div className={`w-16 place-items-center  `} >

@@ -12,9 +12,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     const { orgId } = usePathParams();
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
+      // updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      createdAt,
+      // createdAt,
       ...updateOrg
     }: UpdateOrg = useJsonBody();
 
@@ -44,5 +44,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

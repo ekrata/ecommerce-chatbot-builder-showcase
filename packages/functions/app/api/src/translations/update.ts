@@ -1,9 +1,11 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
 import { Config } from 'sst/node/config';
+import { Table } from 'sst/node/table';
+
 import { UpdateTranslation } from '@/entities/entities';
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -12,9 +14,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     const { orgId, lang } = usePathParams();
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
+      // updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      createdAt,
+      // createdAt,
       ...updateTranslation
     }: UpdateTranslation = useJsonBody();
 
@@ -26,8 +28,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
-      delete updateTranslation?.orgId;
-      delete updateTranslation?.lang;
+      // delete updateTranslation?.orgId;
+      // delete updateTranslation?.lang;
       const res = await appDb.entities.translations
         .patch({
           orgId,
@@ -46,5 +48,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

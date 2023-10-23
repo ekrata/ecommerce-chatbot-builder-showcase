@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useCreateOperatorMut } from '@/app/[locale]/(hooks)/mutations/useCreateOperatorMut';
 import { useDeleteOperatorMut } from '@/app/[locale]/(hooks)/mutations/useDeleteOperatorMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries';
+import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { useOperatorsQuery } from '@/app/[locale]/(hooks)/queries/useOperatorsQuery';
 
 import { getOperatorIcon, NewOperatorModal } from './NewOperatorModal';

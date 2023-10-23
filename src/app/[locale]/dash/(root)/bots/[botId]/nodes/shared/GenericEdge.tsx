@@ -67,7 +67,7 @@ export const GenericEdge: FC<GenericEdgeProps> = (
           }}
           className=" nodrag nopan"
         >
-          {edge?.data?.label}
+          {(edge?.data as { label: string })?.label}
         </div>
       </EdgeLabelRenderer>
     </>

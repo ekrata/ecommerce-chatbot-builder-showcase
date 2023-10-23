@@ -1,3 +1,5 @@
+'use client'
+
 import { EntityItem } from 'electrodb';
 
 import { ChatWidget } from './ChatWidget';

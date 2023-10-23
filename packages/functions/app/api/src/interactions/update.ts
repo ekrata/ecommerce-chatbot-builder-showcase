@@ -4,7 +4,7 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import { Updateinteraction } from '../../../../../../stacks/entities/entities';
+import { UpdateInteraction } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
@@ -17,8 +17,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       // createdAt,
-      ...updateinteraction
-    }: Updateinteraction = useJsonBody();
+      ...updateInteraction
+    }: UpdateInteraction = useJsonBody();
 
     if (!orgId || !interactionId) {
       return {
@@ -33,7 +33,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           orgId,
           interactionId,
         })
-        .set({ ...updateinteraction })
+        .set({ ...updateInteraction })
         .go();
 
       return {

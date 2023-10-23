@@ -20,7 +20,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       ...updateVisit
     }: UpdateVisit = useJsonBody();
 
-    delete updateVisit?.visitId;
+    // delete updateVisit?.visitId;
 
     if (!orgId || !visitId) {
       return {

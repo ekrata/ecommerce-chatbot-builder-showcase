@@ -1,6 +1,6 @@
 'use client'
 import {
-  createContext, Dispatch, FC, PropsWithChildren, ReactNode, useEffect, useMemo, useState
+    createContext, Dispatch, FC, PropsWithChildren, ReactNode, useEffect, useMemo, useState
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -42,7 +42,8 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   useEffect(() => {
     (async () => {
       if (!customerQuery?.data?.customerId && customerQuery.fetchStatus === 'idle' && customerQuery.status === 'error') {
-        const res = await createCustomerMut.mutateAsync([orgId, '', false])
+        const customerId = uuidv4()
+        const res = await createCustomerMut.mutateAsync([orgId, customerId, { customerId, orgId }])
       }
     })()
   }, [customerQuery.fetchStatus, customerQuery.status, customerQuery?.data?.customerId])

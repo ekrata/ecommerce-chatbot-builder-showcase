@@ -3,8 +3,6 @@ import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
-import { useDashStore } from '../(actions)/useDashStore';
-import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { BotsNav } from './BotsNav';
 import { BotsPanel } from './BotsPanel';
 

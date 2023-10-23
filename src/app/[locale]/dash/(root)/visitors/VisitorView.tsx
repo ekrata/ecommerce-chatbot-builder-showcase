@@ -68,6 +68,7 @@ export const VisitorView: FC = () => {
   const { conversationState, setConversationState } = useDashStore();
   const [page, setPage] = useState<number>(1);
   const [pageCursor, setPageCursor] = useState<PageCursor>({ 1: undefined });
+  const router = useRouter()
 
   const { relativeTime } = useFormatter();
   const [operatorSession] = useAuthContext();

@@ -13,10 +13,10 @@ import { useDashStore } from '../(actions)/useDashStore';
 import { highlightMatches } from '../../../(helpers)/highlightMatches';
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
 import {
-  useSearchConversationItemsQuery
+    useSearchConversationItemsQuery
 } from '../../../(hooks)/queries/useSearchConversationItemsQuery';
 import {
-  ConversationItemSearchKey, conversationItemSearchKey, ConversationItemSearchRes
+    ConversationItemSearchKey, conversationItemSearchKey, ConversationItemSearchRes
 } from '../../../../../../stacks/entities/conversation';
 import { ChannelSelect } from './ChannelSelect';
 import { OperatorSelect } from './OperatorSelect';
@@ -43,11 +43,11 @@ const fetchingSkeleton = (
 export const ConversationsSearchView: FC = () => {
   const tCw = useTranslations('chat-widget');
   const t = useTranslations('dash');
-  const { conversationOperatorView, conversationChannel, conversationTopic, setConversationState } = useDashStore();
+  const { conversationListFilter: { topic, status, operatorId, channel }, setConversationState } = useDashStore();
   const [operatorSession] = useAuthContext();
   const [phrase, setPhrase] = useState('');
   const debouncedSearchPhrase = useDebounce(phrase, 150);
-  const searchConversationItemsQuery = useSearchConversationItemsQuery({ expansionFields: ['customerId', 'operatorId'], cursor: undefined, orgId: operatorSession?.orgId ?? '', operatorId: conversationOperatorView, channel: conversationChannel, topic: conversationTopic, phrase: debouncedSearchPhrase })
+  const searchConversationItemsQuery = useSearchConversationItemsQuery({ expansionFields: ['customerId', 'operatorId'], cursor: undefined, orgId: operatorSession?.orgId ?? '', operatorId: operatorId, channel: channel, topic: topic, phrase: debouncedSearchPhrase })
   const {
     register,
     handleSubmit,
@@ -84,13 +84,13 @@ export const ConversationsSearchView: FC = () => {
             <Link
               href={{
                 pathname: '/dash/conversations',
-                query: { conversationId: response.item.conversation.conversationId },
+                query: { conversationId: response.item.conversationId },
               }}
               passHref>
               <li key={response.refIndex} className={`flex  justify-between w-full ${highlightedField['conversation.messages']?.length ? 'h-28' : 'h-20'} font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal`}>
                 <div className='flex flex-col justify-start w-5/6 overflow-y-clip basis-3/4 place-items-start gap-y-1'>
-                  <h5 className='justify-start text-base text-start'>{highlightedField['conversation.customer.name'] ? highlightedField['conversation.customer.name'].map(child => (<>{child}</>)) : response.item.conversation.customer?.name}</h5>
-                  <h5 className='text-sm'>{highlightedField['conversation.customer.email'] ? highlightedField['conversation.customer.email'].map(child => (<>{child}</>)) : response.item.conversation.customer?.email}</h5>
+                  <h5 className='justify-start text-base text-start'>{highlightedField['conversation.customer.name'] ? highlightedField['conversation.customer.name'].map(child => (<>{child}</>)) : response.item.customer?.name}</h5>
+                  <h5 className='text-sm'>{highlightedField['conversation.customer.email'] ? highlightedField['conversation.customer.email'].map(child => (<>{child}</>)) : response.item.customer?.email}</h5>
                   {highlightedField['messages.content'] && <p className='justify-start text-xs text-start text-neutral-400'>{highlightedField['messages.content'] ? highlightedField['messages.content'].map(child => (<>{child}</>)) : response.item.messages?.slice(-1)[0].content}</p>}
                 </div>
                 <BiChevronRight className="flex text-3xl basis-1/6 shrink-0 justify-right" />

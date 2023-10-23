@@ -10,15 +10,14 @@ import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsPlus, BsSearch, BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 import { useDebounce } from 'usehooks-ts';
+import { useSearchArticlesQuery } from 'widget/src/app/(actions)/queries/useSearchArticlesQuery';
 
+import { DynamicBackground } from '@/app/[locale]/(helpers)/DynamicBackground';
+import { highlightMatches } from '@/app/[locale]/(helpers)/highlightMatches';
+import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
+import { useArticlesQuery } from '@/app/[locale]/(hooks)/queries/useArticlesQuery';
+import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
-
-import { DynamicBackground } from '../../(helpers)/DynamicBackground';
-import { highlightMatches } from '../../(helpers)/highlightMatches';
-import { useAuthContext } from '../../(hooks)/AuthProvider';
-import {
-  useArticlesQuery, useConfigurationQuery, useSearchArticlesQuery
-} from '../../(hooks)/queries';
 
 type Inputs = {
   phrase: string;
@@ -119,7 +118,7 @@ export const ArticlesView: FC = () => {
   const debouncedSearchPhrase = useDebounce(phrase, 150);
   const [operatorSession] = useAuthContext()
   const orgId = operatorSession?.orgId ?? ''
-  const searchArticlesQuery = useSearchArticlesQuery(orgId, locale, debouncedSearchPhrase)
+  const searchArticlesQuery = useSearchArticlesQuery([orgId, locale, debouncedSearchPhrase])
   const [currentCategory, setCurrentCategory] = useState<ArticleCategory | null>(null);
   const {
     register,
@@ -134,10 +133,10 @@ export const ArticlesView: FC = () => {
 
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
-  const articles = useArticlesQuery(orgId, locale)
+  const articles = useArticlesQuery([orgId, locale])
 
   console.log(articles)
-  const categoryArticles: CategoryArticles | undefined = articles?.data?.data?.reduce((prev, curr) => {
+  const categoryArticles: CategoryArticles | undefined = articles?.data?.reduce((prev, curr) => {
     prev[curr.category] = [...prev?.[curr.category] ?? [], curr];
     return prev
   }, {} as CategoryArticles)

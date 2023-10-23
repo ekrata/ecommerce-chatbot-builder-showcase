@@ -1,5 +1,6 @@
+import { ConversationItem } from '@/entities/conversation';
+
 import { sortConversationItems } from '../../../(helpers)/sortConversationItems';
-import { ConversationItem } from '../../../../../../../../../stacks/entities/conversation';
 
 export /**
  * Returns sorted conversations

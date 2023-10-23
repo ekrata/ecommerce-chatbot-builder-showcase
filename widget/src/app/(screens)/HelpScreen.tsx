@@ -13,6 +13,7 @@ import { Configuration } from '@/entities/configuration';
 import { useArticlesQuery } from '../(actions)/queries/useArticlesQuery';
 import { useConfigurationQuery } from '../(actions)/queries/useConfigurationQuery';
 import { useOrgQuery } from '../(actions)/queries/useOrgQuery';
+import { useSearchArticlesQuery } from '../(actions)/queries/useSearchArticlesQuery';
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
 import { DynamicBackground } from '../(helpers)/DynamicBackground';
 import { highlightMatches } from '../(helpers)/highlightMatches';
@@ -40,7 +41,8 @@ export type CategoryArticles = { [key in ArticleCategory]: EntityItem<typeof Art
 
 export const HelpScreen: FC = () => {
   const t = useTranslations('chat-widget');
-
+  const org = useOrgQuery()
+  const orgId = org?.data?.orgId ?? ''
   const { chatWidget: { setWidgetState, setSelectedArticleId } } = useChatWidgetStore();
   const listCategories = (categoryArticles: CategoryArticles) =>
   (<ul className="w-full mb-10 animate-fade-left">
@@ -106,12 +108,10 @@ export const HelpScreen: FC = () => {
         }
       </ul>)
   };
-
-  const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''
   const locale = useLocale();
   const [phrase, setPhrase] = useState('');
   const debouncedSearchPhrase = useDebounce(phrase, 150);
-  const searchArticlesQuery = useSearchArticlesQuery(orgId, locale, debouncedSearchPhrase)
+  const searchArticlesQuery = useSearchArticlesQuery([orgId, locale, debouncedSearchPhrase])
   const [currentCategory, setCurrentCategory] = useState<ArticleCategory | null>(null);
   const {
     register,
@@ -125,8 +125,7 @@ export const HelpScreen: FC = () => {
   }
   const configuration = useConfigurationQuery(orgId);
   const widgetAppearance = { ...configuration.data?.channels?.liveChat?.appearance }
-  const org = useOrgQuery(orgId)
-  const articles = useArticlesQuery(orgId, locale)
+  const articles = useArticlesQuery([orgId, locale])
 
   const categoryArticles = articles?.data?.reduce((prev, curr) => {
     prev[curr.category] = [...prev?.[curr.category] ?? [], curr];

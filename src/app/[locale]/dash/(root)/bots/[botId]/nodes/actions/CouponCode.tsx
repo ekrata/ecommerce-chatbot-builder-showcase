@@ -9,13 +9,12 @@ import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
-import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { BsPlus } from 'react-icons/bs';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { FcInfo } from 'react-icons/fc';
 import {
     addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-    useNodeId, useNodes
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+    useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -27,7 +26,7 @@ import { validationType } from '@/entities/bot';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, defaultOutputs, OutputFieldsKeys } from '../../collections';
+import { actionNode, defaultOutputs, OutputFieldKey, OutputFieldsKeys } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -52,7 +51,7 @@ type FormValues = z.infer<typeof schema>
 
 const type = Action.CouponCode
 
-export const CouponCodeActionNode = (node: Node) => {
+export const CouponCodeActionNode: FC<NodeProps> = (node) => {
   const outputKey = OutputFieldsKeys[type]
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
@@ -62,7 +61,7 @@ export const CouponCodeActionNode = (node: Node) => {
     edges?.filter((edge) => edge?.target === node.id)
   ), [edges]);
 
-  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label: string) => label)
 
   return (
     <div className={`w-16  `} >

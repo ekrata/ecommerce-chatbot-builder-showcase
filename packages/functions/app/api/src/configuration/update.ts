@@ -1,9 +1,11 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
+import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
+
+import * as Sentry from '@sentry/serverless';
+
 import { UpdateConfiguration } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
-import { Config } from 'sst/node/config';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -12,9 +14,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     const { orgId } = usePathParams();
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
+      // updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      createdAt,
+      // createdAt,
       ...updateConfiguration
     }: UpdateConfiguration = useJsonBody();
 
@@ -26,7 +28,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
-      delete updateConfiguration?.orgId;
+      // delete updateConfiguration?.orgId;
       const res = await appDb.entities.configurations
         .patch({
           orgId,
@@ -44,5 +46,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

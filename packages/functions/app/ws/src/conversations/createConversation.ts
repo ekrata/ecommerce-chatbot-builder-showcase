@@ -6,7 +6,6 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import { createConversation } from '@/app/[locale]/echat-widget/src/app/actions';
 import { Conversation, ExpandedConversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';

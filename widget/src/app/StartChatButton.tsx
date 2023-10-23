@@ -9,7 +9,7 @@ import { CreateInteraction } from '@/entities/entities';
 import { useQuery } from '@tanstack/react-query';
 
 import { useCreateInteractionMut } from './(actions)/mutations/useCreateInteractionMut';
-import { getConfiguration } from './(actions)/orgs/configurations/getConfiguration';
+import { useConfigurationQuery } from './(actions)/queries/useConfigurationQuery';
 import { useCustomerQuery } from './(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from './(actions)/queries/useOrgQuery';
 import { useChatWidgetStore } from './(actions)/useChatWidgetStore';
@@ -21,7 +21,7 @@ export const StartChatButton: FC = () => {
   const orgId = org?.data?.orgId ?? ''
 
   const { chatWidget: { widgetState, widgetVisibility, setWidgetVisibility } } = useChatWidgetStore();
-  const configuration = useQuery<EntityItem<typeof Configuration>>([orgId, 'configuration'], async () => getConfiguration(orgId));
+  const configuration = useConfigurationQuery(orgId)
   const customerQuery = useCustomerQuery(orgId);
   const createInteractionMut = useCreateInteractionMut(orgId);
   const widgetAppearance: ConfigLiveChatAppearance = { ...configuration.data?.channels?.liveChat?.appearance }
@@ -30,7 +30,7 @@ export const StartChatButton: FC = () => {
   const handleClick = async () => {
     if (widgetVisibility === 'minimized') {
       setWidgetVisibility('open')
-      await createInteractionMut.mutateAsync([orgId, { customerId: customerQuery?.data?.customerId }])
+      await createInteractionMut.mutateAsync([orgId, { orgId: orgId, customerId: customerQuery?.data?.customerId }])
 
     } else {
       setWidgetVisibility('minimized')

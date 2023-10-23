@@ -5,9 +5,9 @@ import { Resolver, useForm } from 'react-hook-form';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
-  useUpdateConfigurationMut
+    useUpdateConfigurationMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries';
+import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { ConfigTicketing } from '@/entities/configuration';
 
 const resolver: Resolver<ConfigTicketing> = async (values) => {

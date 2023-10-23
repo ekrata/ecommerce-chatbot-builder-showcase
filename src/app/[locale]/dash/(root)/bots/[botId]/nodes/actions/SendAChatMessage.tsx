@@ -1,18 +1,18 @@
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, useEdges, useNodeId,
-  useNodes
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, useEdges,
+    useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -42,7 +42,7 @@ type FormValues = SendAChatMessageData
 
 const type = Action.SendAChatMessage
 
-export const SendAChatMessageActionNode = (node: Node) => {
+export const SendAChatMessageActionNode: FC<NodeProps> = (node) => {
   const outputKey = OutputFieldsKeys[type]
   const edges = useEdges()
   const tNodes = useTranslations('dash.bots.nodes')
@@ -99,7 +99,7 @@ export const SendAChatMessageActionForm: React.FC<Props> = ({ node }) => {
     });
 
   const fieldArray = useFieldArray({
-    name: 'messages',
+    name: 'messages' as never,
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 
@@ -134,7 +134,7 @@ export const SendAChatMessageActionForm: React.FC<Props> = ({ node }) => {
       <div className='mb-10 divider'></div>
       {fields.map((field, index) => (
         <div key={field.id}>
-          <TextareaField key={field.id} fieldName={'messages'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
+          <TextareaField key={field.id} fieldName={'messages'} node={node} setValue={setValue as any} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray as any} register={register as any} control={control as any} />
           {errors?.messages?.[index] && <p className='justify-start mb-6 text-xs text-red-500'>{errors?.messages?.[index]?.message}</p>}
         </div>
       ))}

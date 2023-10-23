@@ -1,7 +1,7 @@
 import 'reactflow/dist/style.css';
 
 import {
-    Action, Condition, VisitorBotInteractionTrigger
+    Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { ComponentType, ReactElement } from 'react';
 import {
@@ -53,39 +53,39 @@ import {
 import { onDragStart } from './onDragStart';
 
 export const conditionNode = (value: Conditions) => (
-  <a className='flex flex-row w-16 h-16 text-3xl normal-case border-0 bg-warning pointer-grab gap-x-2 btn btn-outline mask mask-diamond' onDragStart={(event) => onDragStart(event, value)} draggable>
+  <a className='flex flex-row w-16 h-16 text-3xl normal-case border-0 bg-warning pointer-grab gap-x-2 btn btn-outline mask mask-diamond' onDragStart={(event) => onDragStart(event, value as NodeTypeKey)} draggable>
     {nodeSubTypeIcons[value as Conditions]}
   </a>
 )
 
 export const triggerNode = (value: Triggers) => (
-  <a className='flex flex-row w-16 h-16 text-3xl normal-case border-0 bg-success pointer-grab gap-x-2 btn btn-outline mask mask-circle' onDragStart={(event) => onDragStart(event, value)} draggable>
+  <a className='flex flex-row w-16 h-16 text-3xl normal-case border-0 bg-success pointer-grab gap-x-2 btn btn-outline mask mask-circle' onDragStart={(event) => onDragStart(event, value as unknown as NodeTypeKey)} draggable>
     {nodeSubTypeIcons[value as Triggers]}
   </a>
 )
 
 export const actionNode = (value: Actions) => (
-  <a className='flex flex-row w-16 h-16 text-3xl normal-case border-0 bg-info pointer-grab gap-x-2 btn btn-outline mask mask-squircle' onDragStart={(event) => onDragStart(event, value)} draggable>
+  <a className='flex flex-row w-16 h-16 text-3xl normal-case border-0 bg-info pointer-grab gap-x-2 btn btn-outline mask mask-squircle' onDragStart={(event) => onDragStart(event, value as NodeTypeKey)} draggable>
     {nodeSubTypeIcons[value as Actions]}
   </a>
 )
 
 export const nodeTypes: NodeTypes = {
-  [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: VisitorClicksBotsButtonTriggerNode,
-  [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: VisitorClicksOnChatIconTriggerNode,
-  [`${VisitorBotInteractionTrigger.VisitorSays}`]: VisitorSaysTriggerNode,
+  [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}` as string]: VisitorClicksBotsButtonTriggerNode,
+  [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}` as string]: VisitorClicksOnChatIconTriggerNode,
+  [`${VisitorBotInteractionTrigger.VisitorSays}` as string]: VisitorSaysTriggerNode,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
-  [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionNode,
+  [`${Condition.BasedOnContactProperty}` as string]: BasedOnContactPropertyConditionNode,
   // [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
-  [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionNode,
-  [`${Action.DecisionCardMessages}`]: DecisionCardMessagesActionNode,
-  [`${Action.DecisionButtons}`]: DecisionButtonsActionNode,
-  [`${Action.AskAQuestion}`]: AskAQuestionActionNode,
-  [`${Action.CouponCode}`]: CouponCodeActionNode,
-  [`${Action.SubscribeForMailing}`]: SubscribeForMailingNode,
-  [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
-};
+  [`${Action.DecisionQuickReplies}` as string]: DecisionQuickRepliesActionNode,
+  [`${Action.DecisionCardMessages}` as string]: DecisionCardMessagesActionNode,
+  [`${Action.DecisionButtons}` as string]: DecisionButtonsActionNode,
+  [`${Action.AskAQuestion}` as string]: AskAQuestionActionNode,
+  [`${Action.CouponCode}` as string]: CouponCodeActionNode,
+  [`${Action.SubscribeForMailing}` as string]: SubscribeForMailingNode,
+  [`${Action.SendAChatMessage}` as string]: SendAChatMessageActionNode,
+} as const;
 
 export const OutputFieldsKeys = {
   [`${Action.AskAQuestion}`]: 'outputs',
@@ -94,6 +94,7 @@ export const OutputFieldsKeys = {
   [`${Action.DecisionQuickReplies}`]: 'quickReplies',
   [`${Action.DecisionCardMessages}`]: 'choices',
   [`${Action.DecisionButtons}`]: 'choices',
+  [`${Action.SubscribeForMailing}`]: 'outputs',
   [`${Condition.BasedOnContactProperty}`]: 'outputs',
   [`${Condition.ChatStatus}`]: 'outputs',
   [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: 'outputs',
@@ -101,11 +102,12 @@ export const OutputFieldsKeys = {
   [`${VisitorBotInteractionTrigger.VisitorSays}`]: 'outputs',
 } as const
 
-export type OutputFieldKey = typeof OutputFieldsKeys[keyof typeof OutputFieldsKeys]
+export type OutputFieldKey = keyof typeof OutputFieldsKeys
+export type OutputFieldValue = typeof OutputFieldsKeys[OutputFieldKey]
 
 export const renderConnectionLine = (params: ConnectionLineComponentProps, edges: Edge[]) => {
   if (params?.fromNode?.id && params?.fromNode?.type) {
-    const nodeFormLabels = params?.fromNode?.data?.[OutputFieldsKeys[params?.fromNode?.type]]
+    const nodeFormLabels = params?.fromNode?.data?.[OutputFieldsKeys?.[params?.fromNode?.type as OutputFieldKey]]
     const unusedLabel = getNextUnusedLabel(edges, params?.fromNode?.id, nodeFormLabels)
     if (unusedLabel) {
       return <GenericConnectionLine params={params} label={unusedLabel} />

@@ -1,6 +1,6 @@
 import { EntityItem } from 'electrodb';
 
-import { Configuration } from '../../../../../../../../../stacks/entities/configuration';
+import { Configuration } from '@/entities/configuration';
 
 export /**
  * Gets the configuration for the org

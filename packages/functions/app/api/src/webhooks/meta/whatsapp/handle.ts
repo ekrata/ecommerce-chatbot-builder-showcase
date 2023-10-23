@@ -25,21 +25,20 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         console.log('WEBHOOK_VERIFIED');
         return { statusCode: 200, body: challenge };
       } else {
-          const res = verifyMetaRequestSignature();
-          if(res) {
-            return res
+        const res = verifyMetaRequestSignature();
+        if (res) {
+          return res;
+        }
+        if (body?.id) {
+          if (body?.messages) {
           }
-          if(body?.id) {
-            if(body?.messages) {
-            }
-            if(body?.messaging) {
-              body?.messaging.map()
-            }
+          if (body?.messaging) {
+            body?.messaging.map();
           }
         }
-        // Respond with '403 Forbidden' if verify tokens do not match
-        return { statusCode: 403, body: '' };
       }
+      // Respond with '403 Forbidden' if verify tokens do not match
+      return { statusCode: 403, body: '' };
     }
   }),
 );

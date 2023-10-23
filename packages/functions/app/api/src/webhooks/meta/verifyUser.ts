@@ -6,7 +6,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 
-const appDb = getAppDb(Config.REGION, Table.app.tableName);
+const appDb = getAppDb(Config.REGION, Table?.app?.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -18,7 +18,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     // Check if a token and mode is in the query string of the request
     if (mode && token) {
       // Check the mode and token sent is correct
-      if (mode === 'subscribe' && token === Config.META_VERIFY_SECRET) {
+      if (mode === 'subscribe' && token === Config?.META_VERIFY_SECRET) {
         // Respond with the challenge token from the request
         console.log('WEBHOOK_VERIFIED');
         return { statusCode: 200, body: JSON.stringify(challenge) };

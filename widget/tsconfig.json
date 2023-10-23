@@ -47,10 +47,10 @@
         ""
       ],
       "@/entities/*": [
-        "../../stacks/entities/*"
+        "../stacks/entities/*"
       ],
       "@/packages/*": [
-        "../../packages/*"
+        "../packages/*"
       ],
       "@/components/*": [
         "./src/components/*"

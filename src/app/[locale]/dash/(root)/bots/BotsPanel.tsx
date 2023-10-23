@@ -5,7 +5,7 @@ import router from 'next/router';
 import { FC, use, useEffect, useMemo, useRef } from 'react';
 import { BiEdit, BiExport, BiTrash } from 'react-icons/bi';
 import {
-  BsChatLeftDots, BsFileBarGraph, BsPersonSlash, BsRobot, BsThreeDotsVertical
+    BsChatLeftDots, BsFileBarGraph, BsPersonSlash, BsRobot, BsThreeDotsVertical
 } from 'react-icons/bs';
 import { FaRegClone } from 'react-icons/fa';
 import { GrTest } from 'react-icons/gr';
@@ -74,7 +74,6 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                 </tr>
               </thead>
               <tbody className='h-full animate-fade-left'>
-                {console.log(bots?.data)}
                 {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data)?.map((data) => {
                   const bot = (data as EntityItem<typeof Bot>)
                   return (

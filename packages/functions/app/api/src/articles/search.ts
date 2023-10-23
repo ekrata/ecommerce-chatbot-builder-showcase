@@ -1,12 +1,14 @@
+import { EntityItem } from 'electrodb';
 import Fuse from 'fuse.js';
 import { ApiHandler, usePathParams, useQueryParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
 import { Config } from 'sst/node/config';
-import { EntityItem } from 'electrodb';
-import { ArticleContent } from '@/entities/articleContent';
+import { Table } from 'sst/node/table';
+
 import { Article } from '@/entities/article';
+import { ArticleContent } from '@/entities/articleContent';
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -97,7 +99,7 @@ async function scanAll(orgId: string, lang: string) {
       .go(
         lastCursor && lastCursor !== 'init'
           ? { cursor: lastCursor, limit: 20 }
-          : { limit: 20 }
+          : { limit: 20 },
       );
 
     // batch get the articles
@@ -107,13 +109,14 @@ async function scanAll(orgId: string, lang: string) {
           orgId: article.orgId,
           lang: article.lang,
           articleContentId: article.articleContentId,
-        }))
+        })),
       )
       .go();
 
     const articlesWithContent = articles?.data?.map((article, i) => ({
       ...article,
       content: articlesContent.data?.[i].content,
+      htmlContent: articlesContent.data?.[i]?.htmlContent,
     }));
 
     lastCursor = articles.cursor;
@@ -167,5 +170,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

@@ -21,12 +21,10 @@ import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
     addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-    ConnectionLineComponent, ConnectionLineComponentProps, Controls, Edge, EdgeTypes, MiniMap, Node,
-    NodeTypes, OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance,
-    ReactFlowProvider, useEdges, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow,
-    useStoreApi
+    ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
+    ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
 } from 'reactflow';
-import { useDebounce, useOnClickOutside } from 'usehooks-ts';
+import { useDebounce } from 'usehooks-ts';
 import { z } from 'zod';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
@@ -35,16 +33,13 @@ import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMu
 import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { actions, BotNodeType, conditions, triggers } from '@/entities/bot';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useHistoryState } from '@uidotdev/usehooks';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import {
-    actionNode, conditionNode, connectionLineTypes, edgeTypes, getConnectionLineComponent, NodeForm,
-    nodeTypes, OutputFieldsKeys, renderConnectionLine, triggerNode
+    actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, OutputFieldKey, OutputFieldsKeys,
+    renderConnectionLine, triggerNode
 } from './collections';
-import { DecisionQuickRepliesActionConnection } from './nodes/actions/DecisionQuickReplies';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
-import { updateNodes } from './nodes/updateNodes';
 import { onDragStart } from './onDragStart';
 
 export type NodeMenuState = '' | 'trigger' | 'condition' | 'action'
@@ -79,7 +74,7 @@ export const BotEditor: React.FC = () => {
 
   const router = useRouter()
   const params = useParams()
-  const reactFlowWrapper = useRef(null);
+  const reactFlowWrapper = useRef<HTMLInputElement>(null);
   const [operatorSession] = useAuthContext();
   const orgId = operatorSession?.orgId ?? '';
   const botId = params?.botId as string ?? ''
@@ -111,11 +106,11 @@ export const BotEditor: React.FC = () => {
 
 
   const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
     []
   );
   const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    (changes: any) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
 
@@ -172,12 +167,10 @@ export const BotEditor: React.FC = () => {
   }, [botQuery.dataUpdatedAt]);
 
 
-
-
   const onDrop = useCallback(
-    (event) => {
+    (event: any) => {
       event.preventDefault();
-      const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect();
+      const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect() as any;
       const type = event.dataTransfer.getData('application/reactflow');
 
       // check if the dropped element is valid
@@ -246,26 +239,28 @@ export const BotEditor: React.FC = () => {
 
     const node = nodes?.find((node) => node.id === params?.target)
     // prevent nodes from connecting when edge count exceeds quick reply decision count.
-    const outputKey = OutputFieldsKeys?.[nodeTarget.type as string]
-    if (node?.data?.[outputKey] && params?.target && nodeTarget?.type) {
-      const label = getNextUnusedLabel(edges, params?.target, node?.data?.[outputKey])
+    if (nodeTarget?.type) {
+      const outputKey = OutputFieldsKeys?.[nodeTarget?.type as OutputFieldKey]
+      if (node?.data?.[outputKey] && params?.target && nodeTarget?.type) {
+        const label = getNextUnusedLabel(edges, params?.target, node?.data?.[outputKey])
+        return addEdge({
+          ...params,
+          type: nodeTarget?.type,
+          data: { label },
+        }, eds)
+      }
       return addEdge({
         ...params,
-        type: nodeTarget?.type,
-        data: { label },
-
+        label: 'new edge'
       }, eds)
     }
-    return addEdge({
-      ...params,
-      label: 'new edge'
-    }, eds)
+    return eds
   }), [nodes, edges]);
 
   const updateBotMut = useUpdateBotMut(orgId)
 
   // update api with node/edges changes at most every 5 seconds
-  const debouncedNodes = useDebounce<Node<any, string>[]>(nodes, 5000)
+  const debouncedNodes = useDebounce<Node<any, string>[]>(nodes as Node<any, string>[], 5000)
   const debouncedEdges = useDebounce<Edge[]>(edges, 5000)
 
   // update whenever nodes array changes 
@@ -338,7 +333,8 @@ export const BotEditor: React.FC = () => {
       success: tDash('Deleted'),
       error: tDash('Failed to delete')
     }, { position: 'bottom-right' })
-    router.push(`/dash/bots`)
+
+    router.push(`/dash/bots` as never)
   }
 
   const onConnectionLine = useCallback((params: ConnectionLineComponentProps) => (
@@ -443,7 +439,7 @@ export const BotEditor: React.FC = () => {
                                   <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
                                     {triggerNode(value)}
                                     <p className="text-xs font-light">
-                                      {tNodes(`VisitorBotInteractionTrigger.${key as VisitorBotInteractionTrigger}`)}
+                                      {tNodes(`VisitorBotInteractionTrigger.${key as VisitorBotInteractionTrigger}` as any)}
                                     </p>
                                   </li>
                                 ))}
@@ -456,7 +452,7 @@ export const BotEditor: React.FC = () => {
                                   <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
                                     {triggerNode(value)}
                                     <p className="text-xs font-light">
-                                      {tNodes(`VisitorPageInteractionTrigger.${key as VisitorPageInteractionTrigger}`)}
+                                      {tNodes(`VisitorPageInteractionTrigger.${key as VisitorPageInteractionTrigger}` as any)}
                                     </p>
                                   </li>
                                 ))}
@@ -469,7 +465,7 @@ export const BotEditor: React.FC = () => {
                                   <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
                                     {triggerNode(value)}
                                     <p className="text-xs font-light">
-                                      {tNodes(`OperatorInteractionTrigger.${key as OperatorInteractionTrigger}`)}
+                                      {tNodes(`OperatorInteractionTrigger.${key as OperatorInteractionTrigger}` as any)}
                                     </p>
                                   </li>
                                 ))}
@@ -486,7 +482,7 @@ export const BotEditor: React.FC = () => {
                                   <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
                                     {conditionNode(value)}
                                     <p className="text-xs font-light">
-                                      {tNodes(`Condition.${key}`)}
+                                      {tNodes(`Condition.${key}` as any)}
                                     </p>
                                   </li>
                                 ))}
@@ -497,11 +493,11 @@ export const BotEditor: React.FC = () => {
                               <ul className='flex flex-wrap justify-around gap-x-6 gap-y-2'>
                                 {...Object.entries(ShopifyCondition).map(([key, value]) => (
                                   <li className='flex flex-col flex-wrap justify-center gap-y-2 place-items-center'>
-                                    <a className='flex flex-row w-16 h-16 p-2 text-3xl normal-case bg-warning pointer-grab gap-x-2 btn btn-outline mask mask-diamond' onDragStart={(event) => onDragStart(event, 'input')} draggable>
+                                    <a className='flex flex-row w-16 h-16 p-2 text-3xl normal-case bg-warning pointer-grab gap-x-2 btn btn-outline mask mask-diamond' draggable>
                                       {conditionNode(value)}
                                     </a>
                                     <p className="text-xs font-light">
-                                      {tNodes(`ShopifyCondition.${key}`)}
+                                      {tNodes(`ShopifyCondition.${key}` as any)}
                                     </p>
                                   </li>
                                 ))
@@ -519,7 +515,7 @@ export const BotEditor: React.FC = () => {
                                   <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
                                     {actionNode(value)}
                                     <p className="text-xs font-light">
-                                      {tNodes(`Action.${key as Action}`)}
+                                      {tNodes(`Action.${key as Action}` as any)}
                                     </p>
                                   </li>
                                 ))}
@@ -532,7 +528,7 @@ export const BotEditor: React.FC = () => {
                                   <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
                                     {actionNode(value)}
                                     <p className="text-xs font-light">
-                                      {tNodes(`ShopifyAction.${key as Action}`)}
+                                      {tNodes(`ShopifyAction.${key as Action}` as any)}
                                     </p>
                                   </li>
                                 ))}

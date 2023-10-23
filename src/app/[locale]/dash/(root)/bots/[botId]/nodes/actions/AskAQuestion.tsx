@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -12,20 +12,19 @@ import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-  Edge, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges, useNodeId,
-  useNodes
+    Edge, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge, useEdges
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
-import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { validationType } from '@/entities/bot';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys, successFailureOutput } from '../../collections';
+import { useNodeContext } from '../../BotEditor';
+import {
+    actionNode, OutputFieldKey, OutputFieldsKeys, successFailureOutput
+} from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -54,7 +53,7 @@ export type FormValues = AskAQuestionData
 
 const type = Action.AskAQuestion
 
-export const AskAQuestionActionNode = (node: Node) => {
+export const AskAQuestionActionNode: FC<NodeProps> = (node) => {
   const outputKey = 'outputs'
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
@@ -64,7 +63,7 @@ export const AskAQuestionActionNode = (node: Node) => {
     edges?.filter((edge) => edge?.target === node.id)
   ), [edges]);
 
-  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label: string) => label)
 
   return (
     <div className={`w-16  `} >

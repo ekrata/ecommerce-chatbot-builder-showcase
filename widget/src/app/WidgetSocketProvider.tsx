@@ -52,7 +52,7 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
             orgQuery.refetch()
         }
         if (!customer?.data?.customerId) {
-            (async () => await createCustomerMut.mutateAsync([orgId, newCustomerId, false]))()
+            (async () => await createCustomerMut.mutateAsync([orgId, newCustomerId, { customerId: newCustomerId, orgId }]))()
         }
         if (orgId && customer?.data?.customerId) {
             setWsUrl(getWsUrl(orgId, customer?.data?.customerId, 'customer'))
@@ -85,7 +85,7 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
                     queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
                         const updatedConversationItem = (body as ConversationItem)
                         const oldMessages = oldData?.find((conversationItem) => conversationItem?.conversationId === updatedConversationItem?.conversationId)?.messages
-                        const conversationItems = [...oldData?.filter((conversationItem) => conversationItem?.conversationId !== updatedConversationItem?.conversationId) ?? [], { ...updatedConversationItem, messages: oldMessages }]
+                        const conversationItems = [...oldData?.filter((conversationItem) => conversationItem?.conversationId !== updatedConversationItem?.conversationId) ?? [], { ...updatedConversationItem, messages: oldMessages }] as ConversationItem[]
                         sortConversationItems(conversationItems)
                         return conversationItems
                     });

@@ -1,22 +1,19 @@
 'use client'
 
+import { UpdateConfiguration } from 'aws-sdk/clients/verifiedpermissions';
 import { useTranslations } from 'next-intl';
 import { FC, ReactNode, useState } from 'react';
 import { Controller, Resolver, useForm } from 'react-hook-form';
-import { BsChevronDown, BsChevronUp, BsEye, BsPaintBucket, BsPhone } from 'react-icons/bs';
+import { BsEye, BsPaintBucket, BsPhone } from 'react-icons/bs';
 import { FaDesktop, FaPaintBrush } from 'react-icons/fa';
 
+import { Collapse } from '@/app/[locale]/(components)/Collapse';
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
-  useUpdateConfigurationMut
+    useUpdateConfigurationMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries';
-
-import { Collapse } from '../../../../../(components)/Collapse';
-import {
-  ConfigLiveChatAppearance, deviceVisibility
-} from '../../../../../../../../stacks/entities/configuration';
-import { UpdateConfiguration } from '../../../../../../../../stacks/entities/entities';
+import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
+import { ConfigLiveChatAppearance, deviceVisibility } from '@/entities/configuration';
 
 const resolver: Resolver<ConfigLiveChatAppearance> = async (values) => {
   return {
@@ -24,8 +21,6 @@ const resolver: Resolver<ConfigLiveChatAppearance> = async (values) => {
     errors: {}
   };
 };
-
-
 
 const defaultBackgroundColor = "linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))"
 const getTemplateColors = (currentColor: string) => [
@@ -55,8 +50,8 @@ export default function Page() {
       ...configurationQuery.data, channels: {
         ...configurationQuery?.data?.channels, liveChat: { ...configurationQuery?.data?.channels?.liveChat, appearance: { ...data, widgetAppearance: { ...data.widgetAppearance, backgroundColor: selectedBackgroundColor }, } }
       }
-    }
-    await updateConfigurationMut.mutateAsync([orgId, updateBody])
+    } as UpdateConfiguration
+    await updateConfigurationMut.mutateAsync([orgId, updateBody as any])
   })
 
 

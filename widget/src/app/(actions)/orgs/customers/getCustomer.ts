@@ -1,6 +1,6 @@
 export const getCustomer = async (orgId: string, customerId: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/customers/${customerId}`
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/customers/${customerId}`,
   );
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary

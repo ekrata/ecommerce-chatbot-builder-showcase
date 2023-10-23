@@ -43,6 +43,7 @@
       "@/*": [
         "./src/*"
       ],
+
       "@/styles": [
         ""
       ],
@@ -85,6 +86,7 @@
     "next.config.js"
 , "widget/tailwind.config.js"  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "widget"
   ]
 }

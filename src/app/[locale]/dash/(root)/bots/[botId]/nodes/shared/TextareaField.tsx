@@ -73,13 +73,13 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
     }
   }
 
-  useEffect(() => {
-    handleSubmit?.(event)
-  }, [])
+  // useEffect(() => {
+  //   handleSubmit?.(event)
+  // }, [])
 
   return (
     <div className='w-full bg-gray-200 h-22 group form-control textarea textarea-sm'>
-      <textarea key={useId()} className={`${textareaStyle ?? 'flex h-10 text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event)} />
+      <textarea key={useId()} className={`${textareaStyle ?? 'flex h-10 text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event as any)} />
       <label className="justify-end text-gray-100 label place-items-center" >
         <span className="flex flex-row justify-end label-text-alt">
           <div className="invisible text-xl cursor-pointer dropdown dropdown-bottom dropdown-end group-hover:visible">
@@ -115,8 +115,8 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
             <BsX onClick={(event) => {
               if (index != null && fieldArray) {
                 fieldArray.remove(index)
-                setEdges(edges.filter((edge) => edge?.data?.label !== data || edge.target !== node.id))
-                handleSubmit?.(event)
+                setEdges(edges.filter((edge) => (edge?.data as { label: string })?.label !== data || edge.target !== node.id))
+                handleSubmit?.(event as any)
               }
             }} className='invisible text-xl cursor-pointer group-hover:visible' />
           }

@@ -45,6 +45,7 @@ export const Interaction = new Entity({
     createdAt: {
       type: 'number',
       default: Date.now(),
+      set: () => Date.now(),
     },
     updatedAt: {
       type: 'number',
@@ -61,7 +62,7 @@ export const Interaction = new Entity({
       },
       sk: {
         field: 'sk',
-        composite: ['createdAt'],
+        composite: [],
       },
     },
     byOrg: {

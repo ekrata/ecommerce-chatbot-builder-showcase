@@ -1,11 +1,8 @@
 import { EntityItem } from 'electrodb';
 import { StateCreator } from 'zustand';
 
-import {
-  Conversation,
-  ConversationItem,
-} from '../../../../../../../stacks/entities/conversation';
-import { Message } from '../../../../../../../stacks/entities/message';
+import { Conversation, ConversationItem } from '@/entities/conversation';
+import { Message } from '@/entities/message';
 
 export type WidgetState = 'help' | 'conversations' | 'home';
 export type WidgetVisibility = 'expanded' | 'open' | 'minimized';

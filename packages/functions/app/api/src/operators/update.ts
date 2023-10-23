@@ -12,9 +12,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     const { orgId, operatorId } = usePathParams();
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
+      // updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      createdAt,
+      // createdAt,
       ...updateOperator
     }: UpdateOperator = useJsonBody();
 

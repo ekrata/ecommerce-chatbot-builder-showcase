@@ -3,15 +3,15 @@ import 'reactflow/dist/style.css';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
 import {
-  Action, Condition, triggerInterval, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+    Action, Condition, triggerInterval, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import { FcInfo } from 'react-icons/fc';
 import {
-  Edge, EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-  useNodeId, useNodes
+    Edge, EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position,
+    updateEdge, useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -22,7 +22,9 @@ import { faker } from '@faker-js/faker';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useNodeContext } from '../../BotEditor';
-import { defaultOutputs, OutputFieldsKeys, triggerNode, yesNoOutput } from '../../collections';
+import {
+    defaultOutputs, OutputFieldKey, OutputFieldsKeys, triggerNode, yesNoOutput
+} from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -49,7 +51,7 @@ type FormValues = VisitorClicksOnChatIconData
 
 const type = VisitorBotInteractionTrigger.VisitorSays
 
-export const VisitorSaysTriggerNode = (node: Node) => {
+export const VisitorSaysTriggerNode: FC<NodeProps> = (node) => {
   const outputKey = OutputFieldsKeys[type]
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
@@ -59,7 +61,7 @@ export const VisitorSaysTriggerNode = (node: Node) => {
     edges?.filter((edge) => edge?.target === node.id)
   ), [edges]);
 
-  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label: string) => label)
 
   return (
     <div className={`w-16 place-items-center  `} >
@@ -107,7 +109,7 @@ export const VisitorSaysTriggerForm: React.FC<Props> = ({ node }) => {
 
 
   const fieldArray = useFieldArray({
-    name: 'phrases',
+    name: 'phrases' as never,
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 

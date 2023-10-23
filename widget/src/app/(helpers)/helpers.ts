@@ -1,4 +1,4 @@
-import { ConversationItem } from '../../../../../../../stacks/entities/conversation';
+import { ConversationItem } from '@/entities/conversation';
 
 export const getItem = (
   ConversationItem: ConversationItem[],

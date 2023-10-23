@@ -81,6 +81,16 @@ export enum ShopifyAction {
   CouponCode = 'Coupon code',
 }
 
+export const nodeType = {
+  ...Triggers,
+  ...Condition,
+  ...ShopifyAction,
+  ...Action,
+  ...ShopifyCondition,
+};
+
+export type NodeTypeKey = keyof typeof nodeType;
+
 export const triggerInterval = [
   'send once per 24 hours',
   'send only once per unique visitor',

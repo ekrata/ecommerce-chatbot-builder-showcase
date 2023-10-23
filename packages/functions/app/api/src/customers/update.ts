@@ -14,8 +14,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     const { orgId, customerId } = usePathParams();
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // updatedAt,
       // createdAt,
       ...updateCustomer
     }: UpdateCustomer = useJsonBody();

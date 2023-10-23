@@ -20,7 +20,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const command = new PutObjectCommand({
         ACL: 'public-read',
         Key: `${orgId}-logo`,
-        Bucket: Bucket['eChat-app-assets'].bucketName,
+        Bucket: Bucket['echat-app-assets'].bucketName,
       });
       const url = await getSignedUrl(new S3Client({}), command);
       return {

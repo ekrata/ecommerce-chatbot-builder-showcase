@@ -2,7 +2,7 @@ import { EntityItem } from 'electrodb';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
-import { ConversationItem } from '../../../../../../../../stacks/entities/conversation';
+import { ConversationItem } from '@/entities/conversation';
 
 interface Props {
   conversationItem?: ConversationItem,

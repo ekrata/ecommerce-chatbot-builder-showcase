@@ -1,7 +1,7 @@
 'use client'
 import 'react-toastify/dist/ReactToastify.css';
 
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 
 import DashNavbar from './DashNavbar';
 import { DashProvider } from './DashProvider';
@@ -18,7 +18,9 @@ export default function Layout({ children }: PropsWithChildren) {
               <DashNavbar></DashNavbar>
             </div>
             <div className='w-full col-span-11'>
-              {children}
+              <Suspense fallback={<></>}>
+                {children}
+              </Suspense>
             </div>
           </div>
         </NotificationProvider>

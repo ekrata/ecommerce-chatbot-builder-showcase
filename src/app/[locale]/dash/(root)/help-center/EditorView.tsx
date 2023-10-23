@@ -10,27 +10,27 @@ import { BsInfo } from 'react-icons/bs';
 import { MdOutlineArticle } from 'react-icons/md';
 import ReactQuill from 'react-quill';
 import { v4 as uuidv4 } from 'uuid';
+import {
+    getArticleWithContent
+} from 'widget/src/app/(actions)/orgs/articles/getArticleWithContent';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
-  useCreateArticleContentMut
+    useCreateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useCreateArticleContentMut';
 import { useCreateArticleMut } from '@/app/[locale]/(hooks)/mutations/useCreateArticleMut';
 import {
-  useDeleteArticleContentMut
+    useDeleteArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useDeleteArticleContentMut';
 import { useDeleteArticleMut } from '@/app/[locale]/(hooks)/mutations/useDeleteArticleMut';
 import {
-  useUpdateArticleContentMut
+    useUpdateArticleContentMut
 } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleContentMut';
 import { useUpdateArticleMut } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleMut';
-import {
-  getArticleWithContent
-} from '@/app/[locale]/chat-widget/(actions)/orgs/articles/getArticleWithContent';
+import { QueryKey } from '@/app/[locale]/(hooks)/queries';
 import { ArticleCategory, articleCategory, articleStatus, ArticleStatus } from '@/entities/article';
 import { useQuery } from '@tanstack/react-query';
 
-import { QueryKey } from '../../(hooks)/queries';
 import { useNotificationContext } from '../NotificationProvider';
 
 type FormValues = {
@@ -134,7 +134,9 @@ export const EditorView: React.FC = () => {
       success: t('Deleted article'),
       error: t('Failed to delete article')
     }, { position: 'bottom-right' })
-    router.push(`${pathname ?? ''}`)
+    if (pathname) {
+      router.push(`/${pathname}`, {})
+    }
   }
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -144,7 +146,7 @@ export const EditorView: React.FC = () => {
         success: t('Created article'),
         error: t('Failed to create article')
       }, { position: 'bottom-right' })
-      router.push(`${pathname ?? ''}?articleId=${articleRes?.articleId}`)
+      router.push(`/${pathname ?? ''}?articleId=${articleRes?.articleId}`)
     }
     else if (articleId && articleWithContentQuery.data?.articleId && articleWithContentQuery.data?.articleContentId) {
       await toast.promise(() => Promise.all([updateArticleMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleId, { articleContentId: articleWithContentQuery.data?.articleContentId, category: data.category, title: data.title, subtitle: data.subtitle, status: data.status }]), updateArticleContentMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleContentId, { ...data }])]),

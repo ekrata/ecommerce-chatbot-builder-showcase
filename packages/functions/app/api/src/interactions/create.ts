@@ -4,7 +4,7 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import { CreateCustomer } from '../../../../../../stacks/entities/entities';
+import { CreateCustomer, CreateInteraction } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);

@@ -4,8 +4,8 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import { getAppDb } from '../../db';
-import { verifyMetaRequestSignature } from './verifyMetaRequestSignature';
+import { getAppDb } from '../../../db';
+import { verifyMetaRequestSignature } from '../verifyMetaRequestSignature';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -25,23 +25,20 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         console.log('WEBHOOK_VERIFIED');
         return { statusCode: 200, body: challenge };
       } else {
-          const res = verifyMetaRequestSignature();
-          if(res) {
-            return res
-          }
-          if(body?.id) {
-            if(body?.messages) {
-            }
-            if(body?.messaging) {
-              body?.messaging.map()
-            }
-          }
-
-          
+        const res = verifyMetaRequestSignature();
+        if (res) {
+          return res;
         }
-        // Respond with '403 Forbidden' if verify tokens do not match
-        return { statusCode: 403, body: '' };
+        if (body?.id) {
+          if (body?.messages) {
+          }
+          if (body?.messaging) {
+            body?.messaging.map();
+          }
+        }
       }
+      // Respond with '403 Forbidden' if verify tokens do not match
+      return { statusCode: 403, body: '' };
     }
   }),
 );

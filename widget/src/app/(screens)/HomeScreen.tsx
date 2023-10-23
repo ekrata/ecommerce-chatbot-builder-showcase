@@ -10,7 +10,7 @@ import { Configuration } from '@/entities/configuration';
 import { useArticlesQuery } from '../(actions)/queries/useArticlesQuery';
 import { useConfigurationQuery } from '../(actions)/queries/useConfigurationQuery';
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from '../(actions)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from '../(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from '../(actions)/queries/useOrgQuery';
@@ -65,8 +65,8 @@ export const HomeScreen: FC = () => {
         <h1 className='z-10 mx-4 text-3xl font-bold text-white'>
           {translationQuery?.data?.translations?.chatWidget?.['Chat with us'] ?? 'Welcome! 👋'}
         </h1>
-        <h1 className='z-10 mx-4 font-semibold texl-xl text-white'>
-          {translationQuery?.data?.translations?.chatWidget?.['How can we help you?'] ?? 'How can we help you? '}
+        <h1 className='z-10 mx-4 font-semibold text-white texl-xl'>
+          {/* {translationQuery?.data?.translations?.chatWidget?.['How can we help you'] ?? 'How can we help you? '} */}
         </h1>
         {mostRecentConversationItem && mostRecentConversationItem?.messages?.length && (
           <div className=" bg-white shadow-md border-[1px] border-gray-300 h-30  rounded-3xl mx-4 gap-y-4 animate-fade-left animate-once">

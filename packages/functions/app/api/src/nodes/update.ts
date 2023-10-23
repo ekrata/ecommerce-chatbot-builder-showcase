@@ -20,8 +20,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       ...updateBot
     }: UpdateBot = useJsonBody();
 
-    delete updateBot?.botId;
-    delete updateBot?.orgId;
+    // delete updateBot?.botId;
+    // delete updateBot?.orgId;
     if (!orgId || !botId) {
       return {
         statusCode: 422,

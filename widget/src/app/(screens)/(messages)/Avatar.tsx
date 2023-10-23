@@ -1,11 +1,12 @@
 import { EntityItem } from 'electrodb';
 
-import { useConfigurationQuery } from '@/app/(actions)/queries/useConfigurationQuery';
 import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
 import { DynamicBackground } from '@/app/(helpers)/DynamicBackground';
 import { Configuration } from '@/entities/configuration';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
+
+import { useConfigurationQuery } from '../../../app/(actions)/queries/useConfigurationQuery';
 
 interface Props {
   conversationItem?: ConversationItem,

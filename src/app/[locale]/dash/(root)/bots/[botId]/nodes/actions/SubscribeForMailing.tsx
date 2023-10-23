@@ -10,12 +10,10 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { BsPlus } from 'react-icons/bs';
-import { FcInfo } from 'react-icons/fc';
 import {
     addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-    useNodeId, useNodes
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+    useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -23,7 +21,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useNodeContext } from '../../BotEditor';
-import { actionNode, defaultOutputs, OutputFieldsKeys } from '../../collections';
+import { actionNode, defaultOutputs, OutputFieldsKeys, OutputFieldValue } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -46,7 +44,7 @@ type NodeData = FormValues & FieldErrors<FormValues>
 
 const type = Action.SubscribeForMailing
 
-export const SubscribeForMailingNode = (node: Node) => {
+export const SubscribeForMailingNode: FC<NodeProps> = (node) => {
   const outputKey = 'outputs'
   const edges = [...useEdges()];
   const tNodes = useTranslations('dash.bots.nodes')
@@ -56,7 +54,7 @@ export const SubscribeForMailingNode = (node: Node) => {
     edges?.filter((edge) => edge?.target === node.id)
   ), [edges]);
 
-  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message || node?.data?.errors?.[outputKey]?.some((label: string) => label)
 
   return (
     <div className={`w-16  `} >
@@ -69,7 +67,7 @@ export const SubscribeForMailingNode = (node: Node) => {
 
 
 export const SubscribeForMailingEdge: React.FC<EdgeProps> = (params) => {
-  return <GenericEdge {...params} outputKey={OutputFieldsKeys[type]} />
+  return <GenericEdge {...params} outputKey={OutputFieldsKeys[type] as OutputFieldValue} />
 }
 
 interface Props {

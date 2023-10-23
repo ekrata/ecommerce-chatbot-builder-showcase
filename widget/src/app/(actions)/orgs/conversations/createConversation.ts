@@ -1,11 +1,7 @@
 import { EntityItem } from 'electrodb';
 
-import {
-  Conversation,
-  ConversationItem,
-  ExpandedConversation,
-} from '../../../../../../../../../stacks/entities/conversation';
-import { CreateConversation } from '../../../../../../../../../stacks/entities/entities';
+import { ConversationItem } from '@/entities/conversation';
+import { CreateConversation } from '@/entities/entities';
 
 export const createConversation = async (
   orgId: string,

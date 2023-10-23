@@ -1,6 +1,4 @@
-import { EntityItem } from 'electrodb';
-
-import { ArticleWithContent } from '../../../../../../../../../stacks/entities/article';
+import { ArticleWithContent } from '@/entities/article';
 
 export const getArticleWithContent = async (
   orgId: string,

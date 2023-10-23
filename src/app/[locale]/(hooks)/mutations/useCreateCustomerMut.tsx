@@ -1,6 +1,7 @@
+import { createCustomer } from 'widget/src/app/actions';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createCustomer } from '../../(echat-widget)/src/app/actions';
 import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';
 

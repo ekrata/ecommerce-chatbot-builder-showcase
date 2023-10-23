@@ -23,7 +23,7 @@ export const WidgetProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQue
     }
   })
 
-  if (window !== undefined) {
+  if (typeof window !== "undefined") {
 
     const persister = createSyncStoragePersister({ storage: window?.localStorage })
 
@@ -44,4 +44,5 @@ export const WidgetProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQue
       </>
     );
   }
+  return null
 }

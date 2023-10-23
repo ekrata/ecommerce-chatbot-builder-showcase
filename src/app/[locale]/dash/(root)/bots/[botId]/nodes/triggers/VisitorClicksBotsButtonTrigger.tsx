@@ -1,12 +1,12 @@
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import {
-  Action, VisitorBotInteractionTrigger
+    Action, VisitorBotInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import { useEffect, useMemo, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
-import { Edge, Handle, Node, Position, useEdges, useNodeId } from 'reactflow';
+import { Edge, Handle, Node, NodeProps, Position, useEdges, useNodeId } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
 
@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import TriggerNode from '../../../(nodes)/TriggerNode';
 import { useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys, triggerNode } from '../../collections';
+import { actionNode, OutputFieldKey, OutputFieldsKeys, triggerNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { updateNodes } from '../updateNodes';
@@ -32,7 +32,7 @@ type FormValues = VisitorClicksBotsButtonData
 
 const type = VisitorBotInteractionTrigger.VisitorClicksChatIcon
 
-export const VisitorClicksBotsButtonTriggerNode = (node: Node) => {
+export const VisitorClicksBotsButtonTriggerNode: FC<NodeProps> = (node) => {
   const outputKey = OutputFieldsKeys[type]
   const edges = useEdges()
   const tNodes = useTranslations('dash.bots.nodes')
@@ -79,7 +79,7 @@ export const VisitorClicksBotsButtonForm: React.FC<Props> = ({ node }) => {
     setError,
     getValues,
     formState: { errors }, } = useForm<FormValues>({
-      resolver: zodResolver(),
+      resolver: zodResolver(schema),
       defaultValues: {
         buttonName: '',
       },

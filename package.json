@@ -166,7 +166,7 @@
     "@types/uuid": "^9.0.6",
     "@types/ws": "^8.5.8",
     "@typescript-eslint/eslint-plugin": "5.12.1",
-    "aws-cdk-lib": "2.95.1",
+    "aws-cdk-lib": "2.101.1",
     "axe-playwright": "^1.2.3",
     "concurrently": "^8.2.2",
     "constructs": "10.2.69",

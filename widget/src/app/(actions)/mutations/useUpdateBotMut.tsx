@@ -5,7 +5,6 @@ import { UpdateBot, UpdateOperator } from '@/entities/entities';
 import { Operator } from '@/entities/operator';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useAuthContext } from '../AuthProvider';
 import { MutationKey } from '../mutations';
 import { QueryKey } from '../queries';
 
@@ -40,15 +39,12 @@ const updateBotReducer = (oldBots: EntityItem<typeof Bot>[], updatedBot: EntityI
  */
 export const useUpdateBotMut = (orgId: string) => {
   const queryClient = useQueryClient()
-  const [user, setAuthContext] = useAuthContext()
   return useMutation({
     mutationKey: [orgId, MutationKey.updateBot],
     mutationFn: async (params: Parameters<typeof updateBot>) => await updateBot(...params),
     onSuccess: (updatedBot) => {
-      if (user) {
-        const oldBots = queryClient.getQueryData([orgId, QueryKey.bots]) as EntityItem<typeof Bot>[]
-        updateBotReducer(oldBots, updatedBot)
-      }
+      const oldBots = queryClient.getQueryData([orgId, QueryKey.bots]) as EntityItem<typeof Bot>[]
+      updateBotReducer(oldBots, updatedBot)
     }
   })
 }

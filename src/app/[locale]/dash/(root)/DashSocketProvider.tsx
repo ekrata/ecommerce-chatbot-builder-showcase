@@ -61,7 +61,7 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
                         cursor: string | null;
                         data: ConversationItem[];
                     }> | undefined>([...body, QueryKey.conversationItems], (data) => {
-                        return [...data ?? [], body];
+                        return [{ cursor: '', data: body }, data,] as any;
                     });
                     break;
                 case WsAppMessage.createMessage:
@@ -76,7 +76,7 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
                             oldData.pages[pageNumber].data = newMessageReducer(body as EntityItem<typeof Message>, oldData?.pages[pageNumber].data)
                             return { ...oldData }
                         }
-                        return { ...oldData }
+                        return { ...oldData } as any
                     });
                     const queryData = queryClient.getQueryData<{ cursor: string | null, data: ConversationItem[] }>([QueryKey.conversationItems, ...Object.values(conversationListFilter)])
                     console.log(queryData)
@@ -97,7 +97,7 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
                             oldData.pages[pageNumber].data = conversationItems
                             return { ...oldData }
                         }
-                        return { ...oldData }
+                        return { ...oldData } as any
                     });
                     break;
                 default:

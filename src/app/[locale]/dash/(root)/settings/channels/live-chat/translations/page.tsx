@@ -4,14 +4,15 @@ import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Resolver, useForm } from 'react-hook-form';
 import { BsChevronUp } from 'react-icons/bs';
 import { useCopyToClipboard } from 'usehooks-ts';
+import { useOrgQuery } from 'widget/src/app/(actions)/queries/useOrgQuery';
 
 import { LanguageCode, languageCodeMap } from '@/app/[locale]/(helpers)/lang';
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import {
-  useDeleteChatWidgetTranslation
+    useDeleteChatWidgetTranslation
 } from '@/app/[locale]/(hooks)/mutations/useDeleteChatWidgetTranslation';
 import { useUpdateTranslationMut } from '@/app/[locale]/(hooks)/mutations/useUpdateTranslationMut';
-import { useConfigurationQuery, useOrgQuery } from '@/app/[locale]/(hooks)/queries';
+import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { useTranslationQuery } from '@/app/[locale]/(hooks)/queries/useTranslationQuery';
 import { UpdateTranslation } from '@/entities/entities';
 import { ChatWidgetTranslations, Translation } from '@/entities/translation';
@@ -51,7 +52,6 @@ export default function Page() {
   const orgId = user?.orgId ?? ''
   const configurationQuery = useConfigurationQuery(orgId);
   const locale = useLocale();
-  const orgQuery = useOrgQuery(orgId);
   const [tab, setTab] = useState<LanguageCode>(locale as LanguageCode ?? 'en');
   const translationQuery = useTranslationQuery(orgId, tab);
   const translationMut = useUpdateTranslationMut(orgId, tab)

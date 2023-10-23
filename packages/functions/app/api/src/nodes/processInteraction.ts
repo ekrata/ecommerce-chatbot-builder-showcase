@@ -7,14 +7,7 @@ import { Table } from 'sst/node/table';
 import { Topic } from 'sst/node/topic';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import {
-  Bot,
-  BotEdgeType,
-  BotNodeEvent,
-  botNodeEvent,
-  BotNodeType,
-  nodeMap,
-} from '@/entities/bot';
+import { Bot, BotEdgeType, BotNodeEvent, botNodeEvent, BotNodeType, nodeMap } from '@/entities/bot';
 import { Conversation, ConversationItem } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Interaction } from '@/entities/interaction';
@@ -22,10 +15,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
-import {
-  Triggers,
-  VisitorBotInteractionTrigger,
-} from '../bots/triggers/definitions.type';
+import { Triggers, VisitorBotInteractionTrigger } from '../bots/triggers/definitions.type';
 
 const sns = new AWS.SNS();
 
@@ -140,20 +130,20 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
       if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
       }
-      const customer = await appDb.entities.customers.query
-        .primary({ orgId, customerId: customerId ?? '' })
-        .go();
+      // const customer = await appDb.entities.customers.query
+      //   .primary({ orgId, customerId: customerId ?? '' })
+      //   .go();
 
-      let filteredOperators = operators?.data;
+      // let filteredOperators = operators?.data;
 
-      await postToConnection(
-        appDb,
-        new ApiGatewayManagementApi({
-          endpoint: WebSocketApi.appWs.httpsUrl,
-        }),
-        [...filteredOperators, ...customer.data],
-        { type: 'createCustomer', body: customerData },
-      );
+      // await postToConnection(
+      //   appDb,
+      //   new ApiGatewayManagementApi({
+      //     endpoint: WebSocketApi.appWs.httpsUrl,
+      //   }),
+      //   [...filteredOperators, ...customer.data],
+      //   { type: 'createCustomer', body: customerData },
+      // );
 
       return { statusCode: 200, body: 'Message sent' };
     } catch (err) {

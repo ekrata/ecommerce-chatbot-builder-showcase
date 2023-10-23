@@ -14,7 +14,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     const { orgId, conversationId } = usePathParams();
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
+      // updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       // createdAt,
       ...updateConversation
@@ -27,8 +27,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
 
-    delete updateConversation.orgId;
-    delete updateConversation.conversationId;
+    // delete updateConversation.orgId;
+    // delete updateConversation.conversationId;
     try {
       const res = await appDb.entities.conversations
         .patch({

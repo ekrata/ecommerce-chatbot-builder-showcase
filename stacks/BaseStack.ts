@@ -4,8 +4,23 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
-    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
-    NextjsSite, Queue, StackContext, Table, Topic, use, WebSocketApi, WebSocketApiFunctionRouteProps
+  Api,
+  ApiRouteProps,
+  Auth,
+  Bucket,
+  Config,
+  EventBus,
+  EventBusRuleProps,
+  FunctionInlineDefinition,
+  NextjsSite,
+  Queue,
+  StackContext,
+  StaticSite,
+  Table,
+  Topic,
+  use,
+  WebSocketApi,
+  WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 
 import { botNodeEvent } from './entities/bot';
@@ -562,68 +577,82 @@ export function baseStack({ stack, app }: StackContext) {
   process.env.NEXT_PUBLIC_APP_API_URL = api.customDomainUrl;
   process.env.NEXT_PUBLIC_WS_API_URL = wsApi.customDomainUrl;
 
-  const site = new NextjsSite(stack, 'site', {
+  const widgetHost = `widget-${domain}`;
+  const widgetDomain =
+    stack.stage === 'prod'
+      ? widgetHost.toLowerCase()
+      : `${stack.stage}-${widgetHost}`.toLowerCase();
+
+  const widget = new NextjsSite(stack, 'widget', {
+    path: 'widget/',
+    buildCommand: 'pnpm build',
+    // buildCommand: 'cd widget && pnpm build',
     customDomain: {
-      domainName:
-        stack.stage === 'prod'
-          ? domain.toLowerCase()
-          : `${stack.stage}-${domain}`.toLowerCase(),
-      hostedZone: 'ekrata.com',
+      domainName: widgetDomain,
+      domainAlias: `www.${widgetDomain}`,
     },
-    bind: [api, wsApi],
+    // bind: [api, wsApi],
     environment: {
       NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
       NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
     },
   });
 
-  const widgetSiteDomain = `widget-${domain}`;
-  const widget = new NextjsSite(stack, 'widget', {
-    path: 'widget',
+  console.log(
+    widget.url,
+    widget.customDomainUrl,
+    widget.getConstructMetadata(),
+  );
+
+  const siteDomainName =
+    stack.stage === 'prod'
+      ? domain.toLowerCase()
+      : `${stack.stage}-${domain}`.toLowerCase();
+  const site = new NextjsSite(stack, 'dash', {
+    path: '.',
+    buildCommand: 'pnpm build',
     customDomain: {
-      domainName:
-        stack.stage === 'prod'
-          ? widgetSiteDomain.toLowerCase()
-          : `${stack.stage}-${widgetSiteDomain}`.toLowerCase(),
-      hostedZone: 'ekrata.com',
+      domainName: siteDomainName,
+      domainAlias: `www.${siteDomainName}`,
     },
     bind: [api, wsApi],
     environment: {
       NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
       NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
+      NEXT_PUBLIC_APP_WIDGET_URL: widget.customDomainUrl ?? '',
     },
   });
 
   // console.log(widgetDomainName);
-  const widgetDomain = new codeartifact.CfnDomain(stack, 'chatWidgetDomain', {
-    domainName: 'widget-echat-ekrata',
-  });
+  // const widgetDomain = new codeartifact.CfnDomain(stack, 'chatWidgetDomain', {
+  //   domainName: 'widget-echat-ekrata',
+  // });
 
-  // Create a public repository
-  const publicWidgetRepo = new codeartifact.CfnRepository(
-    stack,
-    'publicChatWidgetRepo',
-    {
-      repositoryName: 'publicChatWidgetRepoStore',
-      externalConnections: ['public:npmjs'],
-      domainName: widgetDomain.domainName,
-    },
-  );
+  // // Create a public repository
+  // const publicWidgetRepo = new codeartifact.CfnRepository(
+  //   stack,
+  //   'publicChatWidgetRepo',
+  //   {
+  //     repositoryName: 'publicChatWidgetRepoStore',
+  //     externalConnections: ['public:npmjs'],
+  //     domainName: widgetDomain.domainName,
+  //   },
+  // );
 
-  publicWidgetRepo.addDependency(widgetDomain);
+  // publicWidgetRepo.addDependency(widgetDomain);
 
-  // Create a custom repository
-  const widgetCustomRepo = new codeartifact.CfnRepository(
-    stack,
-    'chatWidgetRepo',
-    {
-      repositoryName: 'chatWidgetRepoStore',
-      upstreams: [publicWidgetRepo.repositoryName],
-      domainName: widgetDomain.domainName,
-    },
-  );
+  // // Create a custom repository
+  // const widgetCustomRepo = new codeartifact.CfnRepository(
+  //   stack,
+  //   'chatWidgetRepo',
+  //   {
+  //     repositoryName: 'chatWidgetRepoStore',
+  //     upstreams: [publicWidgetRepo.repositoryName],
+  //     domainName: widgetDomain.domainName,
+  //   },
+  // );
 
-  widgetCustomRepo.addDependency(publicWidgetRepo);
+  // widgetCustomRepo.addDependency(publicWidgetRepo);
 
   console.log('Site url', site.url);
   console.log('widget url', widget.customDomainUrl);

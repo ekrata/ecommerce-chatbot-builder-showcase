@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -13,9 +13,9 @@ import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 're
 import { BsPlus, BsX } from 'react-icons/bs';
 import { FcFile, FcInfo, FcPicture } from 'react-icons/fc';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-  useNodeId, useNodes, useUpdateNodeInternals
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+    useEdges, useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -52,7 +52,7 @@ const type = Action.DecisionCardMessages
 export type DecisionCardMessagesData = z.infer<typeof schema>
 type FormValues = DecisionCardMessagesData
 
-export const DecisionCardMessagesActionNode = (node: Node) => {
+export const DecisionCardMessagesActionNode: FC<NodeProps> = (node) => {
   const [edges, setEdges] = useEdgeContext()
   const tNodes = useTranslations('dash.bots.nodes')
 
@@ -62,7 +62,7 @@ export const DecisionCardMessagesActionNode = (node: Node) => {
   ), [edges]);
 
   // (node?.data?.errors?.quickReplies ?? [])((quickReply: object | undefined) => quickReply);
-  const hasErrors: boolean = node?.data?.errors?.message && node?.data?.errors?.quickReplies?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message && node?.data?.errors?.quickReplies?.some((label: string) => label)
   const hasTooManyConnections: boolean = useMemo(() => nodeEdges?.length > node?.data?.quickReplies?.length, [nodeEdges?.length, node]);
 
   return (
@@ -90,7 +90,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
   const [nodes, setNodes, onNodesChange] = useNodeContext()
   const params = useParams();
   const ref = useRef(null)
-  const [image, setImage] = useState<File | undefined>()
+  const [image, setImage] = useState<string>('')
 
   const tForm = useTranslations("dash.bots.ActionForms.DecisionCardMessages")
   const tDecisionForm = useTranslations("dash.bots.ActionForms.GenericDecision")
@@ -116,11 +116,11 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
 
 
   const choicesFieldArray = useFieldArray({
-    name: 'choices',
+    name: 'choices' as never,
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
   const choiceLinksFieldArray = useFieldArray({
-    name: 'choiceLinks',
+    name: 'choiceLinks' as never,
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 
@@ -169,7 +169,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
 
   const onImageChange = (files: FileList | undefined) => {
     console.log(files)
-    setImage(URL?.createObjectURL(files?.[0]))
+    setImage(URL?.createObjectURL(files?.[0] as Blob))
   }
 
 
@@ -182,7 +182,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
       <div className='flex flex-col justify-center p-2 border-[1px] border-black rounded-md shadow-lg'>
         <div className='relative w-full bg-gray-200/10 group' >
           {image && <BsX onClick={() => {
-            setImage(undefined)
+            setImage('')
           }} className='absolute top-0 right-0 z-10 invisible text-2xl hover:cursor-pointer group-hover:visible'></BsX>}
           <img src={image} className='w-full h-[160px] aspect-square'></img>
           <div className='flex flex-row'>
@@ -231,7 +231,7 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
               choiceLinksFieldArray?.remove(index)
               // remove respective edge
               console.log(value)
-              setEdges(edges.filter((edge) => edge?.data?.label !== value || edge.target !== node.id))
+              setEdges(edges.filter((edge) => (edge?.data as { label: string })?.label !== value || edge.target !== node.id))
             }}></BsX>
             <div className='mb-1 divider'></div>
           </div>

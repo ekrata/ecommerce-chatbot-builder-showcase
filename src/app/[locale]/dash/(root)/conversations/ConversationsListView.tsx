@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import {
-  ConversationFilterParams
+    ConversationFilterParams
 } from 'packages/functions/app/api/src/conversations/listByLastMessageSentAt';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { BiChevronRight } from 'react-icons/bi';

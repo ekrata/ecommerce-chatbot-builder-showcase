@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -10,14 +10,14 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  FieldErrors, Path, Resolver, SubmitHandler, useFieldArray, useForm
+    FieldErrors, Path, Resolver, SubmitHandler, useFieldArray, useForm
 } from 'react-hook-form';
 import { BsPlus, BsX } from 'react-icons/bs';
 import { FcInfo } from 'react-icons/fc';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-  useNodeId, useNodes, useUpdateNodeInternals
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+    useEdges, useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -28,7 +28,7 @@ import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys } from '../../collections';
+import { actionNode, OutputFieldKey, OutputFieldsKeys, OutputFieldValue } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';
@@ -54,7 +54,8 @@ const type = Action.DecisionButtons
 export type DecisionButtonsData = z.infer<typeof schema>
 type FormValues = DecisionButtonsData
 
-export const DecisionButtonsActionNode = (node: Node) => {
+export const DecisionButtonsActionNode: FC<NodeProps> = (node) => {
+  const outputKey: OutputFieldValue = OutputFieldsKeys[type]
   const [edges, setEdges] = useEdgeContext()
   const tNodes = useTranslations('dash.bots.nodes')
 
@@ -64,14 +65,14 @@ export const DecisionButtonsActionNode = (node: Node) => {
   ), [edges]);
 
   // (node?.data?.errors?.quickReplies ?? [])((quickReply: object | undefined) => quickReply);
-  const hasErrors: boolean = node?.data?.errors?.message && node?.data?.errors?.quickReplies?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message && node?.data?.errors?.quickReplies?.some((label: string) => label)
   const hasTooManyConnections: boolean = useMemo(() => nodeEdges?.length > node?.data?.quickReplies?.length, [nodeEdges?.length, node]);
 
   return (
     <div className={`w-16  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
       <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.DecisionButtons`)} hasErrors={hasErrors} hasTooManyConnections={hasTooManyConnections} />
-      {createTargetHandles(node, nodeEdges, OutputFieldsKeys[type])}
+      {createTargetHandles(node, nodeEdges, outputKey)}
     </div >
   )
 }
@@ -117,12 +118,12 @@ export const DecisionButtonsActionForm: React.FC<Props> = ({ node }) => {
 
 
   const choicesFieldArray = useFieldArray({
-    name: 'choices',
+    name: 'choices' as never,
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 
   const choiceLinksFieldArray = useFieldArray({
-    name: 'choiceLinks',
+    name: 'choiceLinks' as never,
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 
@@ -182,7 +183,7 @@ export const DecisionButtonsActionForm: React.FC<Props> = ({ node }) => {
             choicesFieldArray?.remove(index)
             choiceLinksFieldArray?.remove(index)
             // remove respective edge
-            setEdges(edges.filter((edge) => edge?.data?.label !== value || edge.target !== node.id))
+            setEdges(edges.filter((edge) => (edge?.data as { label: string })?.label !== value || edge.target !== node.id))
           }}></BsX>
 
           <div className='mb-1 divider'></div>

@@ -24,7 +24,6 @@ export const ArticleContent = new Entity({
     articleId: {
       type: 'string',
       required: true,
-      readOnly: true,
     },
     orgId: {
       type: 'string',
@@ -47,12 +46,10 @@ export const ArticleContent = new Entity({
     },
     createdAt: {
       type: 'number',
-      readOnly: true,
       default: Date.now(),
     },
     updatedAt: {
       type: 'number',
-      readOnly: true,
       default: Date.now(),
       watch: '*',
       set: () => Date.now(),

@@ -39,8 +39,9 @@ export const StartConversationCard: React.FC = () => {
   const onClick = async () => {
     setWidgetState('conversations')
     const conversationId = uuidv4()
+    const customerId = uuidv4()
     setSelectedConversationId(conversationId);
-    await createCustomerMut.mutateAsync([orgId, '', false])
+    await createCustomerMut.mutateAsync([orgId, '', { customerId, orgId }])
     await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, channel: 'website', status: 'unassigned' }])
   }
 
@@ -53,7 +54,7 @@ export const StartConversationCard: React.FC = () => {
         </div>
         <div className="flex flex-col place-items-start gap-y-1 ">
           <h5 className='justify-start text-base font-semibold justify-self-start '>{t('Send us a message')}</h5>
-          <div className="flex text-xs  gap-x-1 ">
+          <div className="flex text-xs gap-x-1 ">
             <p>{`${t('We typically reply in under')} `}</p>
             <p className="">
               {` ${relativeTime(halfAnHourAgo,
@@ -62,7 +63,7 @@ export const StartConversationCard: React.FC = () => {
             </p>
           </div>
         </div>
-        <BiSend className="ml-1 text-2xl justify-self-end  justify-right " />
+        <BiSend className="ml-1 text-2xl justify-self-end justify-right " />
       </div>
     </button>
   )

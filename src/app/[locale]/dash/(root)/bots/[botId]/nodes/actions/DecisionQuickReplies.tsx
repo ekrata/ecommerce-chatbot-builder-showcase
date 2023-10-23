@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -12,9 +12,9 @@ import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState }
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, Position, updateEdge, useEdges,
-  useNodeId, useNodes, useUpdateNodeInternals
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+    useEdges, useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -33,7 +33,6 @@ import { GenericEdge } from '../shared/GenericEdge';
 import { TextareaField } from '../shared/TextareaField';
 import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
-import { DecisionQuickRepliesActionConnection } from './SendAChatMessage';
 
 const schema = z.object({
   message: z.string()?.min(1),
@@ -49,7 +48,7 @@ export type DecisionQuickRepliesData = z.infer<typeof schema>
 type FormValues = DecisionQuickRepliesData
 type NodeData = FormValues & FieldErrors<FormValues>
 
-export const DecisionQuickRepliesActionNode = (node: Node) => {
+export const DecisionQuickRepliesActionNode: FC<NodeProps> = (node) => {
   const [edges, setEdges] = useEdgeContext()
   const tNodes = useTranslations('dash.bots.nodes')
 
@@ -59,7 +58,7 @@ export const DecisionQuickRepliesActionNode = (node: Node) => {
   ), [edges]);
 
   // (node?.data?.errors?.quickReplies ?? [])((quickReply: object | undefined) => quickReply);
-  const hasErrors: boolean = node?.data?.errors?.message && node?.data?.errors?.quickReplies?.some((label) => label)
+  const hasErrors: boolean = node?.data?.errors?.message && node?.data?.errors?.quickReplies?.some((label: string) => label)
   const hasTooManyConnections: boolean = useMemo(() => nodeEdges?.length > node?.data?.quickReplies?.length, [nodeEdges?.length, node]);
 
   return (
@@ -108,7 +107,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
 
   const fieldArray = useFieldArray({
-    name: 'quickReplies',
+    name: 'quickReplies' as never,
     control, // control props comes from useForm (optional: if you are using FormContext)
   });
 

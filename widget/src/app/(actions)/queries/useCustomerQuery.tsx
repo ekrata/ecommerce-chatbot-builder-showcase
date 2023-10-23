@@ -55,7 +55,7 @@ export const useCustomerQuery = (orgId: string) => {
       if (customer?.customerId) {
         return await getCustomer(orgId, customer?.customerId ?? '')
       } else {
-        return await createCustomerMut.mutateAsync([orgId, '', false])
+        return await createCustomerMut.mutateAsync([orgId, '', { customerId: uuidv4(), orgId }])
       }
     }
   })

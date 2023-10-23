@@ -1,4 +1,4 @@
-import { ArticleSearchRes } from '../../../../../../../../../stacks/entities/article';
+import { ArticleSearchRes } from '@/entities/article';
 
 export const searchArticles = async (
   orgId: string,

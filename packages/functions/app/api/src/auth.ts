@@ -30,7 +30,12 @@ export const handler = AuthHandler({
             .go();
 
           // if multiple operators returned, get the most recently created
-          operatorRes.data.sort((a, b) => b?.createdAt - a?.createdAt);
+          operatorRes.data.sort((a, b) => {
+            if (a?.createdAt && b?.createdAt) {
+              return b?.createdAt - a?.createdAt;
+            }
+            return 0;
+          });
           // await appDb.entities.operators.get({operatorId: operatorRes.data});
           // sign up
           if (!operatorRes?.data?.length) {

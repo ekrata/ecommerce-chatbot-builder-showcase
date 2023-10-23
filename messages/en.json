@@ -195,6 +195,19 @@
     "Email": "Email",
     "at": "at",
     "Article": "Article",
+    "articleCategory": {
+      "General Information": "General Information",
+      "Orders & Delivery": "Orders & Delivery",
+      "Returns & Refunds": "Returns & Refunds",
+      "Payments & Promotions": "Payments & Promotions",
+      "Technical": "Technical",
+      "Product": "Product"
+    },
+    "articleStatus": {
+      "Published": "Published",
+      "Draft": "Draft",
+      "In Review": "In Review"
+    },
     "Loaded": "Loaded",
     "Title": "Title",
     "Download": "Download",
@@ -510,174 +523,161 @@
           "CouponCode": "Coupon code"
         }
       }
-    }
-  },
-  "settings": {
-    "appearance": {
-      "Appearance": "Appearance",
-      "Widget Appearance": "Widget Appearance",
-      "Background Color": "Background Color",
-      "Welcome Image": "Welcome Image",
-      "Online Status": "Online Status",
-      "Widget Position": "Widget Position",
-      "Show Button Label": "Button Label",
-      "Label Text": "Label Text",
-      "Enable widget sounds": "Enable widget sounds",
-      "Left": "Left",
-      "Right": "Right",
-      "Brand Logo": "Brand Logo",
-      "Custom branding in widget and emails": "Custom branding in widget and emails",
-      "Custom branding is available on the Plus plan": "Custom branding is available on the Plus plan",
-      "Widget Visibility": "Widget Visibility",
-      "Devices": "Devices",
-      "Mobile Widget": "Mobile Widget",
-      "Button Position": "Button Position",
-      "Button Size": "Button Size",
-      "small": "small",
-      "medium": "medium",
-      "large": "large",
-      "On both desktop and mobile devices": "On both desktop and mobile devices",
-      "Only on desktop devices": "Only on desktop devices",
-      "Only on mobile devices": "Only on mobile devices",
-      "Hide on specific pages": "Hide on specific pages",
-      "Display the Chat When You're Offline": "Display the Chat When You're Offline",
-      "Display Widget": "Display Widget",
-      "Let visitors create a Ticket when you’re offline": "Display the Chat When You're Offline",
-      "Offline Status": "Offline Status",
-      "adjust online hours": "adjust online hours",
-      "Get Started": "Get Started",
-      "Offline Message": "Offline Message"
     },
-    "sidebar": {
-      "Sidebar": "Sidebar",
-      "Enable": "Enable"
-    },
-    "translations": {
+    "settings": {
+      "appearance": {
+        "Appearance": "Appearance",
+        "Widget Appearance": "Widget Appearance",
+        "Background Color": "Background Color",
+        "Welcome Image": "Welcome Image",
+        "Online Status": "Online Status",
+        "Widget Position": "Widget Position",
+        "Show Button Label": "Button Label",
+        "Label Text": "Label Text",
+        "Enable widget sounds": "Enable widget sounds",
+        "Left": "Left",
+        "Right": "Right",
+        "Brand Logo": "Brand Logo",
+        "Custom branding in widget and emails": "Custom branding in widget and emails",
+        "Custom branding is available on the Plus plan": "Custom branding is available on the Plus plan",
+        "Widget Visibility": "Widget Visibility",
+        "Devices": "Devices",
+        "Mobile Widget": "Mobile Widget",
+        "Button Position": "Button Position",
+        "Button Size": "Button Size",
+        "small": "small",
+        "medium": "medium",
+        "large": "large",
+        "On both desktop and mobile devices": "On both desktop and mobile devices",
+        "Only on desktop devices": "Only on desktop devices",
+        "Only on mobile devices": "Only on mobile devices",
+        "Hide on specific pages": "Hide on specific pages",
+        "Display the Chat When You're Offline": "Display the Chat When You're Offline",
+        "Display Widget": "Display Widget",
+        "Let visitors create a Ticket when you’re offline": "Display the Chat When You're Offline",
+        "Offline Status": "Offline Status",
+        "adjust online hours": "adjust online hours",
+        "Get Started": "Get Started",
+        "Offline Message": "Offline Message"
+      },
+      "sidebar": {
+        "Sidebar": "Sidebar",
+        "Enable": "Enable"
+      },
+      "translations": {
+        "Translations": "Translations",
+        "Multilanguage": "Multilanguage",
+        "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser": "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser.",
+        "Delete language": "Delete language"
+      },
+      "installation": {
+        "Installation": "Installation",
+        "The chat code is not installed properly": "The chat code is not installed properly",
+        "The chat code is installed": "The chat code is installed",
+        "Paste this code snippet just before the </body> tag": "Paste this code snippet just before the </body> tag.",
+        "Provide your Shopify domain to connect with eChat": "Provide your Shopify domain to connect with eChat",
+        "Copy to clipboard": "Copy to clipboard",
+        "Your store name": "Your store name",
+        "Connect to": "Connect to",
+        "Wordpress installation instructions": "Log in to your WordPress account and go to Dashboard\n                      Navigate to the “Plugins” section and select “Add New”.\n                      Type “eChat” in the search bar and hit the “Install New” button\n                      Once installed, make sure to hit the “Activate” button before moving on\n                      Click “eChat Chat” in the left-hand side menu. Choose “Log in” and enter your email and password\n                      Choose the project you want to integrate with your website\n                      You’re all set! Hit “Open eChat Panel” to start using live chat & chatbots"
+      },
+      "Ticketing": {
+        "Ticketing": "Ticketing",
+        "Connecting email": "Connecting email",
+        "Connect new email": "Connect new email",
+        "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability": "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability.",
+        "Send from": "Paste this code snippet just before the </body> tag.",
+        "Sender address": "Sender address",
+        "Automatic response": "Automatic response",
+        "Custom email signature": "Custom email signature",
+        "Filtered emails": "Filtered emails",
+        "Add new email filter": "Add new email filter",
+        "Own": "Paste this code snippet just before the </body> tag.",
+        "Domain": "Paste this code snippet just before the </body> tag.",
+        "Connect with your existing email": "Connect with your existing email",
+        "Create a new email address": "Create a new email address",
+        "Email address": "Email address",
+        "Choose email type": "Choose email type",
+        "Choose provider": "Choose provider",
+        "Follow email instructions": "Follow email instructions",
+        "Other email provider": "Other email provider",
+        "Email type": "Email type",
+        "You can connect your existing mailbox or create a new one with a eChat domain": "You can connect your existing mailbox or create a new one with a eChat domain.",
+        "Alias": "Alias",
+        "Other mailbox provider": "Other mailbox provider",
+        "Set up an automatic reply that customers will receive when they create a ticket": "Set up an automatic reply that customers will receive when they create a ticket.",
+        "List of filtered out emails from which you won't receive any tickets": "List of filtered out emails from which you won’t receive any tickets",
+        "google": {
+          "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings": "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings",
+          "Choose the 'Forwarding and POP/IMAP' tab in the settings and click on the 'Add a forwarding address' button in the middle": "Choose the \"Forwarding and POP/IMAP\" tab in the settings and click on the \"Add a forwarding address\" button in the middle",
+          "Copy the following email address and paste it in the 'Please enter a new forwarding email address:' field and click on the 'Next button'": "Copy the following email address and paste it in the 'Please enter a new forwarding email address:' field and click on the 'Next button'",
+          "Please wait for a confirmation email and click on the Verification link to activate the forwarding Also, make sure that you have selected the 'Forward a copy of incoming mail to' checkbox in your Forwarding settings in Gmail": "Please wait for a confirmation email and click on the Verification link to activate the forwarding. Also, make sure that you have selected the 'Forward a copy of incoming mail to...' checkbox in your Forwarding settings in Gmail"
+        },
+        "microsoft": {
+          "Select the Gear icon from the top right corner of your Inbox and choose 'Options'": "Select the Gear icon from the top right corner of your Inbox and choose 'Options'",
+          "From the Options page, click on 'Forwarding' tab in 'Account' section": "Select the Gear icon from the top right corner of your Inbox and choose 'Options'",
+          "Copy the following email address and paste it in the 'Forward my email to:' field and click on the 'Save' button": "Copy the following email address and paste it in the 'Forward my email to:' field and click on the 'Save' button"
+        },
+        "other": {
+          "To integrate your mailbox, set up automatic forwarding in your current email, to the email address below": "To integrate your mailbox, set up automatic forwarding in your current email, to the email address below",
+          "if you need any help": "if you need any help",
+          "click here to read the webmail integration guides": "click here to read the webmail integration guides"
+        }
+      },
+      "Account": {
+        "Account": "Account",
+        "Personal Details": "Personal details",
+        "Your picture": "Your picture",
+        "Name": "Name",
+        "Region": "Region",
+        "Language": "Language"
+      },
+      "customerSatisfaction": {
+        "Customer satisfaction": "Customer satisfaction",
+        "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience, It will be shown whenever an operator closes a conversation, You will be able to check results in the Analytics section": "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience. It will be shown whenever an operator closes a conversation. You will be able to check results in the Analytics section.",
+        "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled": "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled.",
+        "Automated survey": "Automated survey",
+        "Message about rating": "Message about rating",
+        "How would you rate your experience talking to us today?": "How would you rate your experience talking to us today?",
+        "Additional comment": "Additional comment",
+        "Share your feedback for this rating": "Share your feedback for this rating"
+      },
+      "operatingHours": {
+        "Operating Hours": "Operating Hours",
+        "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status": "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status.",
+        "Operating hours are enabled": "Operating hours are enabled",
+        "Operating hours are disabled": "Operating hours are disabled",
+        "When all operators are offline, chat widget will be seen as offline, You can decide how it should behave in": "When all operators are offline, chat widget will be seen as offline. You can decide how it should behave in"
+      },
+      "Operators": {
+        "Operators": "Operators",
+        "Add an operator": "Add an operator",
+        "Role": "Role",
+        "Resend invitation": "Resend Invitation",
+        "Edit permissions": "Edit permissions"
+      },
+      "Chat Page": "Chat Page",
       "Translations": "Translations",
-      "Multilanguage": "Multilanguage",
-      "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser": "Add as many languages as you want and let your customers use the widget in the language they have set up for their browser.",
-      "Delete language": "Delete language"
-    },
-    "installation": {
-      "Installation": "Installation",
-      "The chat code is not installed properly": "The chat code is not installed properly",
-      "The chat code is installed": "The chat code is installed",
-      "Paste this code snippet just before the </body> tag": "Paste this code snippet just before the </body> tag.",
-      "Provide your Shopify domain to connect with eChat": "Provide your Shopify domain to connect with eChat",
-      "Copy to clipboard": "Copy to clipboard",
-      "Your store name": "Your store name",
-      "Connect to": "Connect to",
-      "Wordpress installation instructions": "Log in to your WordPress account and go to Dashboard\n                      Navigate to the “Plugins” section and select “Add New”.\n                      Type “eChat” in the search bar and hit the “Install New” button\n                      Once installed, make sure to hit the “Activate” button before moving on\n                      Click “eChat Chat” in the left-hand side menu. Choose “Log in” and enter your email and password\n                      Choose the project you want to integrate with your website\n                      You’re all set! Hit “Open eChat Panel” to start using live chat & chatbots"
-    },
-    "Ticketing": {
-      "Ticketing": "Ticketing",
-      "Connecting email": "Connecting email",
-      "Connect new email": "Connect new email",
-      "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability": "Keep sending tickets from Tidio domain or start using your own email address to improve your credibility and increase the deliverability.",
-      "Send from": "Paste this code snippet just before the </body> tag.",
-      "Sender address": "Sender address",
-      "Automatic response": "Automatic response",
-      "Custom email signature": "Custom email signature",
-      "Filtered emails": "Filtered emails",
-      "Add new email filter": "Add new email filter",
-      "Own": "Paste this code snippet just before the </body> tag.",
-      "Domain": "Paste this code snippet just before the </body> tag.",
-      "Connect with your existing email": "Connect with your existing email",
-      "Create a new email address": "Create a new email address",
-      "Email address": "Email address",
-      "Choose email type": "Choose email type",
-      "Choose provider": "Choose provider",
-      "Follow email instructions": "Follow email instructions",
-      "Other email provider": "Other email provider",
-      "Email type": "Email type",
-      "You can connect your existing mailbox or create a new one with a eChat domain": "You can connect your existing mailbox or create a new one with a eChat domain.",
-      "Alias": "Alias",
-      "Other mailbox provider": "Other mailbox provider",
-      "Set up an automatic reply that customers will receive when they create a ticket": "Set up an automatic reply that customers will receive when they create a ticket.",
-      "List of filtered out emails from which you won't receive any tickets": "List of filtered out emails from which you won’t receive any tickets",
-      "google": {
-        "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings": "Select the Gear icon from the top right corner of your Google mail dashboard and choose Settings",
-        "Choose the 'Forwarding and POP/IMAP' tab in the settings and click on the 'Add a forwarding address' button in the middle": "Choose the \"Forwarding and POP/IMAP\" tab in the settings and click on the \"Add a forwarding address\" button in the middle",
-        "Copy the following email address and paste it in the 'Please enter a new forwarding email address:' field and click on the 'Next button'": "Copy the following email address and paste it in the 'Please enter a new forwarding email address:' field and click on the 'Next button'",
-        "Please wait for a confirmation email and click on the Verification link to activate the forwarding Also, make sure that you have selected the 'Forward a copy of incoming mail to' checkbox in your Forwarding settings in Gmail": "Please wait for a confirmation email and click on the Verification link to activate the forwarding. Also, make sure that you have selected the 'Forward a copy of incoming mail to...' checkbox in your Forwarding settings in Gmail"
+      "Instagram": "Instagram",
+      "Live Chat": "Live Chat",
+      "Channels": "Channels",
+      "Personal": "Personal",
+      "General": "General",
+      "Notifications": "Notifications",
+      "Canned Responses": "Canned Responses",
+      "Workflow": "Workflow",
+      "Team": "Team",
+      "Email Marketing": "Email Marketing",
+      "Integrations": "Integrations",
+      "Desktop & Mobile": {
+        "Desktop & Mobile": "Desktop & Mobile",
+        "Download our mobile app and stay in touch with your customers on the go": "Download our mobile app and stay in touch with your customers on the go.",
+        "Download desktop app to use the chat whenever you are on your computer, You don’t need to keep your browser open to stay online": "Download desktop app to use the chat whenever you are on your computer. You don’t need to keep your browser open to stay online."
       },
-      "microsoft": {
-        "Select the Gear icon from the top right corner of your Inbox and choose 'Options'": "Select the Gear icon from the top right corner of your Inbox and choose 'Options'",
-        "From the Options page, click on 'Forwarding' tab in 'Account' section": "Select the Gear icon from the top right corner of your Inbox and choose 'Options'",
-        "Copy the following email address and paste it in the 'Forward my email to:' field and click on the 'Save' button": "Copy the following email address and paste it in the 'Forward my email to:' field and click on the 'Save' button"
-      },
-      "other": {
-        "To integrate your mailbox, set up automatic forwarding in your current email, to the email address below": "To integrate your mailbox, set up automatic forwarding in your current email, to the email address below",
-        "if you need any help": "if you need any help",
-        "click here to read the webmail integration guides": "click here to read the webmail integration guides"
-      }
-    },
-    "Account": {
-      "Account": "Account",
-      "Personal Details": "Personal details",
-      "Your picture": "Your picture",
-      "Name": "Name",
-      "Region": "Region",
-      "Language": "Language"
-    },
-    "customerSatisfaction": {
-      "Customer satisfaction": "Customer satisfaction",
-      "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience, It will be shown whenever an operator closes a conversation, You will be able to check results in the Analytics section": "If you want to measure the level of your customer satisfaction, you can enable an automated survey that allows them to rate and comment on their experience. It will be shown whenever an operator closes a conversation. You will be able to check results in the Analytics section.",
-      "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled": "A customer can rate and comment on a conversation by clicking on the three dots icon even though an automated survey is disabled.",
-      "Automated survey": "Automated survey",
-      "Message about rating": "Message about rating",
-      "How would you rate your experience talking to us today?": "How would you rate your experience talking to us today?",
-      "Additional comment": "Additional comment",
-      "Share your feedback for this rating": "Share your feedback for this rating"
-    },
-    "operatingHours": {
-      "Operating Hours": "Operating Hours",
-      "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status": "Set a schedule when you are available to receive new messages, so it will automatically change your online/offline status.",
-      "Operating hours are enabled": "Operating hours are enabled",
-      "Operating hours are disabled": "Operating hours are disabled",
-      "When all operators are offline, chat widget will be seen as offline, You can decide how it should behave in": "When all operators are offline, chat widget will be seen as offline. You can decide how it should behave in"
-    },
-    "Operators": {
-      "Operators": "Operators",
-      "Add an operator": "Add an operator",
-      "Role": "Role",
-      "Resend invitation": "Resend Invitation",
-      "Edit permissions": "Edit permissions"
-    },
-    "Chat Page": "Chat Page",
-    "Translations": "Translations",
-    "Instagram": "Instagram",
-    "Live Chat": "Live Chat",
-    "Channels": "Channels",
-    "Personal": "Personal",
-    "General": "General",
-    "Notifications": "Notifications",
-    "Canned Responses": "Canned Responses",
-    "Workflow": "Workflow",
-    "Team": "Team",
-    "Email Marketing": "Email Marketing",
-    "Integrations": "Integrations",
-    "Desktop & Mobile": {
-      "Desktop & Mobile": "Desktop & Mobile",
-      "Download our mobile app and stay in touch with your customers on the go": "Download our mobile app and stay in touch with your customers on the go.",
-      "Download desktop app to use the chat whenever you are on your computer, You don’t need to keep your browser open to stay online": "Download desktop app to use the chat whenever you are on your computer. You don’t need to keep your browser open to stay online."
-    },
-    "Contact Properties": "Contact Properties",
-    "Project & Billing": "Project & Billing",
-    "Domains": "Domains",
-    "Tracking": "Domains"
-  },
-  "articleCategory": {
-    "General Information": "General Information",
-    "Orders & Delivery": "Orders & Delivery",
-    "Returns & Refunds": "Returns & Refunds",
-    "Payments & Promotions": "Payments & Promotions",
-    "Technical": "Technical",
-    "Product": "Product"
-  },
-  "articleStatus": {
-    "Published": "Published",
-    "Draft": "Draft",
-    "In Review": "In Review"
+      "Contact Properties": "Contact Properties",
+      "Project & Billing": "Project & Billing",
+      "Domains": "Domains",
+      "Tracking": "Domains"
+    }
   }
 }
