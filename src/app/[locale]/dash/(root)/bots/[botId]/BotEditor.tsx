@@ -15,7 +15,8 @@ import {
     createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
     useState
 } from 'react';
-import { BiLoaderAlt, BiRedo, BiTrash, BiUndo } from 'react-icons/bi';
+import { useForm } from 'react-hook-form';
+import { BiLoaderAlt, BiRedo, BiTestTube, BiTrash, BiUndo } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
@@ -26,12 +27,14 @@ import ReactFlow, {
     useStoreApi
 } from 'reactflow';
 import { useDebounce, useOnClickOutside } from 'usehooks-ts';
+import { z } from 'zod';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { useDeleteBotMut } from '@/app/[locale]/(hooks)/mutations/useDeleteBotMut';
 import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
 import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { actions, BotNodeType, conditions, triggers } from '@/entities/bot';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useHistoryState } from '@uidotdev/usehooks';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
@@ -61,6 +64,16 @@ const EdgeContext = createContext<EdgeContextType>([[], () => null, () => null])
 export const useNodeContext = () => useContext(NodeContext)
 export const useEdgeContext = () => useContext(EdgeContext)
 
+const schema = z.object({
+  active: z?.boolean()
+
+})
+
+
+export type BotEditorData = z.infer<typeof schema>
+type FormValues = BotEditorData
+
+
 export const BotEditor: React.FC = () => {
   const ref = useRef(null)
 
@@ -81,6 +94,20 @@ export const BotEditor: React.FC = () => {
 
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
+
+  const { register,
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+    formState: { errors }, } = useForm<FormValues>({
+      resolver: zodResolver(schema),
+      defaultValues: {
+        active: botQuery?.data?.active ?? false
+      },
+      mode: 'onBlur',
+    });
+
 
 
   const onNodesChange = useCallback(
@@ -225,7 +252,8 @@ export const BotEditor: React.FC = () => {
       return addEdge({
         ...params,
         type: nodeTarget?.type,
-        data: { label }
+        data: { label },
+
       }, eds)
     }
     return addEdge({
@@ -253,7 +281,7 @@ export const BotEditor: React.FC = () => {
       }])
       updateBot()
     }
-  }, [debouncedNodes, debouncedEdges])
+  }, [debouncedNodes, debouncedEdges, getValues()])
 
   // update history on change
   // useEffect(() => {
@@ -371,15 +399,28 @@ export const BotEditor: React.FC = () => {
                     </div>
                   </Panel> */}
                 <Panel position="top-center">
-                  <div className='flex flex-row bg-white shadow-2xl place-items-center'>
+
+                </Panel>
+                <Controls />
+                <Background variant={BackgroundVariant.Cross} className='-z-10' />
+                <Panel position={'top-right'} className='z-10'>
+                  <div className='flex flex-row place-items-center gap-x-4'>
                     <button onClick={onDelete} className="flex normal-case btn btn-error btn-outline btn-sm" >
                       <BiTrash className={`text-xl`} />
                       {tDash('Delete')}
                     </button>
+                    <div className="form-control">
+                      <label className="cursor-pointer label gap-x-2">
+                        <span className="label-text">{tDash('Active')}</span>
+                        <input type="checkbox" className="toggle" {...register('active')} />
+                      </label>
+                    </div>
+                    <button className="flex normal-case btn btn-info btn-outline btn-sm" >
+                      <BiTestTube className={`text-xl`} />
+                      {tDash('Test')}
+                    </button>
                   </div>
                 </Panel>
-                <Controls />
-                <Background variant={BackgroundVariant.Cross} className='-z-10' />
                 <Panel position={'top-right'}>
                   <div className='absolute right-0 mb-40'>
                     <div className="h-screen-3/4  bg-white shadow-lg w-[360px] p-4 mb-40 mt-10 pb-40 h-[800px] overflow-y-scroll rounded-lg">
