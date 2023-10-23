@@ -6,14 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { Bot, BotEdgeType, BotNodeType } from '@/entities/bot';
-import { faker } from '@faker-js/faker';
 
-import { rating } from '../../../../../../stacks/entities/conversation';
-import { Customer } from '../../../../../../stacks/entities/customer';
-import {
-  CreateBot,
-  CreateCustomer,
-} from '../../../../../../stacks/entities/entities';
+import { CreateBot } from '../../../../../../stacks/entities/entities';
 import { getHttp } from '../http';
 import { MockOrgIds } from '../util';
 import {

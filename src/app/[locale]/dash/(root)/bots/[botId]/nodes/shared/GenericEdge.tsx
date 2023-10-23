@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath, useNodes } from 'reactflow';
+import { BaseEdge, Edge, EdgeLabelRenderer, EdgeProps, getBezierPath, useNodes } from 'reactflow';
 
 import { useEdgeContext } from '../../BotEditor';
 import { getNextUnusedLabel } from './getNextUnusedLabel';
@@ -40,18 +40,13 @@ export const GenericEdge: FC<GenericEdgeProps> = (
   });
 
 
+  const nodeEdges = useMemo<Edge[]>(() => (
+    edges?.filter((edge) => edge?.target === node?.id)
+  ), [edges]);
   // set a node 
   useEffect(() => {
-    const edge = edges?.find((edge) => edge?.id === id)
-    const node = nodes?.find((node) => node.id === edge?.target)
-    if (node?.data?.[outputKey] && edge?.target) {
-      const unusedLabel = getNextUnusedLabel(edges, edge?.target, node?.data?.[outputKey])
-      if (unusedLabel) {
-        setEdges([...edges.filter((edge) => edge?.id !== id), { ...edge, data: { label: unusedLabel } }])
-      }
-    }
-  }, [id])
 
+  }, [id])
 
   return (
     <>
@@ -72,7 +67,6 @@ export const GenericEdge: FC<GenericEdgeProps> = (
           }}
           className=" nodrag nopan"
         >
-          {/* {label} */}
           {edge?.data?.label}
         </div>
       </EdgeLabelRenderer>

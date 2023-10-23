@@ -6,30 +6,47 @@ import {
 import { useEffect, useMemo, useRef } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
-import { Edge, Handle, Node, Position, useNodeId } from 'reactflow';
+import { Edge, Handle, Node, Position, useEdges, useNodeId } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
+import { z } from 'zod';
 
 import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import TriggerNode from '../../../(nodes)/TriggerNode';
 import { useNodeContext } from '../../BotEditor';
-import { actionNode, triggerNode } from '../../collections';
+import { actionNode, OutputFieldsKeys, triggerNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
+import { createTargetHandles } from '../shared/createTargetHandles';
 import { updateNodes } from '../updateNodes';
 
-type FormValues = {
-  buttonName: string
-}
+const schema = z.object({
+  buttonName: z.string()?.min(1),
+  outputs: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
+    message: 'Each option must be unique.',
+  }),
+})
 
-export const VisitorClicksBotsButtonTriggerNode = (node: Node, edges: Edge[]) => {
+type VisitorClicksBotsButtonData = z.infer<typeof schema>
+type FormValues = VisitorClicksBotsButtonData
+
+const type = VisitorBotInteractionTrigger.VisitorClicksChatIcon
+
+export const VisitorClicksBotsButtonTriggerNode = (node: Node) => {
+  const outputKey = OutputFieldsKeys[type]
+  const edges = useEdges()
   const tNodes = useTranslations('dash.bots.nodes')
   const nodeId = useNodeId()
+
+  // prevent nodes from connecting when edge count exceeds quick reply decision count.
+  const nodeEdges = useMemo<Edge[]>(() => (
+    edges?.filter((edge) => edge?.target === node.id)
+  ), [edges]);
 
   return (<div className={`w-16 animate-fade `}>
     <Handle type="target" position={Position.Left} id="a" className="w-2 h-2" />
     <NodeWrapper nodeElement={triggerNode(VisitorBotInteractionTrigger.VisitorClicksBotsButton)} nodeName={tNodes(`VisitorBotInteractionTrigger.VisitorClicksBotsButton`)} hasErrors={node?.data?.errors?.buttonName} />
-    <Handle type="target" position={Position.Right} id="b" className='w-2 h-2' onConnect={(params) => console.log('handle onConnect', params)} />
-    <Handle type="target" position={Position.Top} id="d" className='w-2 h-2' onConnect={(params) => console.log('handle onConnect', params)} />
+    {createTargetHandles(node, nodeEdges, outputKey)}
   </div >
   );
 }
@@ -62,7 +79,7 @@ export const VisitorClicksBotsButtonForm: React.FC<Props> = ({ node }) => {
     setError,
     getValues,
     formState: { errors }, } = useForm<FormValues>({
-      resolver,
+      resolver: zodResolver(),
       defaultValues: {
         buttonName: '',
       },

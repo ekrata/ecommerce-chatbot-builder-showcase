@@ -16,8 +16,16 @@ export const updateBot = async (
 ): Promise<EntityItem<typeof Bot>> => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/bots/${botId}`,
-    { method: 'PATCH', body: JSON.stringify(body) }
-  );
+    {
+      method: 'PATCH', body: JSON.stringify({
+        ...body, edges: body.edges?.map((edge) => {
+          if (edge.sourceHandle === null) {
+            return { ...edge, sourceHandle: '' }
+          }
+          return edge
+        })
+      })
+    })
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data');

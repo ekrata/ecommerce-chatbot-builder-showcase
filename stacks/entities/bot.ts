@@ -2,13 +2,8 @@ import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  Action,
-  Condition,
-  OperatorInteractionTrigger,
-  ShopifyAction,
-  ShopifyCondition,
-  VisitorBotInteractionTrigger,
-  VisitorPageInteractionTrigger,
+    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 export const nodeType = ['trigger', 'condition', 'action'] as const;
@@ -126,6 +121,32 @@ export const Bot = new Entity({
       type: 'boolean',
       default: false,
     },
+    viewport: {
+      type: 'map',
+      default: {
+        x: 0,
+        y: 0,
+        zoom: 1,
+      },
+      required: true,
+      properties: {
+        x: {
+          type: 'number',
+          default: 0,
+          required: true,
+        },
+        y: {
+          type: 'number',
+          default: 0,
+          required: true,
+        },
+        zoom: {
+          type: 'number',
+          default: 1,
+          required: true,
+        },
+      },
+    },
     nodes: {
       type: 'list',
       default: [],
@@ -177,9 +198,24 @@ export const Bot = new Entity({
           },
           sourceHandle: {
             type: 'string',
+            set: (val) => {
+              console.log(val);
+              if (val === null) {
+                return '';
+              } else {
+                return val;
+              }
+            },
           },
           targetHandle: {
             type: 'string',
+          },
+          type: {
+            type: 'string',
+          },
+          data: {
+            type: 'string',
+            default: '{}',
           },
         },
       },

@@ -31,7 +31,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
     try {
       const res = await appDb.entities.bots
-        .patch({
+        .update({
           orgId,
           botId,
         })
@@ -40,6 +40,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           nodes: updateBot.nodes?.map((node) => ({
             ...node,
             data: JSON.stringify(node.data),
+          })),
+          edges: updateBot.edges?.map((edge) => ({
+            ...edge,
+            data: JSON.stringify(edge.data),
           })),
         })
         .go();

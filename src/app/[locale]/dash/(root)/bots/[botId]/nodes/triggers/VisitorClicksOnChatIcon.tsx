@@ -24,9 +24,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useNodeContext } from '../../BotEditor';
-import {
-  conditionNode, defaultOutputs, OutputFieldsKeys, triggerNode, yesNoOutput
-} from '../../collections';
+import { defaultOutputs, OutputFieldsKeys, triggerNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';

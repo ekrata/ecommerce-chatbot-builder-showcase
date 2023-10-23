@@ -8,21 +8,22 @@ import 'reactflow/dist/style.css';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
-  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import {
-  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
-  useState
+    createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
+    useState
 } from 'react';
 import { BiLoaderAlt, BiRedo, BiTrash, BiUndo } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-  addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-  ConnectionLineComponent, ConnectionLineComponentProps, Controls, Edge, EdgeTypes, MiniMap, Node,
-  NodeTypes, OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance,
-  ReactFlowProvider, useEdges, useEdgesState, useNodesState, useOnSelectionChange, useStoreApi
+    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+    ConnectionLineComponent, ConnectionLineComponentProps, Controls, Edge, EdgeTypes, MiniMap, Node,
+    NodeTypes, OnConnectStartParams, OnSelectionChangeParams, Panel, ReactFlowInstance,
+    ReactFlowProvider, useEdges, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow,
+    useStoreApi
 } from 'reactflow';
 import { useDebounce, useOnClickOutside } from 'usehooks-ts';
 
@@ -35,8 +36,8 @@ import { useHistoryState } from '@uidotdev/usehooks';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import {
-  actionNode, conditionNode, connectionLineTypes, edgeTypes, getConnectionLineComponent, NodeForm,
-  nodeTypes, OutputFieldsKeys, renderConnectionLine, triggerNode
+    actionNode, conditionNode, connectionLineTypes, edgeTypes, getConnectionLineComponent, NodeForm,
+    nodeTypes, OutputFieldsKeys, renderConnectionLine, triggerNode
 } from './collections';
 import { DecisionQuickRepliesActionConnection } from './nodes/actions/DecisionQuickReplies';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
@@ -81,6 +82,7 @@ export const BotEditor: React.FC = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
 
+
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     []
@@ -122,13 +124,25 @@ export const BotEditor: React.FC = () => {
 
   const onPaneClick = () => {
     setSelectedFormNode(null)
-    setNodes(nodes.map((node) => {
+    setNodes(nodes?.map((node) => {
       return { ...node, selected: false }
 
     }))
   };
 
+  useEffect(() => {
+    const restoreFlow = async () => {
+      // const flow = JSON.parse(localStorage.getItem(flowKey));
 
+      if (botQuery?.data) {
+        // const { x = 0, y = 0, zoom = 1 } = botQuery.data?.viewport;
+        setNodes(botQuery.data?.nodes as Node[]);
+        setEdges(botQuery.data?.edges as Edge[]);
+      }
+    };
+
+    restoreFlow();
+  }, [botQuery.dataUpdatedAt]);
 
 
 
@@ -203,17 +217,21 @@ export const BotEditor: React.FC = () => {
     //   }
     // }
 
-    if (nodeTarget?.type) {
+    const node = nodes?.find((node) => node.id === params?.target)
+    // prevent nodes from connecting when edge count exceeds quick reply decision count.
+    const outputKey = OutputFieldsKeys?.[nodeTarget.type as string]
+    if (node?.data?.[outputKey] && params?.target && nodeTarget?.type) {
+      const label = getNextUnusedLabel(edges, params?.target, node?.data?.[outputKey])
       return addEdge({
         ...params,
         type: nodeTarget?.type,
-      }, eds)
-    } else {
-      return addEdge({
-        ...params,
-        label: 'new edge'
+        data: { label }
       }, eds)
     }
+    return addEdge({
+      ...params,
+      label: 'new edge'
+    }, eds)
   }), [nodes, edges]);
 
   const updateBotMut = useUpdateBotMut(orgId)
@@ -225,11 +243,13 @@ export const BotEditor: React.FC = () => {
   // update whenever nodes array changes 
   useEffect(() => {
     // && isEquivalentArray(botQuery?.data?.nodes, debouncedNodes) && isEquivalentArray(botQuery?.data?.edges, debouncedEdges)
-    if (botQuery?.data?.nodes && botQuery?.data?.edges && reactFlowInstance) {
+    if (reactFlowInstance) {
+      console.log('hi')
+      console.log(edges)
       const updateBot = async () => await updateBotMut.mutateAsync([orgId, botId, {
         ...botQuery?.data,
         nodes: nodes as any,
-        edges: edges,
+        edges: edges as any,
       }])
       updateBot()
     }
@@ -310,6 +330,7 @@ export const BotEditor: React.FC = () => {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                defaultViewport={botQuery?.data?.viewport}
                 elementsSelectable
                 onSelectionChange={onSelectionChange}
                 nodesConnectable
@@ -329,6 +350,7 @@ export const BotEditor: React.FC = () => {
                 {/* <MiniMap /> */}
                 <Panel position="top-left">
                   {botQuery?.isLoading && !updateBotMut?.isLoading && <div className='flex bg-transparent place-items-center gap-x-2'><BiLoaderAlt className='animate-spin' />{tDash('Fetching')}</div>}
+                  {/* {botQuery?.isSuccess && <div className='flex bg-transparent place-items-center gap-x-2'><FcCheckmark />{tDash('Loaded')}</div>} */}
                   {updateBotMut?.isLoading && <div className='flex bg-transparent place-items-center gap-x-2'><BiLoaderAlt className='animate-spin' />{tDash('Saving')}</div>}
                   {updateBotMut?.isSuccess && <div className='flex bg-transparent place-items-center gap-x-2'><FcCheckmark />{tDash('Saved')}</div>}
                   {updateBotMut?.isError && <div className='flex bg-transparent place-items-center gap-x-2' > <FcCancel />{tDash('Error')}</div>}

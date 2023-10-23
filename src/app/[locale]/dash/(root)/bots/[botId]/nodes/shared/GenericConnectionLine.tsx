@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import {
-    BaseEdge, ConnectionLineComponentProps, EdgeLabelRenderer, getBezierPath
+  BaseEdge, ConnectionLineComponentProps, EdgeLabelRenderer, getBezierPath
 } from 'reactflow';
 
 interface ConnectionProps {

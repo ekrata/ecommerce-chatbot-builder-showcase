@@ -28,6 +28,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               ...node,
               data: JSON.parse(node?.data ?? '{}'),
             })),
+            edges: res?.data.edges?.map((edge) => ({
+              ...edge,
+              data: JSON.parse(edge?.data ?? '{}'),
+            })),
           }),
         };
       }
