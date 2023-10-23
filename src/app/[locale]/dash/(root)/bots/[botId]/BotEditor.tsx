@@ -5,7 +5,7 @@
 import './index.css';
 import 'reactflow/dist/style.css';
 
-import { useTranslations } from 'next-intl';
+import { Link, useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
     Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
@@ -16,7 +16,7 @@ import {
     useState
 } from 'react';
 import { useForm } from 'react-hook-form';
-import { BiLoaderAlt, BiRedo, BiTestTube, BiTrash, BiUndo } from 'react-icons/bi';
+import { BiLoaderAlt, BiRedo, BiTestTube, BiTrash, BiUndo, BiX } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
@@ -281,7 +281,7 @@ export const BotEditor: React.FC = () => {
       }])
       updateBot()
     }
-  }, [debouncedNodes, debouncedEdges, getValues()])
+  }, [debouncedNodes, debouncedEdges, getValues()?.active])
 
   // update history on change
   // useEffect(() => {
@@ -405,32 +405,33 @@ export const BotEditor: React.FC = () => {
                 <Background variant={BackgroundVariant.Cross} className='-z-10' />
                 <Panel position={'top-right'} className='z-10'>
                   <div className='flex flex-row place-items-center gap-x-4'>
+                    <div className="form-control">
+                      <label className="cursor-pointer label gap-x-2">
+                        <span className="label-text">{tDash('Active')}</span>
+                        <input type="checkbox" className="toggle toggle-success" {...register('active')} />
+                      </label>
+                    </div>
+                    <Link href={{ pathname: "/dash/sandbox" }} rel="noopener noreferrer" target="_blank" className='flex normal-case btn btn-info btn-outline btn-sm'>
+                      <BiTestTube className={`text-xl`} />
+                      {tDash('Test')}
+                    </Link>
                     <button onClick={onDelete} className="flex normal-case btn btn-error btn-outline btn-sm" >
                       <BiTrash className={`text-xl`} />
                       {tDash('Delete')}
                     </button>
-                    <div className="form-control">
-                      <label className="cursor-pointer label gap-x-2">
-                        <span className="label-text">{tDash('Active')}</span>
-                        <input type="checkbox" className="toggle" {...register('active')} />
-                      </label>
-                    </div>
-                    <button className="flex normal-case btn btn-info btn-outline btn-sm" >
-                      <BiTestTube className={`text-xl`} />
-                      {tDash('Test')}
-                    </button>
                   </div>
                 </Panel>
                 <Panel position={'top-right'}>
-                  <div className='absolute right-0 mb-40'>
-                    <div className="h-screen-3/4  bg-white shadow-lg w-[360px] p-4 mb-40 mt-10 pb-40 h-[800px] overflow-y-scroll rounded-lg">
+                  <div className='absolute right-0 mb-40 group'>
+                    <div className={` h-screen-3/4  bg-white/75 backdrop-blur-xl shadow-lg   p-4 mb-40 mt-10 ${(nodeMenuState || selectedFormNode) && 'w-[360px] pb-20 h-[650px]'}  ${!nodeMenuState && 'h-[150px] pb-0'} overflow-y-scroll rounded-lg`}>
                       {selectedFormNode ?
                         renderNodeForm()
                         : (<>
-                          <ul className='flex flex-row justify-between mb-10 tabs tabs-boxed'>
+                          <ul className='flex flex-row justify-between mb-10 place-items-center tabs tabs-boxed'>
                             <li className={`tab  ${nodeMenuState === 'trigger' && 'tab-active'}`} onClick={() => setNodeMenuState('trigger')}><a >{tBots('Trigger')}</a></li>
                             <li className={`tab  ${nodeMenuState === 'condition' && 'tab-active'}`} onClick={() => setNodeMenuState('condition')}><a >{tBots('Condition')}</a></li>
                             <li className={`tab  ${nodeMenuState === 'action' && 'tab-active'}`} onClick={() => setNodeMenuState('action')}><a >{tBots('Action')}</a></li>
+                            {nodeMenuState !== '' && <button className='button btn-ghost'><BiX className='text-3xl' onClick={() => setNodeMenuState('')} /></button>}
                           </ul>
                           {nodeMenuState === 'trigger' &&
                             <div className=''>

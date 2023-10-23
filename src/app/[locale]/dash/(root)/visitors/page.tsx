@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useAuthContext } from '../../(hooks)/AuthProvider';
+import { useAuthContext } from '../../../(hooks)/AuthProvider';
 import { VisitorView } from './VisitorView';
 
 export default function Page() {

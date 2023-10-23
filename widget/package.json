@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "sst bind next dev",
     "seed-dev": "sst bind ts-node populate.ts && sst bind next dev",
+    "co:login": "aws codeartifact login --tool npm --repository chatWidgetRepoStore --domain widget-echat-ekrata",
     "build": "next build",
     "build-widget": "next build './src/app/[locale]/(chat-widget)'",
     "publish-widget": "pnpm publish './src/app/[locale]/(chat-widget)'",

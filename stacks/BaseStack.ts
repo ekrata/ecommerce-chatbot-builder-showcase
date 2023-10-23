@@ -4,22 +4,8 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
-  Api,
-  ApiRouteProps,
-  Auth,
-  Bucket,
-  Config,
-  EventBus,
-  EventBusRuleProps,
-  FunctionInlineDefinition,
-  NextjsSite,
-  Queue,
-  StackContext,
-  Table,
-  Topic,
-  use,
-  WebSocketApi,
-  WebSocketApiFunctionRouteProps,
+    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
+    NextjsSite, Queue, StackContext, Table, Topic, use, WebSocketApi, WebSocketApiFunctionRouteProps
 } from 'sst/constructs';
 
 import { botNodeEvent } from './entities/bot';
@@ -308,6 +294,10 @@ export function baseStack({ stack, app }: StackContext) {
       allowOrigins: [allowedOrigins.value],
     },
     defaults: {
+      throttle: {
+        rate: 2000,
+        burst: 100,
+      },
       function: {
         timeout: app.local ? 100 : 10,
         bind: [

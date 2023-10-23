@@ -11,9 +11,9 @@ import { FcAlarmClock, FcClock, FcGlobe } from 'react-icons/fc';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useDashStore } from '../(actions)/useDashStore';
-import { useAuthContext } from '../../(hooks)/AuthProvider';
-import { useCreateConversationMut } from '../../(hooks)/mutations/useCreateConversationMut';
-import { useVisitsQuery } from '../../(hooks)/queries/useVisitsQuery';
+import { useAuthContext } from '../../../(hooks)/AuthProvider';
+import { useCreateConversationMut } from '../../../(hooks)/mutations/useCreateConversationMut';
+import { useVisitsQuery } from '../../../(hooks)/queries/useVisitsQuery';
 import { CustomerAvatar } from '../conversations/CustomerAvatar';
 import { PageCursor, Pagination } from '../Pagination';
 

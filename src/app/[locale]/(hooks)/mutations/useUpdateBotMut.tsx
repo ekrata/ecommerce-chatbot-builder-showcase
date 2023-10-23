@@ -52,6 +52,7 @@ export const useUpdateBotMut = (orgId: string) => {
   return useMutation({
     mutationKey: [orgId, MutationKey.updateBot],
     mutationFn: async (params: Parameters<typeof updateBot>) => await updateBot(...params),
+    retry: 1,
     onSuccess: (updatedBot) => {
       if (user) {
         const oldBots = queryClient.getQueryData([orgId, QueryKey.bots]) as EntityItem<typeof Bot>[]
