@@ -1,8 +1,8 @@
 before_compile:
-  - echo "npm install -g pnpm"
+  - npm install -g pnpm
 
 compile:
- - echo "pnpm install"
+  - pnpm install
 
 before_build:
   - echo "Before build"

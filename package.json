@@ -12,7 +12,7 @@
     "publish-widget": "pnpm publish './src/app/[locale]/(chat-widget)'",
     "start": "sst bind next start",
     "lint": "next lint",
-    "sst-dev": "sst dev",
+    "sst build": "sst build",
     "timeout": "node -e \"setTimeout(() => process.exit(0), 10000)\"",
     "test-app-api": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run --threads=false -c vitest/appApi.config.ts'",
     "test-app-ws": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run --threads=false -c vitest/appWs.config.ts'",
