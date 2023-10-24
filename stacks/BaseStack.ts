@@ -386,170 +386,170 @@ export function baseStack({ stack, app }: StackContext) {
   });
 
   // meta webhook handler -> SNS -> SQS -> lambdas
-  const metaMessengerTopic = new Topic(stack, 'MetaMessengerTopic', {
-    subscribers: {
-      [MessengerEvent.Messages]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.Messages}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messages.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.Messages],
-              }),
-            },
-          },
-        },
-      },
-      [MessengerEvent.MessageDeliveries]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.MessageDeliveries}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messageDeliveries.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.MessageDeliveries],
-              }),
-            },
-          },
-        },
-      },
-      [MessengerEvent.MessageEchoes]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.MessageEchoes}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messageEchos.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.MessageEchoes],
-              }),
-            },
-          },
-        },
-      },
-      [MessengerEvent.MessageReactions]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.MessageReactions}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messageReactions.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.MessageReactions],
-              }),
-            },
-          },
-        },
-      },
-      [MessengerEvent.MessageReads]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.MessageReads}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messageReads.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.MessageReads],
-              }),
-            },
-          },
-        },
-      },
-      [MessengerEvent.MessagingFeedback]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.MessagingFeedback}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messagingFeedback.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.MessagingFeedback],
-              }),
-            },
-          },
-        },
-      },
-      [MessengerEvent.MessagingOptins]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.MessagingOptins}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messagingOptins.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.MessagingOptins],
-              }),
-            },
-          },
-        },
-      },
-      [MessengerEvent.MessagingSeen]: {
-        type: 'queue',
-        queue: new Queue(
-          stack,
-          `meta_messenger_${MessengerEvent.MessagingSeen}_queue`,
-          {
-            consumer:
-              'packages/functions/app/api/src/webhooks/meta/messenger/messagingSeen.handler',
-          },
-        ),
-        cdk: {
-          subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [MessengerEvent.MessagingSeen],
-              }),
-            },
-          },
-        },
-      },
-    },
-  });
+  // const metaMessengerTopic = new Topic(stack, 'MetaMessengerTopic', {
+  //   subscribers: {
+  //     [MessengerEvent.Messages]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.Messages}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messages.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.Messages],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //     [MessengerEvent.MessageDeliveries]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.MessageDeliveries}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messageDeliveries.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.MessageDeliveries],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //     [MessengerEvent.MessageEchoes]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.MessageEchoes}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messageEchos.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.MessageEchoes],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //     [MessengerEvent.MessageReactions]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.MessageReactions}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messageReactions.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.MessageReactions],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //     [MessengerEvent.MessageReads]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.MessageReads}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messageReads.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.MessageReads],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //     [MessengerEvent.MessagingFeedback]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.MessagingFeedback}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messagingFeedback.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.MessagingFeedback],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //     [MessengerEvent.MessagingOptins]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.MessagingOptins}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messagingOptins.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.MessagingOptins],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //     [MessengerEvent.MessagingSeen]: {
+  //       type: 'queue',
+  //       queue: new Queue(
+  //         stack,
+  //         `meta_messenger_${MessengerEvent.MessagingSeen}_queue`,
+  //         {
+  //           consumer:
+  //             'packages/functions/app/api/src/webhooks/meta/messenger/messagingSeen.handler',
+  //         },
+  //       ),
+  //       cdk: {
+  //         subscription: {
+  //           filterPolicy: {
+  //             type: SubscriptionFilter.stringFilter({
+  //               allowlist: [MessengerEvent.MessagingSeen],
+  //             }),
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
 
   const auth = new Auth(stack, 'auth', {
     authenticator: {
@@ -577,11 +577,12 @@ export function baseStack({ stack, app }: StackContext) {
   process.env.NEXT_PUBLIC_APP_API_URL = api.customDomainUrl;
   process.env.NEXT_PUBLIC_WS_API_URL = wsApi.customDomainUrl;
 
+  console.log(domain);
   const widgetHost = `widget-${domain}`;
   const widgetDomain =
     stack.stage === 'prod'
       ? widgetHost.toLowerCase()
-      : `${stack.stage}-${widgetHost}`.toLowerCase();
+      : `${stack.stage}.${widgetHost}`.toLowerCase();
 
   const widget = new NextjsSite(stack, 'widget', {
     path: 'widget/',
@@ -590,8 +591,9 @@ export function baseStack({ stack, app }: StackContext) {
     customDomain: {
       domainName: widgetDomain,
       domainAlias: `www.${widgetDomain}`,
+      hostedZone: 'ekrata.com',
     },
-    // bind: [api, wsApi],
+    bind: [api, wsApi],
     environment: {
       NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
       NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
@@ -607,13 +609,14 @@ export function baseStack({ stack, app }: StackContext) {
   const siteDomainName =
     stack.stage === 'prod'
       ? domain.toLowerCase()
-      : `${stack.stage}-${domain}`.toLowerCase();
+      : `${stack.stage}.${domain}`.toLowerCase();
   const site = new NextjsSite(stack, 'dash', {
-    path: '.',
-    buildCommand: 'pnpm build',
+    // buildCommand: 'pnpm build',
     customDomain: {
       domainName: siteDomainName,
       domainAlias: `www.${siteDomainName}`,
+
+      hostedZone: 'ekrata.com',
     },
     bind: [api, wsApi],
     environment: {
@@ -654,13 +657,14 @@ export function baseStack({ stack, app }: StackContext) {
 
   // widgetCustomRepo.addDependency(publicWidgetRepo);
 
-  console.log('Site url', site.url);
+  console.log('Site url', site.customDomainUrl);
   console.log('widget url', widget.customDomainUrl);
   console.log('WsApi url', wsApi.customDomainUrl);
   console.log('api url', api.customDomainUrl);
 
   stack.addOutputs({
     SiteUrl: site.customDomainUrl,
+    widgetUrl: widget.customDomainUrl,
     AppWsUrl: wsApi.customDomainUrl,
     AppApiUrl: api.customDomainUrl,
   });

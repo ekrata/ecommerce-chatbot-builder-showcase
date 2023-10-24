@@ -16,7 +16,7 @@ export function paramStack({ stack, app }: StackContext) {
     if (app.local) {
       return 'http://localhost:3000';
     }
-    return stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`;
+    return stack.stage === 'prod' ? domain : `${stack.stage}.${domain}`;
   };
 
   const frontendUrl = new Config.Parameter(stack, 'FRONTEND_URL', {
@@ -27,7 +27,9 @@ export function paramStack({ stack, app }: StackContext) {
     if (app.local) {
       return 'http://localhost:3000';
     }
-    return stack.stage === 'prod' ? domain : `${stack.stage}-${domain}`;
+    return stack.stage === 'prod'
+      ? `https://${domain}`
+      : `https://${stack.stage}.${domain}`;
   };
 
   const allowedOrigins = new Config.Parameter(stack, 'ALLOWED_ORIGINS', {

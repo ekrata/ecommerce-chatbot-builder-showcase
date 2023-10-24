@@ -6,7 +6,7 @@
     "dev": "sst bind next dev",
     "seed-dev": "sst bind ts-node populate.ts && sst bind next dev",
     "seed": "sst bind ts-node populate.ts",
-    "build": "next build",
+    "build": "sst bind next build",
     "dev-widget": "sst bind next dev './widget'",
     "build-widget": "next build './src/app/[locale]/(chat-widget)'",
     "publish-widget": "pnpm publish './src/app/[locale]/(chat-widget)'",
