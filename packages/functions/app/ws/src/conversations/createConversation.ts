@@ -1,17 +1,13 @@
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
-import { EntityItem } from 'electrodb';
 import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
-import { ApiHandler, useJsonBody } from 'sst/node/api';
+import { ApiHandler } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
 import { Conversation, ExpandedConversation } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
-import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
 
-import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
 import { WsAppMessage } from '../WsMessage';

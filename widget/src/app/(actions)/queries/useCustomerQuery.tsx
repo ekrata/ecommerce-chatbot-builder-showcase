@@ -55,7 +55,10 @@ export const useCustomerQuery = (orgId: string) => {
       if (customer?.customerId) {
         return await getCustomer(orgId, customer?.customerId ?? '')
       } else {
-        return await createCustomerMut.mutateAsync([orgId, '', { customerId: uuidv4(), orgId }])
+        const newCustomerId = uuidv4()
+        const data = await createCustomerMut.mutateAsync([orgId, newCustomerId, { customerId: newCustomerId, orgId }])
+        console.log(data)
+        queryClient.setQueryData([orgId, QueryKey.customer], () => data)
       }
     }
   })

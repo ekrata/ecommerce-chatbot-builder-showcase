@@ -2,12 +2,10 @@
   "name": "widget",
   "version": "0.1.0",
   "scripts": {
-    "dev": "sst bind next dev",
-    "seed-dev": "sst bind ts-node populate.ts && sst bind next dev",
-    "build": "sst bind next build",
-    "build-widget": "next build './src/app/[locale]/(chat-widget)'",
-    "publish-widget": "pnpm publish './src/app/[locale]/(chat-widget)'",
-    "start": "sst bind next start"
+    "dev": "sst bind 'next dev -p 3001'",
+    "seed-dev": "sst bind ts-node populate.ts && sst bind next dev -p 3001",
+    "build": "sst bind 'next build'",
+    "start": "sst bind 'next start -p 3001'"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.418.0",

@@ -5,10 +5,12 @@ export function botsStack({ stack }: StackContext) {
   const { api } = use(baseStack);
 
   api.addRoutes(stack, {
-    'GET /orgs/{orgId}/bots':
-      'packages/functions/app/api/src/bots/list.handler',
-    'GET /orgs/{orgId}/bots/{botId}':
-      'packages/functions/app/api/src/bots/get.handler',
+    // 'GET /orgs/{orgId}/bots':
+    //   'packages/functions/app/api/src/bots/list.handler',
+    // 'GET /orgs/{orgId}/bots/{botId}':
+    //   'packages/functions/app/api/src/bots/get.handler',
+    // 'POST /orgs/{orgId}/nodes/actions/askAQuestion':
+    //   'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
     'DELETE /orgs/{orgId}/bots/{botId}':
       'packages/functions/app/api/src/bots/delete.handler',
     'POST /orgs/{orgId}/bots/{botId}':

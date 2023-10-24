@@ -10,19 +10,46 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
-import { ArticleCategory, articleStatus } from '../../../../../../stacks/entities/article';
-import { botCategory, BotEdgeType, BotNodeType } from '../../../../../../stacks/entities/bot';
 import {
-    conversationChannel, conversationStatus, conversationTopic
+  ArticleCategory,
+  articleStatus,
+} from '../../../../../../stacks/entities/article';
+import {
+  botCategory,
+  BotEdgeType,
+  BotNodeType,
+} from '../../../../../../stacks/entities/bot';
+import {
+  conversationChannel,
+  conversationStatus,
+  conversationTopic,
 } from '../../../../../../stacks/entities/conversation';
 import {
-    CreateArticle, CreateArticleContent, CreateBot, CreateConfiguration, CreateConversation,
-    CreateCustomer, CreateMessage, CreateOperator, CreateOrg, CreateTranslation, CreateVisit
+  CreateArticle,
+  CreateArticleContent,
+  CreateBot,
+  CreateConfiguration,
+  CreateConversation,
+  CreateCustomer,
+  CreateMessage,
+  CreateOperator,
+  CreateOrg,
+  CreateTranslation,
+  CreateVisit,
 } from '../../../../../../stacks/entities/entities';
 import { senderType } from '../../../../../../stacks/entities/message';
-import { Action, Condition, VisitorBotInteractionTrigger } from '../bots/triggers/definitions.type';
+import {
+  Action,
+  Condition,
+  VisitorBotInteractionTrigger,
+} from '../bots/triggers/definitions.type';
 import { AppDb, getAppDb } from '../db';
 import { MockArgs, mockArticleTitles, MockOrgIds } from './';
+
+export interface SeedResponse {
+  mockArgs: MockArgs;
+  mockOrgs: MockOrgIds[];
+}
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -48,7 +75,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       );
       return {
         statusCode: 200,
-        body: JSON.stringify(mockOrgIds),
+        body: JSON.stringify({ mockArgs, mockOrgs: mockOrgIds }),
       };
     } catch (err) {
       Sentry.captureException(JSON.stringify(err));
@@ -76,7 +103,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   } = mockArgs;
   // org
 
-  const s3 = new S3Client(Config.REGION)
+  const s3 = new S3Client(Config.REGION);
   const orgId = uuidv4();
   const createOrg: CreateOrg = {
     orgId,
@@ -88,24 +115,25 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
   mockOrg.orgId = orgId;
   mockOrg.lang = mockLang;
-  const avatarKey = `${orgId}-configuration-botLogo`
-  const logoKey = `${orgId}-configuration-logo`
+  const avatarKey = `${orgId}-configuration-botLogo`;
+  const logoKey = `${orgId}-configuration-logo`;
   const avatarCommand = new PutObjectCommand({
-    ACL: "public-read",
+    ACL: 'public-read',
     Bucket: Bucket?.['echat-app-assets'].bucketName,
     Key: avatarKey,
-    Body: fs.readFileSync('packages/functions/app/api/src/util/test-avatar.png'),
+    Body: fs.readFileSync(
+      'packages/functions/app/api/src/util/test-avatar.png',
+    ),
   });
   const logoCommand = new PutObjectCommand({
-    ACL: "public-read",
+    ACL: 'public-read',
     Bucket: Bucket?.['echat-app-assets'].bucketName,
     Key: logoKey,
     Body: fs.readFileSync('packages/functions/app/api/src/util/test-logo.png'),
   });
 
-
-  await s3.send(avatarCommand)
-  await s3.send(logoCommand)
+  await s3.send(avatarCommand);
+  await s3.send(logoCommand);
 
   const createConfiguration: CreateConfiguration = {
     orgId,
@@ -114,11 +142,11 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
         appearance: {
           widgetAppearance: {
             botLogo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${avatarKey}`,
-            logo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${logoKey}`
-          }
-        }
-      }
-    }
+            logo: `https://${Bucket?.['echat-app-assets'].bucketName}.s3.amazonaws.com/${logoKey}`,
+          },
+        },
+      },
+    },
   };
 
   const createTranslation: CreateTranslation = {

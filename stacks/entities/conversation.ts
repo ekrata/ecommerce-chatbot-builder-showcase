@@ -136,7 +136,6 @@ export const Conversation = new Entity({
     },
     read: {
       type: 'boolean',
-      required: true,
       default: false,
     },
     readAt: {
@@ -144,17 +143,14 @@ export const Conversation = new Entity({
     },
     dismissed: {
       type: 'boolean',
-      required: true,
       default: false,
     },
     archived: {
       type: 'boolean',
-      required: true,
       default: false,
     },
     preventCustomerReplies: {
       type: 'boolean',
-      required: true,
       default: false,
     },
     lastMessageAt: {

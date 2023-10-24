@@ -8,21 +8,21 @@ import 'reactflow/dist/style.css';
 import { Link, useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
-    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import {
-    createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
-    useState
+  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
+  useState
 } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiRedo, BiTestTube, BiTrash, BiUndo, BiX } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-    ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
-    ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
+  addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+  ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
+  ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
 } from 'reactflow';
 import { useDebounce } from 'usehooks-ts';
 import { z } from 'zod';
@@ -36,8 +36,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import {
-    actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, OutputFieldKey, OutputFieldsKeys,
-    renderConnectionLine, triggerNode
+  actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, OutputFieldKey, OutputFieldsKeys,
+  renderConnectionLine, triggerNode
 } from './collections';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import { onDragStart } from './onDragStart';
@@ -269,11 +269,14 @@ export const BotEditor: React.FC = () => {
     if (reactFlowInstance) {
       console.log('hi')
       console.log(edges)
-      const updateBot = async () => await updateBotMut.mutateAsync([orgId, botId, {
+      const updateBody = {
         ...botQuery?.data,
         nodes: nodes as any,
         edges: edges as any,
-      }])
+      }
+      delete updateBody?.botId
+      delete updateBody?.orgId
+      const updateBot = async () => await updateBotMut.mutateAsync([orgId, botId, updateBody])
       updateBot()
     }
   }, [debouncedNodes, debouncedEdges, getValues()?.active])

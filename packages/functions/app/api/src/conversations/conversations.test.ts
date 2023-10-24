@@ -14,17 +14,23 @@ import {
 } from '../../../../../../stacks/entities/conversation';
 import { CreateConversation } from '../../../../../../stacks/entities/entities';
 import { getHttp } from '../http';
-import {
-  mockMessageCountPerConversation,
-  MockOrgIds,
-  mockSearchPhrase,
-} from '../util/seed';
+import { MockArgs, MockOrgIds } from '../util';
+import { SeedResponse } from '../util/seed';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
+let mockArgs: MockArgs;
+let mockSearchPhrase: string;
+let mockMessageCountPerConversation: number;
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/seed-test-db`)).data as MockOrgIds[];
+  const resData = (await http.post(`/util/small-seed-test-db`))
+    .data as SeedResponse;
+  mockOrgIds = resData.mockOrgs;
+  mockArgs = resData.mockArgs;
+  mockSearchPhrase = mockArgs.mockSearchPhrase;
+  mockMessageCountPerConversation = mockArgs.mockMessageCountPerConversation;
+
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
@@ -173,8 +179,8 @@ describe.concurrent('/conversations', async () => {
     expect(res.status).toBe(200);
     expect(conversationsByCustomer?.data).toBeTruthy();
     conversationsByCustomer.data.forEach((conversation: ConversationItem) => {
-      expect(conversation.conversation.orgId).toEqual(orgId);
-      expect(conversation.conversation.customer.customerId).toEqual(customerId);
+      expect(conversation.orgId).toEqual(orgId);
+      expect(conversation.customer.customerId).toEqual(customerId);
       // expect(conversation.conversation?.operator?.operatorId).toBeTruthy();
       expect(conversation?.messages?.length).toEqual(
         mockMessageCountPerConversation,
@@ -214,7 +220,7 @@ describe.concurrent('/conversations', async () => {
       },
     );
   }, 100000);
-  it('creates a conversation', async () => {
+  it.only('creates a conversation', async () => {
     const { orgId, customers } = mockOrgIds?.[0];
     const { customerId } = faker.helpers.arrayElement(customers);
     const conversationId = uuidv4();

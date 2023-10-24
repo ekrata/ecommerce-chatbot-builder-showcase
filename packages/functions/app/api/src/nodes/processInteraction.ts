@@ -7,7 +7,14 @@ import { Table } from 'sst/node/table';
 import { Topic } from 'sst/node/topic';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import { Bot, BotEdgeType, BotNodeEvent, botNodeEvent, BotNodeType, nodeMap } from '@/entities/bot';
+import {
+  Bot,
+  BotEdgeType,
+  BotNodeEvent,
+  botNodeEvent,
+  BotNodeType,
+  nodeMap,
+} from '@/entities/bot';
 import { Conversation, ConversationItem } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Interaction } from '@/entities/interaction';
@@ -15,7 +22,10 @@ import * as Sentry from '@sentry/serverless';
 
 import { Message } from '../../../../../../stacks/entities/message';
 import { getAppDb } from '../../../api/src/db';
-import { Triggers, VisitorBotInteractionTrigger } from '../bots/triggers/definitions.type';
+import {
+  Triggers,
+  VisitorBotInteractionTrigger,
+} from '../bots/triggers/definitions.type';
 
 const sns = new AWS.SNS();
 
@@ -54,6 +64,11 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         };
       }
       const { orgId, customerId, type } = interactionData;
+
+      const customer = await appDb.entities.customers.get({
+        customerId: customerId ?? '',
+        orgId,
+      });
 
       const bots = await appDb.entities.bots.query.byOrg({ orgId }).go();
 

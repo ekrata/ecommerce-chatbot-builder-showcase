@@ -14,14 +14,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     const { orgId, botId } = usePathParams();
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       // createdAt,
       ...updateBot
     }: UpdateBot = useJsonBody();
 
-    // delete updateBot?.botId;
-    // delete updateBot?.orgId;
+    delete updateBot?.createdAt;
+    delete updateBot?.updatedAt;
     if (!orgId || !botId) {
       return {
         statusCode: 422,

@@ -1,6 +1,7 @@
 import { EntityItem } from 'electrodb';
 import { useLocale, useTranslations } from 'next-intl';
 import { FC, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { ChangeHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsSearch, BsX } from 'react-icons/bs';
@@ -163,6 +164,8 @@ export const HelpScreen: FC = () => {
   return (
     <div className="flex justify-between w-full h-full rounded-3xl">
       <div className="flex flex-col w-full h-full place-items-center ">
+
+        {isMobile && <button className='absolute top-1 right-1 btn-ghost' onClick={() => setWidgetVisibility('minimized')}><BsX className='text-2xl shadow-2xl' /></button>}
         <div
           className={`background text-white flex flex-col gap-y-2 place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold p-3 gap-x-2   `}
         >

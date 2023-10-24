@@ -1,7 +1,9 @@
 'use client'
 import {
-    createContext, Dispatch, FC, PropsWithChildren, ReactNode, useEffect, useMemo, useState
+  createContext, Dispatch, FC, PropsWithChildren, ReactNode, useEffect, useMemo, useState
 } from 'react';
+import { isMobile } from 'react-device-detect';
+import { BsX } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useCreateCustomerMut } from './(actions)/mutations/useCreateCustomerMut';
@@ -29,24 +31,13 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 }) => {
   const org = useOrgQuery()
   const orgId = org?.data?.orgId ?? ''
-  const { chatWidget: { widgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
+  const { chatWidget: { widgetVisibility, setWidgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
   const configuration = useConfigurationQuery(orgId);
   console.log(configuration?.data)
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
   console.log(widgetAppearance)
   const customerQuery = useCustomerQuery(orgId);
-  const createCustomerMut = useCreateCustomerMut(orgId, uuidv4())
-
-  // create customer and assign to conversation if no customer currently found.
-  useEffect(() => {
-    (async () => {
-      if (!customerQuery?.data?.customerId && customerQuery.fetchStatus === 'idle' && customerQuery.status === 'error') {
-        const customerId = uuidv4()
-        const res = await createCustomerMut.mutateAsync([orgId, customerId, { customerId, orgId }])
-      }
-    })()
-  }, [customerQuery.fetchStatus, customerQuery.status, customerQuery?.data?.customerId])
 
   const hideNavbar = (widgetState === 'conversations' && selectedConversationId) || (widgetState === 'help' && selectedArticleId)
 
@@ -76,10 +67,10 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 
 
   return (
-    <div className={`${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-10 md:bottom-10' : 'md:absolute md:right-10 md:bottom-10 '}`}>
+    <div className={` ${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-10 md:bottom-10' : 'md:absolute md:right-10 md:bottom-10 '}`}>
       {widgetVisibility === 'open' &&
         (
-          <div className="flex flex-col h-full w-full md:w-[400px] md:h-[600px] shadow-2xl  rounded-3xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left  mb-10 ">
+          <div className="flex flex-col h-screen w-screen md:w-[400px] md:h-[600px] shadow-2xl  rounded-3xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left  mb-10 ">
             <div className='w-full h-full overflow-y-scroll rounded-3xl '>
               {content}
             </div>
@@ -88,9 +79,11 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
             }
           </div>
         )}
-      <div className='right-0 flex flex-row justify-end ' >
-        <StartChatButton></StartChatButton>
-      </div>
+      {((isMobile && widgetVisibility === 'minimized') || (!isMobile)) &&
+        <div className='bottom-0 right-0 flex flex-row justify-end ' >
+          <StartChatButton></StartChatButton>
+        </div>
+      }
     </div>
   )
 

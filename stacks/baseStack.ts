@@ -24,7 +24,7 @@ import {
 } from 'sst/constructs';
 
 import { botNodeEvent } from './entities/bot';
-import { paramStack } from './paramStack';
+import { getAllowedOrigins, paramStack } from './paramStack';
 
 export function baseStack({ stack, app }: StackContext) {
   // const APP_API_URL = new Config.Parameter(stack, 'APP_API_URL', {
@@ -281,6 +281,7 @@ export function baseStack({ stack, app }: StackContext) {
     // },
   });
 
+  console.log(allowedOrigins.value, 'hiiii');
   const api = new Api(stack, 'appApi', {
     customDomain: {
       domainName:
@@ -306,7 +307,7 @@ export function baseStack({ stack, app }: StackContext) {
         'Accept',
       ],
       allowMethods: ['ANY'],
-      allowOrigins: [allowedOrigins.value],
+      allowOrigins: getAllowedOrigins(stack.stage, domain),
     },
     defaults: {
       throttle: {
@@ -606,6 +607,8 @@ export function baseStack({ stack, app }: StackContext) {
     widget.getConstructMetadata(),
   );
 
+  process.env.NEXT_PUBLIC_APP_WIDGET_URL = widget.customDomainUrl ?? '';
+
   const siteDomainName =
     stack.stage === 'prod'
       ? domain.toLowerCase()
@@ -622,7 +625,7 @@ export function baseStack({ stack, app }: StackContext) {
     environment: {
       NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
       NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
-      NEXT_PUBLIC_APP_WIDGET_URL: widget.customDomainUrl ?? '',
+      NEXT_PUBLIC_APP_WIDGET_URL: `https://${widgetDomain ?? ''}/`,
     },
   });
 

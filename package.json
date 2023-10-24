@@ -11,6 +11,7 @@
     "build-widget": "next build './src/app/[locale]/(chat-widget)'",
     "publish-widget": "pnpm publish './src/app/[locale]/(chat-widget)'",
     "start": "sst bind next start",
+    "sst-dev": "sst bind 'npx sst dev --stage local'",
     "lint": "next lint",
     "sst build": "sst build",
     "timeout": "node -e \"setTimeout(() => process.exit(0), 10000)\"",

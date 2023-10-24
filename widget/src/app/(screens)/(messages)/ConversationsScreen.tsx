@@ -1,8 +1,9 @@
 import { useTranslations } from 'next-intl';
 import { FC } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useForm } from 'react-hook-form';
 import { BiChevronRight, BiSend } from 'react-icons/bi';
-import { BsPersonCircle } from 'react-icons/bs';
+import { BsPersonCircle, BsX } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useCreateConversationMut } from '@/app/(actions)/mutations/useCreateConversationMut';
@@ -37,7 +38,7 @@ const fetchingConversationItemsSkeleton = (
 )
 
 export const ConversationsScreen: FC = () => {
-  const { chatWidget: { setWidgetState, setSelectedConversationId } } = useChatWidgetStore(); const t = useTranslations('chat-widget');
+  const { chatWidget: { setWidgetState, setSelectedConversationId, setWidgetVisibility } } = useChatWidgetStore(); const t = useTranslations('chat-widget');
   const {
     register,
     handleSubmit,
@@ -68,6 +69,7 @@ export const ConversationsScreen: FC = () => {
         <div
           className={`background text-white flex place-items-center w-full animated-flip-up justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
         >
+          {isMobile && <button className='absolute top-2 right-2 btn-ghost' onClick={() => setWidgetVisibility('minimized')}><BsX className='text-2xl text-black shadow-2xl' /></button>}
           {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
           {t('Messages')}
         </div>

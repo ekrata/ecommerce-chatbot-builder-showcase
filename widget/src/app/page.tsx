@@ -4,7 +4,7 @@ import { EntityItem } from 'electrodb';
 
 import { ChatWidget } from './ChatWidget';
 
-export default async function Page() {
+export default function Page() {
   const orgId = '';
   const customerId = '';
   return <div className='w-screen h-screen bg-white'>
