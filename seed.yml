@@ -5,7 +5,7 @@ compile:
   - pnpm install
 
 before_build:
-  - echo "Before build"
+  - ls stacks
 
 before_deploy:
   - echo "Before deploy"
