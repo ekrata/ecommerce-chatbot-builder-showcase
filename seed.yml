@@ -1,0 +1,20 @@
+before_compile:
+  - echo "npm install -g pnpm"
+
+compile:
+ - echo "pnpm install"
+
+before_build:
+  - echo "Before build"
+
+before_deploy:
+  - echo "Before deploy"
+
+after_deploy:
+  - echo "After deploy"
+
+before_remove:
+  - echo "Before deploy"
+
+after_remove:
+  - echo "After deploy"
