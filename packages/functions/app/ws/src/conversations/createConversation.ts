@@ -1,4 +1,4 @@
-import { SNSEvent, StreamRecord } from 'aws-lambda';
+import { SNSEvent, SQSEvent, StreamRecord } from 'aws-lambda';
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import { ApiHandler } from 'sst/node/api';
@@ -13,19 +13,16 @@ import * as Sentry from '@sentry/serverless';
 
 import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
+import { getNewImage } from '../helpers';
 import { postToConnection } from '../postToConnection';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
-const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SNSEvent) => {
+const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
   try {
     const { Records } = event;
     for (const record of Records) {
-      const streamRecord = JSON.parse(record.Sns.Message)
-        ?.dynamodb as StreamRecord;
-      const newImage = DynamoDB.Converter.unmarshall(
-        streamRecord?.NewImage ?? {},
-      );
+      const newImage = getNewImage(record);
       const conversationData = Conversation.parse({ Item: newImage }).data;
       if (!conversationData) {
         return {

@@ -36,7 +36,7 @@ describe(
   'conversations',
   () => {
     it(`customer creates a conversation, a ddbstream 'conversation' create event is the processed by ddb-stream/processBatch,
-   which then creates an event for eventbridge, which then calls createConversation`, () =>
+   which then creates an sns event, which is put onto a queue, which then calls createConversation`, () =>
       new Promise((done) => {
         try {
           let doneCounter = 0;

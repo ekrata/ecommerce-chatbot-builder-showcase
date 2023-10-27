@@ -24,11 +24,8 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
     try {
       const { Records } = event;
       for (const record of Records) {
-        console.log(record);
         const newImage = getNewImage(record);
-
         const customerData = Customer.parse({ Item: newImage }).data;
-        console.log(customerData);
         if (!customerData) {
           return {
             statusCode: 500,

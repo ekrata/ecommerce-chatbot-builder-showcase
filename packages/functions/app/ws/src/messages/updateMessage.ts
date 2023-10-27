@@ -1,3 +1,4 @@
+import { SQSEvent } from 'aws-lambda';
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
 import { ApiHandler, useJsonBody } from 'sst/node/api';
@@ -7,21 +8,23 @@ import { WebSocketApi } from 'sst/node/websocket-api';
 
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
+import middy from '@middy/core';
+import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import { Message } from '../../../../../../stacks/entities/message';
 import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
+import { getNewImage } from '../helpers';
 import { postToConnection } from '../postToConnection';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
-export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event: any, context) => {
-    try {
-      const newImage = DynamoDB.Converter.unmarshall(
-        event.detail?.dynamodb?.NewImage,
-      );
+const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
+  try {
+    const { Records } = event;
+    for (const record of Records) {
+      const newImage = getNewImage(record);
 
       const messageData = Message.parse({ Item: newImage }).data;
       if (!messageData) {
@@ -71,11 +74,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       );
 
       return { statusCode: 200, body: 'Message sent' };
-    } catch (err) {
-      console.log('err');
-      console.log(err);
-      Sentry.captureException(err);
-      return { statusCode: 500, body: JSON.stringify(err) };
     }
-  }),
-);
+  } catch (err) {
+    console.log('err');
+    console.log(err);
+    Sentry.captureException(err);
+    return { statusCode: 500, body: JSON.stringify(err) };
+  }
+});
+
+export const handler = middy(lambdaHandler).use(eventNormalizer());

@@ -251,12 +251,15 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
 
   mockOrg.operatorIds = operators.data.map((operator) => operator.operatorId);
 
-  const ownerOperatorId = '';
+  const ownerOperatorId = uuidv4();
   const createOwnerOperator: CreateOperator = {
     operatorId: ownerOperatorId,
     email: faker.internet.email(),
     orgId,
     permissionTier: 'owner',
+    createdAt: Date.now(),
+    name: 'Sarah',
+    language: '',
   };
   await db.entities.operators.create(createOwnerOperator).go();
   mockOrg.ownerId = ownerOperatorId;
