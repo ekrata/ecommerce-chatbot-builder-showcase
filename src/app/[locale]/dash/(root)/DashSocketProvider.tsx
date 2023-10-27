@@ -1,6 +1,5 @@
 'use client'
 import { EntityItem } from 'electrodb';
-import { WsAppMessage } from 'packages/functions/app/ws/src/WsMessage';
 // Import necessary hooks and libraries
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
@@ -8,6 +7,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { getWsUrl } from '@/app/getWsUrl';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
+import { WsAppDetailType } from '@/types/snsTypes';
 import { InfiniteData, UseInfiniteQueryResult, useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
@@ -56,7 +56,7 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
             const { type, body } = JSON.parse(lastMessage.data);
             // Update the local chat messages state based on the message type
             switch (type) {
-                case WsAppMessage.createConversation:
+                case WsAppDetailType.wsAppCreateConversation:
                     queryClient.setQueryData<InfiniteData<{
                         cursor: string | null;
                         data: ConversationItem[];
@@ -64,7 +64,7 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
                         return [{ cursor: '', data: body }, data,] as any;
                     });
                     break;
-                case WsAppMessage.createMessage:
+                case WsAppDetailType.wsAppCreateMessage:
                     console.log(Object.values(conversationListFilter))
                     queryClient.setQueryData<InfiniteData<{
                         cursor: string | null;
@@ -81,7 +81,7 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
                     const queryData = queryClient.getQueryData<{ cursor: string | null, data: ConversationItem[] }>([QueryKey.conversationItems, ...Object.values(conversationListFilter)])
                     console.log(queryData)
                     break;
-                case WsAppMessage.updateConversation:
+                case WsAppDetailType.wsAppUpdateConversation:
                     queryClient.setQueryData<InfiniteData<{
                         cursor: string | null;
                         data: ConversationItem[];

@@ -8,6 +8,7 @@ import { Conversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import * as Sentry from '@sentry/serverless';
 
+import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
 
@@ -45,7 +46,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
         [...filteredOperators, ...customer.data],
-        { type: 'updateCustomer', body: customerData },
+        { type: WsAppDetailType.wsAppUpdateCustomer, body: customerData },
       );
 
       return { statusCode: 200, body: 'Message sent' };

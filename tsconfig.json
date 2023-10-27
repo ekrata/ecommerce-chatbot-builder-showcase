@@ -56,6 +56,9 @@
       "@/components/*": [
         "./src/components/*"
       ],
+      "@/types/*": [
+        "./types/*"
+      ],
       "app-api": [
         "./packages/functions/app/api/src"
       ],

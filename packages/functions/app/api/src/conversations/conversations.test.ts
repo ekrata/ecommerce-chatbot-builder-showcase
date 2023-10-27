@@ -8,9 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { faker } from '@faker-js/faker';
 
 import {
-  Conversation,
-  ConversationItem,
-  ConversationTopic,
+    Conversation, ConversationItem, ConversationTopic
 } from '../../../../../../stacks/entities/conversation';
 import { CreateConversation } from '../../../../../../stacks/entities/entities';
 import { getHttp } from '../http';
@@ -26,7 +24,7 @@ let mockMessageCountPerConversation: number;
 beforeAll(async () => {
   const resData = (await http.post(`/util/small-seed-test-db`))
     .data as SeedResponse;
-  mockOrgIds = resData.mockOrgs;
+  mockOrgIds = resData.mockOrgIds;
   mockArgs = resData.mockArgs;
   mockSearchPhrase = mockArgs.mockSearchPhrase;
   mockMessageCountPerConversation = mockArgs.mockMessageCountPerConversation;
@@ -220,7 +218,7 @@ describe.concurrent('/conversations', async () => {
       },
     );
   }, 100000);
-  it.only('creates a conversation', async () => {
+  it('creates a conversation', async () => {
     const { orgId, customers } = mockOrgIds?.[0];
     const { customerId } = faker.helpers.arrayElement(customers);
     const conversationId = uuidv4();
@@ -240,6 +238,38 @@ describe.concurrent('/conversations', async () => {
 
     // validate creation api
     const res = await http.post(
+      `/orgs/${orgId}/conversations/${conversationId}`,
+      data,
+    );
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data).toBeTruthy();
+    expect(res.data?.conversationId).toEqual(conversationId);
+    expect(res.data?.orgId).toEqual(orgId);
+    expect(res.data?.status).toEqual(status);
+    expect(res.data?.channel).toEqual(channel);
+    expect(res.data?.topic).toEqual(topic);
+
+  it('puts a conversation', async () => {
+    const { orgId, customers } = mockOrgIds?.[0];
+    const { customerId } = faker.helpers.arrayElement(customers);
+    const conversationId = uuidv4();
+    const status = 'unassigned';
+    const channel = 'website';
+    const type = 'chat';
+    const topic: ConversationTopic = 'orderIssues';
+    const data: CreateConversation = {
+      conversationId,
+      orgId,
+      topic,
+      customerId,
+      operatorId: '',
+      status,
+      channel,
+    };
+
+    // validate creation api
+    const res = await http.put(
       `/orgs/${orgId}/conversations/${conversationId}`,
       data,
     );

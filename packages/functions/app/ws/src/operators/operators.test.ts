@@ -1,6 +1,9 @@
 import { EntityItem } from 'electrodb';
 import { getHttp } from 'packages/functions/app/api/src/http';
-import { MockOrgIds } from 'packages/functions/app/api/src/util/seed';
+import {
+  MockOrgIds,
+  SeedResponse,
+} from 'packages/functions/app/api/src/util/seed';
 import { getWs } from 'packages/functions/app/getWs';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,14 +14,15 @@ import { CreateOperator } from '@/entities/entities';
 import { Operator } from '@/entities/operator';
 import { faker } from '@faker-js/faker';
 
-import { WsEvent } from '../postToConnection';
+import { WsAppEvent } from '../postToConnection';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/small-seed-test-db`))
-    .data as MockOrgIds[];
+  const seedResponse = (await http.post(`/util/small-seed-test-db`))
+    ?.data as SeedResponse;
+  mockOrgIds = seedResponse.mockOrgIds;
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
@@ -40,7 +44,9 @@ describe('operators', () => {
         doneCounter === 4 ? done(true) : null;
       };
       const validateEvent = (event: any, clientType: string) => {
-        const newOperatorEvent = JSON.parse(event.data.toString()) as WsEvent;
+        const newOperatorEvent = JSON.parse(
+          event.data.toString(),
+        ) as WsAppEvent;
         const body = newOperatorEvent.body as EntityItem<typeof Operator>;
         const { type } = newOperatorEvent;
         if (type === 'createOperator') {
@@ -103,7 +109,9 @@ describe('operators', () => {
         doneCounter === 4 ? done(true) : null;
       };
       const validateEvent = (event: any, clientType: string) => {
-        const newOperatorEvent = JSON.parse(event.data.toString()) as WsEvent;
+        const newOperatorEvent = JSON.parse(
+          event.data.toString(),
+        ) as WsAppEvent;
         const body = newOperatorEvent.body as EntityItem<typeof Operator>;
         const { type } = newOperatorEvent;
         if (type === 'updateOperator' && body.connectionId === '') {

@@ -1,7 +1,8 @@
 import * as codeartifact from 'aws-cdk-lib/aws-codeartifact';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import { SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
+import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
+import { Duration } from 'aws-cdk-lib/core';
 import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
   Api,
@@ -18,10 +19,14 @@ import {
   StaticSite,
   Table,
   Topic,
+  TopicFunctionSubscriberProps,
+  TopicQueueSubscriberProps,
   use,
   WebSocketApi,
   WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
+
+import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
 
 import { botNodeEvent } from './entities/bot';
 import { getAllowedOrigins, paramStack } from './paramStack';
@@ -39,6 +44,8 @@ export function baseStack({ stack, app }: StackContext) {
     appName,
     domain,
     REGION,
+    tableName,
+
     frontendUrl,
     allowedOrigins,
     oauthGoogleClientId,
@@ -52,6 +59,7 @@ export function baseStack({ stack, app }: StackContext) {
     app.setDefaultRemovalPolicy('destroy');
   }
 
+  const defaultFunctionTimeout = 100;
   if (!app.local) {
     const sentry = lambda.LayerVersion.fromLayerVersionArn(
       stack,
@@ -67,6 +75,7 @@ export function baseStack({ stack, app }: StackContext) {
   }
 
   const appEventBus = new EventBus(stack, 'appEventBus', {});
+  const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
 
   const table = new Table(stack, `app`, {
     fields: {
@@ -103,9 +112,9 @@ export function baseStack({ stack, app }: StackContext) {
         function: {
           handler:
             'packages/functions/app/api/src/ddb-stream/processBatch.handler',
-          timeout: 20,
-          bind: [appEventBus],
-          permissions: ['events:PutEvents'],
+          timeout: defaultFunctionTimeout,
+          bind: [ddbStreamTopic],
+          // permissions: ['events:PutEvents'],
         },
       },
     },
@@ -128,22 +137,22 @@ export function baseStack({ stack, app }: StackContext) {
   const wsApiRoutes:
     | Record<string, FunctionInlineDefinition | WebSocketApiFunctionRouteProps>
     | undefined = {
-    createMessage:
+    [`${WsAppDetailType.wsAppCreateMessage}`]:
       'packages/functions/app/ws/src/messages/createMessage.handler',
 
-    createConversation:
+    [`${WsAppDetailType.wsAppCreateConversation}`]:
       'packages/functions/app/ws/src/conversations/createConversation.handler',
-    updateConversation:
+    [`${WsAppDetailType.wsAppUpdateConversation}`]:
       'packages/functions/app/ws/src/conversations/updateConversation.handler',
 
-    createCustomer:
+    [`${WsAppDetailType.wsAppCreateCustomer}`]:
       'packages/functions/app/ws/src/customers/createCustomer.handler',
-    updateCustomer:
+    [`${WsAppDetailType.wsAppUpdateConversation}`]:
       'packages/functions/app/ws/src/customers/updateCustomer.handler',
 
-    createOperator:
+    [`${WsAppDetailType.wsAppCreateOperator}`]:
       'packages/functions/app/ws/src/operators/createOperator.handler',
-    updateOperator:
+    [`${WsAppDetailType.wsAppUpdateOperator}`]:
       'packages/functions/app/ws/src/operators/updateOperator.handler',
 
     $connect: 'packages/functions/app/ws/src/connect.handler',
@@ -162,6 +171,12 @@ export function baseStack({ stack, app }: StackContext) {
     defaults: {
       function: {
         bind: [table, REGION, appEventBus],
+        permissions: [
+          table,
+          'sqs:ReceiveMessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes',
+        ],
       },
     },
     routes: wsApiRoutes,
@@ -183,88 +198,86 @@ export function baseStack({ stack, app }: StackContext) {
 
   // Because the rules of the entire websocket API(Which is responsible for the real time messaging and notifications of the app))
   // are of the same, shared structure, we can simply build the eventbus rules dynamically from lambda names
-  const rules: Record<string, EventBusRuleProps> = wsApi.routes.reduce(
-    (acc, route) => {
-      const wsFunc = wsApi.getFunction(route);
-      if (wsFunc) {
-        return {
-          ...acc,
-          [`${wsFunc.id.split('$').slice(-1)[0]}-rule`]: {
-            pattern: {
-              source: ['ddbStream'],
-              detailType: [wsFunc.id],
-            },
-            targets: {
-              ws: {
-                cdk: {
-                  function: lambda.Function.fromFunctionArn(
-                    stack,
-                    wsFunc.id,
-                    wsFunc.functionArn,
-                  ),
-                },
-              },
-            },
-          },
-        } as Record<string, EventBusRuleProps>;
-      }
-      throw new Error('Failed to get a function from the ws api');
-    },
-    {},
-  );
-
-  const metaRules: Record<string, EventBusRuleProps> = {};
+  // const rules: Record<string, EventBusRuleProps> = wsApi.routes.reduce(
+  //   (acc, route) => {
+  //     const wsFunc = wsApi.getFunction(route);
+  //     if (wsFunc) {
+  //       return {
+  //         ...acc,
+  //         [`${wsFunc.id.split('$').slice(-1)[0]}-rule`]: {
+  //           pattern: {
+  //             source: ['ddbStream'],
+  //             detailType: [wsFunc.id],
+  //           },
+  //           targets: {
+  //             ws: {
+  //               cdk: {
+  //                 function: lambda.Function.fromFunctionArn(
+  //                   stack,
+  //                   wsFunc.id,
+  //                   wsFunc.functionArn,
+  //                 ),
+  //               },
+  //             },
+  //           },
+  //         },
+  //       } as Record<string, EventBusRuleProps>;
+  //     }
+  //     throw new Error('Failed to get a function from the ws api');
+  //   },
+  //   {},
+  // );
 
   // add rules
-  appEventBus.addRules(stack, { ...rules });
+  // appEventBus.addRules(stack, { ...rules });
 
   // add permissions to allow eventbridge rules to invoke respective wsApi lambda.
-  wsApi.routes.map((route) => {
-    const routeRuleKey = Object.keys(rules).find((rule) =>
-      rule.includes(`${route.split('$').slice(-1)[0]}-rule`),
-    );
+  // wsApi.routes.map((route) => {
+  //   const routeRuleKey = Object.keys(rules).find((rule) =>
+  //     rule.includes(`${route.split('$').slice(-1)[0]}-rule`),
+  //   );
 
-    if (!routeRuleKey) {
-      throw new Error('Failed to find a route rule key');
-    }
+  //   if (!routeRuleKey) {
+  //     throw new Error('Failed to find a route rule key');
+  //   }
 
-    const routeRule = appEventBus.getRule(routeRuleKey);
-    if (!routeRule) {
-      throw new Error('Failed to find a route rule');
-    }
-    const fn = wsApi.getFunction(route);
-    // fn?.addPermission(new iam.ServicePrincipal('events.amazonaws.com'));
-    // fn?.attachPermissions(['events'])
-    fn?.addPermission(`eb-invoke`, {
-      action: 'lambda:InvokeFunction',
-      principal: new iam.ServicePrincipal('events.amazonaws.com'),
-      sourceArn: routeRule.ruleArn,
-    });
-    // wsApi.attachPermissionsToRoute(route, [
-    //   new iam.PolicyStatement({
-    //     actions: ['lambda:InvokeFunction'],
-    //     effect: iam.Effect.ALLOW,
-    //     principals: [new iam.ServicePrincipal('events.amazonaws.com')],
-    //     resources: [routeRule.ruleArn],
-    //   }),
-    // ]);
-  });
-  // wsApi.attachPermissions([
-  //   rules.map(
-  //     (rule) =>
-  //       new iam.PolicyStatement({
-  //         actions: ['lambda:InvokeFunction'],
-  //         principal: 'events.amazonaws.com',
-  //         effect: 'allow',
-  //         resources: [rule],
-  //       }),
-  //   ),
-  // ]);
+  //   const routeRule = appEventBus.getRule(routeRuleKey);
+  //   if (!routeRule) {
+  //     throw new Error('Failed to find a route rule');
+  //   }
+  //   const fn = wsApi.getFunction(route);
+  //   // fn?.addPermission(new iam.ServicePrincipal('events.amazonaws.com'));
+  //   // fn?.attachPermissions(['events'])
+  //   fn?.addPermission(`eb-invoke`, {
+  //     action: 'lambda:InvokeFunction',
+  //     principal: new iam.ServicePrincipal('events.amazonaws.com'),
+  //     sourceArn: routeRule.ruleArn,
+  //   });
+  //   // wsApi.attachPermissionsToRoute(route, [
+  //   //   new iam.PolicyStatement({
+  //   //     actions: ['lambda:InvokeFunction'],
+  //   //     effect: iam.Effect.ALLOW,
+  //   //     principals: [new iam.ServicePrincipal('events.amazonaws.com')],
+  //   //     resources: [routeRule.ruleArn],
+  //   //   }),
+  //   // ]);
+  // });
+  // // wsApi.attachPermissions([
+  // //   rules.map(
+  // //     (rule) =>
+  // //       new iam.PolicyStatement({
+  // //         actions: ['lambda:InvokeFunction'],
+  // //         principal: 'events.amazonaws.com',
+  // //         effect: 'allow',
+  // //         resources: [rule],
+  // //       }),
+  // //   ),
+  // // ]);
 
   const assets = new Bucket(stack, `${appName}-app-assets`, {
     defaults: {
       function: {
-        timeout: 20,
+        timeout: defaultFunctionTimeout,
         environment: { tableName: table.tableName },
         permissions: [table],
       },
@@ -281,7 +294,23 @@ export function baseStack({ stack, app }: StackContext) {
     // },
   });
 
-  console.log(allowedOrigins.value, 'hiiii');
+  const apiRoutes: Record<string, ApiRouteProps<string>> = {
+    ...testRoutes,
+    'GET /session': 'packages/functions/app/api/src/session.handler',
+    'OPTIONS /session': 'packages/functions/app/api/src/sessionOptions.handler',
+    'POST /nodes/process-interaction':
+      'packages/functions/app/api/src/nodes/processInteraction.handler',
+    // 'POST /ddb-stream/process-batch': {
+    //   function: {
+    //     handler:
+    //       'packages/functions/app/api/src/ddb-stream/processBatch.handler',
+    //     timeout: app.local ? 100 : 10,
+    //     // bind: [table, REGION, OAUTH_GOOGLE_KEY, STRIPE_KEY],
+    //     permissions: [table, assets, REGION, 'events:PutEvents'],
+    //   },
+    // },
+  };
+
   const api = new Api(stack, 'appApi', {
     customDomain: {
       domainName:
@@ -315,7 +344,7 @@ export function baseStack({ stack, app }: StackContext) {
         burst: 100,
       },
       function: {
-        timeout: app.local ? 100 : 10,
+        timeout: defaultFunctionTimeout,
         bind: [
           table,
           assets,
@@ -329,40 +358,202 @@ export function baseStack({ stack, app }: StackContext) {
           allowedOrigins,
         ],
         // bind: [table, REGION, OAUTH_GOOGLE_KEY, STRIPE_KEY],
-        permissions: [table],
+        permissions: [
+          table,
+          'sqs:ReceiveMessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes',
+        ],
       },
     },
-    routes: {
-      ...testRoutes,
-      'GET /session': 'packages/functions/app/api/src/session.handler',
-      'OPTIONS /session':
-        'packages/functions/app/api/src/sessionOptions.handler',
-      // 'POST /ddb-stream/process-batch': {
-      //   function: {
-      //     handler:
-      //       'packages/functions/app/api/src/ddb-stream/processBatch.handler',
-      //     timeout: app.local ? 100 : 10,
-      //     // bind: [table, REGION, OAUTH_GOOGLE_KEY, STRIPE_KEY],
-      //     permissions: [table, assets, REGION, 'events:PutEvents'],
-      //   },
-      // },
+    routes: apiRoutes,
+  });
+
+  const processInteractionRoute = api.routes.find(
+    (route) => route === 'POST /nodes/process-interaction',
+  );
+  const processInteractionFunction = api.getFunction(
+    processInteractionRoute ?? '',
+  );
+
+  if (!processInteractionFunction) {
+    throw new Error('Could not find process interaction function');
+  }
+
+  // console.log(processInteractionFunction);
+  // const botRules = {
+  //   [`${processInteractionFunction?.id.replaceAll('/', '.')}-rule`]: {
+  //     pattern: {
+  //       source: ['ddbStream'],
+  //       detailType: [ApiAppDetailType.apiAppCreateInteraction],
+  //     },
+  //     targets: {
+  //       api: {
+  //         cdk: {
+  //           function: lambda.Function.fromFunctionArn(
+  //             stack,
+  //             processInteractionFunction.id,
+  //             processInteractionFunction.functionArn,
+  //           ),
+  //         },
+  //       },
+  //     },
+  //   },
+  // } as Record<string, EventBusRuleProps>;
+
+  // appEventBus.addRules(stack, { ...botRules });
+  // const processInteractionRule = appEventBus.getRule(
+  //   `${processInteractionFunction?.id.replaceAll('/', '.')}-rule`,
+  // );
+  // processInteractionFunction?.addPermission(`eb-invoke`, {
+  //   action: 'lambda:InvokeFunction',
+  //   principal: new iam.ServicePrincipal('events.amazonaws.com'),
+  //   sourceArn: processInteractionRule?.ruleArn,
+  // });
+
+  const defaultQueueConfig = {
+    queue: {
+      // queueName: "my-queue",
+      visibilityTimeout: Duration.seconds(defaultFunctionTimeout * 60),
     },
+  };
+
+  const ddbStreamWsTopicSubs:
+    | Record<
+        string,
+        | FunctionInlineDefinition
+        | Queue
+        | TopicFunctionSubscriberProps
+        | TopicQueueSubscriberProps
+      >
+    | undefined = wsApi.routes.reduce((acc, route) => {
+    const wsFunc = wsApi.getFunction(route);
+    console.log(wsFunc?.id);
+    if (wsFunc && !wsFunc.id.includes('$')) {
+      return {
+        ...acc,
+        [`${wsFunc.id}-sub`]: {
+          type: 'queue',
+          queue: new Queue(stack, `${route}_queue`, {
+            cdk: defaultQueueConfig,
+            consumer: {
+              cdk: {
+                function: lambda.Function.fromFunctionArn(
+                  stack,
+                  wsFunc.id,
+                  wsFunc.functionArn,
+                ),
+              },
+            },
+          }),
+          cdk: {
+            subscription: {
+              filterPolicy: {
+                type: SubscriptionFilter.stringFilter({
+                  allowlist: [wsFunc.id],
+                }),
+              },
+            },
+          },
+        },
+      };
+    }
+    return acc;
+  }, {});
+
+  const ddbStreamApiTopicSubs: () =>
+    | Record<
+        string,
+        | FunctionInlineDefinition
+        | Queue
+        | TopicFunctionSubscriberProps
+        | TopicQueueSubscriberProps
+      >
+    | undefined = () => {
+    const func = processInteractionFunction;
+    func.attachPermissions([table, 'sns']);
+    console.log(func.id);
+    if (func) {
+      return {
+        [`${func.id.replaceAll('/', '_')}-sub`]: {
+          type: 'queue',
+          queue: new Queue(stack, `${func.id.replaceAll('/', '_')}_queue`, {
+            cdk: defaultQueueConfig,
+            consumer: {
+              cdk: {
+                function: lambda.Function.fromFunctionArn(
+                  stack,
+                  func.id,
+                  func.functionArn,
+                ),
+              },
+            },
+          }),
+          cdk: {
+            subscription: {
+              filterPolicy: {
+                type: SubscriptionFilter.stringFilter({
+                  allowlist: [func.id],
+                }),
+              },
+            },
+          },
+        },
+      };
+    }
+    throw new Error('Failed to get a function from the ws api');
+  };
+
+  ddbStreamTopic.bind([
+    table,
+    REGION,
+    // oauthGoogleClientId,
+    // oauthGoogleSecret,
+    // metaAppSecret,
+    // metaVerifySecret,
+    // stripeKeySecret,
+    frontendUrl,
+    allowedOrigins,
+    assets,
+  ]);
+  ddbStreamTopic.attachPermissions([table]);
+  ddbStreamTopic.addSubscribers(stack, {
+    ...ddbStreamWsTopicSubs,
+    ...ddbStreamApiTopicSubs(),
   });
 
   const botNodeTopic = new Topic(stack, 'BotNodeTopic', {
+    defaults: {
+      function: {
+        bind: [wsApi, api, REGION, table],
+        permissions: [
+          table,
+          'sqs:ReceiveMessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes',
+        ],
+      },
+    },
     subscribers: {
       [botNodeEvent.AskAQuestion]: {
         type: 'queue',
         queue: new Queue(stack, `bot_node_action_AskAQuestion_queue`, {
-          consumer:
-            'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
+          cdk: defaultQueueConfig,
+          consumer: {
+            function: {
+              handler:
+                'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
+            },
+          },
         }),
         cdk: {
           subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [botNodeEvent.AskAQuestion],
-              }),
+            filterPolicyWithMessageBody: {
+              type: FilterOrPolicy.filter(
+                SubscriptionFilter.stringFilter({
+                  allowlist: [botNodeEvent.AskAQuestion],
+                }),
+              ),
             },
           },
         },
@@ -370,21 +561,32 @@ export function baseStack({ stack, app }: StackContext) {
       [botNodeEvent.DecisionCardMessages]: {
         type: 'queue',
         queue: new Queue(stack, `bot_node_action_DecisionCardMessages_queue`, {
-          consumer:
-            'packages/functions/app/api/src/nodes/actions/decisionCardMessages.handler',
+          cdk: defaultQueueConfig,
+          consumer: {
+            function: {
+              timeout: defaultFunctionTimeout,
+              bind: [wsApi, api, REGION, table],
+              handler:
+                'packages/functions/app/api/src/nodes/actions/decisionCardMessages.handler',
+            },
+          },
         }),
         cdk: {
           subscription: {
-            filterPolicy: {
-              type: SubscriptionFilter.stringFilter({
-                allowlist: [botNodeEvent.DecisionCardMessages],
-              }),
+            filterPolicyWithMessageBody: {
+              type: FilterOrPolicy.filter(
+                SubscriptionFilter.stringFilter({
+                  allowlist: [botNodeEvent.DecisionCardMessages],
+                }),
+              ),
             },
           },
         },
       },
     },
   });
+  processInteractionFunction.bind([wsApi, api, REGION, table, botNodeTopic]);
+  appEventBus.bind([wsApi, api, REGION, table]);
 
   // meta webhook handler -> SNS -> SQS -> lambdas
   // const metaMessengerTopic = new Topic(stack, 'MetaMessengerTopic', {
@@ -554,6 +756,7 @@ export function baseStack({ stack, app }: StackContext) {
 
   const auth = new Auth(stack, 'auth', {
     authenticator: {
+      permissions: ['ssm:DeleteParameters'],
       handler: 'packages/functions/app/api/src/auth.handler',
     },
   });
@@ -577,8 +780,9 @@ export function baseStack({ stack, app }: StackContext) {
 
   process.env.NEXT_PUBLIC_APP_API_URL = api.customDomainUrl;
   process.env.NEXT_PUBLIC_WS_API_URL = wsApi.customDomainUrl;
+  process.env.VITEST_REGION = REGION.value ?? '';
+  process.env.VITEST_TABLE = tableName.value ?? '';
 
-  console.log(domain);
   const widgetHost = `widget-${domain}`;
   const widgetDomain =
     stack.stage === 'prod'
@@ -601,11 +805,11 @@ export function baseStack({ stack, app }: StackContext) {
     },
   });
 
-  console.log(
-    widget.url,
-    widget.customDomainUrl,
-    widget.getConstructMetadata(),
-  );
+  // console.log(
+  //   widget.url,
+  //   widget.customDomainUrl,
+  //   widget.getConstructMetadata(),
+  // );
 
   process.env.NEXT_PUBLIC_APP_WIDGET_URL = widget.customDomainUrl ?? '';
 

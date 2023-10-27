@@ -1,3 +1,4 @@
+import { SNSEvent, StreamRecord } from 'aws-lambda';
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import { ApiHandler } from 'sst/node/api';
@@ -6,19 +7,24 @@ import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
 import { Conversation, ExpandedConversation } from '@/entities/conversation';
+import middy from '@middy/core';
+import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
+import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
-import { WsAppMessage } from '../WsMessage';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
-export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event: any, context) => {
-    try {
+const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SNSEvent) => {
+  try {
+    const { Records } = event;
+    for (const record of Records) {
+      const streamRecord = JSON.parse(record.Sns.Message)
+        ?.dynamodb as StreamRecord;
       const newImage = DynamoDB.Converter.unmarshall(
-        event?.detail?.dynamodb?.NewImage,
+        streamRecord?.NewImage ?? {},
       );
       const conversationData = Conversation.parse({ Item: newImage }).data;
       if (!conversationData) {
@@ -71,13 +77,15 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
         [...operators?.data, ...customer.data],
-        { type: WsAppMessage.createConversation, body: expandedData },
+        { type: WsAppDetailType.wsAppCreateConversation, body: expandedData },
       );
 
       return { statusCode: 200, body: 'Message sent' };
-    } catch (err: any) {
-      Sentry.captureException(err);
-      return { statusCode: 500, body: JSON.stringify(err) };
     }
-  }),
-);
+  } catch (err: any) {
+    Sentry.captureException(err);
+    return { statusCode: 500, body: JSON.stringify(err) };
+  }
+});
+
+export const handler = middy(lambdaHandler).use(eventNormalizer());

@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
 import { MockArgs, MockOrgIds } from './';
-import { seed } from './seed';
+import { seed, SeedResponse } from './seed';
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -44,7 +44,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockMessageCountPerConversation: 1,
         existingOperator: createOperator,
       };
-      const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
+      const seedRes = await Promise.all(
         [...Array(mockArgs.mockOrgCount)].map((_, i) => {
           console.log('seed', i);
           return seed(db, mockArgs, i);
@@ -53,10 +53,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
       return {
         statusCode: 200,
-        body: JSON.stringify(mockOrgIds),
+        body: JSON.stringify({ mockArgs, mockOrgIds: seedRes } as SeedResponse),
       };
     } catch (err) {
-      Sentry.captureException(JSON.stringify(err));
+      Sentry.captureException(err);
       return {
         statusCode: 500,
         body: JSON.stringify(err),

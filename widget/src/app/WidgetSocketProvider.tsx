@@ -9,6 +9,7 @@ import {
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { v4 as uuidv4 } from 'uuid';
 
+import { WsAppDetailType } from '@/types/ebDetailTypes';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { ConversationItem } from '../../../stacks/entities/conversation';
@@ -22,7 +23,6 @@ import { useCustomerQuery } from './(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from './(actions)/queries/useOrgQuery';
 import { sortConversationItems } from './(helpers)/sortConversationItems';
 import { getWsUrl } from './getWsUrl';
-import { WsAppMessage } from './WsMessage';
 
 // import { useDashStore } from './(actions)/useDashStore';
 
@@ -71,17 +71,17 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
             // Update the local chat messages state based on the message type
             console.log(type)
             switch (type) {
-                case WsAppMessage.createConversation:
+                case WsAppDetailType.wsAppCreateConversation:
                     queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (data) => {
                         return [...data ?? [], body];
                     });
                     break;
-                case WsAppMessage.createMessage:
+                case WsAppDetailType.wsAppCreateMessage:
                     queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
                         return newMessageReducer(body as EntityItem<typeof Message>, oldData ?? [])
                     });
                     break;
-                case WsAppMessage.updateConversation:
+                case WsAppDetailType.wsAppUpdateConversation:
                     queryClient.setQueryData<ConversationItem[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
                         const updatedConversationItem = (body as ConversationItem)
                         const oldMessages = oldData?.find((conversationItem) => conversationItem?.conversationId === updatedConversationItem?.conversationId)?.messages
@@ -90,7 +90,7 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
                         return conversationItems
                     });
                     break;
-                case WsAppMessage.updateOperator:
+                case WsAppDetailType.wsAppUpdateOperator:
                     queryClient.setQueryData<EntityItem<typeof Operator>[]>([orgId, customer?.data?.customerId, QueryKey.conversationItems], (oldData) => {
                         const updateOperatorItem = (body as EntityItem<typeof Operator>)
                         const operators = [...oldData?.filter((operator) => operator?.operatorId !== updateOperatorItem?.operatorId) ?? [], updateOperatorItem]

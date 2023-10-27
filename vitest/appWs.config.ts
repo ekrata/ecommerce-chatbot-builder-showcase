@@ -1,3 +1,4 @@
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -7,4 +8,5 @@ export default defineConfig({
     hookTimeout: 30000,
     // globalSetup: ['packages/functions/app/api/globalSetup.ts'],
   },
+  plugins: [tsconfigPaths({ root: '../' })],
 });

@@ -185,7 +185,7 @@ export const BotEditor: React.FC = () => {
 
 
       const newNode: Node = {
-        id: getId(),
+        id: getId().replace('dndnode_', ''),
         type,
         data: {},
         position,

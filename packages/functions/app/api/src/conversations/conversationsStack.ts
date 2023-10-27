@@ -17,6 +17,8 @@ export function conversationsStack({ stack }: StackContext) {
       'packages/functions/app/api/src/conversations/delete.handler',
     'POST /orgs/{orgId}/conversations/{conversationId}':
       'packages/functions/app/api/src/conversations/create.handler',
+    'PUT /orgs/{orgId}/conversations/{conversationId}':
+      'packages/functions/app/api/src/conversations/put.handler',
     'PATCH /orgs/{orgId}/conversations/{conversationId}':
       'packages/functions/app/api/src/conversations/update.handler',
   });

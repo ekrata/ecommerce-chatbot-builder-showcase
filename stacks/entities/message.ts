@@ -1,6 +1,14 @@
-import { Entity } from 'electrodb';
+import { CustomAttributeType, Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 import { string } from 'zod';
+
+import { AskAQuestionData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
+import { DecisionButtonsData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionButtons';
+import { DecisionCardMessagesData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionCardMessages';
+import { DecisionQuickRepliesData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
+import { BotStateContext } from '@/packages/functions/app/api/src/nodes/processInteraction';
+
+import { botNodeEvent } from './bot';
 
 /**
  * Type of sender
@@ -18,20 +26,37 @@ export const senderType = ['operator', 'customer', 'bot'] as const;
  */
 export type SenderType = (typeof senderType)[number];
 
-/**
- * Messages have multiple contexts; default is messages,
- * other contexts such as prompts may trigger the chatbot to send a input form.
- * @date 12/06/2023 - 11:19:18
- *
- * @type {readonly ["message", "email-prompt", "question-prompt", "order-number-prompt", "name-prompt"]}
- */
-export const contextType = [
-  'message',
-  'email-prompt',
-  'question-prompt',
-  'order-number-prompt',
-  'name-prompt',
+// /**
+//  * Messages have multiple contexts; default is messages,
+//  * other contexts such as prompts may trigger the chatbot to send a input form.
+//  * @date 12/06/2023 - 11:19:18
+//  *
+//  * @type {readonly ["message", "email-prompt", "question-prompt", "order-number-prompt", "name-prompt"]}
+//  */
+// export const contextType = [
+//   'message',
+//   'email-prompt',
+//   'question-prompt',
+//   'order-number-prompt',
+//   'name-prompt',
+// ] as const;
+
+export const messageFormType = [
+  '',
+  botNodeEvent.AskAQuestion,
+  botNodeEvent.DecisionButtons,
+  botNodeEvent.DecisionCardMessages,
+  botNodeEvent.DecisionQuickReplies,
+  // botNodeEvent.SendAForm,
 ] as const;
+
+export type MessageFormType = (typeof messageFormType)[number];
+
+export type NodeFormData =
+  | AskAQuestionData
+  | DecisionQuickRepliesData
+  | DecisionButtonsData
+  | DecisionCardMessagesData;
 
 export const attachmentType = [
   'image',
@@ -105,6 +130,18 @@ export const Message = new Entity({
     },
     contentHtml: {
       type: 'string',
+    },
+    messageFormType: {
+      type: messageFormType,
+      default: '',
+    },
+    messageFormData: {
+      type: CustomAttributeType<NodeFormData>('any'),
+      default: null,
+    },
+    botStateContext: {
+      type: CustomAttributeType<BotStateContext>('any'),
+      default: null,
     },
     sentAt: {
       type: 'number',

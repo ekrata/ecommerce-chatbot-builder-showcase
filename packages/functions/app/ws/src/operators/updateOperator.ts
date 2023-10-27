@@ -9,6 +9,7 @@ import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
 
+import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
 
@@ -66,7 +67,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
         [...filteredOperators, ...customers],
-        { type: 'updateOperator', body: operatorData },
+        { type: WsAppDetailType.wsAppUpdateOperator, body: operatorData },
       );
 
       return { statusCode: 200, body: 'Operator sent' };

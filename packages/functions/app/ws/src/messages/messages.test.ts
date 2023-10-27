@@ -13,15 +13,18 @@ import { Operator } from '@/entities/operator';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
-import { WsEvent } from '../postToConnection';
-import { WsAppMessage } from '../WsMessage';
+import { WsAppDetailType } from '../../../../../../types/snsTypes';
+import { MockOrgIds } from '../../../api/src/util';
+import { SeedResponse } from '../../../api/src/util/seed';
+import { WsAppEvent } from '../postToConnection';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/small-seed-test-db`))
-    .data as MockOrgIds[];
+  const seedResponse = (await http.post(`/util/small-seed-test-db`))
+    ?.data as SeedResponse;
+  mockOrgIds = seedResponse.mockOrgIds;
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
@@ -51,10 +54,12 @@ describe(
           clientType: string,
         ) => {
           console.log('validating', clientType, 'recieves message');
-          const newMessageEvent = JSON.parse(event.data.toString()) as WsEvent;
+          const newMessageEvent = JSON.parse(
+            event.data.toString(),
+          ) as WsAppEvent;
           const body = newMessageEvent.body as EntityItem<typeof Message>;
           const { type } = newMessageEvent;
-          if (type === WsAppMessage.createMessage) {
+          if (type === WsAppDetailType.wsAppCreateMessage) {
             expect(body.messageId).toStrictEqual(newMessageId);
             expect(body.customerId).toStrictEqual(customerId);
             expect(body.operatorId).toStrictEqual(operatorId);

@@ -1,26 +1,24 @@
-import AWS, { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
+import AWS, { DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
-import { postToConnection } from 'packages/functions/app/ws/src/postToConnection';
-import { ApiHandler, useJsonBody } from 'sst/node/api';
+import { Api, ApiHandler, useJsonBody } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { Topic } from 'sst/node/topic';
-import { WebSocketApi } from 'sst/node/websocket-api';
+import { v4 as uuidv4 } from 'uuid';
+
+import * as Sentry from '@sentry/serverless';
 
 import {
   Bot,
   BotEdgeType,
   BotNodeEvent,
-  botNodeEvent,
   BotNodeType,
-  nodeMap,
-} from '@/entities/bot';
-import { Conversation, ConversationItem } from '@/entities/conversation';
-import { Customer } from '@/entities/customer';
-import { Interaction } from '@/entities/interaction';
-import * as Sentry from '@sentry/serverless';
-
-import { Message } from '../../../../../../stacks/entities/message';
+} from '../../../../../../stacks/entities/bot';
+import {
+  Conversation,
+  ConversationItem,
+} from '../../../../../../stacks/entities/conversation';
+import { Interaction } from '../../../../../../stacks/entities/interaction';
 import { getAppDb } from '../../../api/src/db';
 import {
   Triggers,
@@ -31,11 +29,12 @@ const sns = new AWS.SNS();
 
 export type BotStateContext = {
   type: BotNodeEvent;
+  // interaction that started this bot
+  interaction: EntityItem<typeof Interaction>;
   bot: EntityItem<typeof Bot>;
   conversation: ConversationItem;
   nextNode: BotNodeType;
   currentNode: BotNodeType;
-  nodeContext: { currentId: string };
 };
 
 // console.log(
@@ -48,103 +47,55 @@ export type BotStateContext = {
 
 // import { postToConnection } from '../postToConnection';
 
-const appDb = getAppDb(Config.REGION, Table.app.tableName);
-
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event: any, context) => {
+    console.log('processInteraction');
     try {
+      const appDb = getAppDb(Config.REGION, Table.app.tableName);
       const newImage = DynamoDB.Converter.unmarshall(
         event?.detail?.dynamodb?.NewImage,
       );
       const interactionData = Interaction.parse({ Item: newImage }).data;
+      console.log(interactionData);
       if (!interactionData) {
         return {
           statusCode: 500,
           body: 'Failed to parse the eventbridge event into a usable entity.',
         };
       }
-      const { orgId, customerId, type } = interactionData;
 
-      const customer = await appDb.entities.customers.get({
-        customerId: customerId ?? '',
-        orgId,
-      });
-
-      const bots = await appDb.entities.bots.query.byOrg({ orgId }).go();
-
-      const triggers = bots?.data?.reduce<
-        Record<string, BotNodeType[] | undefined>
-      >(
-        (prev, next) => ({
-          ...prev,
-          [`${next?.botId}`]: next?.nodes?.filter((node) => {
-            const { type } = node;
-            if (type && Object.values(Triggers).includes(type as any)) {
-              return node;
-            }
-          }),
-        }),
-        {} as Record<string, BotNodeType[] | undefined>,
+      const { type } = interactionData;
+      const bots = await appDb.entities.bots.query
+        .byOrg({ orgId: interactionData.orgId })
+        .go();
+      const botTriggers = getBotTriggers(bots?.data);
+      const botStates = await processTrigger(
+        interactionData,
+        botTriggers,
+        bots?.data,
       );
 
-      console.log(triggers);
-
-      if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
-        // find the first trigger to match across all the bots
-        const triggerMatch = Object.entries(triggers).find(
-          ([botId, botTriggers]) =>
-            botTriggers?.find(
-              (trigger) =>
-                trigger === VisitorBotInteractionTrigger.VisitorClicksChatIcon,
-            ),
+      console.log('publishing', botStates);
+      botStates?.forEach(async (botState) => {
+        console.log(
+          'publishing',
+          JSON.stringify({
+            ...botState,
+          }),
         );
+        await sns
+          .publish({
+            // Get the topic from the environment variable
+            TopicArn: Topic.BotNodeTopic.topicArn,
+            Message: JSON.stringify({
+              ...botState,
+            }),
+            MessageStructure: 'string',
+          })
+          .promise();
+      });
 
-        if (triggerMatch && triggerMatch?.[0]) {
-          const conversation = await appDb.entities.conversations
-            .create({ orgId, customerId, botId: triggerMatch?.[0] })
-            .go();
-
-          const bot = bots?.data.find(
-            ({ botId }) => botId === triggerMatch?.[0],
-          );
-
-          const nextNodes = getNextNodes(
-            triggerMatch[0],
-            bot?.nodes,
-            bot?.edges,
-          );
-
-          // create a botState for each connecting node
-          const botStates: BotStateContext[] | undefined = nextNodes?.map(
-            (nextNode) =>
-              ({
-                type: nextNode?.type,
-                bot: bot,
-                conversation: conversation?.data as ConversationItem,
-                nextNode: nextNode,
-                currentNode: triggerMatch[1],
-                nodeContext: { currentId: triggerMatch?.[0] },
-              }) as BotStateContext,
-          );
-
-          botStates?.forEach(
-            async (botState) =>
-              await sns
-                .publish({
-                  // Get the topic from the environment variable
-                  TopicArn: Topic.BotNodeTopic.topicArn,
-                  Message: JSON.stringify({
-                    botState,
-                  }),
-                  MessageStructure: 'string',
-                })
-                .promise(),
-          );
-        }
-      }
-
-      if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
-      }
+      // if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
       // const customer = await appDb.entities.customers.query
       //   .primary({ orgId, customerId: customerId ?? '' })
       //   .go();
@@ -159,8 +110,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       //   [...filteredOperators, ...customer.data],
       //   { type: 'createCustomer', body: customerData },
       // );
-
-      return { statusCode: 200, body: 'Message sent' };
     } catch (err) {
       console.log('err');
       console.log(err);
@@ -170,13 +119,102 @@ export const handler = Sentry.AWSLambda.wrapHandler(
   }),
 );
 
-const getNextNodes = (
+export const getNextNodes = (
   ancestorNodeId: string,
-  nodes: BotNodeType[] | undefined,
-  edges?: BotEdgeType[] | undefined,
+  nodes?: BotNodeType[],
+  edges?: BotEdgeType[],
 ) => {
   const nodeIds = edges
-    ?.filter((edge) => edge.source === ancestorNodeId)
-    .map(({ target }) => target);
+    ?.filter((edge) => edge.target === ancestorNodeId)
+    .map(({ source }) => source);
   return nodes?.filter(({ id }) => nodeIds?.includes(id));
+};
+
+export const getBotTriggers = (bots: EntityItem<typeof Bot>[]) => {
+  const triggers = bots?.reduce<Record<string, BotNodeType[] | undefined>>(
+    (prev, next) => ({
+      ...prev,
+      [`${next?.botId}`]: next?.nodes?.filter((node) => {
+        const { type } = node;
+        if (type && Object.values(Triggers).includes(type as any)) {
+          return node;
+        }
+      }),
+    }),
+    {} as Record<string, BotNodeType[] | undefined>,
+  );
+  return triggers;
+};
+
+export const processTrigger = async (
+  interaction: EntityItem<typeof Interaction>,
+  botTriggers: Record<string, BotNodeType[] | undefined>,
+  bots: EntityItem<typeof Bot>[],
+) => {
+  const {
+    orgId,
+    customerId,
+    botId,
+    conversationId,
+    operatorId,
+    interactionId,
+    status,
+    channel,
+  } = interaction;
+
+  const triggerMatch = Object.entries(botTriggers).find(
+    ([botId, triggers]) =>
+      triggers?.find((trigger) => trigger.type === interaction.type),
+  );
+  const matchedBotId = triggerMatch?.[0];
+  const matchedNode = triggerMatch?.[1]?.[0];
+  const matchedNodeId = triggerMatch?.[1]?.[0]?.id;
+
+  if (matchedBotId && matchedNodeId) {
+    const bot = bots.find(({ botId }) => botId === matchedBotId);
+
+    const newConversationId = uuidv4();
+
+    // console.log('next Nodes', matchedNodeId, bot?.nodes, bot?.edges);
+
+    const nextNodes = getNextNodes(matchedNodeId, bot?.nodes, bot?.edges);
+
+    // console.log(nextNodes);
+
+    const createConversationRes = await fetch(
+      `${
+        Api.appApi.url ?? process.env.NEXT_PUBLIC_APP_API_URL
+      }/orgs/${orgId}/conversations/${conversationId || newConversationId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({
+          ...{ status, channel },
+          orgId,
+          customerId,
+          operatorId: interaction?.operatorId,
+          botId: botId || bot?.botId,
+          conversationId: conversationId || newConversationId,
+        }),
+      },
+    );
+
+    // console.log(createConversationRes);
+    // console.log(await createConversationRes.json());
+    const conversation: EntityItem<typeof Conversation> =
+      await createConversationRes.json();
+
+    // create a botState for each connecting node
+    const botStates: BotStateContext[] | undefined = nextNodes?.map(
+      (nextNode) =>
+        ({
+          type: nextNode?.type,
+          bot,
+          interaction,
+          conversation: conversation as ConversationItem,
+          nextNode,
+          currentNode: matchedNode,
+        }) as BotStateContext,
+    );
+    return botStates;
+  }
 };

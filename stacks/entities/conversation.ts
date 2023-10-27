@@ -113,7 +113,7 @@ export const Conversation = new Entity({
     operatorId: {
       type: 'string',
     },
-    // Current Operator
+    // engaged if bot active
     botId: {
       type: 'string',
     },

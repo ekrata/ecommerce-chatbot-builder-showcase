@@ -33,6 +33,10 @@ export function paramStack({ stack, app }: StackContext) {
     value: getFrontendUrl(),
   });
 
+  const tableName = new Config.Parameter(stack, 'tableName', {
+    value: `${stack.stage}-${appName}-app`,
+  });
+
   const allowedOrigins = new Config.Parameter(stack, 'ALLOWED_ORIGINS', {
     value: getAllowedOrigins(stack.stage, domain)[0],
   });
@@ -56,6 +60,7 @@ export function paramStack({ stack, app }: StackContext) {
     appName,
     domain,
     REGION,
+    tableName,
     frontendUrl,
     allowedOrigins,
     oauthGoogleClientId,

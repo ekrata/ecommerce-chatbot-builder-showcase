@@ -4,10 +4,11 @@ import { EntityItem } from 'electrodb';
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
 
+import { WsAppDetailType } from '../../../../../types/snsTypes';
 import { AppDb } from '../../api/src/db';
 
-export type WsEvent = {
-  type: string;
+export type WsAppEvent = {
+  type: WsAppDetailType;
   body: object;
 };
 
@@ -16,7 +17,7 @@ export const postToConnection = async (
   appDb: AppDb,
   apiG: ApiGatewayManagementApi,
   recipients: (EntityItem<typeof Operator> | EntityItem<typeof Customer>)[],
-  event: WsEvent,
+  event: WsAppEvent,
 ) => {
   // post created message to filtered operators and customer
   recipients.map(async (recipient) => {

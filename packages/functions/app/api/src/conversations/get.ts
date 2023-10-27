@@ -1,8 +1,16 @@
-import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import {
+  ApiHandler,
+  usePathParams,
+  useQueryParam,
+  useQueryParams,
+} from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
-import { ConversationItem, ExpandedConversation } from '@/entities/conversation';
+import {
+  ConversationItem,
+  ExpandedConversation,
+} from '@/entities/conversation';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
@@ -12,7 +20,7 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, conversationId } = usePathParams();
+    const { orgId, conversationId, botId } = usePathParams();
     const { includeMessages } = useQueryParams();
     const expansionFields = JSON.parse(
       useQueryParam('expansionFields') ?? '[]',

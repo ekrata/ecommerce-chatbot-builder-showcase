@@ -9,13 +9,15 @@ export function botsStack({ stack }: StackContext) {
     //   'packages/functions/app/api/src/bots/list.handler',
     // 'GET /orgs/{orgId}/bots/{botId}':
     //   'packages/functions/app/api/src/bots/get.handler',
-    // 'POST /orgs/{orgId}/nodes/actions/askAQuestion':
+    // 'POST /orgs/{orgId}/nodes/actions/ask-a-question':
     //   'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
-    'DELETE /orgs/{orgId}/bots/{botId}':
-      'packages/functions/app/api/src/bots/delete.handler',
-    'POST /orgs/{orgId}/bots/{botId}':
-      'packages/functions/app/api/src/bots/create.handler',
-    'PATCH /orgs/{orgId}/bots/{botId}':
-      'packages/functions/app/api/src/bots/update.handler',
+    // 'POST /orgs/{orgId}/nodes/process-interaction':
+    //   'packages/functions/app/api/src/nodes/processInteraction.handler',
+    // 'DELETE /orgs/{orgId}/nodes/{botId}':
+    //   'packages/functions/app/api/src/nodes/delete.handler',
+    // 'POST /orgs/{orgId}/bots/{botId}':
+    //   'packages/functions/app/api/src/nodes/create.handler',
+    // 'PATCH /orgs/{orgId}/bots/{botId}':
+    //   'packages/functions/app/api/src/bots/update.handler',
   });
 }

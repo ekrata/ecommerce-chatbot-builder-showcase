@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-    SuggestionMode, Theme
+  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+  SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -12,7 +12,7 @@ import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-    Edge, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge, useEdges
+  Edge, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge, useEdges
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -23,7 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useNodeContext } from '../../BotEditor';
 import {
-    actionNode, OutputFieldKey, OutputFieldsKeys, successFailureOutput
+  actionNode, OutputFieldKey, OutputFieldsKeys, successFailureOutput
 } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
@@ -48,7 +48,7 @@ const schema = z.object({
   }),
 })
 
-type AskAQuestionData = z.infer<typeof schema>
+export type AskAQuestionData = z.infer<typeof schema>
 export type FormValues = AskAQuestionData
 
 const type = Action.AskAQuestion

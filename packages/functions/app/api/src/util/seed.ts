@@ -15,7 +15,6 @@ import {
   articleStatus,
 } from '../../../../../../stacks/entities/article';
 import {
-  botCategory,
   BotEdgeType,
   BotNodeType,
 } from '../../../../../../stacks/entities/bot';
@@ -44,11 +43,12 @@ import {
   VisitorBotInteractionTrigger,
 } from '../bots/triggers/definitions.type';
 import { AppDb, getAppDb } from '../db';
-import { MockArgs, mockArticleTitles, MockOrgIds } from './';
+import emailSubscribeBot from '../nodes/botMocks/emailSubscribe.json';
+import { MockArgs, mockArticleTitles, MockOrgIds, TestBotKey } from './';
 
 export interface SeedResponse {
   mockArgs: MockArgs;
-  mockOrgs: MockOrgIds[];
+  mockOrgIds: MockOrgIds[];
 }
 
 export const handler = Sentry.AWSLambda.wrapHandler(
@@ -219,54 +219,33 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     }),
   );
 
-  mockOrg.botIds = await Promise.all(
-    [...Array(mockBotCount)].map(async (_, i) => {
-      const nodes: BotNodeType[] = [
-        {
-          id: '1',
-          type: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
-          position: { x: 0, y: 50 },
-        },
-        {
-          id: '2',
-          type: Condition.Day,
-          position: { x: -200, y: 200 },
-        },
-        {
-          id: '3',
-          type: Action.AskAQuestion,
-          position: { x: 200, y: 200 },
-        },
-      ];
-      const edges: BotEdgeType[] = [
-        {
-          id: 'e1-2',
-          source: '1',
-          target: '2',
-        },
-        {
-          id: 'e1-3',
-          source: '1',
-          target: '3',
-        },
-      ];
-      const botId = uuidv4();
-      const createBot: CreateBot = {
-        botId,
-        orgId,
-        category: 'Sales',
-        name: `Increase Sales ${i}`,
-        active: true,
-        triggeredCount: Math.random() * 1000,
-        helpfulnessPercent: 0.75,
-        handoffPercent: 0.2,
-        nodes,
-        edges,
-      };
-      const res = await db.entities.bots.create(createBot).go();
-      return res?.data?.botId;
-    }),
-  );
+  // rearrange to select bots
+  const bots = [emailSubscribeBot];
+
+  mockOrg.botIds = await bots
+    .slice(0, mockBotCount)
+    .reduce<Promise<Record<TestBotKey, string>>>(
+      async (prev, bot, i) => {
+        const botId = uuidv4();
+        const createBot = {
+          ...bot,
+          nodes: bot?.nodes?.map((node) => ({
+            ...node,
+            data: JSON.stringify(node?.data),
+          })),
+          edges: bot?.edges?.map((edge) => ({
+            ...edge,
+            data: JSON.stringify(edge?.data),
+          })),
+          botId,
+          orgId,
+        } as unknown as CreateBot;
+
+        const res = await db.entities.bots.create(createBot).go();
+        return { ...prev, [`${bot?.name as TestBotKey}`]: res?.data?.botId };
+      },
+      {} as Promise<Record<TestBotKey, string>>,
+    );
 
   const operators = await db.entities.operators.query.byOrg({ orgId }).go();
 

@@ -1,6 +1,9 @@
 import { EntityItem } from 'electrodb';
 import { getHttp } from 'packages/functions/app/api/src/http';
-import { MockOrgIds } from 'packages/functions/app/api/src/util/seed';
+import {
+  MockOrgIds,
+  SeedResponse,
+} from 'packages/functions/app/api/src/util/seed';
 import { Api } from 'sst/node/api';
 import { beforeAll, describe, expect, it, test } from 'vitest';
 
@@ -14,8 +17,9 @@ import { getWs } from '../../getWs';
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/small-seed-test-db`))
-    .data as MockOrgIds[];
+  const seedResponse = (await http.post(`/util/small-seed-test-db`))
+    .data as SeedResponse;
+  mockOrgIds = seedResponse.mockOrgIds;
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }

@@ -1,28 +1,33 @@
 import { EntityItem } from 'electrodb';
 import { getHttp } from 'packages/functions/app/api/src/http';
-import { MockOrgIds } from 'packages/functions/app/api/src/util/seed';
+import {
+  MockOrgIds,
+  SeedResponse,
+} from 'packages/functions/app/api/src/util/seed';
 import { getWs } from 'packages/functions/app/getWs';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it, test } from 'vitest';
 
 import { Customer } from '@/entities/customer';
+import { WsAppDetailType } from '@/types/snsTypes';
 import { faker } from '@faker-js/faker';
 
-import { WsEvent } from '../postToConnection';
+import { WsAppEvent } from '../postToConnection';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/small-seed-test-db`))
-    .data as MockOrgIds[];
+  const seedResponse = (await http.post(`/util/small-seed-test-db`))
+    ?.data as SeedResponse;
+  mockOrgIds = seedResponse.mockOrgIds;
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
 });
 
-describe('customers', () => {
+describe('visits', () => {
   it(`a customer visits a new site link, a ddbstream 'visit' create event is the processed by ddb-stream/processBatch,
    which then creates an event for eventbridge, which then calls the 'createVisit' wsApi route, notifying operators
     that are in an 'open' conversation with the customerId in the visit`, () =>
@@ -43,10 +48,12 @@ describe('customers', () => {
         operatorId: string,
         clientType: string,
       ) => {
-        const newCustomerEvent = JSON.parse(event.data.toString()) as WsEvent;
+        const newCustomerEvent = JSON.parse(
+          event.data.toString(),
+        ) as WsAppEvent;
         const body = newCustomerEvent.body as EntityItem<typeof Customer>;
         const { type } = newCustomerEvent;
-        if (type === 'createVisit') {
+        if (type === WsAppDetailType.wsAppCreateVisit) {
           console.log('validating', clientType, 'recieves customer');
           expect(body.customerId).toStrictEqual(customerId);
           doneCounter += 1;
@@ -100,7 +107,9 @@ describe('customers', () => {
         customerId: string,
         clientType: string,
       ) => {
-        const newCustomerEvent = JSON.parse(event.data.toString()) as WsEvent;
+        const newCustomerEvent = JSON.parse(
+          event.data.toString(),
+        ) as WsAppEvent;
         const body = newCustomerEvent.body as EntityItem<typeof Customer>;
         const { type } = newCustomerEvent;
         if (type === 'updateCustomer') {

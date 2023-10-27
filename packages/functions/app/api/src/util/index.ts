@@ -1,6 +1,8 @@
 import { ArticleCategory } from '@/entities/article';
 import { CreateOperator } from '@/entities/entities';
 
+export type TestBotKey = 'emailSubscribe';
+
 export type MockOrgIds = {
   orgId: string;
   /**
@@ -16,7 +18,7 @@ export type MockOrgIds = {
   articleIds: { articleId: string; articleContentId: string }[];
   domain: string;
   lang: string;
-  botIds: string[];
+  botIds: Record<TestBotKey, string>;
   operatorIds: string[];
   customers: {
     customerId: string;

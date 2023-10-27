@@ -44,7 +44,7 @@ export const HelpScreen: FC = () => {
   const t = useTranslations('chat-widget');
   const org = useOrgQuery()
   const orgId = org?.data?.orgId ?? ''
-  const { chatWidget: { setWidgetState, setSelectedArticleId } } = useChatWidgetStore();
+  const { chatWidget: { setWidgetState, setSelectedArticleId, setWidgetVisibility } } = useChatWidgetStore();
   const listCategories = (categoryArticles: CategoryArticles) =>
   (<ul className="w-full mb-10 animate-fade-left">
     <li className="flex justify-between w-full  h-16 hover:bg-transparent  px-4 font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal">{t('categories', { count: Object.entries(categoryArticles ?? {}).filter((category) => category.length).length })}</li>

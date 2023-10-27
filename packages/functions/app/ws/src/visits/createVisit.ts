@@ -7,9 +7,9 @@ import { WebSocketApi } from 'sst/node/websocket-api';
 import { Visit } from '@/entities/visit';
 import * as Sentry from '@sentry/serverless';
 
+import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
 import { postToConnection } from '../postToConnection';
-import { WsAppMessage } from '../WsMessage';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -61,7 +61,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           endpoint: WebSocketApi.appWs.httpsUrl,
         }),
         [...operators?.data],
-        { type: WsAppMessage.createVisit, body: visitData },
+        { type: WsAppDetailType.wsAppCreateVisit, body: visitData },
       );
 
       return { statusCode: 200, body: 'Message sent' };

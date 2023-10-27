@@ -1,6 +1,6 @@
 import { EntityItem } from 'electrodb';
 import { getHttp } from 'packages/functions/app/api/src/http';
-import { MockOrgIds } from 'packages/functions/app/api/src/util/seed';
+import { SeedResponse } from 'packages/functions/app/api/src/util/seed';
 import { getWs } from 'packages/functions/app/getWs';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,14 +16,17 @@ import { Customer } from '@/entities/customer';
 import { CreateConversation, UpdateConversation } from '@/entities/entities';
 import { faker } from '@faker-js/faker';
 
-import { WsEvent } from '../postToConnection';
+import { WsAppDetailType } from '../../../../../../types/snsTypes';
+import { MockOrgIds } from '../../../api/src/util';
+import { WsAppEvent } from '../postToConnection';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);
 let mockOrgIds: MockOrgIds[] = [];
 beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/small-seed-test-db`))
-    .data as MockOrgIds[];
+  const seedResponse = (await http.post(`/util/small-seed-test-db`))
+    ?.data as SeedResponse;
+  mockOrgIds = seedResponse.mockOrgIds;
   if (!mockOrgIds) {
     throw new Error('Mock Organisation undefined');
   }
@@ -60,13 +63,11 @@ describe(
             operatorId: string,
             clientType: string,
           ) => {
-            const newConversationEvent = JSON.parse(
-              event.data.toString(),
-            ) as WsEvent;
+            const newConversationEvent = JSON.parse(event?.data.toString());
             const body = newConversationEvent.body as ExpandedConversation;
             const { type } = newConversationEvent;
             console.log(type);
-            if (type === 'createConversation') {
+            if (type === WsAppDetailType.wsAppCreateConversation) {
               console.log('validating', clientType, 'recieves conversation');
               expect(body.conversationId).toStrictEqual(newConversationId);
               expect(body.customerId).toStrictEqual(customerId);
@@ -156,10 +157,10 @@ describe(
           ) => {
             const newConversationEvent = JSON.parse(
               event.data.toString(),
-            ) as WsEvent;
+            ) as WsAppEvent;
             const body = newConversationEvent.body as ExpandedConversation;
             const { type } = newConversationEvent;
-            if (type === 'updateConversation') {
+            if (type === WsAppDetailType.wsAppUpdateConversation) {
               console.log('validating', clientType, 'recieves conversation');
               expect(body.conversationId).toStrictEqual(conversationId);
               expect(body.customerId).toStrictEqual(customerId);
