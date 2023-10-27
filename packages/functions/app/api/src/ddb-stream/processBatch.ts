@@ -4,8 +4,13 @@ import { ApiHandler, usePathParams } from 'sst/node/api';
 import { EventBus } from 'sst/node/event-bus';
 import { Topic } from 'sst/node/topic';
 
+import { BotNodeEvent, botNodeEvent } from '@/entities/bot';
+import { Message } from '@/entities/message';
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
 import * as Sentry from '@sentry/serverless';
+
+import { Action } from '../bots/triggers/definitions.type';
+import { getNextNodes } from '../nodes/processInteraction';
 
 const sns = new AWS.SNS();
 
@@ -142,6 +147,55 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             record.dynamodb.NewImage.context?.S === 'message' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'message'
           ) {
+            const messageData = Message.parse({
+              Item: record.dynamodb.NewImage,
+            }).data;
+
+            // route responses to bot actions/conditions to the appropriate next node
+            if (messageData?.messageFormType !== '') {
+              const botStateContext = messageData?.botStateContext;
+              if (
+                botStateContext?.currentNode &&
+                botStateContext?.bot?.nodes &&
+                botStateContext?.bot?.edges
+              ) {
+                const nextNodes = getNextNodes(
+                  botStateContext?.currentNode?.id ?? '',
+                  botStateContext?.bot?.nodes,
+                  botStateContext?.bot?.edges,
+                );
+                nextNodes?.map(async (nextNode) => {
+                  if (nextNode?.type) {
+                    const nextNodeType = Object.entries(botNodeEvent).find(
+                      ([key, value]) => {
+                        if (value === nextNode.type) {
+                          return botNodeEvent?.[
+                            key as keyof typeof botNodeEvent
+                          ];
+                        }
+                      },
+                    ) as BotNodeEvent | undefined;
+                    if (nextNodeType) {
+                      console.log(nextNodeType);
+                      await sns
+                        .publish({
+                          TopicArn: Topic.BotNodeTopic.topicArn,
+                          Message: JSON.stringify(record),
+                          MessageAttributes: {
+                            type: {
+                              DataType: 'String',
+                              StringValue: nextNodeType,
+                            },
+                          },
+                          MessageStructure: 'string',
+                        })
+                        .promise();
+                    }
+                  }
+                });
+              }
+            }
+
             await sns
               .publish({
                 TopicArn: Topic.DdbStreamTopic.topicArn,

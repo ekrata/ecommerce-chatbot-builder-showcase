@@ -30,7 +30,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
       if (!messageData) {
         return {
           statusCode: 500,
-          body: 'Failed to parse the eventbridge event into a usable entity.',
+          body: `Failed to parse ${record.messageId} into a usable entity.`,
         };
       }
 
@@ -64,6 +64,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
         );
       }
 
+      console.log(conversation, operators, customer);
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({

@@ -14,15 +14,15 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, visitId } = usePathParams();
-    const body: CreateVisit = useJsonBody();
-    if (!orgId) {
-      return {
-        statusCode: 422,
-        body: 'Failed to parse an id from the url.',
-      };
-    }
     try {
+      const { orgId, visitId } = usePathParams();
+      const body: CreateVisit = useJsonBody();
+      if (!orgId) {
+        return {
+          statusCode: 422,
+          body: 'Failed to parse an id from the url.',
+        };
+      }
       const res = await appDb.entities.visits
         .create({
           ...body,
@@ -35,6 +35,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(res.data),
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,

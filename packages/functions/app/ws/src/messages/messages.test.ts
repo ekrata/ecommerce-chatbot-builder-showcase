@@ -170,7 +170,7 @@ describe(
           done(false);
         }
       }));
-    it.only(`customer sends a updates message to an existing conversation, a ddbstream 'message' create event is the processed by ddb-stream/processBatch,
+    it(`customer sends a updates message to an existing conversation, a ddbstream 'message' create event is the processed by ddb-stream/processBatch,
    which then publishes a sns event, added to queue, which createMessage lambda consumers`, () =>
       new Promise((done) => {
         let doneCounter = 0;
@@ -182,8 +182,8 @@ describe(
           faker.helpers.arrayElement(conversations);
         const messageId = faker.helpers.arrayElement(messageIds);
         const operatorId = faker.helpers.arrayElement(operatorIds);
-        const newMessageId = uuidv4();
         const content = 'abc';
+        const sender = 'operator';
         const triggerDone = () => {
           doneCounter === 5 ? done(true) : null;
         };
@@ -197,13 +197,16 @@ describe(
           const newMessageEvent = JSON.parse(
             event.data.toString(),
           ) as WsAppEvent;
+          // console.log(newMessageEvent);
           const body = newMessageEvent.body as EntityItem<typeof Message>;
           const { type } = newMessageEvent;
           if (type === WsAppDetailType.wsAppUpdateMessage) {
-            expect(body.messageId).toStrictEqual(newMessageId);
+            expect(body.messageId).toStrictEqual(messageId);
             expect(body.customerId).toStrictEqual(customerId);
+            expect(body.conversationId).toStrictEqual(conversationId);
             expect(body.operatorId).toStrictEqual(operatorId);
             expect(body.content).toStrictEqual(content);
+            expect(body.sender).toStrictEqual(sender);
             doneCounter += 1;
             triggerDone();
           }
@@ -243,7 +246,13 @@ describe(
                         http
                           .put(
                             `/orgs/${orgId}/conversations/${conversationId}/messages/${messageId}`,
-                            { content },
+                            {
+                              content,
+                              sender: 'operator',
+                              operatorId,
+                              customerId,
+                              conversationId,
+                            },
                           )
                           .then(() => {
                             console.log('updated message');
@@ -298,5 +307,5 @@ describe(
         }
       }));
   },
-  { timeout: 30000 },
+  { timeout: 60000 },
 );

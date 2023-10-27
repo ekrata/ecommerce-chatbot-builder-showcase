@@ -17,5 +17,7 @@ export function operatorsStack({ stack }: StackContext) {
       'packages/functions/app/api/src/operators/create.handler',
     'PATCH /orgs/{orgId}/operators/{operatorId}':
       'packages/functions/app/api/src/operators/update.handler',
+    'PUT /orgs/{orgId}/operators/{operatorId}':
+      'packages/functions/app/api/src/operators/put.handler',
   });
 }

@@ -189,12 +189,12 @@ describe(
               const wsOwner = getWs(orgId, ownerId, 'operator');
               wsOwner.onopen = (event) => {
                 http
-                  .patch(
+                  .put(
                     `/orgs/${orgId}/conversations/${conversationId}`,
                     updateConversation,
                   )
                   .then((res) => {
-                    console.log(res.data);
+                    console.log('got conversation put');
                     expect(true).toBeTruthy();
                     ws.addEventListener('message', (event) =>
                       validateEvent(event, customerId, operatorId, 'operator'),

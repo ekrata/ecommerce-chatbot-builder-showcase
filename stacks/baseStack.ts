@@ -59,7 +59,7 @@ export function baseStack({ stack, app }: StackContext) {
     app.setDefaultRemovalPolicy('destroy');
   }
 
-  const defaultFunctionTimeout = 100;
+  const defaultFunctionTimeout = 200;
   if (!app.local) {
     const sentry = lambda.LayerVersion.fromLayerVersionArn(
       stack,
@@ -139,6 +139,8 @@ export function baseStack({ stack, app }: StackContext) {
     | undefined = {
     [`${WsAppDetailType.wsAppCreateMessage}`]:
       'packages/functions/app/ws/src/messages/createMessage.handler',
+    [`${WsAppDetailType.wsAppUpdateMessage}`]:
+      'packages/functions/app/ws/src/messages/updateMessage.handler',
 
     [`${WsAppDetailType.wsAppCreateConversation}`]:
       'packages/functions/app/ws/src/conversations/createConversation.handler',
@@ -147,13 +149,16 @@ export function baseStack({ stack, app }: StackContext) {
 
     [`${WsAppDetailType.wsAppCreateCustomer}`]:
       'packages/functions/app/ws/src/customers/createCustomer.handler',
-    [`${WsAppDetailType.wsAppUpdateConversation}`]:
+    [`${WsAppDetailType.wsAppUpdateCustomer}`]:
       'packages/functions/app/ws/src/customers/updateCustomer.handler',
 
     [`${WsAppDetailType.wsAppCreateOperator}`]:
       'packages/functions/app/ws/src/operators/createOperator.handler',
     [`${WsAppDetailType.wsAppUpdateOperator}`]:
       'packages/functions/app/ws/src/operators/updateOperator.handler',
+
+    [`${WsAppDetailType.wsAppCreateVisit}`]:
+      'packages/functions/app/ws/src/visits/createVisit.handler',
 
     $connect: 'packages/functions/app/ws/src/connect.handler',
     $default: 'packages/functions/app/ws/src/connect.handler',
@@ -185,7 +190,8 @@ export function baseStack({ stack, app }: StackContext) {
   wsApi.bind([wsApi]);
 
   // Only need to be available locally, for seeding and dropping the test db
-  const testRoutes: Record<string, ApiRouteProps<string>> = app.local
+  const testRoutes: Record<string, ApiRouteProps<string>> = stack.stage ===
+  'local'
     ? {
         'POST /util/seed-test-db':
           'packages/functions/app/api/src/util/seed.handler',
@@ -756,7 +762,6 @@ export function baseStack({ stack, app }: StackContext) {
 
   const auth = new Auth(stack, 'auth', {
     authenticator: {
-      permissions: ['ssm:DeleteParameters'],
       handler: 'packages/functions/app/api/src/auth.handler',
     },
   });
@@ -765,6 +770,8 @@ export function baseStack({ stack, app }: StackContext) {
     api,
     prefix: '/auth',
   });
+
+  auth.id;
 
   // // Create the WebSocket API
   // const api = new Api(stack, "app", {

@@ -15,5 +15,7 @@ export function customersStack({ stack }: StackContext) {
       'packages/functions/app/api/src/customers/create.handler',
     'PATCH /orgs/{orgId}/customers/{customerId}':
       'packages/functions/app/api/src/customers/update.handler',
+    'PUT /orgs/{orgId}/customers/{customerId}':
+      'packages/functions/app/api/src/customers/put.handler',
   });
 }

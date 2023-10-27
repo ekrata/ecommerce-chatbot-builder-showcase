@@ -28,23 +28,26 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           messageId,
         })
         .go();
-      await appDb.entities.conversations
+      console.log(res?.data);
+      const conversationRes = await appDb.entities.conversations
         .update({
           ...body,
           orgId,
           conversationId,
         })
-        .set({ lastMessageAt: res.data.createdAt })
+        .set({ lastMessageAt: res?.data?.createdAt })
         .go();
+      console.log(conversationRes?.data);
       return {
         statusCode: 200,
-        body: JSON.stringify(res.data),
+        body: JSON.stringify(res?.data),
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,
-        body: JSON.stringify(err),
+        body: err,
       };
     }
   }),

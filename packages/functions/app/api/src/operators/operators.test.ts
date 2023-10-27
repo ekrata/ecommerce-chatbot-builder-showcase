@@ -104,6 +104,36 @@ describe.concurrent('/operators', async () => {
     expect(getRes.data?.operatorId).toEqual(operatorId);
     expect(getRes.data?.email).toEqual(email);
   });
+  it('updates the email of an operator using put', async () => {
+    const { orgId, operatorIds } = mockOrgIds[1];
+    const operatorId = faker.helpers.arrayElement(operatorIds);
+
+    // Get prexisting data for patch
+    const prepareRes = await http.get(`/orgs/${orgId}/operators/${operatorId}`);
+    expect(prepareRes).toBeTruthy();
+    expect(prepareRes.status).toBe(200);
+
+    // patch
+    const email = faker.internet.email();
+    const { data } = prepareRes;
+    delete data?.operatorId;
+    delete data?.orgId;
+    const res = await http.put(`/orgs/${orgId}/operators/${operatorId}`, {
+      ...data,
+      email,
+    });
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+
+    // Validate patch with get
+    const getRes = await http.get(`/orgs/${orgId}/operators/${operatorId}`);
+
+    expect(getRes).toBeTruthy();
+    expect(getRes.status).toBe(200);
+    expect(getRes.data).toBeTruthy();
+    expect(getRes.data?.operatorId).toEqual(operatorId);
+    expect(getRes.data?.email).toEqual(email);
+  });
   it('deletes a operator', async () => {
     const { orgId, operatorIds } = mockOrgIds?.[2];
     const operatorId = faker.helpers.arrayElement(operatorIds);
@@ -120,7 +150,7 @@ describe.concurrent('/operators', async () => {
       expect((err as AxiosError).response?.status).toBe(404);
     }
   });
-  it.only('returns a signed url to upload a profile picutre for key operatorId', async () => {
+  it('returns a signed url to upload a profile picutre for key operatorId', async () => {
     const { orgId, operatorIds } = mockOrgIds?.[2];
     const operatorId = faker.helpers.arrayElement(operatorIds);
 

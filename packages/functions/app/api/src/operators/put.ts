@@ -11,17 +11,17 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, operatorId } = usePathParams();
-    const body: CreateOperator = useJsonBody();
-    if (!orgId || !operatorId) {
-      return {
-        statusCode: 422,
-        body: 'Failed to parse an id from the url.',
-      };
-    }
     try {
+      const { orgId, operatorId } = usePathParams();
+      const body: CreateOperator = useJsonBody();
+      if (!orgId || !operatorId) {
+        return {
+          statusCode: 422,
+          body: 'Failed to parse an id from the url.',
+        };
+      }
       const res = await appDb.entities.operators
-        .create({
+        .put({
           ...body,
           orgId,
           operatorId,
@@ -29,7 +29,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         .go();
       return {
         statusCode: 200,
-        body: JSON.stringify(res.data),
+        body: JSON.stringify(res?.data),
       };
     } catch (err) {
       console.log(err);

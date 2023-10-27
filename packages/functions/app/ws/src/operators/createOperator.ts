@@ -1,3 +1,4 @@
+import { SQSEvent } from 'aws-lambda';
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { ApiHandler, useJsonBody } from 'sst/node/api';
 import { Config } from 'sst/node/config';
@@ -7,21 +8,23 @@ import { WebSocketApi } from 'sst/node/websocket-api';
 import { Conversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
+import middy from '@middy/core';
+import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import { Message } from '../../../../../../stacks/entities/message';
 import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
+import { getNewImage } from '../helpers';
 import { postToConnection } from '../postToConnection';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
-export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event: any, context) => {
-    try {
-      const newImage = DynamoDB.Converter.unmarshall(
-        event?.detail?.dynamodb?.NewImage,
-      );
+const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
+  try {
+    const { Records } = event;
+    for (const record of Records) {
+      const newImage = getNewImage(record);
       const operatorData = Operator.parse({ Item: newImage }).data;
       if (!operatorData) {
         return {
@@ -33,6 +36,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
 
       const operators = await appDb.entities.operators.query
         .byOrg({ orgId })
+        .where(({ connectionId }, { ne }) => {
+          return `${ne(connectionId, '')}`;
+        })
         .go();
 
       // operators changes apply on api calls
@@ -48,11 +54,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       );
 
       return { statusCode: 200, body: 'Operator sent' };
-    } catch (err) {
-      console.log('err');
-      console.log(err);
-      Sentry.captureException(err);
-      return { statusCode: 500, body: JSON.stringify(err) };
     }
-  }),
-);
+  } catch (err) {
+    console.log('err');
+    console.log(err);
+    Sentry.captureException(err);
+    return { statusCode: 500, body: JSON.stringify(err) };
+  }
+});
+
+export const handler = middy(lambdaHandler).use(eventNormalizer());

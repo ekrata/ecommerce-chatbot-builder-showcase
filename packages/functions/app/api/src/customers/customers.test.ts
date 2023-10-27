@@ -87,6 +87,39 @@ describe.concurrent('/customers', async () => {
     expect(res.data?.locale).toEqual(locale);
     expect(res.data?.phone).toEqual(phone);
   });
+  it('puts a customer', async () => {
+    const { orgId } = mockOrgIds?.[0];
+    const customerId = uuidv4();
+    const email = faker.internet.email();
+    const mailingSubscribed = true;
+    const ip = faker.internet.ipv4();
+    const locale = 'en';
+    const phone = faker.phone.number();
+    const starRating = faker.helpers.arrayElement(rating);
+    const data: CreateCustomer = {
+      customerId,
+      orgId,
+      email,
+      mailingSubscribed,
+      ip,
+      locale,
+      phone,
+      rating: starRating,
+    };
+
+    // validate creation api
+    const res = await http.put(`/orgs/${orgId}/customers/${customerId}`, data);
+    expect(res).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(res.data).toBeTruthy();
+    expect(res.data?.customerId).toEqual(customerId);
+    expect(res.data?.orgId).toEqual(orgId);
+    expect(res.data?.email).toEqual(email);
+    expect(res.data?.mailingSubscribed).toEqual(mailingSubscribed);
+    expect(res.data?.ip).toEqual(ip);
+    expect(res.data?.locale).toEqual(locale);
+    expect(res.data?.phone).toEqual(phone);
+  });
   it('updates the user agent and phone of a customer', async () => {
     const { orgId, customers } = mockOrgIds[1];
     const { customerId } = faker.helpers.arrayElement(customers);

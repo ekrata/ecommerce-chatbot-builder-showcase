@@ -79,7 +79,6 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         return { statusCode: 200, body: 'Message sent' };
       }
     } catch (err) {
-      console.log('err');
       console.log(err);
       Sentry.captureException(err);
       return { statusCode: 500, body: JSON.stringify(err) };

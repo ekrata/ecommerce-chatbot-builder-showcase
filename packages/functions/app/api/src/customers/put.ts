@@ -4,27 +4,27 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import { CreateOperator } from '../../../../../../stacks/entities/entities';
+import { CreateCustomer } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, operatorId } = usePathParams();
-    const body: CreateOperator = useJsonBody();
-    if (!orgId || !operatorId) {
+    const { orgId, customerId } = usePathParams();
+    const body: CreateCustomer = useJsonBody();
+    if (!orgId || !customerId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
       };
     }
     try {
-      const res = await appDb.entities.operators
-        .create({
+      const res = await appDb.entities.customers
+        .put({
           ...body,
           orgId,
-          operatorId,
+          customerId,
         })
         .go();
       return {
