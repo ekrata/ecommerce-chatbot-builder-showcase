@@ -9,7 +9,7 @@ import {
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { v4 as uuidv4 } from 'uuid';
 
-import { WsAppDetailType } from '@/types/ebDetailTypes';
+import { WsAppDetailType } from '@/types/snsTypes';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { ConversationItem } from '../../../stacks/entities/conversation';

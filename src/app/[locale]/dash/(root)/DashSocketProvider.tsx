@@ -4,9 +4,9 @@ import { EntityItem } from 'electrodb';
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
-import { getWsUrl } from '@/app/getWsUrl';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';
+import { getWsUrl } from '@/src/app/getWsUrl';
 import { WsAppDetailType } from '@/types/snsTypes';
 import { InfiniteData, UseInfiniteQueryResult, useQueryClient } from '@tanstack/react-query';
 

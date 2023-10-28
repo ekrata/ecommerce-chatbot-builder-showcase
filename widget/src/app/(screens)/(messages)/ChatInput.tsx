@@ -3,15 +3,15 @@ import { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
 import { CgSpinner } from 'react-icons/cg';
-import { v4 as uuidv4 } from 'uuid';
-
-import { useCreateMessageMut } from '@/app/(actions)/mutations/useCreateMessageMut';
-import { useConfigurationQuery } from '@/app/(actions)/queries/useConfigurationQuery';
+import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
+import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
   useConversationItemsByCustomerQuery
-} from '@/app/(actions)/queries/useConversationItemsQuery';
-import { useCustomerQuery } from '@/app/(actions)/queries/useCustomerQuery';
-import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
+} from 'src/app/(actions)/queries/useConversationItemsQuery';
+import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
+import { v4 as uuidv4 } from 'uuid';
+
 import { CreateMessage } from '@/entities/entities';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';

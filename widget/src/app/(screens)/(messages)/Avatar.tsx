@@ -1,7 +1,7 @@
 import { EntityItem } from 'electrodb';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
+import { DynamicBackground } from 'src/app/(helpers)/DynamicBackground';
 
-import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
-import { DynamicBackground } from '@/app/(helpers)/DynamicBackground';
 import { Configuration } from '@/entities/configuration';
 import { ConversationItem } from '@/entities/conversation';
 import { Message } from '@/entities/message';

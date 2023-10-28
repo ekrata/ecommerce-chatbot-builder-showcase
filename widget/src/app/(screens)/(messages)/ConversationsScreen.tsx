@@ -4,16 +4,15 @@ import { isMobile } from 'react-device-detect';
 import { useForm } from 'react-hook-form';
 import { BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsPersonCircle, BsX } from 'react-icons/bs';
-import { v4 as uuidv4 } from 'uuid';
-
-import { useCreateConversationMut } from '@/app/(actions)/mutations/useCreateConversationMut';
-import { useConfigurationQuery } from '@/app/(actions)/queries/useConfigurationQuery';
+import { useCreateConversationMut } from 'src/app/(actions)/mutations/useCreateConversationMut';
+import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
   useConversationItemsByCustomerQuery
-} from '@/app/(actions)/queries/useConversationItemsQuery';
-import { useCustomerQuery } from '@/app/(actions)/queries/useCustomerQuery';
-import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
-import { DynamicBackground } from '@/app/(helpers)/DynamicBackground';
+} from 'src/app/(actions)/queries/useConversationItemsQuery';
+import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
+import { DynamicBackground } from 'src/app/(helpers)/DynamicBackground';
+import { v4 as uuidv4 } from 'uuid';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';

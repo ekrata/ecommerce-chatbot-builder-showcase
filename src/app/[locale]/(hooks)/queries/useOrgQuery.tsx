@@ -18,6 +18,7 @@ export const useOrgQuery = (orgId: string) => useQuery<EntityItem<typeof Org>>([
 export const getOrg = async (
   orgId: string,
 ): Promise<EntityItem<typeof Org>> => {
+  console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}`)
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}`,
   );

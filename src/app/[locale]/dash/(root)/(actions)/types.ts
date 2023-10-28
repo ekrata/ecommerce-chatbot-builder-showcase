@@ -1,4 +1,3 @@
-import { ConversationFilterParams } from 'packages/functions/app/api/src/conversations/listByCreatedAt';
 import { StateCreator } from 'zustand';
 
 import {
@@ -6,6 +5,7 @@ import {
   ConversationStatus,
   ConversationTopic,
 } from '@/entities/conversation';
+import { ConversationFilterParams } from '@/packages/functions/app/api/src/conversations/listByCreatedAt';
 
 export type WidgetState = 'help' | 'conversations' | 'home';
 export type WidgetVisibility = 'expanded' | 'open' | 'minimized';

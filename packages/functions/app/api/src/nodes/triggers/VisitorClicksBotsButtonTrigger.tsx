@@ -9,7 +9,7 @@
 // import { Edge, Handle, Node, Position, useNodeId } from 'reactflow';
 // import { useOnClickOutside } from 'usehooks-ts';
 
-// import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
+// import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 
 // import TriggerNode from '../../../(nodes)/TriggerNode';
 // import { useNodeContext } from '../../BotEditor';
@@ -33,9 +33,6 @@
 //   </div >
 //   );
 // }
-
-
-
 
 // interface Props {
 //   node: Node
@@ -108,5 +105,3 @@
 //     </form >
 //   )
 // }
-
-

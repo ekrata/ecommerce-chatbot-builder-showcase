@@ -1,13 +1,12 @@
 import { useFormatter, useTranslations } from 'next-intl';
 import { FC, useEffect, useMemo } from 'react';
-
-import { useCreateMessageMut } from '@/app/(actions)/mutations/useCreateMessageMut';
-import { useConfigurationQuery } from '@/app/(actions)/queries/useConfigurationQuery';
+import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
+import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
   useConversationItemsByCustomerQuery
-} from '@/app/(actions)/queries/useConversationItemsQuery';
-import { useCustomerQuery } from '@/app/(actions)/queries/useCustomerQuery';
-import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
+} from 'src/app/(actions)/queries/useConversationItemsQuery';
+import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';

@@ -1,6 +1,4 @@
 import { EntityItem } from 'electrodb';
-import { getHttp } from 'packages/functions/app/api/src/http';
-import { getWs } from 'packages/functions/app/getWs';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it, test } from 'vitest';
@@ -10,6 +8,8 @@ import { Customer } from '@/entities/customer';
 import { CreateMessage, UpdateConversation } from '@/entities/entities';
 import { Message } from '@/entities/message';
 import { Operator } from '@/entities/operator';
+import { getHttp } from 'packages/functions/app/api/src/http';
+import { getWs } from 'packages/functions/app/getWs';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 

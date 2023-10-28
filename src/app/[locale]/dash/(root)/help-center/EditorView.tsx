@@ -11,24 +11,24 @@ import { MdOutlineArticle } from 'react-icons/md';
 import ReactQuill from 'react-quill';
 import { v4 as uuidv4 } from 'uuid';
 import {
-    getArticleWithContent
+  getArticleWithContent
 } from 'widget/src/app/(actions)/orgs/articles/getArticleWithContent';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import {
-    useCreateArticleContentMut
-} from '@/app/[locale]/(hooks)/mutations/useCreateArticleContentMut';
-import { useCreateArticleMut } from '@/app/[locale]/(hooks)/mutations/useCreateArticleMut';
-import {
-    useDeleteArticleContentMut
-} from '@/app/[locale]/(hooks)/mutations/useDeleteArticleContentMut';
-import { useDeleteArticleMut } from '@/app/[locale]/(hooks)/mutations/useDeleteArticleMut';
-import {
-    useUpdateArticleContentMut
-} from '@/app/[locale]/(hooks)/mutations/useUpdateArticleContentMut';
-import { useUpdateArticleMut } from '@/app/[locale]/(hooks)/mutations/useUpdateArticleMut';
-import { QueryKey } from '@/app/[locale]/(hooks)/queries';
 import { ArticleCategory, articleCategory, articleStatus, ArticleStatus } from '@/entities/article';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import {
+  useCreateArticleContentMut
+} from '@/src/app/[locale]/(hooks)/mutations/useCreateArticleContentMut';
+import { useCreateArticleMut } from '@/src/app/[locale]/(hooks)/mutations/useCreateArticleMut';
+import {
+  useDeleteArticleContentMut
+} from '@/src/app/[locale]/(hooks)/mutations/useDeleteArticleContentMut';
+import { useDeleteArticleMut } from '@/src/app/[locale]/(hooks)/mutations/useDeleteArticleMut';
+import {
+  useUpdateArticleContentMut
+} from '@/src/app/[locale]/(hooks)/mutations/useUpdateArticleContentMut';
+import { useUpdateArticleMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateArticleMut';
+import { QueryKey } from '@/src/app/[locale]/(hooks)/queries';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNotificationContext } from '../NotificationProvider';

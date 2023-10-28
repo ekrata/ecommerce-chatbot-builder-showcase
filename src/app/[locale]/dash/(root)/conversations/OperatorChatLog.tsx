@@ -5,8 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { FC, useEffect, useMemo } from 'react';
 import { BsChat } from 'react-icons/bs';
 
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { ConversationItem } from '@/entities/conversation';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
 
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
 import { useCreateMessageMut } from '../../../(hooks)/mutations/useCreateMessageMut';

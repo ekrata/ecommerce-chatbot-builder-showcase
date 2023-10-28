@@ -1,12 +1,12 @@
 import { SNSEvent, SQSEvent, StreamRecord } from 'aws-lambda';
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
-import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
 import { Conversation, ExpandedConversation } from '@/entities/conversation';
+import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';

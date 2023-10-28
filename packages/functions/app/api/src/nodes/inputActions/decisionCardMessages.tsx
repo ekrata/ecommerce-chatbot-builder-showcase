@@ -20,13 +20,13 @@
 // import { useOnClickOutside } from 'usehooks-ts';
 // import { z } from 'zod';
 
-// import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-// import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
-// import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
-// import { useEdgeContext, useNodeContext } from '@/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
-// import { actionNode, OutputFieldsKeys } from '@/app/[locale]/dash/(root)/bots/[botId]/collections';
-// import { NodeWrapper } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
-// import { updateNodes } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
+// import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+// import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
+// import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
+// import { useEdgeContext, useNodeContext } from '@/src/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
+// import { actionNode, OutputFieldsKeys } from '@/src/app/[locale]/dash/(root)/bots/[botId]/collections';
+// import { NodeWrapper } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
+// import { updateNodes } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
 // import { zodResolver } from '@hookform/resolvers/zod';
 
 // import { createTargetHandles } from '../shared/createTargetHandles';
@@ -111,8 +111,6 @@
 //       mode: 'onBlur',
 //     });
 
-
-
 //   const choicesFieldArray = useFieldArray({
 //     name: 'choices' as never,
 //     control, // control props comes from useForm (optional: if you are using FormContext)
@@ -128,7 +126,6 @@
 //   }
 
 //   useOnClickOutside(ref, handleClickOutside)
-
 
 //   useEffect(() => {
 //     const apiValues: FormValues = node?.data
@@ -154,7 +151,6 @@
 //     console.log(getValues())
 //   }, [errors])
 
-
 //   const onSubmit: SubmitHandler<FormValues> = async (values) => {
 //     console.log(values)
 //     onImageChange(values?.banner)
@@ -169,7 +165,6 @@
 //     console.log(files)
 //     setImage(URL?.createObjectURL(files?.[0] as Blob) as string)
 //   }
-
 
 //   return (
 //     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
@@ -256,5 +251,3 @@
 //     </form >
 //   )
 // }
-
-

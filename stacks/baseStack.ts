@@ -3,7 +3,6 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { Duration } from 'aws-cdk-lib/core';
-import { MessengerEvent } from 'packages/functions/app/api/src/webhooks/meta/metaEvents';
 import {
   Api,
   ApiRouteProps,
@@ -478,7 +477,6 @@ export function baseStack({ stack, app }: StackContext) {
     | undefined = () => {
     const func = processInteractionFunction;
     func.attachPermissions([table, 'sns']);
-    console.log(func.id);
     if (func) {
       return {
         [`${func.id.replaceAll('/', '_')}-sub`]: {
@@ -548,7 +546,7 @@ export function baseStack({ stack, app }: StackContext) {
           consumer: {
             function: {
               handler:
-                'packages/functions/app/api/src/nodes/actions/askAQuestion.handler',
+                'packages/functions/app/api/src/nodes/inputActions/askAQuestion.handler',
             },
           },
         }),
@@ -573,7 +571,7 @@ export function baseStack({ stack, app }: StackContext) {
               timeout: defaultFunctionTimeout,
               bind: [wsApi, api, REGION, table],
               handler:
-                'packages/functions/app/api/src/nodes/actions/decisionCardMessages.handler',
+                'packages/functions/app/api/src/nodes/inputActions/decisionCardMessages.handler',
             },
           },
         }),
@@ -608,6 +606,81 @@ export function baseStack({ stack, app }: StackContext) {
               type: FilterOrPolicy.filter(
                 SubscriptionFilter.stringFilter({
                   allowlist: [botNodeEvent.SubscribeForMailing],
+                }),
+              ),
+            },
+          },
+        },
+      },
+      [botNodeEvent.DecisionButtons]: {
+        type: 'queue',
+        queue: new Queue(stack, `bot_node_action_DecisionButtons_queue`, {
+          cdk: defaultQueueConfig,
+          consumer: {
+            function: {
+              timeout: defaultFunctionTimeout,
+              bind: [wsApi, api, REGION, table],
+              handler:
+                'packages/functions/app/api/src/nodes/inputActions/decisionButtons.handler',
+            },
+          },
+        }),
+        cdk: {
+          subscription: {
+            filterPolicyWithMessageBody: {
+              type: FilterOrPolicy.filter(
+                SubscriptionFilter.stringFilter({
+                  allowlist: [botNodeEvent.DecisionButtons],
+                }),
+              ),
+            },
+          },
+        },
+      },
+      [botNodeEvent.DecisionQuickReplies]: {
+        type: 'queue',
+        queue: new Queue(stack, `bot_node_action_DecisionQuickReplies_queue`, {
+          cdk: defaultQueueConfig,
+          consumer: {
+            function: {
+              timeout: defaultFunctionTimeout,
+              bind: [wsApi, api, REGION, table],
+              handler:
+                'packages/functions/app/api/src/nodes/inputActions/decisionQuickReplies.handler',
+            },
+          },
+        }),
+        cdk: {
+          subscription: {
+            filterPolicyWithMessageBody: {
+              type: FilterOrPolicy.filter(
+                SubscriptionFilter.stringFilter({
+                  allowlist: [botNodeEvent.DecisionQuickReplies],
+                }),
+              ),
+            },
+          },
+        },
+      },
+      [botNodeEvent.CouponCode]: {
+        type: 'queue',
+        queue: new Queue(stack, `bot_node_action_CouponCode_queue`, {
+          cdk: defaultQueueConfig,
+          consumer: {
+            function: {
+              timeout: defaultFunctionTimeout,
+              bind: [wsApi, api, REGION, table],
+              handler:
+                'packages/functions/app/api/src/nodes/actions/couponCode.handler',
+            },
+          },
+        }),
+        cdk: {
+          subscription: {
+            filterPolicyWithMessageBody: {
+              type: FilterOrPolicy.filter(
+                SubscriptionFilter.stringFilter({
+                  allowlist: [botNodeEvent.CouponCode],
                 }),
               ),
             },
@@ -796,8 +869,6 @@ export function baseStack({ stack, app }: StackContext) {
     prefix: '/auth',
   });
 
-  auth.id;
-
   // // Create the WebSocket API
   // const api = new Api(stack, "app", {
   //   defaults: {
@@ -821,9 +892,10 @@ export function baseStack({ stack, app }: StackContext) {
       ? widgetHost.toLowerCase()
       : `${stack.stage}.${widgetHost}`.toLowerCase();
 
+  console.log('building: ', widgetDomain);
   const widget = new NextjsSite(stack, 'widget', {
     path: 'widget/',
-    buildCommand: 'pnpm build',
+    buildCommand: `echo 'building: ${widgetDomain}' && pnpm build`,
     // buildCommand: 'cd widget && pnpm build',
     customDomain: {
       domainName: widgetDomain,
@@ -849,6 +921,8 @@ export function baseStack({ stack, app }: StackContext) {
     stack.stage === 'prod'
       ? domain.toLowerCase()
       : `${stack.stage}.${domain}`.toLowerCase();
+
+  // console.log('building: ', siteDomainName);
   const site = new NextjsSite(stack, 'dash', {
     // buildCommand: 'pnpm build',
     customDomain: {

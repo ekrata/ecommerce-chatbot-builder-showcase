@@ -20,9 +20,9 @@
 // import { useOnClickOutside } from 'usehooks-ts';
 // import { z } from 'zod';
 
-// import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-// import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
-// import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
+// import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+// import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
+// import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 // import { validationType } from '@/entities/bot';
 // import { contactProperties, contactSelector } from '@/entities/customer';
 // import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,9 +38,6 @@
 // import { updateNodes } from '../updateNodes';
 
 // // const handleStyle = { left: 10 };
-
-
-
 
 // const schema = z.object({
 //   fieldName: z.enum(contactProperties),
@@ -75,7 +72,6 @@
 //     </div >
 //   );
 // }
-
 
 // export const BasedOnContactPropertyConditionEdge: React.FC<EdgeProps> = (params) => {
 //   return <GenericEdge {...params} outputKey={OutputFieldsKeys[type]} />
@@ -112,7 +108,6 @@
 
 //   useOnClickOutside(ref, handleClickOutside)
 
-
 //   useEffect(() => {
 //     const apiValues: FormValues = node?.data
 //     setValue('fieldName', apiValues?.fieldName)
@@ -128,13 +123,11 @@
 //     updateNodes(getValues(), node, nodes, setNodes, errors)
 //   }, [errors])
 
-
 //   const onSubmit: SubmitHandler<FormValues> = async (values) => {
 //     updateNodes(values, node, nodes, setNodes)
 //   }
 
 //   const selectorHasValue = contactSelector
-
 
 //   return (
 //     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
@@ -170,5 +163,3 @@
 //     </form >
 //   )
 // }
-
-

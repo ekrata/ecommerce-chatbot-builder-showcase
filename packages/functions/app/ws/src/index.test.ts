@@ -1,13 +1,13 @@
 import { EntityItem } from 'electrodb';
+import { Api } from 'sst/node/api';
+import { beforeAll, describe, expect, it, test } from 'vitest';
+
+import { Operator } from '@/entities/operator';
 import { getHttp } from 'packages/functions/app/api/src/http';
 import {
   MockOrgIds,
   SeedResponse,
 } from 'packages/functions/app/api/src/util/seed';
-import { Api } from 'sst/node/api';
-import { beforeAll, describe, expect, it, test } from 'vitest';
-
-import { Operator } from '@/entities/operator';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 

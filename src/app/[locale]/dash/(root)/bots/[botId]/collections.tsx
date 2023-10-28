@@ -1,54 +1,54 @@
 import 'reactflow/dist/style.css';
 
-import {
-    Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger
-} from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { ComponentType, ReactElement } from 'react';
 import {
-    ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
-    Node, NodeTypes
+  ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
+  Node, NodeTypes
 } from 'reactflow';
 
 import { Actions, Conditions, Triggers } from '@/entities/bot';
+import {
+  Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger
+} from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 import { nodeSubTypeIcons } from '../nodeSubTypeIcons';
 import {
-    AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode
+  AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode
 } from './nodes/actions/AskAQuestion';
 import {
-    CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
+  CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
 } from './nodes/actions/CouponCode';
 import {
-    DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode
+  DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode
 } from './nodes/actions/DecisionButtons';
 import {
-    DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode
+  DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode
 } from './nodes/actions/DecisionCardMessages';
 import {
-    DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
+  DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
 } from './nodes/actions/DecisionQuickReplies';
 import {
-    SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
+  SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
 } from './nodes/actions/SendAChatMessage';
 import {
-    SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
+  SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
 } from './nodes/actions/SubscribeForMailing';
 import {
-    BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
-    BasedOnContactPropertyConditionNode
+  BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
+  BasedOnContactPropertyConditionNode
 } from './nodes/conditions/BasedOnContactProperty';
 import { ChatStatusConditionEdge } from './nodes/conditions/ChatStatus';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
-    VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
+  VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
 import {
-    VisitorClicksOnChatIconTriggerEdge, VisitorClicksOnChatIconTriggerForm,
-    VisitorClicksOnChatIconTriggerNode
+  VisitorClicksOnChatIconTriggerEdge, VisitorClicksOnChatIconTriggerForm,
+  VisitorClicksOnChatIconTriggerNode
 } from './nodes/triggers/VisitorClicksOnChatIcon';
 import {
-    VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
+  VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
 } from './nodes/triggers/VisitorSays';
 import { onDragStart } from './onDragStart';
 

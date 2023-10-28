@@ -5,9 +5,9 @@ import { BiMailSend } from 'react-icons/bi';
 import { useOnClickOutside } from 'usehooks-ts';
 import * as yup from 'yup';
 
-import { CopyToClipboard } from '@/app/[locale]/(components)/CopyToClipboard';
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
+import { CopyToClipboard } from '@/src/app/[locale]/(components)/CopyToClipboard';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const schema = yup

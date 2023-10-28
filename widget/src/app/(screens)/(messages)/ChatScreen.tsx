@@ -1,16 +1,14 @@
 import { useTranslations } from 'next-intl';
 import React, { FC, useEffect } from 'react';
 import { BiChevronLeft } from 'react-icons/bi';
-import { v4 as uuidv4 } from 'uuid';
-
-import { useCreateCustomerMut } from '@/app/(actions)/mutations/useCreateCustomerMut';
-import { useConfigurationQuery } from '@/app/(actions)/queries/useConfigurationQuery';
+import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
   useConversationItemsByCustomerQuery
-} from '@/app/(actions)/queries/useConversationItemsQuery';
-import { useCustomerQuery } from '@/app/(actions)/queries/useCustomerQuery';
-import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
-import { DynamicBackground } from '@/app/(helpers)/DynamicBackground';
+} from 'src/app/(actions)/queries/useConversationItemsQuery';
+import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
+import { DynamicBackground } from 'src/app/(helpers)/DynamicBackground';
+import { v4 as uuidv4 } from 'uuid';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';

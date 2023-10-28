@@ -6,16 +6,18 @@ import { BsChevronUp } from 'react-icons/bs';
 import { useCopyToClipboard } from 'usehooks-ts';
 import { useOrgQuery } from 'widget/src/app/(actions)/queries/useOrgQuery';
 
-import { LanguageCode, languageCodeMap } from '@/app/[locale]/(helpers)/lang';
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import {
-    useDeleteChatWidgetTranslation
-} from '@/app/[locale]/(hooks)/mutations/useDeleteChatWidgetTranslation';
-import { useUpdateTranslationMut } from '@/app/[locale]/(hooks)/mutations/useUpdateTranslationMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
-import { useTranslationQuery } from '@/app/[locale]/(hooks)/queries/useTranslationQuery';
 import { UpdateTranslation } from '@/entities/entities';
 import { ChatWidgetTranslations, Translation } from '@/entities/translation';
+import { LanguageCode, languageCodeMap } from '@/src/app/[locale]/(helpers)/lang';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import {
+  useDeleteChatWidgetTranslation
+} from '@/src/app/[locale]/(hooks)/mutations/useDeleteChatWidgetTranslation';
+import {
+  useUpdateTranslationMut
+} from '@/src/app/[locale]/(hooks)/mutations/useUpdateTranslationMut';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
+import { useTranslationQuery } from '@/src/app/[locale]/(hooks)/queries/useTranslationQuery';
 
 const resolver: Resolver<ChatWidgetTranslations> = async (values) => {
   return {

@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { BsLink, BsX } from 'react-icons/bs';
 
-import { Collapse } from '@/app/[locale]/(components)/Collapse';
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import {
-    useUpdateConfigurationMut
-} from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { ConfigTicketing } from '@/entities/configuration';
+import { Collapse } from '@/src/app/[locale]/(components)/Collapse';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import {
+  useUpdateConfigurationMut
+} from '@/src/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
 
 import { EmailModal } from './EmailModal';
 

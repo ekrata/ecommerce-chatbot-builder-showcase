@@ -47,7 +47,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       Sentry.captureException(err);
       return {
         statusCode: 500,
-        body: err,
+        body: err as string,
       };
     }
   }),

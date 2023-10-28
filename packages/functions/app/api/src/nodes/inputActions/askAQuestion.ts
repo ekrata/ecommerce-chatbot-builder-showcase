@@ -1,17 +1,13 @@
-import { SNSEvent, SQSEvent } from 'aws-lambda';
-import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
+import { SQSEvent } from 'aws-lambda';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v5 as uuidv5 } from 'uuid';
 
-import {
-    AskAQuestionData
-} from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
 import { botNodeEvent } from '@/entities/bot';
-import { MessageFormType, messageFormType } from '@/entities/message';
+import middy from '@middy/core';
+import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
-import { CreateBot } from '../../../../../../../stacks/entities/entities';
 import { getAppDb } from '../../db';
 import { BotStateContext } from '../processInteraction';
 
@@ -19,9 +15,10 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent) => {
     try {
       const appDb = getAppDb(Config.REGION, Table.app.tableName);
-      event.Records.map(async (record) => {
-        const snsMessageId = record.Sns.MessageId;
-        const botStateContext: BotStateContext = JSON.parse(record.Sns.Message);
+      const { Records } = event;
+      for (const record of Records) {
+        const snsMessageId = record.messageId;
+        const botStateContext: BotStateContext = JSON.parse(record.body);
         const { type, bot, conversation, nextNode, interaction, currentNode } =
           botStateContext;
 
@@ -41,16 +38,16 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             sender: 'bot',
             content: '',
             messageFormType: botNodeEvent.AskAQuestion,
-            messageFormData: JSON.parse(data ?? '') as AskAQuestionData,
+            messageFormData: data,
             // don't need to modify
-            botStateContext: botStateContext,
+            botStateContext: JSON.stringify(botStateContext),
           })
           .go();
         return {
           statusCode: 200,
           body: JSON.stringify(res.data),
         };
-      });
+      }
     } catch (err) {
       console.log(err);
       Sentry.captureException(err);
@@ -62,4 +59,4 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   },
 );
 
-export const handler = 
+export const handler = middy(lambdaHandler).use(eventNormalizer());

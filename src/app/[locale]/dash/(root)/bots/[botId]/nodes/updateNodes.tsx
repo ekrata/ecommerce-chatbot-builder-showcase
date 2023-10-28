@@ -1,9 +1,10 @@
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
-import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { SetStateAction, useEffect, useMemo } from 'react';
 import { FieldErrors } from 'react-hook-form';
 import { Node, Position } from 'reactflow';
+
+import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 export const updateNodes = (values: object, currentNode: Node<unknown, string | undefined>, nodes: Node<unknown, string | undefined>[], setNodes: (value: SetStateAction<Node<unknown, string | undefined>[]>) => void, errors?: FieldErrors<object>) => {
   if (currentNode) {

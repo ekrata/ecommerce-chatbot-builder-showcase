@@ -7,13 +7,13 @@ import { Controller, Resolver, useForm } from 'react-hook-form';
 import { BsEye, BsPaintBucket, BsPhone } from 'react-icons/bs';
 import { FaDesktop, FaPaintBrush } from 'react-icons/fa';
 
-import { Collapse } from '@/app/[locale]/(components)/Collapse';
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
+import { ConfigLiveChatAppearance, deviceVisibility } from '@/entities/configuration';
+import { Collapse } from '@/src/app/[locale]/(components)/Collapse';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import {
   useUpdateConfigurationMut
-} from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
-import { ConfigLiveChatAppearance, deviceVisibility } from '@/entities/configuration';
+} from '@/src/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
 
 const resolver: Resolver<ConfigLiveChatAppearance> = async (values) => {
   return {

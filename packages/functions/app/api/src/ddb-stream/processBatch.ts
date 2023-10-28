@@ -10,7 +10,7 @@ import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
 import * as Sentry from '@sentry/serverless';
 
 import { Action } from '../bots/triggers/definitions.type';
-import { getNextNodes } from '../nodes/processInteraction';
+import { BotStateContext, getNextNodes } from '../nodes/processInteraction';
 
 const sns = new AWS.SNS();
 
@@ -156,7 +156,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               messageData?.messageFormType !== '' &&
               messageData?.sender === 'bot'
             ) {
-              const botStateContext = messageData?.botStateContext;
+              const botStateContext = JSON.parse(
+                messageData?.botStateContext ?? '{}',
+              ) as BotStateContext;
               if (
                 botStateContext?.currentNode &&
                 botStateContext?.bot?.nodes &&

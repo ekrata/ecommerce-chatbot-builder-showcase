@@ -40,7 +40,7 @@
       "@/marketing/*": [
         "./src/app/[locale]/(marketing)/*"
       ],
-      "@/*": [
+      "@/src/*": [
         "./src/*"
       ],
 
@@ -50,6 +50,7 @@
       "@/packages/*": [
         "./packages/*"
       ],
+
       "@/entities/*": [
         "./stacks/entities/*"
       ],

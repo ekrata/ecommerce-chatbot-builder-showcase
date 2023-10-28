@@ -1,8 +1,11 @@
-import {
-    ConversationFilterParams
-} from 'packages/functions/app/api/src/conversations/listByCreatedAt';
+import { ConversationFilterParams } from '@/packages/functions/app/api/src/conversations/listByCreatedAt';
 
-import { ConversationState, DashStateDefinition, DashStateType, StateSlice } from './types';
+import {
+  ConversationState,
+  DashStateDefinition,
+  DashStateType,
+  StateSlice,
+} from './types';
 
 /**
  * Initial chat widget state

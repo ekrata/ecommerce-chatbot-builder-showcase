@@ -5,21 +5,21 @@ import { FC, ReactNode, useState } from 'react';
 import { Controller, Resolver, useForm } from 'react-hook-form';
 import { BiLogoJavascript, BiLogoWordpress } from 'react-icons/bi';
 import {
-    BsChevronDown, BsChevronUp, BsClipboard, BsEye, BsPaintBucket, BsPhone
+  BsChevronDown, BsChevronUp, BsClipboard, BsEye, BsPaintBucket, BsPhone
 } from 'react-icons/bs';
 import { FaDesktop, FaPaintBrush, FaShopify } from 'react-icons/fa';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { SiWoocommerce } from 'react-icons/si';
 import { useCopyToClipboard } from 'usehooks-ts';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import {
-    useUpdateConfigurationMut
-} from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
-import { useOrgQuery } from '@/app/[locale]/(hooks)/queries/useOrgQuery';
 import { ConfigLiveChatAppearance } from '@/entities/configuration';
 import { UpdateConfiguration } from '@/entities/entities';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import {
+  useUpdateConfigurationMut
+} from '@/src/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
+import { useOrgQuery } from '@/src/app/[locale]/(hooks)/queries/useOrgQuery';
 
 const resolver: Resolver<ConfigLiveChatAppearance> = async (values) => {
   return {

@@ -19,15 +19,15 @@
 // import { useOnClickOutside } from 'usehooks-ts';
 // import { z } from 'zod';
 
-// import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-// import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
-// import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
-// import { useNodeContext } from '@/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
+// import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+// import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
+// import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
+// import { useNodeContext } from '@/src/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
 // import {
 //     actionNode, defaultOutputs, OutputFieldsKeys
-// } from '@/app/[locale]/dash/(root)/bots/[botId]/collections';
-// import { NodeWrapper } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
-// import { updateNodes } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
+// } from '@/src/app/[locale]/dash/(root)/bots/[botId]/collections';
+// import { NodeWrapper } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
+// import { updateNodes } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
 // import { zodResolver } from '@hookform/resolvers/zod';
 
 // import { createTargetHandles } from '../shared/createTargetHandles';
@@ -128,7 +128,6 @@
 //     updateNodes(getValues(), node, nodes, setNodes, errors)
 //   }, [errors])
 
-
 //   const onSubmit: SubmitHandler<FormValues> = async (values) => {
 //     updateNodes(values, node, nodes, setNodes)
 //   }
@@ -146,5 +145,3 @@
 //     </form >
 //   )
 // }
-
-

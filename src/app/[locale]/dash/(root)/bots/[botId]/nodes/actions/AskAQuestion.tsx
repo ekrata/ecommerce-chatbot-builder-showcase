@@ -7,7 +7,6 @@ import EmojiPicker, {
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
-import { Action } from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
@@ -17,8 +16,9 @@ import {
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
 import { validationType } from '@/entities/bot';
+import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useNodeContext } from '../../BotEditor';

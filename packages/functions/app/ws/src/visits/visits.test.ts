@@ -1,7 +1,4 @@
 import { EntityItem } from 'electrodb';
-import { getHttp } from 'packages/functions/app/api/src/http';
-import { SeedResponse } from 'packages/functions/app/api/src/util/seed';
-import { getWs } from 'packages/functions/app/getWs';
 import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it, test } from 'vitest';
@@ -9,6 +6,9 @@ import { beforeAll, describe, expect, it, test } from 'vitest';
 import { Customer } from '@/entities/customer';
 import { CreateVisit } from '@/entities/entities';
 import { Visit } from '@/entities/visit';
+import { getHttp } from 'packages/functions/app/api/src/http';
+import { SeedResponse } from 'packages/functions/app/api/src/util/seed';
+import { getWs } from 'packages/functions/app/getWs';
 import { WsAppDetailType } from '@/types/snsTypes';
 import { faker } from '@faker-js/faker';
 

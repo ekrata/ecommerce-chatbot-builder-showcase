@@ -6,10 +6,10 @@ import { BsPerson } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
-import { languageCodeMap } from '@/app/[locale]/(helpers)/lang';
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import { useUpdateOperatorMut } from '@/app/[locale]/(hooks)/mutations/useUpdateOperatorMut';
 import { UpdateOperator } from '@/entities/entities';
+import { languageCodeMap } from '@/src/app/[locale]/(helpers)/lang';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import { useUpdateOperatorMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateOperatorMut';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const schema = z.object({

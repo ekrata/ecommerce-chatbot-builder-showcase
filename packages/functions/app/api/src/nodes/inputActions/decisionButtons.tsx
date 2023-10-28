@@ -22,13 +22,13 @@
 // import { useOnClickOutside } from 'usehooks-ts';
 // import { z } from 'zod';
 
-// import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-// import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
-// import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
-// import { useEdgeContext, useNodeContext } from '@/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
-// import { actionNode, OutputFieldsKeys } from '@/app/[locale]/dash/(root)/bots/[botId]/collections';
-// import { NodeWrapper } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
-// import { updateNodes } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
+// import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+// import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
+// import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
+// import { useEdgeContext, useNodeContext } from '@/src/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
+// import { actionNode, OutputFieldsKeys } from '@/src/app/[locale]/dash/(root)/bots/[botId]/collections';
+// import { NodeWrapper } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
+// import { updateNodes } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
 // import { zodResolver } from '@hookform/resolvers/zod';
 
 // import { createTargetHandles } from '../shared/createTargetHandles';
@@ -37,8 +37,6 @@
 // import { TextareaField } from '../shared/TextareaField';
 
 // // const handleStyle = { left: 10 };
-
-
 
 // const schema = z.object({
 //   message: z.string()?.min(1),
@@ -115,8 +113,6 @@
 //       mode: 'onBlur',
 //     });
 
-
-
 //   const choicesFieldArray = useFieldArray({
 //     control, // control props comes from useForm (optional: if you are using FormContext)
 //     name: "choices" as never
@@ -134,7 +130,6 @@
 
 //   useOnClickOutside(ref, handleClickOutside)
 
-
 //   useEffect(() => {
 //     const apiValues: FormValues = node?.data
 //     setValue('message', apiValues?.message ?? tForm('messagePlaceholder'))
@@ -149,7 +144,6 @@
 
 //   // }, [errors])
 
-
 //   const onSubmit: SubmitHandler<FormValues> = async (values) => {
 //     updateNodes(values, node, nodes, setNodes)
 //   }
@@ -157,8 +151,6 @@
 //   // useEffect(() => {
 //   //   handleSubmit(onSubmit)
 //   // }, [])
-
-
 
 //   return (
 //     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
@@ -211,5 +203,3 @@
 //     </form >
 //   )
 // }
-
-

@@ -52,7 +52,7 @@
       "@/types/*": [
         "../types/*"
       ],
-      "@/dash/*": [
+      "@/src/*": [
         "../src/*"
       ],
       "@/components/*": [

@@ -8,10 +8,6 @@ import 'reactflow/dist/style.css';
 import { Link, useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
-  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
-} from 'packages/functions/app/api/src/bots/triggers/definitions.type';
-import {
   createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
   useState
 } from 'react';
@@ -27,11 +23,15 @@ import ReactFlow, {
 import { useDebounce } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import { useDeleteBotMut } from '@/app/[locale]/(hooks)/mutations/useDeleteBotMut';
-import { useUpdateBotMut } from '@/app/[locale]/(hooks)/mutations/useUpdateBotMut';
-import { useBotQuery } from '@/app/[locale]/(hooks)/queries/useBotQuery';
 import { actions, BotNodeType, conditions, triggers } from '@/entities/bot';
+import {
+  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+} from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import { useDeleteBotMut } from '@/src/app/[locale]/(hooks)/mutations/useDeleteBotMut';
+import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
+import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';

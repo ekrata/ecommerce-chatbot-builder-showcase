@@ -9,10 +9,10 @@ import { useOnClickOutside } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 import * as zod from 'zod';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import { useCreateOperatorMut } from '@/app/[locale]/(hooks)/mutations/useCreateOperatorMut';
 import { CreateOperator, UpdateOperator } from '@/entities/entities';
 import { Operator, permissionTier } from '@/entities/operator';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import { useCreateOperatorMut } from '@/src/app/[locale]/(hooks)/mutations/useCreateOperatorMut';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const schema = zod.object({

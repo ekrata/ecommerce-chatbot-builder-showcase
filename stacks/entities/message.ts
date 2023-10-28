@@ -2,11 +2,11 @@ import { CustomAttributeType, Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 import { string } from 'zod';
 
-import { AskAQuestionData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
-import { DecisionButtonsData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionButtons';
-import { DecisionCardMessagesData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionCardMessages';
-import { DecisionQuickRepliesData } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
 import { BotStateContext } from '@/packages/functions/app/api/src/nodes/processInteraction';
+import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
+import { DecisionButtonsData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionButtons';
+import { DecisionCardMessagesData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionCardMessages';
+import { DecisionQuickRepliesData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
 
 import { botNodeEvent } from './bot';
 
@@ -141,7 +141,7 @@ export const Message = new Entity({
     },
     botStateContext: {
       type: 'string',
-      default: '{}',
+      default: '',
     },
     sentAt: {
       type: 'number',

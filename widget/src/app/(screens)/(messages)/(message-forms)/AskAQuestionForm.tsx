@@ -11,14 +11,15 @@ import {
 } from 'reactflow';
 import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
 import { useUpdateMessageMut } from 'src/app/(actions)/mutations/useUpdateMessageMut';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
 import { useOnClickOutside } from 'usehooks-ts';
 import * as z from 'zod';
 import errorMap from 'zod/lib/locales/en';
 
+import { Message, NodeFormData } from '@/entities/message';
 import {
   AskAQuestionData, FormValues
-} from '@/dash/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
-import { Message, NodeFormData } from '@/entities/message';
+} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 interface Props {
@@ -29,6 +30,8 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message }) => {
   const tNodes = useTranslations('dash.bots.nodes')
   const tDash = useTranslations('dash.bots')
 
+  const orgQuery = useOrgQuery()
+  const orgId = orgQuery?.data?.orgId ?? ''
   const messageFormData = JSON.parse(message?.messageFormData ?? '{}') as AskAQuestionData
   const { validationType, errorMessage } = messageFormData
 
@@ -65,7 +68,7 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message }) => {
   const [schema, setSchema] = useState<any>(emailSchema);
   // const [nodes, setNodes, onNodesChange] = useNodeContext()
   const updateMessageMut = useUpdateMessageMut(message?.orgId, message?.conversationId, message?.messageId);
-  const orgId = operatorSession?.orgId ?? ''
+  // const orgId = operatorSession?.orgId ?? ''
   const params = useParams();
   const botId = params?.botId as string
   const ref = useRef(null)

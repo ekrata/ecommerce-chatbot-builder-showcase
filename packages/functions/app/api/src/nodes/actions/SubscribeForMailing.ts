@@ -1,13 +1,16 @@
 import { SQSEvent } from 'aws-lambda';
+import { EntityItem } from 'electrodb';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
+import { Message } from '@/entities/message';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 import { BotStateContext } from '../processInteraction';
+import { publishToNextNodes } from '../publishToNextNodes';
 
 const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
   try {
@@ -31,12 +34,29 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
             orgId,
           })
           .set({ mailingSubscribed: true })
-          .go();
+          .go({ response: 'all_new' });
+
+        const filteredMessages = messages
+          ?.filter(
+            (message) => message.messageId !== lastNodeMessage?.messageId,
+          )
+          .filter(Boolean);
+
+        console.log(lastNodeMessage);
+        if (filteredMessages?.length) {
+          publishToNextNodes({
+            ...botStateContext,
+            messages: [
+              ...filteredMessages,
+              res?.data as EntityItem<typeof Message>,
+            ],
+          });
+        }
+        return {
+          statuscode: 200,
+          body: `Successfully subscribed ${lastNodeMessage?.customerId} to mailing list`,
+        };
       }
-      return {
-        statuscode: 200,
-        body: `Successfully subscribed ${lastNodeMessage?.customerId} to mailing list`,
-      };
     }
   } catch (err) {
     console.log(err);

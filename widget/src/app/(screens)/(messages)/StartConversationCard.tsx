@@ -3,14 +3,14 @@
 import { EntityItem } from 'electrodb';
 import { useFormatter, useTranslations } from 'next-intl';
 import { BiSend } from 'react-icons/bi';
+import { useCreateConversationMut } from 'src/app/(actions)/mutations/useCreateConversationMut';
+import { useCreateCustomerMut } from 'src/app/(actions)/mutations/useCreateCustomerMut';
+import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
+import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
+import { DynamicBackground } from 'src/app/(helpers)/DynamicBackground';
 import { v4 as uuidv4 } from 'uuid';
 
-import { useCreateConversationMut } from '@/app/(actions)/mutations/useCreateConversationMut';
-import { useCreateCustomerMut } from '@/app/(actions)/mutations/useCreateCustomerMut';
-import { useConfigurationQuery } from '@/app/(actions)/queries/useConfigurationQuery';
-import { useCustomerQuery } from '@/app/(actions)/queries/useCustomerQuery';
-import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
-import { DynamicBackground } from '@/app/(helpers)/DynamicBackground';
 import { Configuration } from '@/entities/configuration';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';

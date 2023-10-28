@@ -2,28 +2,28 @@ import 'reactflow/dist/style.css';
 
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
-import {
-    Action, Condition, triggerInterval, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
-} from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import { FcInfo } from 'react-icons/fc';
 import {
-    Edge, EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position,
-    updateEdge, useEdges, useNodeId, useNodes
+  Edge, EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position,
+  updateEdge, useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { languageCodes } from '@/app/[locale]/(helpers)/lang';
 import { conversationTopic } from '@/entities/conversation';
+import {
+  Action, Condition, triggerInterval, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+} from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { languageCodes } from '@/src/app/[locale]/(helpers)/lang';
 import { faker } from '@faker-js/faker';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useNodeContext } from '../../BotEditor';
 import {
-    defaultOutputs, OutputFieldKey, OutputFieldsKeys, triggerNode, yesNoOutput
+  defaultOutputs, OutputFieldKey, OutputFieldsKeys, triggerNode, yesNoOutput
 } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';

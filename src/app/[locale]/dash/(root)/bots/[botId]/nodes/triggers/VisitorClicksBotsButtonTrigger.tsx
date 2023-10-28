@@ -1,8 +1,5 @@
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import {
-    Action, VisitorBotInteractionTrigger
-} from 'packages/functions/app/api/src/bots/triggers/definitions.type';
 import { FC, useEffect, useMemo, useRef } from 'react';
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
@@ -10,10 +7,12 @@ import { Edge, Handle, Node, NodeProps, Position, useEdges, useNodeId } from 're
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
+import {
+  Action, VisitorBotInteractionTrigger
+} from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import TriggerNode from '../../../(nodes)/TriggerNode';
 import { useNodeContext } from '../../BotEditor';
 import { actionNode, OutputFieldKey, OutputFieldsKeys, triggerNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';

@@ -20,12 +20,12 @@
 // import { useOnClickOutside } from 'usehooks-ts';
 // import { z } from 'zod';
 
-// import { useNodeContext } from '@/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
+// import { useNodeContext } from '@/src/app/[locale]/dash/(root)/bots/[botId]/BotEditor';
 // import {
 //     actionNode, defaultOutputs, OutputFieldsKeys
-// } from '@/app/[locale]/dash/(root)/bots/[botId]/collections';
-// import { NodeWrapper } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
-// import { updateNodes } from '@/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
+// } from '@/src/app/[locale]/dash/(root)/bots/[botId]/collections';
+// import { NodeWrapper } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/NodeWrapper';
+// import { updateNodes } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/updateNodes';
 // import { validationType } from '@/entities/bot';
 // import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -34,9 +34,6 @@
 // import { TextareaField } from '../shared/TextareaField';
 
 // // const handleStyle = { left: 10 };
-
-
-
 
 // const schema = z.object({
 //   message: z.string()?.min(1),
@@ -71,7 +68,6 @@
 //   );
 // }
 
-
 // export const CouponCodeActionEdge: React.FC<EdgeProps> = (params) => {
 //   return <GenericEdge {...params} outputKey={OutputFieldsKeys[type]} />
 // }
@@ -104,7 +100,6 @@
 
 //   useOnClickOutside(ref, handleClickOutside)
 
-
 //   useEffect(() => {
 //     const apiValues: FormValues = node?.data
 //     setValue('message', apiValues?.message ?? tForm('defaultMessage'))
@@ -119,11 +114,9 @@
 //     updateNodes(getValues(), node, nodes, setNodes, errors)
 //   }, [errors])
 
-
 //   const onSubmit: SubmitHandler<FormValues> = async (values) => {
 //     updateNodes(values, node, nodes, setNodes)
 //   }
-
 
 //   return (
 //     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
@@ -147,5 +140,3 @@
 //     </form >
 //   )
 // }
-
-

@@ -16,7 +16,7 @@
 // import { useOnClickOutside } from 'usehooks-ts';
 // import { z } from 'zod';
 
-// import { languageCodes } from '@/app/[locale]/(helpers)/lang';
+// import { languageCodes } from '@/src/app/[locale]/(helpers)/lang';
 // import { conversationTopic } from '@/entities/conversation';
 // import { faker } from '@faker-js/faker';
 // import { zodResolver } from '@hookform/resolvers/zod';
@@ -105,14 +105,12 @@
 
 //   useOnClickOutside(ref, handleClickOutside)
 
-
 //   const fieldArray = useFieldArray({
 //     name: 'phrases',
 //     control, // control props comes from useForm (optional: if you are using FormContext)
 //   });
 
 //   const { fields, append, update, prepend, remove, swap, move, insert } = fieldArray
-
 
 //   useEffect(() => {
 //     const apiValues: FormValues = node?.data
@@ -128,7 +126,6 @@
 //     console.log(errors)
 //     updateNodes(getValues(), node, nodes, setNodes, errors)
 //   }, [errors])
-
 
 //   const onSubmit: SubmitHandler<FormValues> = async (values) => {
 //     updateNodes(values, node, nodes, setNodes)
@@ -168,5 +165,3 @@
 //     </form >
 //   )
 // }
-
-

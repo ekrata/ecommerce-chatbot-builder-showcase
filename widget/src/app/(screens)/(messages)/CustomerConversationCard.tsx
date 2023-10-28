@@ -3,11 +3,10 @@ import { EntityItem } from 'electrodb';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { BiSend } from 'react-icons/bi';
+import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
+import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
+import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
 
-import { useConfigurationQuery } from '@/app/(actions)/queries/useConfigurationQuery';
-import { useCustomerQuery } from '@/app/(actions)/queries/useCustomerQuery';
-import { useOrgQuery } from '@/app/(actions)/queries/useOrgQuery';
-import { DynamicBackground } from '@/app/(helpers)/DynamicBackground';
 import { Configuration } from '@/entities/configuration';
 import { ConversationItem } from '@/entities/conversation';
 

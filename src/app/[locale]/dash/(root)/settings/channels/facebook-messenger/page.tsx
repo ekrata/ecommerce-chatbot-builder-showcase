@@ -3,12 +3,12 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import {
-    useUpdateConfigurationMut
-} from '@/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
 import { ConfigTicketing } from '@/entities/configuration';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import {
+  useUpdateConfigurationMut
+} from '@/src/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
 
 const resolver: Resolver<ConfigTicketing> = async (values) => {
   return {

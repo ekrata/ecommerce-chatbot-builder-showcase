@@ -9,11 +9,11 @@ import { BsPerson, BsPersonFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
-import { useAuthContext } from '@/app/[locale]/(hooks)/AuthProvider';
-import { useCreateOperatorMut } from '@/app/[locale]/(hooks)/mutations/useCreateOperatorMut';
-import { useDeleteOperatorMut } from '@/app/[locale]/(hooks)/mutations/useDeleteOperatorMut';
-import { useConfigurationQuery } from '@/app/[locale]/(hooks)/queries/useConfigurationQuery';
-import { useOperatorsQuery } from '@/app/[locale]/(hooks)/queries/useOperatorsQuery';
+import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
+import { useCreateOperatorMut } from '@/src/app/[locale]/(hooks)/mutations/useCreateOperatorMut';
+import { useDeleteOperatorMut } from '@/src/app/[locale]/(hooks)/mutations/useDeleteOperatorMut';
+import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
+import { useOperatorsQuery } from '@/src/app/[locale]/(hooks)/queries/useOperatorsQuery';
 
 import { getOperatorIcon, NewOperatorModal } from './NewOperatorModal';
 
