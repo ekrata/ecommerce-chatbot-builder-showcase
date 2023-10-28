@@ -1,12 +1,9 @@
 import { SQSEvent } from 'aws-lambda';
-import { ApiGatewayManagementApi, DynamoDB } from 'aws-sdk';
-import { a } from 'msw/lib/glossary-de6278a9';
-import { ApiHandler } from 'sst/node/api';
+import { ApiGatewayManagementApi } from 'aws-sdk';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
-import { Conversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';

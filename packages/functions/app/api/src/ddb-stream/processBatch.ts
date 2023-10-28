@@ -152,7 +152,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             }).data;
 
             // route responses to bot actions/conditions to the appropriate next node
-            if (messageData?.messageFormType !== '') {
+            if (
+              messageData?.messageFormType !== '' &&
+              messageData?.sender === 'bot'
+            ) {
               const botStateContext = messageData?.botStateContext;
               if (
                 botStateContext?.currentNode &&
@@ -179,8 +182,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                       console.log(nextNodeType);
                       await sns
                         .publish({
-                          TopicArn: Topic.BotNodeTopic.topicArn,
-                          Message: JSON.stringify(record),
+                          TopicArn: Topic?.BotNodeTopic?.topicArn,
+                          Message: JSON.stringify({
+                            ...botStateContext,
+                            messages: [
+                              ...(botStateContext?.messages ?? []),
+                              messageData,
+                            ],
+                          }),
                           MessageAttributes: {
                             type: {
                               DataType: 'String',

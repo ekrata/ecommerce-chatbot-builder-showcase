@@ -6,6 +6,7 @@ import { Table } from 'sst/node/table';
 import { Topic } from 'sst/node/topic';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Message } from '@/entities/message';
 import * as Sentry from '@sentry/serverless';
 
 import {
@@ -33,6 +34,7 @@ export type BotStateContext = {
   interaction: EntityItem<typeof Interaction>;
   bot: EntityItem<typeof Bot>;
   conversation: ConversationItem;
+  messages?: EntityItem<typeof Message>[];
   nextNode: BotNodeType;
   currentNode: BotNodeType;
 };
