@@ -9,11 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { Message } from '@/entities/message';
+import { WsAppDetailType } from '@/types/snsTypes';
 import { faker } from '@faker-js/faker';
 
 import {
   Bot,
   BotEdgeType,
+  botNodeEvent,
   BotNodeType,
 } from '../../../../../../stacks/entities/bot';
 import {
@@ -145,7 +147,7 @@ describe.concurrent('bot-executions', async () => {
         const newEvent = JSON.parse(event.data.toString()) as WsAppEvent;
         const { type } = newEvent;
 
-        if (type === 'createConversation') {
+        if (type === WsAppDetailType.wsAppCreateConversation) {
           const body = newEvent.body as ExpandedConversation;
           const { type } = newEvent;
           console.log(type);
@@ -160,7 +162,7 @@ describe.concurrent('bot-executions', async () => {
           createMessageDone += 1;
           triggerDone();
         }
-        if (type === 'createMessage') {
+        if (type === WsAppDetailType.wsAppCreateMessage) {
           const body = newEvent.body as EntityItem<typeof Message>;
           const { type } = newEvent;
           console.log('validating', clientType, 'recieves conversation');
@@ -168,6 +170,9 @@ describe.concurrent('bot-executions', async () => {
           expect(body.customerId).toStrictEqual(customerId);
           expect(body.operatorId).toStrictEqual('');
           expect(body?.customerId).toStrictEqual(customerId);
+          expect(body?.messageFormType).toStrictEqual(
+            botNodeEvent.AskAQuestion,
+          );
           createMessageDone += 1;
           triggerDone();
         }

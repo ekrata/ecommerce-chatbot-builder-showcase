@@ -40,9 +40,6 @@
       "@/marketing/*": [
         "./src/app/[locale]/(marketing)/*"
       ],
-      "@/*": [
-        "./src/*"
-      ],
       "@/styles": [
         ""
       ],
@@ -54,6 +51,9 @@
       ],
       "@/types/*": [
         "../types/*"
+      ],
+      "@/dash/*": [
+        "../src/*"
       ],
       "@/components/*": [
         "./src/components/*"

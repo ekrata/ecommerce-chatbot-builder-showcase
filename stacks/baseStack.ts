@@ -589,6 +589,31 @@ export function baseStack({ stack, app }: StackContext) {
           },
         },
       },
+      [botNodeEvent.SubscribeForMailing]: {
+        type: 'queue',
+        queue: new Queue(stack, `bot_node_action_SubscribeForMailing_queue`, {
+          cdk: defaultQueueConfig,
+          consumer: {
+            function: {
+              timeout: defaultFunctionTimeout,
+              bind: [wsApi, api, REGION, table],
+              handler:
+                'packages/functions/app/api/src/nodes/actions/subscribeForMailing.handler',
+            },
+          },
+        }),
+        cdk: {
+          subscription: {
+            filterPolicyWithMessageBody: {
+              type: FilterOrPolicy.filter(
+                SubscriptionFilter.stringFilter({
+                  allowlist: [botNodeEvent.SubscribeForMailing],
+                }),
+              ),
+            },
+          },
+        },
+      },
     },
   });
   processInteractionFunction.bind([wsApi, api, REGION, table, botNodeTopic]);

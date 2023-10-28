@@ -136,12 +136,12 @@ export const Message = new Entity({
       default: '',
     },
     messageFormData: {
-      type: CustomAttributeType<NodeFormData>('any'),
-      default: null,
+      type: 'string',
+      default: '{}',
     },
     botStateContext: {
-      type: CustomAttributeType<BotStateContext>('any'),
-      default: null,
+      type: 'string',
+      default: '{}',
     },
     sentAt: {
       type: 'number',
