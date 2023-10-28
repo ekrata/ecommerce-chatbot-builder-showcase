@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useForm } from 'react-hook-form';
 import { BiChevronRight, BiSend } from 'react-icons/bi';
@@ -62,42 +62,46 @@ export const ConversationsScreen: FC = () => {
   console.log(conversationItems.data)
   sortConversationItems(conversationItems.data ?? [])
   console.log(conversationItems.data)
-  return (
-    <div className="flex justify-between w-full h-full rounded-3xl">
-      <div className="flex flex-col w-full h-full place-items-center">
-        <div
-          className={`background text-white flex place-items-center w-full animated-flip-up justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
-        >
-          {isMobile && <button className='absolute top-2 right-2 btn-ghost' onClick={() => setWidgetVisibility('minimized')}><BsX className='text-2xl text-black shadow-2xl' /></button>}
-          {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
-          {t('Messages')}
-        </div>
-        <div
-          className={`flex flex-col place-items-center w-full overflow-y-scroll `}
-        >
-          {conversationItems.isFetching && fetchingConversationItemsSkeleton}
-          {conversationItems.isSuccess && conversationItems.data.map((conversationItem) => (
-            conversationItem?.messages?.length ?
-              <div key={conversationItem?.conversationId} data-testid={conversationItem?.conversationId} className="w-full border-b-2 divide-y-2">
-                <CustomerConversationCard height={'16'} conversationItem={conversationItem} />
-              </div>
-              : null
-          ))}
-          {(conversationItems.isSuccess && !conversationItems.data.length &&
-            noData
-          )}
+  const render = useMemo(() => {
+    return (
+      <div className="flex justify-between w-full h-full rounded-3xl">
+        <div className="flex flex-col w-full h-full place-items-center">
+          <div
+            className={`background text-white flex place-items-center w-full animated-flip-up justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
+          >
+            {isMobile && <button className='absolute top-2 right-2 btn-ghost' onClick={() => setWidgetVisibility('minimized')}><BsX className='text-2xl text-black shadow-2xl' /></button>}
+            {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
+            {t('Messages')}
+          </div>
+          <div
+            className={`flex flex-col place-items-center w-full overflow-y-scroll `}
+          >
+            {conversationItems.isFetching && fetchingConversationItemsSkeleton}
+            {conversationItems.isSuccess && conversationItems.data.map((conversationItem) => (
+              conversationItem?.messages?.length ?
+                <div key={conversationItem?.conversationId} data-testid={conversationItem?.conversationId} className="w-full border-b-2 divide-y-2">
+                  <CustomerConversationCard height={'16'} conversationItem={conversationItem} />
+                </div>
+                : null
+            ))}
+            {(conversationItems.isSuccess && !conversationItems.data.length &&
+              noData
+            )}
 
+          </div>
+          <button onClick={async () => {
+            const conversationId = uuidv4()
+            setSelectedConversationId(conversationId);
+            const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, operatorId: '', channel: 'website', status: 'unassigned' }])
+          }}
+            className="fixed z-10 justify-center normal-case border-0 shadow-lg btn gap-x-2 background rounded-3xl bottom-20">{t('Send us a message')}
+            {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
+            <BiSend className='text-xl' />
+          </button>
         </div>
-        <button onClick={async () => {
-          const conversationId = uuidv4()
-          setSelectedConversationId(conversationId);
-          const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, operatorId: '', channel: 'website', status: 'unassigned' }])
-        }}
-          className="fixed z-10 justify-center normal-case border-0 shadow-lg btn gap-x-2 background rounded-3xl bottom-20">{t('Send us a message')}
-          {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
-          <BiSend className='text-xl' />
-        </button>
       </div>
-    </div>
-  );
+    );
+  }, [conversationItems?.dataUpdatedAt, conversationItems?.data]
+  )
+  return render
 };

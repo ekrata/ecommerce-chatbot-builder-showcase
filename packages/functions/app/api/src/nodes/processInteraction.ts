@@ -1,3 +1,4 @@
+import { SQSEvent } from 'aws-lambda';
 import AWS, { DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
 import { Api, ApiHandler, useJsonBody } from 'sst/node/api';
@@ -7,6 +8,8 @@ import { Topic } from 'sst/node/topic';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Message } from '@/entities/message';
+import middy from '@middy/core';
+import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import {
@@ -21,6 +24,7 @@ import {
 } from '../../../../../../stacks/entities/conversation';
 import { Interaction } from '../../../../../../stacks/entities/interaction';
 import { getAppDb } from '../../../api/src/db';
+import { getNewImage } from '../../../ws/src/helpers';
 import {
   Triggers,
   VisitorBotInteractionTrigger,
@@ -49,77 +53,80 @@ export type BotStateContext = {
 
 // import { postToConnection } from '../postToConnection';
 
-export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event: any, context) => {
+const lambdaHandler = Sentry.AWSLambda.wrapHandler(
+  async (event: SQSEvent, context) => {
+    const appDb = getAppDb(Config.REGION, Table.app.tableName);
     console.log('processInteraction');
     try {
-      const appDb = getAppDb(Config.REGION, Table.app.tableName);
-      const newImage = DynamoDB.Converter.unmarshall(
-        event?.detail?.dynamodb?.NewImage,
-      );
-      const interactionData = Interaction.parse({ Item: newImage }).data;
-      console.log(interactionData);
-      if (!interactionData) {
-        return {
-          statusCode: 500,
-          body: 'Failed to parse the eventbridge event into a usable entity.',
-        };
-      }
+      const { Records } = event;
+      for (const record of Records) {
+        const newImage = getNewImage(record);
+        const interactionData = Interaction.parse({ Item: newImage }).data;
+        console.log(interactionData);
+        if (!interactionData) {
+          return {
+            statusCode: 500,
+            body: 'Failed to parse the eventbridge event into a usable entity.',
+          };
+        }
 
-      const { type } = interactionData;
-      const bots = await appDb.entities.bots.query
-        .byOrg({ orgId: interactionData.orgId })
-        .go();
-      const botTriggers = getBotTriggers(bots?.data);
-      const botStates = await processTrigger(
-        interactionData,
-        botTriggers,
-        bots?.data,
-      );
-
-      console.log('publishing', botStates);
-      botStates?.forEach(async (botState) => {
-        console.log(
-          'publishing',
-          JSON.stringify({
-            ...botState,
-          }),
+        const { type } = interactionData;
+        const bots = await appDb.entities.bots.query
+          .byOrg({ orgId: interactionData.orgId })
+          .go();
+        const botTriggers = getBotTriggers(bots?.data);
+        const botStates = await processTrigger(
+          interactionData,
+          botTriggers,
+          bots?.data,
         );
-        await sns
-          .publish({
-            // Get the topic from the environment variable
-            TopicArn: Topic.BotNodeTopic.topicArn,
-            Message: JSON.stringify({
+
+        console.log('publishing', botStates);
+        botStates?.forEach(async (botState) => {
+          console.log(
+            'publishing',
+            JSON.stringify({
               ...botState,
             }),
-            MessageStructure: 'string',
-          })
-          .promise();
-      });
+          );
+          await sns
+            .publish({
+              // Get the topic from the environment variable
+              TopicArn: Topic.BotNodeTopic.topicArn,
+              Message: JSON.stringify({
+                ...botState,
+              }),
+              MessageStructure: 'string',
+            })
+            .promise();
+        });
 
-      // if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
-      // const customer = await appDb.entities.customers.query
-      //   .primary({ orgId, customerId: customerId ?? '' })
-      //   .go();
+        // if (type === VisitorBotInteractionTrigger.VisitorClicksChatIcon) {
+        // const customer = await appDb.entities.customers.query
+        //   .primary({ orgId, customerId: customerId ?? '' })
+        //   .go();
 
-      // let filteredOperators = operators?.data;
+        // let filteredOperators = operators?.data;
 
-      // await postToConnection(
-      //   appDb,
-      //   new ApiGatewayManagementApi({
-      //     endpoint: WebSocketApi.appWs.httpsUrl,
-      //   }),
-      //   [...filteredOperators, ...customer.data],
-      //   { type: 'createCustomer', body: customerData },
-      // );
+        // await postToConnection(
+        //   appDb,
+        //   new ApiGatewayManagementApi({
+        //     endpoint: WebSocketApi.appWs.httpsUrl,
+        //   }),
+        //   [...filteredOperators, ...customer.data],
+        //   { type: 'createCustomer', body: customerData },
+        // );
+      }
     } catch (err) {
       console.log('err');
       console.log(err);
       Sentry.captureException(err);
       return { statusCode: 500, body: JSON.stringify(err) };
     }
-  }),
+  },
 );
+
+export const handler = middy(lambdaHandler).use(eventNormalizer());
 
 export const getNextNodes = (
   ancestorNodeId: string,

@@ -4,8 +4,10 @@ import { useTranslations } from 'next-intl';
 import { FC, useId, useState } from 'react';
 import { BsChatLeftFill, BsChevronDown, BsPencilSquare } from 'react-icons/bs';
 
+import { botNodeEvent } from '@/entities/bot';
 import { ConfigLiveChatAppearance, Configuration } from '@/entities/configuration';
 import { CreateInteraction } from '@/entities/entities';
+import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useQuery } from '@tanstack/react-query';
 
 import { useCreateInteractionMut } from './(actions)/mutations/useCreateInteractionMut';
@@ -19,7 +21,6 @@ export const StartChatButton: FC = () => {
   const [hover, setHover] = useState(false);
   const org = useOrgQuery()
   const orgId = org?.data?.orgId ?? ''
-
   const { chatWidget: { widgetState, widgetVisibility, setWidgetVisibility } } = useChatWidgetStore();
   const configuration = useConfigurationQuery(orgId)
   const customerQuery = useCustomerQuery(orgId);
@@ -30,12 +31,14 @@ export const StartChatButton: FC = () => {
   const handleClick = async () => {
     if (widgetVisibility === 'minimized') {
       setWidgetVisibility('open')
-      await createInteractionMut.mutateAsync([orgId, { orgId: orgId, customerId: customerQuery?.data?.customerId, createdAt: Date.now() }])
+      await createInteractionMut.mutateAsync([orgId, { orgId: orgId, visitId: '', operatorId: '', botId: '', customerId: customerQuery?.data?.customerId, channel: 'website', status: 'unassigned', createdAt: Date.now(), type: Triggers.VisitorClicksChatIcon }])
 
     } else {
       setWidgetVisibility('minimized')
     }
   }
+
+
 
   return (
     <div onClick={() => handleClick()}>

@@ -34,6 +34,10 @@ export interface Props {
     mockWsUrl?: string
 }
 
+export const useWidgetSocket = () => {
+
+}
+
 export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) => {
     // Initialize the WebSocket connection and retrieve necessary properties
     // const orgId = process.env.NEXT_PUBLIC_ORG_ID ?? ''

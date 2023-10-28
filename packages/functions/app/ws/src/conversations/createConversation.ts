@@ -1,12 +1,12 @@
 import { SNSEvent, SQSEvent, StreamRecord } from 'aws-lambda';
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
+import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import { ApiHandler } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { WebSocketApi } from 'sst/node/websocket-api';
 
 import { Conversation, ExpandedConversation } from '@/entities/conversation';
-import { expandObjects } from 'packages/functions/app/api/src/util/expandObjects';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
@@ -16,10 +16,9 @@ import { getAppDb } from '../../../api/src/db';
 import { getNewImage } from '../helpers';
 import { postToConnection } from '../postToConnection';
 
-const appDb = getAppDb(Config.REGION, Table.app.tableName);
-
 const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
   try {
+    const appDb = getAppDb(Config.REGION, Table.app.tableName);
     const { Records } = event;
     for (const record of Records) {
       const newImage = getNewImage(record);

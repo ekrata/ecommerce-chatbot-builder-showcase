@@ -497,7 +497,7 @@ export function baseStack({ stack, app }: StackContext) {
             subscription: {
               filterPolicy: {
                 type: SubscriptionFilter.stringFilter({
-                  allowlist: [func.id],
+                  allowlist: [ApiAppDetailType.apiAppCreateInteraction],
                 }),
               },
             },
@@ -547,6 +547,13 @@ export function baseStack({ stack, app }: StackContext) {
             function: {
               handler:
                 'packages/functions/app/api/src/nodes/inputActions/askAQuestion.handler',
+              bind: [wsApi, api, REGION, table],
+              permissions: [
+                table,
+                'sqs:ReceiveMessage',
+                'sqs:DeleteMessage',
+                'sqs:GetQueueAttributes',
+              ],
             },
           },
         }),
@@ -935,7 +942,10 @@ export function baseStack({ stack, app }: StackContext) {
     environment: {
       NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
       NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
-      NEXT_PUBLIC_APP_WIDGET_URL: `https://${widgetDomain ?? ''}/`,
+      NEXT_PUBLIC_APP_WIDGET_URL:
+        stack.stage === 'local'
+          ? 'http://localhost:3001'
+          : `https://${widgetDomain ?? ''}/`,
     },
   });
 

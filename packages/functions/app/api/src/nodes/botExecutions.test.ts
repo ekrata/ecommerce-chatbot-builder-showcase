@@ -58,7 +58,7 @@ beforeAll(async () => {
 // we test to see if the outputted data is correct and expected for the next node.
 
 describe.concurrent(
-  'bot-executions',
+  'botExecutions',
   async () => {
     it.only('asks the user to subscribe to org emails', () =>
       new Promise(async (done) => {

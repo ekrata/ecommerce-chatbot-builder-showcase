@@ -1,12 +1,16 @@
 'use client'
+import { useSearchParams } from 'next/navigation';
 import {
   createContext, Dispatch, FC, PropsWithChildren, ReactNode, useEffect, useMemo, useState
 } from 'react';
 import { isMobile } from 'react-device-detect';
 import { BsX } from 'react-icons/bs';
+import useWebSocket from 'react-use-websocket';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useCreateCustomerMut } from './(actions)/mutations/useCreateCustomerMut';
+import { useCreateInteractionMut } from './(actions)/mutations/useCreateInteractionMut';
+import { useCreateVisitMut } from './(actions)/mutations/useCreateVisitMut';
 import { useConfigurationQuery } from './(actions)/queries/useConfigurationQuery';
 import { useCustomerQuery } from './(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from './(actions)/queries/useOrgQuery';
@@ -30,16 +34,28 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   mockWsUrl,
 }) => {
   const org = useOrgQuery()
+  // const searchParams = useSearchParams()
+  // const botId = searchParams.get('botId')
+
+
   const orgId = org?.data?.orgId ?? ''
+
   const { chatWidget: { widgetVisibility, setWidgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
   const configuration = useConfigurationQuery(orgId);
+  const visitId = uuidv4()
+  const createVisitMut = useCreateVisitMut(orgId, visitId)
   console.log(configuration?.data)
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
   console.log(widgetAppearance)
   const customerQuery = useCustomerQuery(orgId);
 
+  useEffect(() => {
+    createVisitMut.mutateAsync([orgId, visitId, { customerId: customerQuery?.data?.customerId ?? '', orgId: orgId, visitId: visitId, url: window.location.href, at: Date.now() }])
+  }, [window.location.href])
+
   const hideNavbar = (widgetState === 'conversations' && selectedConversationId) || (widgetState === 'help' && selectedArticleId)
+
 
   const content = useMemo(() => {
     switch (widgetState) {
@@ -65,7 +81,6 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
     }
   }, [widgetState, selectedConversationId, selectedArticleId])
 
-
   return (
     <div className={` ${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-10 md:bottom-10' : 'md:absolute md:right-10 md:bottom-10 '}`}>
       {widgetVisibility === 'open' &&
@@ -80,8 +95,8 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
           </div>
         )}
       {((isMobile && widgetVisibility === 'minimized') || (!isMobile)) &&
-        <div className='bottom-0 right-0 flex flex-row justify-end ' >
-          <StartChatButton></StartChatButton>
+        <div className='bottom-0 right-0 flex flex-row justify-end' >
+          <StartChatButton ></StartChatButton>
         </div>
       }
     </div>

@@ -90,7 +90,7 @@ export const HomeScreen: FC = () => {
 
         {articles.isLoading || (articles.isFetched && articles?.data?.length) && <div className=" dark:bg-gray-900 mt-4 bg-white border-gray-300  shadow-md border-[1px] text-normal    rounded-3xl mx-4 gap-y-4 animate-fade-left">
           <div className="flex place-items-center">
-            <button onClick={() => setWidgetState('help')} className="justify-between w-full px-2 m-2 font-semibold normal-case bg-gray-200 border-0 rounded-b-none btn btn-ghost rounded-3xl text-normal input input-bordered " >
+            <button onClick={() => setWidgetState('help')} className="justify-between w-full px-2 m-2 mb-4 font-semibold normal-case bg-gray-200 border-0 rounded-b-none btn btn-ghost rounded-3xl text-normal input input-bordered " >
               <p>{t('Search for help')}</p>
               <BsSearch className='justify-end text-xl' />
             </button>

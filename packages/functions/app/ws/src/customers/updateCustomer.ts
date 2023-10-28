@@ -42,8 +42,6 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         let filteredOperators = operators.data;
 
-        console.log([...filteredOperators, ...customer.data]);
-
         await postToConnection(
           appDb,
           new ApiGatewayManagementApi({

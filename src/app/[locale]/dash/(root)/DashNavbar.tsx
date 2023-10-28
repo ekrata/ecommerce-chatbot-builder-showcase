@@ -7,6 +7,7 @@ import { BsRobot } from 'react-icons/bs';
 import { CgWebsite } from 'react-icons/cg';
 import { IoMdChatboxes } from 'react-icons/io';
 import { MdOutlineDashboard } from 'react-icons/md';
+import { PiBrowsersFill } from 'react-icons/pi';
 import { TbSettings } from 'react-icons/tb';
 
 export default function DashNavbar() {
@@ -87,6 +88,21 @@ export default function DashNavbar() {
           </div>
         </Link>
       </li>
+      <li >
+        <Link
+          href={{ pathname: "/dash/sandbox" }}
+          key='sandbox'
+          passHref
+          legacyBehavior
+          className='flex btn btn-ghost hover:bg-opacity-0'
+        >
+          <a target="_blank" rel="noopener noreferrer">
+            <div className='normal-case tooltip lg:tooltip-right' data-tip={t('sandbox')}>
+              <PiBrowsersFill className='w-6 h-6 text-gray-400' />
+            </div>
+          </a>
+        </Link>
+      </li>
       <li className='justify-end'>
         <Link
           href={{ pathname: "/dash/settings" }}
@@ -98,6 +114,7 @@ export default function DashNavbar() {
           </div>
         </Link>
       </li>
+
     </ul >
   );
 }

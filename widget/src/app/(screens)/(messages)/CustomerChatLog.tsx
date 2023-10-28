@@ -51,7 +51,8 @@ export const CustomerChatLog: FC = ({ }) => {
           <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
             {(message.sender === 'operator' || message.sender === 'bot') && (
               <div className="flex flex-col justify-start w-full gap-x-2" >
-                <div className="flex-none w-30 h-30">
+                <div className="flex flex-row">
+                  <Avatar height='6' width='6' conversationItem={conversationItem} message={message} />
                   <div className="indicator">
                     <span
                       data-testid="status-badge"
@@ -62,7 +63,6 @@ export const CustomerChatLog: FC = ({ }) => {
                     >
                       {!message.sentAt ? '...' : ''}
                     </span>
-                    <Avatar conversationItem={conversationItem} message={message} />
                   </div>
                   <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
                     } tooltip-bottom z-10`}

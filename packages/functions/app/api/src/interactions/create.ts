@@ -14,7 +14,7 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId } = usePathParams();
+    const { orgId, interactionId } = usePathParams();
     const body: CreateInteraction = useJsonBody();
     if (!orgId) {
       return {
@@ -27,6 +27,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         .upsert({
           ...body,
           orgId,
+          interactionId,
         })
         .go();
       return {
@@ -34,6 +35,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(res.data),
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,

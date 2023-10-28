@@ -1,9 +1,10 @@
-import { SQSEvent } from 'aws-lambda';
+import { SNSEvent, SNSEventRecord, SNSMessage, SQSEvent } from 'aws-lambda';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v5 as uuidv5 } from 'uuid';
 
 import { botNodeEvent } from '@/entities/bot';
+import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
@@ -18,7 +19,10 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
       const { Records } = event;
       for (const record of Records) {
         const snsMessageId = record.messageId;
-        const botStateContext: BotStateContext = JSON.parse(record.body);
+        const botStateContext: BotStateContext = (
+          record.body as unknown as SNSMessage
+        )?.Message as unknown as BotStateContext;
+        console.log(botStateContext);
         const { type, bot, conversation, nextNode, interaction, currentNode } =
           botStateContext;
 
@@ -26,6 +30,21 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           conversation;
         const { id, position, data } = nextNode;
         const params = {};
+        const resOne = await appDb.entities.messages
+          .upsert({
+            // messageId based on idempotent interactionId
+            messageId: uuidv5(snsMessageId, orgId),
+            conversationId,
+            botId,
+            orgId,
+            operatorId,
+            customerId,
+            sender: 'bot',
+            content: (JSON.parse(data ?? '{}') as AskAQuestionData)?.message,
+            // don't need to modify
+            // botStateContext: JSON.stringify(botStateContext),
+          })
+          .go();
         const res = await appDb.entities.messages
           .upsert({
             // messageId based on idempotent interactionId

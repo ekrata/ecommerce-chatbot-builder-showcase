@@ -20,6 +20,7 @@ export enum MutationKey {
   createBot = "createBot",
   deleteBot = "deleteBot",
   createInteraction = "createInteraction",
+  createVisit = "createVisit"
 }
 
 
