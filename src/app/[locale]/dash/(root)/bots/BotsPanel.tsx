@@ -51,7 +51,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
       <div className='flex flex-row justify-between'>
         <h2 className='text-2xl font-semibold'>{title === 'All' ? tDash('All') : tDash(`bots.categories.${title}`)}</h2>
         <div className="flex gap-x-2" >
-          <button className="flex normal-case btn btn-sm btn-outline gap-x-2" onClick={async () => createBotMut.mutateAsync([{ botId: uuidv4(), name: `new-bot-${generate({ exactly: 1, wordsPerString: 2, separator: "-" })[0]}`, orgId }])}>
+          <button className="flex normal-case btn btn-sm btn-outline gap-x-2" onClick={async () => createBotMut.mutateAsync([{ botId: uuidv4(), category: 'General', name: `new-bot-${generate({ exactly: 1, wordsPerString: 2, separator: "-" })[0]}`, orgId }])}>
             <BsRobot />
             {tBots('Create new bot')}
           </button>

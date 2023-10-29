@@ -2,6 +2,7 @@ import {
   Action,
   Condition,
   VisitorBotInteractionTrigger,
+  VisitorPageInteractionTrigger,
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 export const OutputFieldsKeys = {
@@ -17,6 +18,7 @@ export const OutputFieldsKeys = {
   [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: 'outputs',
   [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: 'outputs',
   [`${VisitorBotInteractionTrigger.VisitorSays}`]: 'outputs',
+  [`${VisitorPageInteractionTrigger.FirstVisitOnSite}`]: 'outputs',
 } as const;
 
 export type OutputFieldKey = keyof typeof OutputFieldsKeys;

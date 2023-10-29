@@ -189,9 +189,15 @@ export const BotEditor: React.FC = () => {
         y: event.clientY - reactFlowBounds.top,
       }) ?? { x: 0, y: 0 }
 
-      const nodeIds = nodes.map(({ id }) => parseInt(id, 10));
+      let nextNodeId = '0'
+      if (nodes?.length) {
+        const nodeIds = nodes?.map(({ id }) => {
+          return parseInt(id, 10)
+        })
+        nextNodeId = ((Math.max(...nodeIds)) + 1).toString()
+      }
       const newNode: Node = {
-        id: ((Math.max(...nodeIds)) + 1).toString(),
+        id: nextNodeId,
         type,
         data: {},
         position,

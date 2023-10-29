@@ -8,7 +8,7 @@ import {
 
 import { Actions, Conditions, Triggers } from '@/entities/bot';
 import {
-  Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger
+  Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 import { nodeSubTypeIcons } from '../nodeSubTypeIcons';
@@ -41,6 +41,9 @@ import {
 import { ChatStatusConditionEdge } from './nodes/conditions/ChatStatus';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
+import {
+  FirstVisitOnSiteTriggerEdge, FirstVisitOnSiteTriggerForm, FirstVisitOnSiteTriggerNode
+} from './nodes/triggers/FirstVisitOnSite';
 import {
   VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
@@ -75,6 +78,7 @@ export const nodeTypes: NodeTypes = {
   [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}` as string]: VisitorClicksBotsButtonTriggerNode,
   [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}` as string]: VisitorClicksOnChatIconTriggerNode,
   [`${VisitorBotInteractionTrigger.VisitorSays}` as string]: VisitorSaysTriggerNode,
+  [`${VisitorPageInteractionTrigger.FirstVisitOnSite}` as string]: FirstVisitOnSiteTriggerNode,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   [`${Condition.BasedOnContactProperty}` as string]: BasedOnContactPropertyConditionNode,
@@ -113,6 +117,7 @@ export const edgeTypes: EdgeTypes = {
   [`${Condition.ChatStatus}`]: ChatStatusConditionEdge,
   [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: VisitorClicksOnChatIconTriggerEdge,
   [`${VisitorBotInteractionTrigger.VisitorSays}`]: VisitorSaysTriggerEdge,
+  [`${VisitorPageInteractionTrigger.FirstVisitOnSite}`]: FirstVisitOnSiteTriggerEdge,
 }
 
 interface Props {
@@ -143,6 +148,8 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
       return <VisitorClicksOnChatIconTriggerForm node={node} />
     case VisitorBotInteractionTrigger.VisitorSays:
       return <VisitorSaysTriggerForm node={node} />
+    case VisitorPageInteractionTrigger.FirstVisitOnSite:
+      return <FirstVisitOnSiteTriggerForm node={node} />
 
     default:
       return null

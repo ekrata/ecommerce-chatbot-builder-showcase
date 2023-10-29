@@ -13,8 +13,8 @@ export function botsStack({ stack }: StackContext) {
     //   'packages/functions/app/api/src/bots/listTemplates.handler',
     // 'DELETE /orgs/{orgId}/bots/{botId}':
     //   'packages/functions/app/api/src/bots/delete.handler',
-    'POST /orgs/{orgId}/bots/{botId}':
-      'packages/functions/app/api/src/bots/create.handler',
+    'POST /orgs/{orgId}/bot-templates/{botId}':
+      'packages/functions/app/api/src/botTemplates/create.handler',
     // 'PATCH /orgs/{orgId}/bots/{botId}':
     //   'packages/functions/app/api/src/bots/update.handler',
   });

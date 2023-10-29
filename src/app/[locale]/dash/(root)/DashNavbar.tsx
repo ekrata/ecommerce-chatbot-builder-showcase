@@ -10,11 +10,21 @@ import { MdOutlineDashboard } from 'react-icons/md';
 import { PiBrowsersFill } from 'react-icons/pi';
 import { TbSettings } from 'react-icons/tb';
 
+import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
+import { useConversationItemsQuery } from '../../(hooks)/queries/useConversationItemsQuery';
+import { useDashStore } from './(actions)/useDashStore';
+
 export default function DashNavbar() {
   const locale = useLocale()
+  const { conversationListFilter } = useDashStore()
   const t = useTranslations('app.layout');
-  // const conversation = useConversationItemsQuery({ ...conversationFilter })
-  const unreadMessages = 5;
+
+  const unreadMessages = useConversationItemsQuery(conversationListFilter)?.data?.pages?.[0]?.data.reduce((prev, curr) => {
+    if (!curr?.read) {
+      return prev + 1
+    }
+    return prev
+  }, 0)
 
   return (
     <ul className='flex flex-col text-gray-400 normal-case bg-black place-items-center hover:bg-opacity-0'>
@@ -37,9 +47,13 @@ export default function DashNavbar() {
         >
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('conversations')}>
             <div className='indicator'>
-              <span className='text-xs indicator-item badge badge-info'>
-                {unreadMessages}
-              </span>
+
+              {unreadMessages &&
+                <span className='text-xs indicator-item badge badge-info'>
+                  {unreadMessages}
+                </span>
+
+              }
               <IoMdChatboxes className='w-6 h-6' />
             </div>
           </div>

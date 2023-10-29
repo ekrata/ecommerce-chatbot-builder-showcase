@@ -44,6 +44,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(res.data),
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,

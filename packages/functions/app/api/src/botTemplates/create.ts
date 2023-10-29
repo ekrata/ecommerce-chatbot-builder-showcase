@@ -32,8 +32,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             ...edge,
             data: JSON.stringify(edge.data),
           })),
-          orgId,
-          botId,
+          botTemplateId: botId,
         })
         .go();
       return {
