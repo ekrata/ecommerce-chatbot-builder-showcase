@@ -35,11 +35,12 @@ export const CustomerChatLog: FC = ({ }) => {
   const conversationItem = getItem(conversationItems.data ?? [], selectedConversationId ?? '');
   console.log(conversationItem)
   const configuration = useConfigurationQuery(orgId);
-  const widgetAppearance = { ...configuration.data?.channels?.liveChat?.appearance }
+  const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
 
   // Observing message creation/sending state
   const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '')
   const { relativeTime } = useFormatter()
+
 
   return (
     <div
@@ -50,20 +51,9 @@ export const CustomerChatLog: FC = ({ }) => {
         ?.map((message, i) => (
           <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
             {(message.sender === 'operator' || message.sender === 'bot') && (
-              <div className="flex flex-col justify-start w-full gap-x-2" >
-                <div className="flex flex-row">
-                  <Avatar height='6' width='6' conversationItem={conversationItem} message={message} />
-                  <div className="indicator">
-                    <span
-                      data-testid="status-badge"
-                      className={`indicator-item  badge-success ring-white ring-2 badge-xs text-white dark:text-default rounded-full ${!message.sentAt
-                        ? 'mx-0 my-0 indicator-bottom animate-bounce'
-                        : 'my-2 mx-2 indicator-top'
-                        }`}
-                    >
-                      {!message.sentAt ? '...' : ''}
-                    </span>
-                  </div>
+              <div className="flex flex-col justify-start w-full gap-x-2 gap-y-1" >
+                <div className="flex flex-row place-items-center gap-x-2">
+                  <Avatar conversationItem={conversationItem} message={message} toggleIndicator={(conversationItem?.messages.length) === i + 1} />
                   <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
                     } tooltip-bottom z-10`}
                     data-testid={`operator-message-content-${message.messageId}`}
@@ -92,7 +82,8 @@ export const CustomerChatLog: FC = ({ }) => {
               </div>
             )}
           </div>
-        ))}
-    </div>
+        ))
+      }
+    </div >
   )
 };

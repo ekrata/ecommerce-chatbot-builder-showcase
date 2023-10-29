@@ -37,7 +37,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
         .get({ orgId, conversationId })
         .go();
 
-      console.log(conversation);
       // filter recipitents
       const operators = await appDb.entities.operators.query
         .byOrg({ orgId })
@@ -58,17 +57,11 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
           return `${ne(connectionId, '')}`;
         })
         .go();
-      console.log(operators);
       // filter recipitents
       const customer = await appDb.entities.customers.query
         .primary({ orgId, customerId })
         .go();
 
-      console.log(
-        [...operators.data, ...customer.data].filter(
-          (person) => person?.connectionId,
-        ),
-      );
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({

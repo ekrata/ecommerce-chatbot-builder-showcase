@@ -115,6 +115,11 @@ export function baseStack({ stack, app }: StackContext) {
           bind: [ddbStreamTopic],
           // permissions: ['events:PutEvents'],
         },
+        cdk: {
+          eventSource: {
+            startingPosition: lambda.StartingPosition.LATEST,
+          },
+        },
       },
     },
   });
@@ -380,6 +385,8 @@ export function baseStack({ stack, app }: StackContext) {
   const processInteractionFunction = api.getFunction(
     processInteractionRoute ?? '',
   );
+
+  processInteractionFunction;
 
   if (!processInteractionFunction) {
     throw new Error('Could not find process interaction function');

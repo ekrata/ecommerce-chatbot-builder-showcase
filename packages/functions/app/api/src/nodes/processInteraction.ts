@@ -79,6 +79,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           interactionData,
           botTriggers,
           bots?.data,
+          appDb,
         );
 
         console.log('publishing', botStates);
@@ -159,6 +160,7 @@ export const processTrigger = async (
   interaction: EntityItem<typeof Interaction>,
   botTriggers: Record<string, BotNodeType[] | undefined>,
   bots: EntityItem<typeof Bot>[],
+  appDb: ReturnType<typeof getAppDb>,
 ) => {
   const {
     orgId,
@@ -190,27 +192,22 @@ export const processTrigger = async (
 
     // console.log(nextNodes);
 
-    const createConversationRes = await fetch(
-      `${
-        Api.appApi.url ?? process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${orgId}/conversations/${conversationId || newConversationId}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify({
-          ...{ status, channel },
-          orgId,
-          customerId,
-          operatorId: interaction?.operatorId,
-          botId: botId || bot?.botId,
-          conversationId: conversationId || newConversationId,
-        }),
-      },
-    );
+    const createConversationRes = await appDb.entities.conversations
+      .put({
+        ...{ status, channel },
+        orgId,
+        customerId,
+        operatorId: interaction?.operatorId,
+        botId: botId || bot?.botId,
+        conversationId: conversationId || newConversationId,
+      })
+      .go();
 
-    // console.log(createConversationRes);
-    // console.log(await createConversationRes.json());
-    const conversation: EntityItem<typeof Conversation> =
-      await createConversationRes.json();
+    console.log(createConversationRes);
+    // // console.log(createConversationRes);
+    // // console.log(await createConversationRes.json());
+    // const conversation: EntityItem<typeof Conversation> =
+    //   await createConversationRes.json();
 
     // create a botState for each connecting node
     const botStates: BotStateContext[] | undefined = nextNodes?.map(
@@ -219,7 +216,7 @@ export const processTrigger = async (
           type: nextNode?.type,
           bot,
           interaction,
-          conversation: conversation as ConversationItem,
+          conversation: createConversationRes?.data as ConversationItem,
           nextNode,
           currentNode: matchedNode,
         }) as BotStateContext,

@@ -30,10 +30,12 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           conversation;
         const { id, position, data } = nextNode;
         const params = {};
+        const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
+        console.log(orgId);
         const resOne = await appDb.entities.messages
           .upsert({
             // messageId based on idempotent interactionId
-            messageId: uuidv5(snsMessageId, orgId),
+            messageId: uuidv5(`${snsMessageId}1`, orgId),
             conversationId,
             botId,
             orgId,
@@ -48,7 +50,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const res = await appDb.entities.messages
           .upsert({
             // messageId based on idempotent interactionId
-            messageId: uuidv5(snsMessageId, orgId),
+            messageId: uuidv5(`${snsMessageId}2`, orgId),
             conversationId,
             botId,
             orgId,

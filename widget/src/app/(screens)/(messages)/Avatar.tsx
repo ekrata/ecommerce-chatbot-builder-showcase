@@ -10,20 +10,33 @@ import { useConfigurationQuery } from '../../../app/(actions)/queries/useConfigu
 
 interface Props {
   conversationItem?: ConversationItem,
-  message?: EntityItem<typeof Message>
-  height: string
-  width: string
+  message?: EntityItem<typeof Message>,
+  toggleIndicator?: boolean,
+  width?: string
 }
 
-export const Avatar: React.FC<Props> = ({ conversationItem, message, width = '6', height = '6' }) => {
+export const Avatar: React.FC<Props> = ({ conversationItem, message, toggleIndicator = false }) => {
   const org = useOrgQuery()
   const orgId = org?.data?.orgId ?? ''
   const configuration = useConfigurationQuery(orgId);
   return (
-    <div className={`avatar w-${width} h-${height} background rounded-full p-2 ring-2 ring-info ${message?.sender === 'operator' && conversationItem?.operator.online ? 'online' : ''}`} >
+    <div className={`avatar indicator  align-center items-center place-items-center align-center content-center background rounded-full p-1 ring-1 ring-info ${message?.sender === 'operator' && conversationItem?.operator.online ? 'online' : ''}`} >
+      {toggleIndicator &&
+        <span
+          data-testid="status-badge"
+          className={`indicator-item badge-success ring-white ring-2 badge-xs text-white dark:text-default rounded-full ${!message?.sentAt
+            ? 'mx-0 my-0 indicator-bottom animate-bounce'
+            : 'my-2 mx-2 indicator-top'
+            }`}
+        >
+          {!message?.sentAt ? '...' : ''}
+        </span>
+      }
       {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />}
-      {message?.sender === 'operator' ? <img src={conversationItem?.operator.profilePicture} /> : <img src={configuration?.data?.channels?.liveChat?.appearance?.widgetAppearance?.botLogo} className='object-contain' />}
-    </div >
+      <div className={` w-8 `}>
+        {message?.sender === 'operator' ? <img src={conversationItem?.operator.profilePicture} /> : <img src={configuration?.data?.channels?.liveChat?.appearance?.widgetAppearance?.botLogo} />}
+      </div>
+    </div>
 
   )
 }
