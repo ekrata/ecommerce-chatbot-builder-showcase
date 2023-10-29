@@ -1,3 +1,5 @@
+import { writeFile } from 'fs';
+import { camelCase } from 'lodash';
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
@@ -29,6 +31,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
+      console.log('innn');
       const res = await appDb.entities.bots
         .update({
           orgId,
@@ -45,13 +48,25 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             data: JSON.stringify(edge.data),
           })),
         })
-        .go();
+        .go({ response: Config.STAGE === 'local' ? 'all_new' : 'default' });
 
+      // save name to botDump locally. move to templates folder to be a template
+      if (Config.STAGE === 'local') {
+        const name = res?.data?.name ?? res?.data?.botId;
+        if (name) {
+          const path = `packages/functions/app/api/src/botTemplates/botDump/${camelCase(
+            name,
+          )}.json`;
+          console.log(path);
+          writeFile(path, JSON.stringify(res?.data), () => {});
+        }
+      }
       return {
         statusCode: 200,
         body: JSON.stringify(res?.data),
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,

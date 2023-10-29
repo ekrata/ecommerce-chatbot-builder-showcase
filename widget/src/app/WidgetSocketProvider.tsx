@@ -27,16 +27,14 @@ import { getWsUrl } from './getWsUrl';
 // import { useDashStore } from './(actions)/useDashStore';
 
 // Create a context for chat messages
-const ChatMessagesContext = createContext(null);
+const WidgetSocketContext = createContext<ReturnType<typeof useWebSocket> | null>(null);
 const SOCKET_URL = "ws://localhost:3001";
 
 export interface Props {
     mockWsUrl?: string
 }
 
-export const useWidgetSocket = () => {
-
-}
+export const useWidgetSocketContext = () => useContext(WidgetSocketContext)
 
 export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) => {
     // Initialize the WebSocket connection and retrieve necessary properties
@@ -63,7 +61,8 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
         }
     }, [orgId, customer?.data?.customerId])
 
-    const { lastMessage } = useWebSocket(wsUrl, {});
+    const ws = useWebSocket(wsUrl, {});
+    const { lastMessage } = ws
     // Initialize the queryClient from react-query
     const queryClient = useQueryClient();
     // Check if WebSocket connection is open and ready for sending messages
@@ -108,8 +107,8 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
 
     // Render the ChatMessagesContext.Provider component and pass the necessary values
     return (
-        <ChatMessagesContext.Provider value={null}>
+        <WidgetSocketContext.Provider value={ws ?? null}>
             {children}
-        </ChatMessagesContext.Provider>
+        </WidgetSocketContext.Provider>
     );
 };

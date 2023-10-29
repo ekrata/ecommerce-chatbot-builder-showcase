@@ -22,8 +22,9 @@ import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateB
 import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys } from '../../../outputFields';
 import { useNodeContext } from '../../BotEditor';
-import { actionNode, defaultOutputs, OutputFieldsKeys } from '../../collections';
+import { actionNode, defaultOutputs } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';

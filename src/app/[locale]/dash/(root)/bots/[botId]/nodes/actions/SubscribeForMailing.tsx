@@ -20,8 +20,9 @@ import { z } from 'zod';
 import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys, OutputFieldValue } from '../../../outputFields';
 import { useNodeContext } from '../../BotEditor';
-import { actionNode, defaultOutputs, OutputFieldsKeys, OutputFieldValue } from '../../collections';
+import { actionNode, defaultOutputs } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';

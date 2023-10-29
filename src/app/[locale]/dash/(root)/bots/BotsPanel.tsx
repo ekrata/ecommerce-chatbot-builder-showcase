@@ -2,14 +2,16 @@
 import { EntityItem } from 'electrodb';
 import { Link, useLocale, useTranslations } from 'next-intl';
 import router from 'next/router';
-import { FC, use, useEffect, useMemo, useRef } from 'react';
+import { count, generate } from 'random-words';
+import { FC, use, useEffect, useMemo, useRef, useState } from 'react';
 import { BiEdit, BiExport, BiTrash } from 'react-icons/bi';
 import {
-    BsChatLeftDots, BsFileBarGraph, BsPersonSlash, BsRobot, BsThreeDotsVertical
+  BsChatLeftDots, BsFileBarGraph, BsPersonSlash, BsRobot, BsThreeDotsVertical
 } from 'react-icons/bs';
 import { FaRegClone } from 'react-icons/fa';
 import { GrTest } from 'react-icons/gr';
 import { TbRobotOff } from 'react-icons/tb';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Bot, BotCategory } from '@/entities/bot';
 
@@ -36,6 +38,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
   const deleteBotMut = useDeleteBotMut(orgId)
   const createBotMut = useCreateBotMut(orgId)
   const updateBotMut = useUpdateBotMut(orgId)
+  const [selectedBotIndex, setSelectedBotIndex] = useState<number | null>(null)
 
   useEffect(() => {
     if (operatorSession?.orgId) {
@@ -48,11 +51,16 @@ export const BotsPanel: FC<Props> = ({ title }) => {
       <div className='flex flex-row justify-between'>
         <h2 className='text-2xl font-semibold'>{title === 'All' ? tDash('All') : tDash(`bots.categories.${title}`)}</h2>
         <div className="flex gap-x-2" >
-          <button className="flex normal-case btn btn-sm btn-outline gap-x-2">
+          <button className="flex normal-case btn btn-sm btn-outline gap-x-2" onClick={async () => createBotMut.mutateAsync([{ botId: uuidv4(), name: `new-bot-${generate({ exactly: 1, wordsPerString: 2, separator: "-" })[0]}`, orgId }])}>
             <BsRobot />
             {tBots('Create new bot')}
           </button>
-          <button className="flex normal-case btn btn-sm btn-primary gap-x-2">
+          <button disabled={selectedBotIndex == null} className="flex normal-case btn btn-sm btn-primary gap-x-2" onClick={async () => {
+            if (selectedBotIndex != null) {
+              await createBotMut.mutateAsync([{ ...bots?.data?.[selectedBotIndex], botId: uuidv4(), name: `new-bot-${generate({ exactly: 1, wordsPerString: 2, separator: "-" })[0]}`, orgId }])
+            }
+          }}
+          >
             <BsRobot />
             {tBots('Create new bot from template')}
           </button>
@@ -74,11 +82,23 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                 </tr>
               </thead>
               <tbody className='h-full animate-fade-left'>
-                {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data)?.map((data) => {
+                {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data)?.map((data, i) => {
                   const bot = (data as EntityItem<typeof Bot>)
                   return (
                     <tr className='w-full text-lg font-normal group hover:cursor-pointer'
                     >
+                      <th>
+                        <label>
+                          <input type="checkbox" className="checkbox" onClick={() => {
+                            if (selectedBotIndex === i) {
+                              setSelectedBotIndex(null)
+                            } else {
+                              setSelectedBotIndex(i)
+                            }
+                          }
+                          } />
+                        </label>
+                      </th>
                       <td className='group-hover:bg-gray-300 '>
                         <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
                           <div className="flex items-center space-x-3">

@@ -1,6 +1,7 @@
 import { Service } from 'electrodb';
 
 import { Bot } from '@/entities/bot';
+import { BotTemplate } from '@/entities/botTemplate';
 import { Interaction } from '@/entities/interaction';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 
@@ -27,6 +28,7 @@ export const getAppDb = (region: string, tableName: string) =>
       messages: Message,
       orgs: Org,
       bots: Bot,
+      botTemplates: BotTemplate,
       interactions: Interaction,
       articles: Article,
       articleContents: ArticleContent,

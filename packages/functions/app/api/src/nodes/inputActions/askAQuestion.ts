@@ -43,10 +43,13 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             customerId,
             sender: 'bot',
             content: (JSON.parse(data ?? '{}') as AskAQuestionData)?.message,
+            createdAt: Date.now() - 10,
             // don't need to modify
             // botStateContext: JSON.stringify(botStateContext),
           })
           .go();
+        // const nextBotStateContext = getNextBotStateContext(botStateContext);
+
         const res = await appDb.entities.messages
           .upsert({
             // messageId based on idempotent interactionId
@@ -60,6 +63,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             content: '',
             messageFormType: botNodeEvent.AskAQuestion,
             messageFormData: data,
+            createdAt: Date.now(),
             // don't need to modify
             botStateContext: JSON.stringify(botStateContext),
           })

@@ -23,7 +23,7 @@ import ReactFlow, {
 import { useDebounce } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { actions, BotNodeType, conditions, triggers } from '@/entities/bot';
+import { actions, botCategory, BotNodeType, conditions, triggers } from '@/entities/bot';
 import {
   Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
   VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
@@ -35,9 +35,9 @@ import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
+import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-  actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, OutputFieldKey, OutputFieldsKeys,
-  renderConnectionLine, triggerNode
+  actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import { onDragStart } from './onDragStart';
@@ -60,8 +60,9 @@ export const useNodeContext = () => useContext(NodeContext)
 export const useEdgeContext = () => useContext(EdgeContext)
 
 const schema = z.object({
-  active: z?.boolean()
-
+  active: z?.boolean(),
+  name: z.string().min(1),
+  category: z.enum(botCategory)
 })
 
 
@@ -98,7 +99,9 @@ export const BotEditor: React.FC = () => {
     formState: { errors }, } = useForm<FormValues>({
       resolver: zodResolver(schema),
       defaultValues: {
-        active: botQuery?.data?.active ?? false
+        active: botQuery?.data?.active ?? false,
+        name: botQuery?.data?.name,
+        category: botQuery?.data?.category
       },
       mode: 'onBlur',
     });
@@ -160,6 +163,9 @@ export const BotEditor: React.FC = () => {
         // const { x = 0, y = 0, zoom = 1 } = botQuery.data?.viewport;
         setNodes(botQuery.data?.nodes as Node[]);
         setEdges(botQuery.data?.edges as Edge[]);
+        setValue('name', botQuery?.data?.name ?? '',)
+        setValue('active', botQuery?.data?.active ?? false,)
+        setValue('category', botQuery?.data?.category ?? 'General')
       }
     };
 
@@ -183,9 +189,9 @@ export const BotEditor: React.FC = () => {
         y: event.clientY - reactFlowBounds.top,
       }) ?? { x: 0, y: 0 }
 
-
+      const nodeIds = nodes.map(({ id }) => parseInt(id, 10));
       const newNode: Node = {
-        id: getId().replace('dndnode_', ''),
+        id: ((Math.max(...nodeIds)) + 1).toString(),
         type,
         data: {},
         position,
@@ -269,17 +275,21 @@ export const BotEditor: React.FC = () => {
     if (reactFlowInstance) {
       console.log('hi')
       console.log(edges)
+      const { active, name, category } = getValues()
       const updateBody = {
         ...botQuery?.data,
         nodes: nodes as any,
         edges: edges as any,
+        name,
+        active,
+        category
       }
       delete updateBody?.botId
       delete updateBody?.orgId
       const updateBot = async () => await updateBotMut.mutateAsync([orgId, botId, updateBody])
       updateBot()
     }
-  }, [debouncedNodes, debouncedEdges, getValues()?.active])
+  }, [debouncedNodes, debouncedEdges, getValues()?.active, getValues()?.name, getValues()?.category])
 
   // update history on change
   // useEffect(() => {
@@ -397,13 +407,21 @@ export const BotEditor: React.FC = () => {
                       </div>
                     </div>
                   </Panel> */}
-                <Panel position="top-center">
-
-                </Panel>
                 <Controls />
-                <Background variant={BackgroundVariant.Cross} className='-z-10' />
+                <Background variant={BackgroundVariant.Cross} className='-z-100' />
                 <Panel position={'top-right'} className='z-10'>
                   <div className='flex flex-row place-items-center gap-x-4'>
+                    <label className="cursor-pointer label gap-x-2">
+                      {/* <span className="label-text">{tDash('Active')}</span> */}
+                      <input type="text" className="w-full max-w-xs bg-gray-200 input input-sm"   {...register('name')} onChange={() => null} />
+                    </label>
+                    <label className="cursor-pointer label gap-x-2">
+                      <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm" {...register('category')} >
+                        {botCategory?.map((item) =>
+                          <option key={item}>{item}</option>
+                        )}
+                      </select>
+                    </label>
                     <div className="form-control">
                       <label className="cursor-pointer label gap-x-2">
                         <span className="label-text">{tDash('Active')}</span>

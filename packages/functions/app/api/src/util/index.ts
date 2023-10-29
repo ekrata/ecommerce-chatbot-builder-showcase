@@ -19,6 +19,7 @@ export type MockOrgIds = {
   domain: string;
   lang: string;
   botIds: Record<TestBotKey, string>;
+  botTemplateIds: string[];
   operatorIds: string[];
   customers: {
     customerId: string;

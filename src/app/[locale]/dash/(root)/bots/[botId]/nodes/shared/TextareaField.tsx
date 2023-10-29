@@ -3,8 +3,8 @@ import { snakeCase } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { FormEventHandler, useEffect, useId, useReducer, useRef, useState } from 'react';
 import {
-    Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
-    UseFormRegister, UseFormSetValue, useWatch
+  Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
+  UseFormRegister, UseFormSetValue, useWatch
 } from 'react-hook-form';
 import { BiCodeCurly } from 'react-icons/bi';
 import { BsX } from 'react-icons/bs';
@@ -96,7 +96,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
             </ul>
           </div>
           <HiOutlineEmojiHappy onClick={() => setShowEmoji(true)} className='invisible text-xl cursor-pointer group-hover:visible' />
-          <div className='absolute' ref={ref}>
+          <div className='absolute ' ref={ref}>
             {showEmoji &&
               <EmojiPicker
                 onEmojiClick={(emojiData: EmojiClickData, event: MouseEvent) => {
@@ -108,7 +108,9 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
                   setShowEmoji(false)
                 }}
                 autoFocusSearch={false}
-                emojiStyle={EmojiStyle.NATIVE}
+                height="100%" width="100%"
+                emojiStyle={EmojiStyle.APPLE}
+
               />}
           </div>
           {deletable &&

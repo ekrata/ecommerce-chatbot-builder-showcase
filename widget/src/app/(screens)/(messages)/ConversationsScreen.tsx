@@ -12,6 +12,7 @@ import {
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
 import { DynamicBackground } from 'src/app/(helpers)/DynamicBackground';
+import { MinimiseMobileButton } from 'src/app/MinimiseMobileButton';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
@@ -69,7 +70,7 @@ export const ConversationsScreen: FC = () => {
           <div
             className={`background text-white flex place-items-center w-full animated-flip-up justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
           >
-            {isMobile && <button className='absolute top-2 right-2 btn-ghost' onClick={() => setWidgetVisibility('minimized')}><BsX className='text-2xl text-black shadow-2xl' /></button>}
+            <MinimiseMobileButton />
             {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
             {t('Messages')}
           </div>

@@ -27,6 +27,7 @@ import {
   CreateArticle,
   CreateArticleContent,
   CreateBot,
+  CreateBotTemplate,
   CreateConfiguration,
   CreateConversation,
   CreateCustomer,
@@ -37,13 +38,8 @@ import {
   CreateVisit,
 } from '../../../../../../stacks/entities/entities';
 import { senderType } from '../../../../../../stacks/entities/message';
-import {
-  Action,
-  Condition,
-  VisitorBotInteractionTrigger,
-} from '../bots/triggers/definitions.type';
+import * as botTemplates from '../botTemplates/templates';
 import { AppDb, getAppDb } from '../db';
-import emailSubscribeBot from '../nodes/botMocks/emailSubscribe.json';
 import { MockArgs, mockArticleTitles, MockOrgIds, TestBotKey } from './';
 
 export interface SeedResponse {
@@ -220,7 +216,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   );
 
   // rearrange to select bots
-  const bots = [emailSubscribeBot];
+  const bots = [botTemplates.SubscribeToMailingList];
 
   mockOrg.botIds = await bots
     .slice(0, mockBotCount)
@@ -247,6 +243,27 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
       {} as Promise<Record<TestBotKey, string>>,
     );
 
+  mockOrg.botTemplateIds = await Promise.all(
+    Object.entries(botTemplates).map(async ([key, botTemplate]) => {
+      const botTemplateId = uuidv4();
+      const createBot = {
+        ...botTemplate,
+        nodes: botTemplate?.nodes?.map((node) => ({
+          ...node,
+          data: JSON.stringify(node?.data),
+        })),
+        edges: botTemplate?.edges?.map((edge) => ({
+          ...edge,
+          data: JSON.stringify(edge?.data),
+        })),
+        botTemplateId,
+        orgId,
+      } as unknown as CreateBotTemplate;
+
+      await db.entities.botTemplates.create(createBot).go();
+      return botTemplateId;
+    }),
+  );
   const operators = await db.entities.operators.query.byOrg({ orgId }).go();
 
   mockOrg.operatorIds = operators.data.map((operator) => operator.operatorId);

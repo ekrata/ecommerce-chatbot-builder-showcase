@@ -29,29 +29,10 @@ import {
   Triggers,
   VisitorBotInteractionTrigger,
 } from '../bots/triggers/definitions.type';
+import { BotStateContext } from './botStateContext';
+import { getNextNodes } from './getNextNodes';
 
 const sns = new AWS.SNS();
-
-export type BotStateContext = {
-  type: BotNodeEvent;
-  // interaction that started this bot
-  interaction: EntityItem<typeof Interaction>;
-  bot: EntityItem<typeof Bot>;
-  conversation: ConversationItem;
-  messages?: EntityItem<typeof Message>[];
-  nextNode: BotNodeType;
-  currentNode: BotNodeType;
-};
-
-// console.log(
-//   new Blob([
-//     JSON.stringify({
-//       messages: botState,
-//     }),
-//   ]).size,
-// );
-
-// import { postToConnection } from '../postToConnection';
 
 const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent, context) => {
@@ -62,7 +43,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
       for (const record of Records) {
         const newImage = getNewImage(record);
         const interactionData = Interaction.parse({ Item: newImage }).data;
-        console.log(interactionData);
+        // console.log(interactionData);
         if (!interactionData) {
           return {
             statusCode: 500,
@@ -82,14 +63,14 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           appDb,
         );
 
-        console.log('publishing', botStates);
+        // console.log('publishing', botStates);
         botStates?.forEach(async (botState) => {
-          console.log(
-            'publishing',
-            JSON.stringify({
-              ...botState,
-            }),
-          );
+          // console.log(
+          //   'publishing',
+          //   JSON.stringify({
+          //     ...botState,
+          //   }),
+          // );
           await sns
             .publish({
               // Get the topic from the environment variable
@@ -128,17 +109,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 );
 
 export const handler = middy(lambdaHandler).use(eventNormalizer());
-
-export const getNextNodes = (
-  ancestorNodeId: string,
-  nodes?: BotNodeType[],
-  edges?: BotEdgeType[],
-) => {
-  const nodeIds = edges
-    ?.filter((edge) => edge.target === ancestorNodeId)
-    .map(({ source }) => source);
-  return nodes?.filter(({ id }) => nodeIds?.includes(id));
-};
 
 export const getBotTriggers = (bots: EntityItem<typeof Bot>[]) => {
   const triggers = bots?.reduce<Record<string, BotNodeType[] | undefined>>(
@@ -203,7 +173,7 @@ export const processTrigger = async (
       })
       .go();
 
-    console.log(createConversationRes);
+    // console.log(createConversationRes);
     // // console.log(createConversationRes);
     // // console.log(await createConversationRes.json());
     // const conversation: EntityItem<typeof Conversation> =

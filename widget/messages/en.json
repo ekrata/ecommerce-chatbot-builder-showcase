@@ -36,7 +36,12 @@
     "categories": "{count, plural, \n              =0 {No categories found}\n              =1 {One category}\n              other {# categories}\n              }",
     "No results for": "No results for",
     "Try again": "Try again",
-    "Updated": "Updated"
+    "Updated": "Updated",
+    "emailInputPlaceholder": "Enter your email to subscribe",
+    "numberInputPlaceholder": "Enter a number",
+    "phoneNumberInputPlaceholder": "Enter a phone number",
+    "urlInputPlaceholder": "Enter a url",
+    "nameInputPlaceholder": "Enter a name"
   },
   "navbar": {
     "products": {

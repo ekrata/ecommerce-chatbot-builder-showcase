@@ -15,5 +15,7 @@ export function messagesStack({ stack }: StackContext) {
       'packages/functions/app/api/src/messages/create.handler',
     'PUT /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
       'packages/functions/app/api/src/messages/put.handler',
+    'PATCH /orgs/{orgId}/conversations/{conversationId}/messages/{messageId}':
+      'packages/functions/app/api/src/messages/update.handler',
   });
 }

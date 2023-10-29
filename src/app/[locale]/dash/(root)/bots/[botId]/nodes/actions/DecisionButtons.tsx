@@ -27,8 +27,9 @@ import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateB
 import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys, OutputFieldValue } from '../../../outputFields';
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldKey, OutputFieldsKeys, OutputFieldValue } from '../../collections';
+import { actionNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';

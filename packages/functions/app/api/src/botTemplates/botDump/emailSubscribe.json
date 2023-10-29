@@ -59,6 +59,7 @@
           ],
           "validationType": "Email",
           "numberOfRepeats": 1,
+          "placeholder": "Enter your email to subscribe",
           "saveTheAnswerAsAContactProperty": false,
           "errorMessage": "Oops... that doesn't look correct, try again.",
           "errors": {}

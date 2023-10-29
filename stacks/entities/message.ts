@@ -126,7 +126,6 @@ export const Message = new Entity({
     content: {
       type: 'string',
       required: true,
-      readOnly: true,
     },
     contentHtml: {
       type: 'string',
@@ -138,6 +137,10 @@ export const Message = new Entity({
     messageFormData: {
       type: 'string',
       default: '{}',
+    },
+    selectedEdgeLabel: {
+      type: 'string',
+      default: '',
     },
     botStateContext: {
       type: 'string',

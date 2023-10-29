@@ -11,9 +11,8 @@ import { FC, SetStateAction, useCallback, useEffect, useMemo, useRef, useState }
 import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BsPlus } from 'react-icons/bs';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
-  useEdges, useNodeId, useNodes, useUpdateNodeInternals
+  Edge, EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position,
+  updateEdge, useEdges, useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -24,8 +23,9 @@ import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateB
 import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys } from '../../../outputFields';
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys } from '../../collections';
+import { actionNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';

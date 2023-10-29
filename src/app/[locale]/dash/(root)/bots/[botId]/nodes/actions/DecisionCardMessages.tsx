@@ -25,14 +25,13 @@ import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateB
 import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys } from '../../../outputFields';
 import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldsKeys } from '../../collections';
+import { actionNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
-import { filterByEdgeTargetHandle } from '../shared/filterByEdgeTargetHandle';
 import { GenericEdge } from '../shared/GenericEdge';
 import { TextareaField } from '../shared/TextareaField';
-import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
 
 const schema = z.object({

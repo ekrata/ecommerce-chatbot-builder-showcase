@@ -24,7 +24,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
-      delete body?.botId;
       const res = await appDb.entities.bots
         .create({
           ...body,
@@ -32,7 +31,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             ...node,
             data: JSON.stringify(node.data),
           })),
-
+          edges: body.edges?.map((edge) => ({
+            ...edge,
+            data: JSON.stringify(edge.data),
+          })),
           orgId,
           botId,
         })

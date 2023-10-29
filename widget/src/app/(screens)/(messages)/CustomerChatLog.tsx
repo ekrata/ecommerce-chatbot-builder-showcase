@@ -1,5 +1,6 @@
+import { EntityItem } from 'electrodb';
 import { useFormatter, useTranslations } from 'next-intl';
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
@@ -7,9 +8,14 @@ import {
 } from 'src/app/(actions)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
+import { sortConversationItems } from 'src/app/(helpers)/sortConversationItems';
+
+import { Message, messageFormType } from '@/entities/message';
+import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';
+import { AskAQuestionMessageForm } from './(message-forms)/AskAQuestionMessageForm';
 import { Avatar } from './Avatar';
 import { CustomerMessageTimeLabel } from './CustomerMessageTimeLabel';
 
@@ -41,6 +47,15 @@ export const CustomerChatLog: FC = ({ }) => {
   const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '')
   const { relativeTime } = useFormatter()
 
+  const getForm = (message: EntityItem<typeof Message>) => {
+    switch (message?.messageFormType) {
+      case Action.AskAQuestion:
+        return <AskAQuestionMessageForm message={message} />
+      default:
+        return <></>
+    }
+  }
+
 
   return (
     <div
@@ -50,7 +65,20 @@ export const CustomerChatLog: FC = ({ }) => {
       {conversationItem?.messages
         ?.map((message, i) => (
           <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
-            {(message.sender === 'operator' || message.sender === 'bot') && (
+            {message.sender === 'bot' && message?.messageFormType && (
+              <div className="flex flex-col chat chat-end">
+                {getForm(message)}
+                {/* <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
+                  
+                </div> */}
+                {/* {i + 1 === conversationItem?.messages?.length && (
+                  <div className="flex justify-end place-items-center">
+                    <CustomerMessageTimeLabel conversationItem={conversationItem} />
+                  </div>
+                )} */}
+              </div>
+            )}
+            {(message.sender === 'operator' || (message.sender === 'bot' && !message?.messageFormType)) && (
               <div className="flex flex-col justify-start w-full gap-x-2 gap-y-1" >
                 <div className="flex flex-row place-items-center gap-x-2">
                   <Avatar conversationItem={conversationItem} message={message} toggleIndicator={(conversationItem?.messages.length) === i + 1} />

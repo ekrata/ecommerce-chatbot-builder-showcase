@@ -5,7 +5,7 @@ import {
 } from 'react';
 import { isMobile } from 'react-device-detect';
 import { BsX } from 'react-icons/bs';
-import useWebSocket from 'react-use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useCreateCustomerMut } from './(actions)/mutations/useCreateCustomerMut';
@@ -22,6 +22,7 @@ import { HelpScreen } from './(screens)/HelpScreen';
 import { HomeScreen } from './(screens)/HomeScreen';
 import { NavBar } from './NavBar';
 import { StartChatButton } from './StartChatButton';
+import { useWidgetSocketContext } from './WidgetSocketProvider';
 
 export interface ConversationsState {
   selectedConversationId?: string
@@ -42,6 +43,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 
   const { chatWidget: { widgetVisibility, setWidgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
+  const ws = useWidgetSocketContext()
   const configuration = useConfigurationQuery(orgId);
   const visitId = uuidv4()
   const createVisitMut = useCreateVisitMut(orgId, visitId)
@@ -82,24 +84,26 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   }, [widgetState, selectedConversationId, selectedArticleId])
 
   return (
-    <div className={` ${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-10 md:bottom-10' : 'md:absolute md:right-10 md:bottom-10 '}`}>
-      {widgetVisibility === 'open' &&
-        (
-          <div className="flex flex-col h-screen w-screen md:w-[400px] md:h-[600px] shadow-2xl  rounded-3xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left  mb-10 ">
-            <div className='w-full h-full overflow-y-scroll rounded-3xl '>
-              {content}
+    ws?.readyState === ReadyState.OPEN ?
+      <div className={` ${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-10 md:bottom-10' : 'md:absolute md:right-10 md:bottom-10 '}`}>
+        {widgetVisibility === 'open' &&
+          (
+            <div className="flex flex-col h-screen w-screen md:w-[400px] md:h-[600px] shadow-2xl  rounded-3xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left  mb-10 ">
+              <div className='w-full h-full overflow-y-scroll rounded-3xl '>
+                {content}
+              </div>
+              {!hideNavbar &&
+                <NavBar />
+              }
             </div>
-            {!hideNavbar &&
-              <NavBar />
-            }
+          )}
+        {((isMobile && widgetVisibility === 'minimized') || (!isMobile)) &&
+          <div className='bottom-0 right-0 flex flex-row justify-end' >
+            <StartChatButton ></StartChatButton>
           </div>
-        )}
-      {((isMobile && widgetVisibility === 'minimized') || (!isMobile)) &&
-        <div className='bottom-0 right-0 flex flex-row justify-end' >
-          <StartChatButton ></StartChatButton>
-        </div>
-      }
-    </div>
+        }
+      </div>
+      : null
   )
 
 };

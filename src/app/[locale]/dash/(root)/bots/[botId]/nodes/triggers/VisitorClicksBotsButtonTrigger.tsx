@@ -13,8 +13,9 @@ import {
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys } from '../../../outputFields';
 import { useNodeContext } from '../../BotEditor';
-import { actionNode, OutputFieldKey, OutputFieldsKeys, triggerNode } from '../../collections';
+import { actionNode, triggerNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { updateNodes } from '../updateNodes';

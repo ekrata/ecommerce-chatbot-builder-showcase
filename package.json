@@ -116,6 +116,7 @@
     "postcss": "8.4.23",
     "proxy-agent": "^6.3.1",
     "ramda": "^0.29.1",
+    "random-words": "^2.0.0",
     "react": "18.2.0",
     "react-colorful": "^5.6.1",
     "react-device-detect": "^2.2.3",

@@ -27,15 +27,12 @@ import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateB
 import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useEdgeContext, useNodeContext } from '../../BotEditor';
-import {
-  actionNode, conditionNode, defaultOutputs, OutputFieldKey, OutputFieldsKeys, yesNoOutput
-} from '../../collections';
+import { OutputFieldsKeys } from '../../../outputFields';
+import { useNodeContext } from '../../BotEditor';
+import { conditionNode, defaultOutputs, yesNoOutput } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
-import { TextareaField } from '../shared/TextareaField';
-import { updateEdges } from '../updateEdges';
 import { updateNodes } from '../updateNodes';
 
 // const handleStyle = { left: 10 };

@@ -25,6 +25,10 @@ export function paramStack({ stack, app }: StackContext) {
     value: app.region,
   });
 
+  const STAGE = new Config.Parameter(stack, 'STAGE', {
+    value: app.stage,
+  });
+
   const getFrontendUrl = () => {
     return getAllowedOrigins(stack.stage, domain)?.[0];
   };
@@ -60,6 +64,7 @@ export function paramStack({ stack, app }: StackContext) {
     appName,
     domain,
     REGION,
+    STAGE,
     tableName,
     frontendUrl,
     allowedOrigins,

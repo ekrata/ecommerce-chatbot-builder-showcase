@@ -2,7 +2,7 @@ import { compact } from 'lodash';
 import { useMemo } from 'react';
 import { Edge, Handle, Node, NodeProps, Position, useUpdateNodeInternals } from 'reactflow';
 
-import { OutputFieldKey, OutputFieldsKeys, OutputFieldValue } from '../../collections';
+import { OutputFieldValue } from '../../../outputFields';
 
 /**
  * Create a handler for every handler used by nodeEdges, then add n handlers the difference between

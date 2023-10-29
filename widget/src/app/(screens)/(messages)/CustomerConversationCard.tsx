@@ -39,7 +39,8 @@ export const CustomerConversationCard: React.FC<Props> = ({ conversationItem, he
   halfAnHourAgo.setMinutes(halfAnHourAgo.getMinutes() - 30);
 
   const lastMessage = useMemo(() => {
-    return conversationItem?.messages?.slice(-1)[0]
+    // get last message that wasn't a form input
+    return conversationItem?.messages?.filter((message) => !message?.messageFormType)?.slice(-1)[0]
   }, [conversationItem])
 
 
@@ -59,7 +60,7 @@ export const CustomerConversationCard: React.FC<Props> = ({ conversationItem, he
           <img src={widgetAppearance?.widgetAppearance?.botLogo}></img>
         </div> */}
         <div className="flex flex-col w-3/5 place-items-start gap-y-1">
-          <h5 className='justify-start w-full text-base break-all truncate text-start font-base justify-self-start'>{`${lastMessage?.content}`}</h5>
+          <h5 className='justify-start w-full text-sm break-all truncate text-start font-base justify-self-start'>{`${lastMessage?.content}`}</h5>
           <div className="flex text-xs text-neutral-400 gap-x-1 ">
             <CustomerMessageTimeLabel conversationItem={conversationItem} />
           </div>

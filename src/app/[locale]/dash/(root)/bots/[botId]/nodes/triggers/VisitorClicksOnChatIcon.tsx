@@ -23,8 +23,9 @@ import {
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys } from '../../../outputFields';
 import { useNodeContext } from '../../BotEditor';
-import { defaultOutputs, OutputFieldKey, OutputFieldsKeys, triggerNode } from '../../collections';
+import { defaultOutputs, triggerNode } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';

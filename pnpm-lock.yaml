@@ -176,6 +176,9 @@ importers:
       ramda:
         specifier: ^0.29.1
         version: 0.29.1
+      random-words:
+        specifier: ^2.0.0
+        version: 2.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -25095,6 +25098,12 @@ packages:
     dependencies:
       discontinuous-range: 1.0.0
       ret: 0.1.15
+    dev: false
+
+  /random-words@2.0.0:
+    resolution: {integrity: sha512-uqpnDqFnYrZajgmvgjmBrSZL2V1UA/9bNPGrilo12CmBeBszoff/avElutUlwWxG12gvmCk/8dUhvHefYxzYjw==}
+    dependencies:
+      seedrandom: 3.0.5
     dev: false
 
   /randombytes@2.1.0:

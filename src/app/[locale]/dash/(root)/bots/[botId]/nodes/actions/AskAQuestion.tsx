@@ -21,10 +21,9 @@ import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitio
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys } from '../../../outputFields';
 import { useNodeContext } from '../../BotEditor';
-import {
-  actionNode, OutputFieldKey, OutputFieldsKeys, successFailureOutput
-} from '../../collections';
+import { actionNode, defaultOutputs, successFailureOutput } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';
@@ -42,6 +41,8 @@ const schema = z.object({
   validationType: z.enum(validationType),
   errorMessage: z.string()?.min(1),
   numberOfRepeats: z.coerce?.number()?.gte(0),
+  timeout: z.number(),
+  formPlaceholder: z.string()?.min(1),
   saveTheAnswerAsAContactProperty: z.boolean(),
   outputs: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
     message: 'Each option must be unique.',
@@ -55,7 +56,7 @@ const type = Action.AskAQuestion
 
 export const AskAQuestionActionNode: FC<NodeProps> = (node) => {
   const outputKey = 'outputs'
-  const edges = [...useEdges()];
+  const edges = useEdges()
   const tNodes = useTranslations('dash.bots.nodes')
 
   // prevent nodes from connecting when edge count exceeds quick reply decision count.
@@ -105,7 +106,8 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
       resolver: zodResolver(schema),
       defaultValues: {
         message: '',
-        outputs: successFailureOutput
+        outputs: defaultOutputs,
+        timeout: 60
       },
       mode: 'onBlur',
     });
@@ -125,7 +127,8 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
     setValue('message', apiValues?.message ?? tForm('defaultQuestion'))
     setValue('validationType', apiValues?.validationType ?? 'Email')
     setValue('errorMessage', apiValues?.errorMessage ?? tForm('defaultError'))
-    setValue('outputs', successFailureOutput)
+    setValue('timeout', apiValues?.timeout ?? 60)
+    setValue('outputs', defaultOutputs)
     setValue('numberOfRepeats', apiValues?.numberOfRepeats ?? 1)
     setValue('saveTheAnswerAsAContactProperty', apiValues?.saveTheAnswerAsAContactProperty ?? false)
     // setError('quickReplies', node?.data?.errors?.quickReplies)
@@ -155,20 +158,27 @@ export const AskAQuestionActionForm: React.FC<Props> = ({ node }) => {
           )}
         </select>
       </div>
-      <div className="w-full max-w-xs form-control">
+      {/* <div className="w-full max-w-xs form-control">
         <label className="label">
           <span className="label-text">{tForm('errorMessageLabel')}</span>
         </label>
         <TextareaField deletable={false} node={node} fieldName={'errorMessage'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
       </div>
-      {errors?.errorMessage && <p className='justify-start text-xs text-red-500'>{errors?.errorMessage?.message}</p>}
-      <div className="w-full max-w-xs form-control">
+      {errors?.errorMessage && <p className='justify-start text-xs text-red-500'>{errors?.errorMessage?.message}</p>} */}
+      {/* <div className="w-full max-w-xs form-control">
         <label className="label">
           <span className="label-text">{tForm('numberOfRepeatsLabel')}</span>
         </label>
         <input type="number" placeholder={tForm('numberOfRepeatsLabel')} className="w-full max-w-xs bg-gray-200 input-sm input"  {...register('numberOfRepeats')} />
       </div>
       {errors?.numberOfRepeats && <p className='justify-start text-xs text-red-500'>{errors?.numberOfRepeats?.message}</p>}
+      <div className="w-full max-w-xs form-control">
+        <label className="label">
+          <span className="label-text">{tForm('timeout')}</span>
+        </label>
+        <input type="number" placeholder={tForm('timeout')} className="w-full max-w-xs bg-gray-200 input-sm input"  {...register('timeout')} />
+      </div> */}
+      {errors?.timeout && <p className='justify-start text-xs text-red-500'>{errors?.timeout?.message}</p>}
       <div className="form-control">
         <label className="cursor-pointer label">
           <span className="label-text">{tForm("Save the answer as a contact property")}</span>

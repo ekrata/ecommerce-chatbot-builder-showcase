@@ -3,6 +3,7 @@ import { CreateEntityItem, UpdateEntityItem } from 'electrodb';
 import { Article } from './article';
 import { ArticleContent } from './articleContent';
 import { Bot } from './bot';
+import { BotTemplate } from './botTemplate';
 import { Configuration } from './configuration';
 import { Conversation } from './conversation';
 import { Customer } from './customer';
@@ -45,6 +46,9 @@ export type UpdateArticleContent = UpdateEntityItem<typeof ArticleContent>;
 
 export type CreateBot = CreateEntityItem<typeof Bot>;
 export type UpdateBot = UpdateEntityItem<typeof Bot>;
+
+export type CreateBotTemplate = CreateEntityItem<typeof BotTemplate>;
+export type UpdateBotTemplate = UpdateEntityItem<typeof BotTemplate>;
 
 export type CreateInteraction = CreateEntityItem<typeof Interaction>;
 export type UpdateInteraction = UpdateEntityItem<typeof Interaction>;

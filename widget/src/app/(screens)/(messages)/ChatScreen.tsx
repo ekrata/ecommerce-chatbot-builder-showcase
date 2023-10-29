@@ -8,6 +8,7 @@ import {
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
 import { DynamicBackground } from 'src/app/(helpers)/DynamicBackground';
+import { MinimiseMobileButton } from 'src/app/MinimiseMobileButton';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
@@ -51,6 +52,7 @@ export const ChatScreen: FC = ({ }) => {
         <div
           className={`background flex place-items-center w-full justify-start rounded-t-lg text-xl font-semibold p-2 gap-x-2    text-white`}
         >
+          <MinimiseMobileButton />
           {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
           <button><BiChevronLeft className='text-5xl' onClick={() => setSelectedConversationId()}></BiChevronLeft></button>
           {conversationItem?.operator?.operatorId && (

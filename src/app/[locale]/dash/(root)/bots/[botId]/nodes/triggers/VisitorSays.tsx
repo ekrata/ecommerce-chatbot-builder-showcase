@@ -21,10 +21,9 @@ import { languageCodes } from '@/src/app/[locale]/(helpers)/lang';
 import { faker } from '@faker-js/faker';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { OutputFieldsKeys } from '../../../outputFields';
 import { useNodeContext } from '../../BotEditor';
-import {
-  defaultOutputs, OutputFieldKey, OutputFieldsKeys, triggerNode, yesNoOutput
-} from '../../collections';
+import { defaultOutputs, triggerNode, yesNoOutput } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
 import { createTargetHandles } from '../shared/createTargetHandles';
 import { GenericEdge } from '../shared/GenericEdge';

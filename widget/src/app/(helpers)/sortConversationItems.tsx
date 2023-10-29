@@ -11,9 +11,9 @@ export /**
   const sortConversationItems = (conversationItems: ConversationItem[]) => {
     // sort messages
     conversationItems.forEach((conversationItem) => {
-      conversationItem.messages?.sort((a, b) => a?.sentAt ?? 0 - (b?.sentAt ?? 0))
+      conversationItem.messages?.sort((a, b) => a?.createdAt ?? 0 - (b?.createdAt ?? 0))
     });
 
     // sort conversations by comparing last message sentAt
-    conversationItems.sort((a, b) => a?.messages?.slice(-1)?.[0]?.sentAt ?? 0 - (a?.messages?.slice(-1)[0]?.sentAt ?? 0)).reverse()
+    conversationItems.sort((a, b) => a?.messages?.slice(-1)?.[0]?.createdAt ?? 0 - (a?.messages?.slice(-1)[0]?.createdAt ?? 0)).reverse()
   }

@@ -19,6 +19,7 @@ import { useOrgQuery } from '../(actions)/queries/useOrgQuery';
 import { useTranslationQuery } from '../(actions)/queries/useTranslationQuery';
 import { useChatWidgetStore } from '../(actions)/useChatWidgetStore';
 import { DynamicBackground } from '../(helpers)/DynamicBackground';
+import { MinimiseMobileButton } from '../MinimiseMobileButton';
 import { Avatar } from './(messages)/Avatar';
 import { CustomerConversationCard } from './(messages)/CustomerConversationCard';
 import { StartConversationCard } from './(messages)/StartConversationCard';
@@ -57,7 +58,7 @@ export const HomeScreen: FC = () => {
         className={`dark:bg-gray-900 bg-white flex flex-col justify-start  rounded-l gap-x-2 gap-y-4`}
       >
         <div className="sticky flex p-4 -mb-32 space-y-8 background pb-60 rounded-t-3xl animate-fade-left">
-          {isMobile && <button className='absolute top-1 right-1 btn-ghost' onClick={() => setWidgetVisibility('minimized')}><BsX className='text-2xl shadow-2xl' /></button>}
+          <MinimiseMobileButton />
           {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />}
           <div className='mr-6 justify-left animate-fade-left'>{<img src={widgetAppearance?.logo ?? ''} className='object-cover h-16 mt-10' /> ?? (<h1>{org?.data?.name ?? 'Your org'}</h1>)}</div>
           {/* <div className='-mr-4 justify-right'><Avatar conversationItem={conversationItems.data?.[0]} message={conversationItems.data?.[0]?.messages?.slice(-1)[0]} /> </div>

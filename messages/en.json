@@ -147,6 +147,7 @@
       "visitors": "Visitors",
       "help-center": "Help center",
       "analytics": "Analytics",
+      "sandbox": "Sandbox",
       "bots": "Bots",
       "settings": "Settings"
     },
@@ -406,6 +407,7 @@
           "defaultError": "Oops... that doesn't look correct, try again.",
           "errorMessageLabel": "Display this message when there is a validation type error",
           "numberOfRepeatsLabel": "Number of repeats",
+          "timeout": "Timeout (seconds)",
           "Save the answer as a contact property": "Save the answer as a contact property",
           "validationTypeLabel": "Validation Type Label"
         },

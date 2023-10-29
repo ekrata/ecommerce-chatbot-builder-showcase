@@ -12,6 +12,7 @@ import {
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 import { nodeSubTypeIcons } from '../nodeSubTypeIcons';
+import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
   AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode
 } from './nodes/actions/AskAQuestion';
@@ -87,23 +88,7 @@ export const nodeTypes: NodeTypes = {
   [`${Action.SendAChatMessage}` as string]: SendAChatMessageActionNode,
 } as const;
 
-export const OutputFieldsKeys = {
-  [`${Action.AskAQuestion}`]: 'outputs',
-  [`${Action.CouponCode}`]: 'outputs',
-  [`${Action.SendAChatMessage}`]: 'outputs',
-  [`${Action.DecisionQuickReplies}`]: 'quickReplies',
-  [`${Action.DecisionCardMessages}`]: 'choices',
-  [`${Action.DecisionButtons}`]: 'choices',
-  [`${Action.SubscribeForMailing}`]: 'outputs',
-  [`${Condition.BasedOnContactProperty}`]: 'outputs',
-  [`${Condition.ChatStatus}`]: 'outputs',
-  [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: 'outputs',
-  [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: 'outputs',
-  [`${VisitorBotInteractionTrigger.VisitorSays}`]: 'outputs',
-} as const
 
-export type OutputFieldKey = keyof typeof OutputFieldsKeys
-export type OutputFieldValue = typeof OutputFieldsKeys[OutputFieldKey]
 
 export const renderConnectionLine = (params: ConnectionLineComponentProps, edges: Edge[]) => {
   if (params?.fromNode?.id && params?.fromNode?.type) {

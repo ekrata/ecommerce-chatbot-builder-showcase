@@ -21,5 +21,8 @@
   },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "exportall.config.folderListener": [
+    "/packages/functions/app/api/src/bots/templates"
+  ]
 }

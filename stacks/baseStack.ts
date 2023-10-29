@@ -41,10 +41,10 @@ export function baseStack({ stack, app }: StackContext) {
 
   const {
     appName,
+    STAGE,
     domain,
     REGION,
     tableName,
-
     frontendUrl,
     allowedOrigins,
     oauthGoogleClientId,
@@ -75,6 +75,7 @@ export function baseStack({ stack, app }: StackContext) {
 
   const appEventBus = new EventBus(stack, 'appEventBus', {});
   const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
+  const botNodeTopic = new Topic(stack, 'BotNodeTopic', {});
 
   const table = new Table(stack, `app`, {
     fields: {
@@ -112,7 +113,7 @@ export function baseStack({ stack, app }: StackContext) {
           handler:
             'packages/functions/app/api/src/ddb-stream/processBatch.handler',
           timeout: defaultFunctionTimeout,
-          bind: [ddbStreamTopic],
+          bind: [ddbStreamTopic, botNodeTopic],
           // permissions: ['events:PutEvents'],
         },
         cdk: {
@@ -179,7 +180,7 @@ export function baseStack({ stack, app }: StackContext) {
     },
     defaults: {
       function: {
-        bind: [table, REGION, appEventBus],
+        bind: [table, REGION, appEventBus, STAGE],
         permissions: [
           table,
           'sqs:ReceiveMessage',
@@ -359,6 +360,7 @@ export function baseStack({ stack, app }: StackContext) {
           table,
           assets,
           REGION,
+          STAGE,
           oauthGoogleClientId,
           oauthGoogleSecret,
           metaAppSecret,
@@ -533,176 +535,187 @@ export function baseStack({ stack, app }: StackContext) {
     ...ddbStreamApiTopicSubs(),
   });
 
-  const botNodeTopic = new Topic(stack, 'BotNodeTopic', {
-    defaults: {
-      function: {
-        bind: [wsApi, api, REGION, table],
-        permissions: [
-          table,
-          'sqs:ReceiveMessage',
-          'sqs:DeleteMessage',
-          'sqs:GetQueueAttributes',
-        ],
-      },
-    },
-    subscribers: {
-      [botNodeEvent.AskAQuestion]: {
-        type: 'queue',
-        queue: new Queue(stack, `bot_node_action_AskAQuestion_queue`, {
-          cdk: defaultQueueConfig,
-          consumer: {
-            function: {
-              handler:
-                'packages/functions/app/api/src/nodes/inputActions/askAQuestion.handler',
-              bind: [wsApi, api, REGION, table],
-              permissions: [
-                table,
-                'sqs:ReceiveMessage',
-                'sqs:DeleteMessage',
-                'sqs:GetQueueAttributes',
-              ],
-            },
-          },
-        }),
-        cdk: {
-          subscription: {
-            filterPolicyWithMessageBody: {
-              type: FilterOrPolicy.filter(
-                SubscriptionFilter.stringFilter({
-                  allowlist: [botNodeEvent.AskAQuestion],
-                }),
-              ),
-            },
+  const botNodeTopicSubs:
+    | Record<
+        string,
+        | FunctionInlineDefinition
+        | Queue
+        | TopicFunctionSubscriberProps
+        | TopicQueueSubscriberProps
+      >
+    | undefined = {
+    [botNodeEvent.AskAQuestion]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_AskAQuestion_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            handler:
+              'packages/functions/app/api/src/nodes/inputActions/askAQuestion.handler',
+            bind: [wsApi, api, REGION, table],
+            permissions: [
+              table,
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
           },
         },
-      },
-      [botNodeEvent.DecisionCardMessages]: {
-        type: 'queue',
-        queue: new Queue(stack, `bot_node_action_DecisionCardMessages_queue`, {
-          cdk: defaultQueueConfig,
-          consumer: {
-            function: {
-              timeout: defaultFunctionTimeout,
-              bind: [wsApi, api, REGION, table],
-              handler:
-                'packages/functions/app/api/src/nodes/inputActions/decisionCardMessages.handler',
-            },
-          },
-        }),
-        cdk: {
-          subscription: {
-            filterPolicyWithMessageBody: {
-              type: FilterOrPolicy.filter(
-                SubscriptionFilter.stringFilter({
-                  allowlist: [botNodeEvent.DecisionCardMessages],
-                }),
-              ),
-            },
-          },
-        },
-      },
-      [botNodeEvent.SubscribeForMailing]: {
-        type: 'queue',
-        queue: new Queue(stack, `bot_node_action_SubscribeForMailing_queue`, {
-          cdk: defaultQueueConfig,
-          consumer: {
-            function: {
-              timeout: defaultFunctionTimeout,
-              bind: [wsApi, api, REGION, table],
-              handler:
-                'packages/functions/app/api/src/nodes/actions/subscribeForMailing.handler',
-            },
-          },
-        }),
-        cdk: {
-          subscription: {
-            filterPolicyWithMessageBody: {
-              type: FilterOrPolicy.filter(
-                SubscriptionFilter.stringFilter({
-                  allowlist: [botNodeEvent.SubscribeForMailing],
-                }),
-              ),
-            },
-          },
-        },
-      },
-      [botNodeEvent.DecisionButtons]: {
-        type: 'queue',
-        queue: new Queue(stack, `bot_node_action_DecisionButtons_queue`, {
-          cdk: defaultQueueConfig,
-          consumer: {
-            function: {
-              timeout: defaultFunctionTimeout,
-              bind: [wsApi, api, REGION, table],
-              handler:
-                'packages/functions/app/api/src/nodes/inputActions/decisionButtons.handler',
-            },
-          },
-        }),
-        cdk: {
-          subscription: {
-            filterPolicyWithMessageBody: {
-              type: FilterOrPolicy.filter(
-                SubscriptionFilter.stringFilter({
-                  allowlist: [botNodeEvent.DecisionButtons],
-                }),
-              ),
-            },
-          },
-        },
-      },
-      [botNodeEvent.DecisionQuickReplies]: {
-        type: 'queue',
-        queue: new Queue(stack, `bot_node_action_DecisionQuickReplies_queue`, {
-          cdk: defaultQueueConfig,
-          consumer: {
-            function: {
-              timeout: defaultFunctionTimeout,
-              bind: [wsApi, api, REGION, table],
-              handler:
-                'packages/functions/app/api/src/nodes/inputActions/decisionQuickReplies.handler',
-            },
-          },
-        }),
-        cdk: {
-          subscription: {
-            filterPolicyWithMessageBody: {
-              type: FilterOrPolicy.filter(
-                SubscriptionFilter.stringFilter({
-                  allowlist: [botNodeEvent.DecisionQuickReplies],
-                }),
-              ),
-            },
-          },
-        },
-      },
-      [botNodeEvent.CouponCode]: {
-        type: 'queue',
-        queue: new Queue(stack, `bot_node_action_CouponCode_queue`, {
-          cdk: defaultQueueConfig,
-          consumer: {
-            function: {
-              timeout: defaultFunctionTimeout,
-              bind: [wsApi, api, REGION, table],
-              handler:
-                'packages/functions/app/api/src/nodes/actions/couponCode.handler',
-            },
-          },
-        }),
-        cdk: {
-          subscription: {
-            filterPolicyWithMessageBody: {
-              type: FilterOrPolicy.filter(
-                SubscriptionFilter.stringFilter({
-                  allowlist: [botNodeEvent.CouponCode],
-                }),
-              ),
-            },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.AskAQuestion],
+              }),
+            ),
           },
         },
       },
     },
-  });
+    [botNodeEvent.DecisionCardMessages]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_DecisionCardMessages_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            timeout: defaultFunctionTimeout,
+            bind: [wsApi, api, REGION, table],
+            handler:
+              'packages/functions/app/api/src/nodes/inputActions/decisionCardMessages.handler',
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.DecisionCardMessages],
+              }),
+            ),
+          },
+        },
+      },
+    },
+    [botNodeEvent.SubscribeForMailing]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_SubscribeForMailing_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            timeout: defaultFunctionTimeout,
+            bind: [wsApi, api, REGION, table],
+            handler:
+              'packages/functions/app/api/src/nodes/actions/subscribeForMailing.handler',
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.SubscribeForMailing],
+              }),
+            ),
+          },
+        },
+      },
+    },
+    [botNodeEvent.DecisionButtons]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_DecisionButtons_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            timeout: defaultFunctionTimeout,
+            bind: [wsApi, api, REGION, table],
+            handler:
+              'packages/functions/app/api/src/nodes/inputActions/decisionButtons.handler',
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.DecisionButtons],
+              }),
+            ),
+          },
+        },
+      },
+    },
+    [botNodeEvent.DecisionQuickReplies]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_DecisionQuickReplies_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            timeout: defaultFunctionTimeout,
+            bind: [wsApi, api, REGION, table],
+            handler:
+              'packages/functions/app/api/src/nodes/inputActions/decisionQuickReplies.handler',
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.DecisionQuickReplies],
+              }),
+            ),
+          },
+        },
+      },
+    },
+    [botNodeEvent.CouponCode]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_CouponCode_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            timeout: defaultFunctionTimeout,
+            bind: [wsApi, api, REGION, table],
+            handler:
+              'packages/functions/app/api/src/nodes/actions/couponCode.handler',
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.CouponCode],
+              }),
+            ),
+          },
+        },
+      },
+    },
+  };
+
+  botNodeTopic.bind([wsApi, api, REGION, table]);
+  botNodeTopic.attachPermissions([
+    table,
+    'sqs:ReceiveMessage',
+    'sqs:DeleteMessage',
+    'sqs:GetQueueAttributes',
+  ]);
+  botNodeTopic.addSubscribers(stack, botNodeTopicSubs);
+  // defaults: {
+  //   function: {
+  //     bind: [wsApi, api, REGION, table],
+  //   }
+
+  // }
+
   processInteractionFunction.bind([wsApi, api, REGION, table, botNodeTopic]);
   appEventBus.bind([wsApi, api, REGION, table]);
 

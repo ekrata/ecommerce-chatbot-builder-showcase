@@ -2,8 +2,13 @@ import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action,
+  Condition,
+  OperatorInteractionTrigger,
+  ShopifyAction,
+  ShopifyCondition,
+  VisitorBotInteractionTrigger,
+  VisitorPageInteractionTrigger,
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 export const nodeType = ['trigger', 'condition', 'action'] as const;
@@ -172,6 +177,10 @@ export const Bot = new Entity({
               },
             },
             default: { x: 0, y: 0 },
+          },
+          retries: {
+            type: 'number',
+            default: 0,
           },
           // getters and setters allow us to keep the node data as stringified JSON only at database level
           data: {

@@ -17,6 +17,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
     const appDb = getAppDb(Config.REGION, Table.app.tableName);
     const { Records } = event;
     for (const record of Records) {
+      console.log('mailing');
       const body = record?.body;
       const snsMessageId = record?.messageId;
       const botStateContext: BotStateContext = JSON.parse(record?.body);

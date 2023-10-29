@@ -1,16 +1,13 @@
-import { DetailType } from 'aws-cdk-lib/aws-codestarnotifications';
-import AWS from 'aws-sdk';
+import AWS, { DynamoDB } from 'aws-sdk';
 import { ApiHandler, usePathParams } from 'sst/node/api';
-import { EventBus } from 'sst/node/event-bus';
 import { Topic } from 'sst/node/topic';
 
-import { BotNodeEvent, botNodeEvent } from '@/entities/bot';
 import { Message } from '@/entities/message';
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
 import * as Sentry from '@sentry/serverless';
 
-import { Action } from '../bots/triggers/definitions.type';
-import { BotStateContext, getNextNodes } from '../nodes/processInteraction';
+import { BotStateContext } from '../nodes/botStateContext';
+import { publishToNextNodes } from '../nodes/publishToNextNodes';
 
 const sns = new AWS.SNS();
 
@@ -29,7 +26,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             record.dynamodb.NewImage.context?.S === 'interaction' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'interaction'
           ) {
-            console.log('we are in');
             await sns
               .publish({
                 TopicArn: Topic.DdbStreamTopic.topicArn,
@@ -147,9 +143,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             record.dynamodb.NewImage.context?.S === 'message' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'message'
           ) {
-            const messageData = Message.parse({
-              Item: record.dynamodb.NewImage,
-            }).data;
+            console.log(record);
+            const newImage = DynamoDB.Converter.unmarshall(
+              record.dynamodb.NewImage,
+            );
+            const messageparsed = Message.parse({
+              Item: newImage,
+            });
+            const messageData = messageparsed?.data;
 
             // route responses to bot actions/conditions to the appropriate next node
             if (
@@ -160,50 +161,15 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 messageData?.botStateContext ?? '{}',
               ) as BotStateContext;
               if (
-                botStateContext?.currentNode &&
+                botStateContext?.nextNode?.id &&
                 botStateContext?.bot?.nodes &&
                 botStateContext?.bot?.edges
               ) {
-                const nextNodes = getNextNodes(
-                  botStateContext?.currentNode?.id ?? '',
-                  botStateContext?.bot?.nodes,
-                  botStateContext?.bot?.edges,
-                );
-                nextNodes?.map(async (nextNode) => {
-                  if (nextNode?.type) {
-                    const nextNodeType = Object.entries(botNodeEvent).find(
-                      ([key, value]) => {
-                        if (value === nextNode.type) {
-                          return botNodeEvent?.[
-                            key as keyof typeof botNodeEvent
-                          ];
-                        }
-                      },
-                    ) as BotNodeEvent | undefined;
-                    if (nextNodeType) {
-                      console.log(nextNodeType);
-                      await sns
-                        .publish({
-                          TopicArn: Topic?.BotNodeTopic?.topicArn,
-                          Message: JSON.stringify({
-                            ...botStateContext,
-                            messages: [
-                              ...(botStateContext?.messages ?? []),
-                              messageData,
-                            ],
-                          }),
-                          MessageAttributes: {
-                            type: {
-                              DataType: 'String',
-                              StringValue: nextNodeType,
-                            },
-                          },
-                          MessageStructure: 'string',
-                        })
-                        .promise();
-                    }
-                  }
-                });
+                const newBotStateContext = {
+                  ...botStateContext,
+                  messages: [...(botStateContext?.messages ?? []), messageData],
+                };
+                publishToNextNodes(newBotStateContext);
               }
             }
 
