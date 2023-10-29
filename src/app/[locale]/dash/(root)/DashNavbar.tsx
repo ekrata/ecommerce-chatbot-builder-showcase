@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { BiHelpCircle } from 'react-icons/bi';
-import { BsRobot } from 'react-icons/bs';
+import { BsFillPeopleFill, BsRobot } from 'react-icons/bs';
 import { CgWebsite } from 'react-icons/cg';
 import { IoMdChatboxes } from 'react-icons/io';
 import { MdOutlineDashboard } from 'react-icons/md';
@@ -56,7 +56,7 @@ export default function DashNavbar() {
               {/* <span className='text-xs indicator-item badge badge-info'>
                 0
               </span> */}
-              <CgWebsite className='w-6 h-6' />
+              <BsFillPeopleFill className='w-6 h-6' />
             </div>
           </div>
         </Link>
@@ -96,11 +96,11 @@ export default function DashNavbar() {
           legacyBehavior
           className='flex btn btn-ghost hover:bg-opacity-0'
         >
-          <a target="_blank" rel="noopener noreferrer">
-            <div className='normal-case tooltip lg:tooltip-right' data-tip={t('sandbox')}>
-              <PiBrowsersFill className='w-6 h-6 text-gray-400' />
-            </div>
-          </a>
+          {/* <a target="_blank" rel="noopener noreferrer"> */}
+          <div className='normal-case tooltip lg:tooltip-right' data-tip={t('sandbox')}>
+            <PiBrowsersFill className='w-6 h-6 text-gray-400' />
+          </div>
+          {/* </a> */}
         </Link>
       </li>
       <li className='justify-end'>

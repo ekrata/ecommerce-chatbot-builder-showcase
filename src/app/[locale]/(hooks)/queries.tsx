@@ -18,6 +18,7 @@ export enum QueryKey {
   customer = 'customer',
   customers = 'customers',
   bot = 'bot',
+  botTemplates = 'botTemplates',
   bots = 'bots',
   visits = 'visits',
   shopifyProducts = 'shopifyProducts',

@@ -11,11 +11,11 @@ export default function Page() {
 
 
   return (
-    <div className="grid max-h-screen grid-cols-12 max-w-screen">
+    <div className="grid max-h-screen grid-cols-12 bg-white max-w-screen">
       <div className='h-screen col-span-2'>
         <BotsNav />
       </div>
-      <div className='h-screen col-span-10 shadow-2xl'>
+      <div className='h-screen col-span-10 shadow-lg'>
         <BotsPanel title={'General'} />
       </div>
     </div>

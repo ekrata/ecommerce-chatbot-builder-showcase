@@ -5,7 +5,7 @@ export function botsStack({ stack }: StackContext) {
   const { api } = use(baseStack);
 
   api.addRoutes(stack, {
-    'GET /botTemplates':
+    'GET /bot-templates':
       'packages/functions/app/api/src/botTemplates/list.handler',
     // 'GET /orgs/{orgId}/bots/{botId}':
     //   'packages/functions/app/api/src/bots/get.handler',

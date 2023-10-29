@@ -74,6 +74,11 @@ export const BotsPanel: FC<Props> = ({ title }) => {
             <table className="table w-full table-lg">
               <thead className=''>
                 <tr className='bg-white border-b-[1px] normal-case text-xl'>
+                  <th className='text-lg normal-case bg-transparent disabled'>
+                    <label>
+                      <input type="checkbox" className="checkbox" checked={false} />
+                    </label>
+                  </th>
                   <th className='text-lg normal-case bg-transparent'>{tDash('Name')}</th>
                   <th className='text-lg normal-case bg-transparent'>{tBots('Triggered')}</th>
                   <th className='text-lg normal-case bg-transparent'>{tBots('Engagement')}</th>
@@ -87,7 +92,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                   return (
                     <tr className='w-full text-lg font-normal group hover:cursor-pointer'
                     >
-                      <th>
+                      <th className='group-hover:bg-gray-300'>
                         <label>
                           <input type="checkbox" className="checkbox" onClick={() => {
                             if (selectedBotIndex === i) {

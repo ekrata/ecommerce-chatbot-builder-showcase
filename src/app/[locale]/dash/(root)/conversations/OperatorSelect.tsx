@@ -32,21 +32,21 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const displaySelectedAvatar = () => {
     if (operatorId === 'all') {
       return <div className={`avatar place-items-center`}>
-        <div className="w-8 h-8 text-2xl rounded-full place-items-center ring ring-primary ring-offset-base-100 ring-offset-2">
+        <div className="w-8 h-8 text-2xl rounded-full place-items-center ring ring-info ring-offset-base-100 ring-offset-1">
           <BsPeopleFill className='w-full h-full text-2xl text-gray-200' />
         </div>
       </div>
     }
     else if (operatorId === 'bots') {
       return <div className={`avatar place-items-center`}>
-        <div className="w-8 h-8 text-2xl rounded-full place-items-center ring ring-primary ring-offset-base-100 ring-offset-2">
+        <div className="w-8 h-8 text-2xl rounded-full place-items-center ring ring-info ring-offset-base-100 ring-offset-2">
           <BsRobot className='w-full h-full text-2xl' />
         </div>
       </div>
     }
     else if (operatorId === sessionOperator?.operatorId) {
       return sessionOperator?.profilePicture ? <div className={`avatar ${sessionOperator.online ? 'online' : 'offline'} place-items-center`}>
-        <div className="w-8 h-8 text-2xl rounded-full place-items-center ring ring-primary ring-offset-base-100 ring-offset-2">
+        <div className="w-8 h-8 text-2xl rounded-full place-items-center ring-info ring-offset-base-100 ring-2">
           <img className='w-8 h-8' width={8} height={8} src={sessionOperator?.profilePicture}></img>
         </div>
       </div> : <BsPerson />
@@ -56,7 +56,7 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
       // const operator = operators?.data?.find((operator) => operator?.operatorId === operatorId);
       return sessionOperator?.profilePicture ?
         <div className={`avatar ${sessionOperator?.online ? 'online' : 'offline'} place-items-center`}>
-          <div className="w-8 h-8 text-2xl rounded-full place-items-center ring ring-primary ring-offset-base-100 ring-offset-2">
+          <div className="w-8 h-8 text-2xl rounded-full place-items-center ring ring-info ring-offset-base-100 ring-offset-2">
             <img className='w-8 h-8' width={8} height={8} src={sessionOperator?.profilePicture}></img>
           </div>
         </div>
@@ -78,7 +78,7 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
               setConversationListFilter({ ...conversationListFilter, operatorId })
             }} />
             <div className={`avatar ${sessionOperator?.online ? 'online' : 'offline'}`}>
-              <div className="w-6 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              <div className="w-6 rounded-full ring ring-info ring-offset-base-100 ring-offset-2">
                 <img src={sessionOperator?.profilePicture} />
               </div>
             </div>
@@ -122,7 +122,7 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
                   setConversationListFilter({ ...conversationListFilter, operatorId: operator?.operatorId })
                 }} />
                 <div className={`avatar ${operator?.online ? 'online' : 'offline'}`}>
-                  <div className="w-6 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                  <div className="w-6 rounded-full ring ring-info ring-offset-base-100 ring-offset-2">
                     {operator?.profilePicture ? <img src={operator?.profilePicture} /> : <BsPerson className="text-xl" />}
                   </div>
                 </div>

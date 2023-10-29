@@ -12,7 +12,7 @@ export const BotsNav: FC = () => {
 
   return (
     < div className="flex justify-between w-full h-full bg-white " >
-      <div className="flex flex-col w-full h-full place-items-center ">
+      <div className="flex flex-col w-full h-full bg-white place-items-center">
         <div
           className={`bg-white flex flex-col gap-y-2 place-items-center  w-full justify-start text-start  text-xl font-semibold p-3 gap-x-2   `}
         >

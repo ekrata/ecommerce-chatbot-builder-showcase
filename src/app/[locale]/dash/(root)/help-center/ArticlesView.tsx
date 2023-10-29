@@ -10,7 +10,6 @@ import { BiChevronLeft, BiChevronRight, BiSend } from 'react-icons/bi';
 import { BsPlus, BsSearch, BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 import { useDebounce } from 'usehooks-ts';
-import { useSearchArticlesQuery } from 'widget/src/app/(actions)/queries/useSearchArticlesQuery';
 
 import { Article, ArticleCategory, ArticleSearchRes } from '@/entities/article';
 import { DynamicBackground } from '@/src/app/[locale]/(helpers)/DynamicBackground';
@@ -18,6 +17,8 @@ import { highlightMatches } from '@/src/app/[locale]/(helpers)/highlightMatches'
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { useArticlesQuery } from '@/src/app/[locale]/(hooks)/queries/useArticlesQuery';
 import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
+
+import { useSearchArticlesQuery } from '../../../(hooks)/queries/useSearchArticlesQuery';
 
 type Inputs = {
   phrase: string;

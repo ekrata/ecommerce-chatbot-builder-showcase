@@ -21,7 +21,7 @@ type Inputs = {
 };
 
 const fetchingConversationItemSkeleton = (
-  <div className="flex flex-col w-full h-screen p-2 bg-white animate-pulse gap-y-2">
+  <div className="flex flex-col w-full h-screen p-2 bg-white gap-y-2">
     {[...Array(15)].map(() => (
       <div className="flex w-full place-items-center animate-fade-left">
         <div className='flex flex-col w-full gap-y-6'>
@@ -80,7 +80,7 @@ export const ChatView: FC = () => {
             {conversationItem?.customer?.name}
             {conversationItem?.customer && (
               <a onClick={() => setConversationState('customerInfo')} className='flex flex-row place-items-center gap-x-2'>
-                <CustomerAvatar conversationItem={conversationItem} />
+                <CustomerAvatar customer={conversationItem?.customer} conversationItem={conversationItem} />
                 <p>{`${conversationItem.customer?.name ?? conversationItem?.customer?.email ?? conversationItem?.customer?.customerId}`}</p>
               </a>
             )}

@@ -3,8 +3,7 @@
 import ct from 'countries-and-timezones';
 import { flag } from 'country-emoji';
 import { useFormatter, useTranslations } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { FcAlarmClock, FcClock, FcGlobe } from 'react-icons/fc';
@@ -90,13 +89,13 @@ export const VisitorView: FC = () => {
   }
 
   return (
-    <div className="flex justify-between w-full h-screen shadow-2xl rounded-3xl">
+    <div className="flex justify-between w-full h-screen bg-white shadow-2xl rounded-3xl">
       <div className="flex flex-col w-full h-full place-items-center ">
         <div
-          className={` bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold gap-x-2   `}
+          className={` bg-white  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center rounded-t-lg text-xl font-semibold gap-x-2   `}
         >
           <div className="w-full overflow-x-auto">
-            <table className={`table ${isMobile ? 'table-xs' : 'w-full h-screen'}`}>
+            <table className={`table ${isMobile ? 'table-xs' : 'w-full '}`}>
               {/* head */}
               <thead className='normal-case bg-white '>
                 <tr className='normal-case bg-white '>
@@ -107,7 +106,7 @@ export const VisitorView: FC = () => {
                   <th className='text-2xl normal-case bg-transparent '></th>
                 </tr>
               </thead>
-              <tbody className='content-start align-top max-h-10'>
+              <tbody className='relative content-start justify-start h-10 align-top max-h-10'>
                 {visitsQuery.isFetching ? fetchingSkeleton :
                   visitsQuery?.data?.data?.map((visit) => (
                     <tr className='content-start w-full text-xs font-normal normal-case truncate max-h-20 hover:cursor-pointer' onClick={() => {
@@ -115,7 +114,7 @@ export const VisitorView: FC = () => {
                     }}>
                       <th className='bg-transparent'>
                         <div className='flex gap-x-2'>
-                          <CustomerAvatar></CustomerAvatar>
+                          <CustomerAvatar customer={visit?.customer}></CustomerAvatar>
                           <div className='flex flex-col text-xs font-medium max-w-20'>
                             <p>
                               {visit.customer.name ?? visit.customer?.email}

@@ -43,7 +43,7 @@ export default function Page() {
 
         {conversationState === 'search' && <ConversationsSearchView></ConversationsSearchView>}
       </div>
-      <div className='h-screen col-span-6 shadow-md'>
+      <div className='h-screen col-span-6 shadow-lg'>
         <ChatView />
       </div>
       <div className='col-span-3  shadow-lg border-l-[1px]'>

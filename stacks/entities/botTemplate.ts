@@ -160,22 +160,11 @@ export const BotTemplate = new Entity({
     primary: {
       pk: {
         field: 'pk',
-        composite: ['orgId', 'botId'],
+        composite: ['botTemplateId'],
       },
       sk: {
         field: 'sk',
         composite: [],
-      },
-    },
-    byOrg: {
-      index: 'gsi1pk-gsi1sk-index',
-      pk: {
-        field: 'gsi1pk',
-        composite: ['orgId'],
-      },
-      sk: {
-        field: 'gsi1sk',
-        composite: ['createdAt'],
       },
     },
   },
