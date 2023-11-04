@@ -10,9 +10,11 @@ export const updateNodes = (values: object, currentNode: Node<unknown, string | 
   if (currentNode) {
     const { id, position } = currentNode
     if (id && position?.x && position?.y) {
-      setNodes([...(nodes.filter((oldNode) => oldNode?.id !== id) ?? []), {
-        ...currentNode, position: { x: position?.x, y: position.y }, data: { ...values, errors }
-      }])
+      const newNodes = [...(nodes.filter((oldNode) => oldNode?.id !== id) ?? []), {
+        ...currentNode, position: { x: position?.x, y: position?.y }, data: { ...values, errors }
+      }]
+      console.log(newNodes)
+      setNodes(newNodes)
     }
   }
 }

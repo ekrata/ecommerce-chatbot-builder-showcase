@@ -113,7 +113,7 @@ export function baseStack({ stack, app }: StackContext) {
           handler:
             'packages/functions/app/api/src/ddb-stream/processBatch.handler',
           timeout: defaultFunctionTimeout,
-          bind: [ddbStreamTopic, botNodeTopic],
+          bind: [ddbStreamTopic, botNodeTopic, REGION],
           // permissions: ['events:PutEvents'],
         },
         cdk: {
@@ -124,6 +124,8 @@ export function baseStack({ stack, app }: StackContext) {
       },
     },
   });
+
+  table.bindToConsumer('consumer1', [table]);
 
   if (app.local) {
     // const script = new Script(stack, "Script", {
@@ -164,6 +166,9 @@ export function baseStack({ stack, app }: StackContext) {
 
     [`${WsAppDetailType.wsAppCreateVisit}`]:
       'packages/functions/app/ws/src/visits/createVisit.handler',
+
+    [`${WsAppDetailType.wsAppTriggerStarted}`]:
+      'packages/functions/app/ws/src/interactions/triggerStarted.handler',
 
     $connect: 'packages/functions/app/ws/src/connect.handler',
     $default: 'packages/functions/app/ws/src/connect.handler',
@@ -624,6 +629,31 @@ export function baseStack({ stack, app }: StackContext) {
         },
       },
     },
+    [botNodeEvent.SendAChatMessage]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_SendAChatMessage_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            timeout: defaultFunctionTimeout,
+            bind: [wsApi, api, REGION, table],
+            handler:
+              'packages/functions/app/api/src/nodes/actions/sendAChatMessage.handler',
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.SendAChatMessage],
+              }),
+            ),
+          },
+        },
+      },
+    },
     [botNodeEvent.DecisionButtons]: {
       type: 'queue',
       queue: new Queue(stack, `bot_node_action_DecisionButtons_queue`, {
@@ -716,7 +746,14 @@ export function baseStack({ stack, app }: StackContext) {
 
   // }
 
-  processInteractionFunction.bind([wsApi, api, REGION, table, botNodeTopic]);
+  processInteractionFunction.bind([
+    wsApi,
+    api,
+    REGION,
+    table,
+    botNodeTopic,
+    ddbStreamTopic,
+  ]);
   appEventBus.bind([wsApi, api, REGION, table]);
 
   // meta webhook handler -> SNS -> SQS -> lambdas
@@ -919,6 +956,10 @@ export function baseStack({ stack, app }: StackContext) {
       ? widgetHost.toLowerCase()
       : `${stack.stage}.${widgetHost}`.toLowerCase();
 
+  const siteDomainName =
+    stack.stage === 'prod'
+      ? domain.toLowerCase()
+      : `${stack.stage}.${domain}`.toLowerCase();
   console.log('building: ', widgetDomain);
   const widget = new NextjsSite(stack, 'widget', {
     path: 'widget/',
@@ -933,6 +974,10 @@ export function baseStack({ stack, app }: StackContext) {
     environment: {
       NEXT_PUBLIC_APP_API_URL: api.customDomainUrl ?? '',
       NEXT_PUBLIC_APP_WS_URL: wsApi.customDomainUrl ?? '',
+      NEXT_PUBLIC_APP_URL:
+        stack.stage === 'local'
+          ? 'http://localhost:3000'
+          : `https://${siteDomainName ?? ''}`,
     },
   });
 
@@ -943,11 +988,6 @@ export function baseStack({ stack, app }: StackContext) {
   // );
 
   process.env.NEXT_PUBLIC_APP_WIDGET_URL = widget.customDomainUrl ?? '';
-
-  const siteDomainName =
-    stack.stage === 'prod'
-      ? domain.toLowerCase()
-      : `${stack.stage}.${domain}`.toLowerCase();
 
   // console.log('building: ', siteDomainName);
   const site = new NextjsSite(stack, 'dash', {

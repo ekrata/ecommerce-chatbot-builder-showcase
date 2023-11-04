@@ -2,13 +2,17 @@
 
 import { getCookie } from 'cookies-next';
 import { EntityItem } from 'electrodb';
+import { invert } from 'lodash';
 // Import necessary hooks and libraries
 import {
     createContext, PropsWithChildren, useCallback, useContext, useEffect, useState
 } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { useLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Interaction } from '@/entities/interaction';
+import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { WsAppDetailType } from '@/types/snsTypes';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -43,8 +47,9 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
     const orgId = orgQuery?.data?.orgId ?? ''
     const configuration = useConfigurationQuery(orgId);
     const newCustomerId = uuidv4()
-    const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId)
+    // const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId)
     const { widgetAppearance } = { ...configuration?.data?.channels?.liveChat?.appearance }
+    const [interactionHistory, setInteractionHistory] = useLocalStorage<Partial<Record<keyof typeof Triggers, number>>>('interactionHistory', {});
     const customer = useCustomerQuery(orgId)
     const [wsUrl, setWsUrl] = useState('');
     // const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId)
@@ -52,9 +57,6 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
     useEffect(() => {
         if (!orgId) {
             orgQuery.refetch()
-        }
-        if (!customer?.data?.customerId) {
-            (async () => await createCustomerMut.mutateAsync([orgId, newCustomerId, { customerId: newCustomerId, orgId }]))()
         }
         if (orgId && customer?.data?.customerId) {
             setWsUrl(getWsUrl(orgId, customer?.data?.customerId, 'customer'))
@@ -99,6 +101,12 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
                         const operators = [...oldData?.filter((operator) => operator?.operatorId !== updateOperatorItem?.operatorId) ?? [], updateOperatorItem]
                         return operators
                     });
+                case WsAppDetailType.wsAppTriggerStarted:
+                    const interaction = body as EntityItem<typeof Interaction>
+                    console.log(interaction)
+                    if (interaction?.type) {
+                        setInteractionHistory({ ...interactionHistory, [`${invert(Triggers)?.[interaction?.type]}`]: Date.now() });
+                    }
                 default:
                     break;
             }

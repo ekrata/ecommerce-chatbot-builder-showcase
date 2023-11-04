@@ -39,6 +39,7 @@ import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
   actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
+import { getNodeForm } from './getNodeForm';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import { onDragStart } from './onDragStart';
 
@@ -277,9 +278,11 @@ export const BotEditor: React.FC = () => {
 
   // update whenever nodes array changes 
   useEffect(() => {
+    console.log('update')
     // && isEquivalentArray(botQuery?.data?.nodes, debouncedNodes) && isEquivalentArray(botQuery?.data?.edges, debouncedEdges)
     if (reactFlowInstance) {
       console.log('hi')
+      console.log(nodes)
       console.log(edges)
       const { active, name, category } = getValues()
       const updateBody = {
@@ -319,30 +322,7 @@ export const BotEditor: React.FC = () => {
   const renderNodeForm = useCallback(() => {
     if (selectedFormNode) {
       const selectedNode = selectedFormNode
-      return (
-        <>
-          <h5 className='flex flex-row justify-center lex-between place-items-center gap-x-2'>
-            {triggers.includes(selectedNode.type as any) && <div className="flex flex-row w-4 h-4 text-xl normal-case border-0 place-items-center bg-success gap-x-2 btn btn-outline mask mask-circle">
-              <div className='text-xl'>
-                {nodeSubTypeIcons[selectedNode.type as SubNodeType]}
-              </div>
-            </div>}
-            {conditions.includes(selectedNode.type as any) && <div className="flex flex-row w-1 h-1 text-xl normal-case border-0 bg-warning gap-x-2 btn btn-outline mask mask-diamond">
-              <div className='text-xl'>
-                {nodeSubTypeIcons[selectedNode.type as SubNodeType]}
-              </div>
-            </div>}
-            {actions.includes(selectedNode.type as any) && <div className="flex flex-row w-1 h-1 text-xl normal-case border-0 bg-info gap-x-2 btn btn-outline mask mask-squircle">
-
-              <div className='text-xl'>
-                {nodeSubTypeIcons[selectedNode.type as SubNodeType]}
-              </div>
-            </div>}
-            {selectedNode?.type}
-          </h5>
-          <NodeForm node={selectedNode} />
-        </>
-      )
+      return getNodeForm(selectedNode)
     }
   }, [selectedFormNode])
 
@@ -430,8 +410,8 @@ export const BotEditor: React.FC = () => {
                     </label>
                     <div className="form-control">
                       <label className="cursor-pointer label gap-x-2">
-                        <span className="label-text">{tDash('Active')}</span>
-                        <input type="checkbox" className="toggle toggle-success" {...register('active')} />
+                        <span className="label-text">{getValues()?.active ? tDash('Active') : tDash('Disabled')}</span>
+                        <input type="checkbox" className="toggle toggle-info" {...register('active')} />
                       </label>
                     </div>
                     <Link href={{ pathname: "/dash/sandbox" }} rel="noopener noreferrer" target="_blank" className='flex normal-case btn btn-info btn-outline btn-sm'>

@@ -4,7 +4,7 @@ import { EntityItem } from 'electrodb';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiSend } from 'react-icons/bi';
 import { BsPlus } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
@@ -28,6 +28,10 @@ import {
 } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+const schema = z.object({
+  content: z.string()?.min(1)
+})
+
 interface Props {
   message: EntityItem<typeof Message>
 }
@@ -43,7 +47,7 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message }) =>
   const { quickReplies } = messageFormData
 
 
-  const [schema, setSchema] = useState<any>(emailSchema);
+  // const [schema, setSchema] = useState<any>(emailSchema);
   const [placeholder, setPlaceholder] = useState<any>('emailInputPlaceholder ');
   // const [nodes, setNodes, onNodesChange] = useNodeContext()
   const updateMessageMut = useUpdateMessageMut(message?.orgId, message?.conversationId, message?.messageId);
@@ -67,7 +71,8 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message }) =>
       mode: 'onChange',
     });
 
-  const watchContent = watch("content")
+
+  // const watchContent = watch("content")
 
   const handleClickOutside = () => {
     // Your custom logic here
@@ -79,12 +84,12 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message }) =>
   // const { fields, append, update, prepend, remove, swap, move, insert } = fieldArray
 
   useEffect(() => {
-    setValue('content', message?.content)
+    setValue('content', message?.content ?? '')
     // setError('quickReplies', node?.data?.errors?.quickReplies)
   }, [message])
 
   const onSubmit: SubmitHandler<z.infer<typeof schema>> = async (values) => {
-    await updateMessageMut.mutateAsync([orgId, message?.conversationId, message?.messageId, values])
+    await updateMessageMut.mutateAsync([orgId, message?.conversationId, message?.messageId, { content: values.choice }])
   }
   {
     updateMessageMut.isSuccess ? <FcCheckmark className='text-lg' /> :
@@ -105,7 +110,9 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message }) =>
       <div className='flex flex-row gap-2 place-items-center'>
         {/* {updateMessageMut.isLoading && <Cg className='text-xl text-gray-400 animate-spin' />} */}
         {quickReplies.map((quickReply, i) => (
-          <button className="btn" type="submit" onClick={() => setSelection(i)}>{quickReply}</button>
+          <button className="btn" type="submit" onClick={() => {
+            setSelection(i)
+          }}>{quickReply}</button>
         ))}
       </div>
       {errors?.content && <p className='justify-end text-xs text-end text-error'>{!!watchContent?.length && errors?.content?.message as string}</p>}

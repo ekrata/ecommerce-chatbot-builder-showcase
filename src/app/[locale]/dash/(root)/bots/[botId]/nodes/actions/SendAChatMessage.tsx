@@ -18,8 +18,6 @@ import { z } from 'zod';
 
 import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
-import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
-import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { OutputFieldsKeys } from '../../../outputFields';

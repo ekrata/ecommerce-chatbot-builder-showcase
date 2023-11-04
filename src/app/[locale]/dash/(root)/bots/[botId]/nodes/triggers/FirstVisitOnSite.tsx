@@ -15,7 +15,6 @@ import { z } from 'zod';
 
 import { conversationTopic } from '@/entities/conversation';
 import {
-  Action, Condition, triggerInterval, Triggers, VisitorBotInteractionTrigger,
   VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { languageCodes } from '@/src/app/[locale]/(helpers)/lang';
@@ -41,7 +40,7 @@ const schema = z.object({
   }),
 })
 
-type FirstVisitOnSiteData = z.infer<typeof schema>
+export type FirstVisitOnSiteData = z.infer<typeof schema>
 type FormValues = FirstVisitOnSiteData
 
 const type = VisitorPageInteractionTrigger.FirstVisitOnSite

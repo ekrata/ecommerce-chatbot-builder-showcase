@@ -41,7 +41,7 @@ const schema = z.object({
   }),
 })
 
-type VisitorClicksOnChatIconData = z.infer<typeof schema>
+export type VisitorClicksOnChatIconData = z.infer<typeof schema>
 type FormValues = VisitorClicksOnChatIconData
 
 const type = VisitorBotInteractionTrigger.VisitorClicksChatIcon

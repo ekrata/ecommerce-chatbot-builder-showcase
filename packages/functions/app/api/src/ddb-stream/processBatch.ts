@@ -1,17 +1,21 @@
 import AWS, { DynamoDB } from 'aws-sdk';
 import { ApiHandler, usePathParams } from 'sst/node/api';
+import { Config } from 'sst/node/config';
+import { Table } from 'sst/node/table';
 import { Topic } from 'sst/node/topic';
 
 import { Message } from '@/entities/message';
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
 import * as Sentry from '@sentry/serverless';
 
+import { getAppDb } from '../db';
 import { BotStateContext } from '../nodes/botStateContext';
+import { findNextNodes } from '../nodes/getNextNodes';
 import { publishToNextNodes } from '../nodes/publishToNextNodes';
 
 const sns = new AWS.SNS();
 
-// const appDb = getAppDb(Config.REGION, Table.app.tableName);
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async (event: any, ctx) => {
@@ -19,8 +23,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       // eslint-disable-next-line no-use-before-define
       event?.Records?.forEach(async (record: any) => {
         // eslint-disable-next-line no-use-before-define
-        console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
         // CREATE
+        console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
         if (record.eventName === 'INSERT') {
           if (
             record.dynamodb.NewImage.context?.S === 'interaction' ||
@@ -143,14 +147,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             record.dynamodb.NewImage.context?.S === 'message' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'message'
           ) {
-            console.log(record);
             const newImage = DynamoDB.Converter.unmarshall(
               record.dynamodb.NewImage,
             );
-            const messageparsed = Message.parse({
+            const messageParsed = Message.parse({
               Item: newImage,
             });
-            const messageData = messageparsed?.data;
+            const messageData = messageParsed?.data;
 
             // route responses to bot actions/conditions to the appropriate next node
             if (
@@ -160,16 +163,21 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               const botStateContext = JSON.parse(
                 messageData?.botStateContext ?? '{}',
               ) as BotStateContext;
+              console.log(botStateContext);
               if (
-                botStateContext?.nextNode?.id &&
+                botStateContext?.currentNode?.id &&
                 botStateContext?.bot?.nodes &&
                 botStateContext?.bot?.edges
               ) {
+                // current/next node incrementation for inputAction's updating message occurs here rather than in the lambda
                 const newBotStateContext = {
                   ...botStateContext,
                   messages: [...(botStateContext?.messages ?? []), messageData],
                 };
-                publishToNextNodes(newBotStateContext);
+                const nextNodes = await publishToNextNodes(
+                  newBotStateContext,
+                  appDb,
+                );
               }
             }
 

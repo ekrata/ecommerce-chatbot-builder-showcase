@@ -68,6 +68,9 @@ importers:
       '@types/aws-lambda':
         specifier: ^8.10.125
         version: 8.10.125
+      '@types/lodash.invert':
+        specifier: ^4.3.8
+        version: 4.3.8
       '@types/node':
         specifier: 18.15.13
         version: 18.15.13
@@ -128,6 +131,9 @@ importers:
       daisyui:
         specifier: ^2.52.0
         version: 2.52.0(autoprefixer@10.4.14)(postcss@8.4.23)
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
       electrodb:
         specifier: ^2.10.3
         version: 2.10.3(@aws-sdk/client-dynamodb@3.433.0)
@@ -484,14 +490,14 @@ importers:
         specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.3.1)
       '@tanstack/query-sync-storage-persister':
-        specifier: ^4.29.15
-        version: 4.29.15
+        specifier: ^4.36.1
+        version: 4.36.1
       '@tanstack/react-query':
-        specifier: ^4.29.15
-        version: 4.29.15(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^4.36.1
+        version: 4.36.1(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query-persist-client':
-        specifier: ^4.29.15
-        version: 4.29.15(@tanstack/react-query@4.29.15)
+        specifier: ^4.36.1
+        version: 4.36.1(@tanstack/react-query@4.36.1)
       '@types/node':
         specifier: 18.15.13
         version: 18.15.13
@@ -5204,6 +5210,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+    dev: true
 
   /@babel/runtime@7.23.2:
     resolution: {integrity: sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==}
@@ -12593,18 +12600,8 @@ packages:
       tailwindcss: 3.3.1(postcss@8.4.23)
     dev: false
 
-  /@tanstack/query-core@4.29.15:
-    resolution: {integrity: sha512-Recc1d5rjHesKhzlH3Aw66v+vQxtB9OHEXP/vxgEcEJ0DwEpfe3EQ4id20vuBJHY2XRjfgWGmUs6ZgK6PSsTXA==}
-    dev: false
-
   /@tanstack/query-core@4.36.1:
     resolution: {integrity: sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==}
-    dev: false
-
-  /@tanstack/query-persist-client-core@4.29.15:
-    resolution: {integrity: sha512-cXOkx7nRrJpL5MmT3tmIW41Xn87KjIVgjcoakcK23luj5sJLgWomTJKiDlyEcUL8P8yrywNut+M1IxbTSndaDQ==}
-    dependencies:
-      '@tanstack/query-core': 4.29.15
     dev: false
 
   /@tanstack/query-persist-client-core@4.36.1:
@@ -12613,25 +12610,10 @@ packages:
       '@tanstack/query-core': 4.36.1
     dev: false
 
-  /@tanstack/query-sync-storage-persister@4.29.15:
-    resolution: {integrity: sha512-M8wEZ2a0sHPvPQxFQBbGdQMDhWI5Rn6KOjM4pA0ybmaqvE7b3lN/nSTcmc+RrdceEH9HWMCqlzUbLUJThLb2iQ==}
-    dependencies:
-      '@tanstack/query-persist-client-core': 4.29.15
-    dev: false
-
   /@tanstack/query-sync-storage-persister@4.36.1:
     resolution: {integrity: sha512-yMEt5hWe2+1eclf1agMtXHnPIkxEida0lYWkfdhR8U6KXk/lO4Vca6piJmhKI85t0NHlx3l/z6zX+t/Fn5O9NA==}
     dependencies:
       '@tanstack/query-persist-client-core': 4.36.1
-    dev: false
-
-  /@tanstack/react-query-persist-client@4.29.15(@tanstack/react-query@4.29.15):
-    resolution: {integrity: sha512-sYISV7iFMhFXwHoc9B94ZrCGPyZKPA0CCLqkP4f4Ll9XzsMijYlDUD2C9Wm56aYi3bS+LYy2oSxrMNLqtW4HYw==}
-    peerDependencies:
-      '@tanstack/react-query': 4.29.15
-    dependencies:
-      '@tanstack/query-persist-client-core': 4.29.15
-      '@tanstack/react-query': 4.29.15(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@tanstack/react-query-persist-client@4.36.1(@tanstack/react-query@4.36.1):
@@ -12641,24 +12623,6 @@ packages:
     dependencies:
       '@tanstack/query-persist-client-core': 4.36.1
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
-    dev: false
-
-  /@tanstack/react-query@4.29.15(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-1zDkv95ljuJ623hhbYU8YIprPW2x6774kh3IQNEuZav62+S+Zr26uUOrE2zGRp9I1uO5Liw/0uYB3dWXQP5+3Q==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@tanstack/query-core': 4.29.15
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /@tanstack/react-query@4.36.1(react-dom@18.2.0)(react@18.2.0):
@@ -12684,7 +12648,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       '@babel/code-frame': 7.22.13
-      '@babel/runtime': 7.23.1
+      '@babel/runtime': 7.23.2
       '@types/aria-query': 5.0.1
       aria-query: 5.1.3
       chalk: 4.1.2
@@ -13477,6 +13441,12 @@ packages:
 
   /@types/lodash.clonedeep@4.5.8:
     resolution: {integrity: sha512-I5toZLLfTvhnuAnejjVgSpBSLSC316bVURbI0sCYI0dKY3jaJgOg2arfPC6miTNnHRi/Tk/J6BB+kzT3iB5mcw==}
+    dependencies:
+      '@types/lodash': 4.14.200
+    dev: false
+
+  /@types/lodash.invert@4.3.8:
+    resolution: {integrity: sha512-4UQ1k7vIhr4kdnbNnsmdDzAnKB4MrSVLhHc23jtltvITgC1JMEE4dD23Of4MzJ+RIbpWeM0W4Z3+aZEGN73+QA==}
     dependencies:
       '@types/lodash': 4.14.200
     dev: false
@@ -14731,7 +14701,7 @@ packages:
     resolution: {integrity: sha512-o/HelwhuKpTj/frsOsbNLNgnNGVIFsVP/SW2BSF14gVl7kAfMOJ6/8wUAUvG1R1NHKrfG+2sHZTu0yauT1qBrA==}
     engines: {node: '>=6.0'}
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.23.2
       '@babel/runtime-corejs3': 7.22.6
     dev: true
 
@@ -16923,8 +16893,7 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
     dependencies:
-      '@babel/runtime': 7.23.1
-    dev: true
+      '@babel/runtime': 7.23.2
 
   /date-time@3.1.0:
     resolution: {integrity: sha512-uqCUKXE5q1PNBXjPqvwhwJf9SwMoAHBgWJ6DcrnS5o+W2JOiIILl0JEdVD8SGujrNS02GGxgwAg2PN2zONgtjg==}
@@ -18328,7 +18297,7 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
-      '@babel/runtime': 7.23.1
+      '@babel/runtime': 7.23.2
       aria-query: 5.3.0
       array-includes: 3.1.7
       array.prototype.flatmap: 1.3.2
@@ -25595,7 +25564,7 @@ packages:
   /regenerator-transform@0.15.2:
     resolution: {integrity: sha512-hfMp2BoF0qOk3uc5V20ALGDS2ddjQaLrdl7xrGXvAIow7qeWRM2VA2HuCHkUKk9slq3VwEwLNK3DFBqDfPGYtg==}
     dependencies:
-      '@babel/runtime': 7.23.1
+      '@babel/runtime': 7.23.2
 
   /regex-parser@2.2.11:
     resolution: {integrity: sha512-jbD/FT0+9MBU2XAZluI7w2OBs1RBi6p9M83nkoZayQXXU9e8Robt69FcZc7wU4eJD/YFTjn1JdCk3rbMJajz8Q==}
@@ -28723,7 +28692,7 @@ packages:
       '@apideck/better-ajv-errors': 0.3.6(ajv@8.12.0)
       '@babel/core': 7.23.2
       '@babel/preset-env': 7.22.10(@babel/core@7.23.2)
-      '@babel/runtime': 7.23.1
+      '@babel/runtime': 7.23.2
       '@rollup/plugin-babel': 5.3.1(@babel/core@7.23.2)(rollup@2.79.1)
       '@rollup/plugin-node-resolve': 11.2.1(rollup@2.79.1)
       '@rollup/plugin-replace': 2.4.2(rollup@2.79.1)

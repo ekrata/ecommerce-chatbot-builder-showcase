@@ -216,8 +216,12 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   );
 
   // rearrange to select bots
-  const bots = [botTemplates.SubscribeToMailingList];
+  const bots = [
+    botTemplates.SubscribeToMailingList,
+    botTemplates.DiscountForNewVisitors,
+  ];
 
+  // create bots from templates
   mockOrg.botIds = await bots
     .slice(0, mockBotCount)
     .reduce<Promise<Record<TestBotKey, string>>>(
@@ -243,6 +247,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
       {} as Promise<Record<TestBotKey, string>>,
     );
 
+  // create templates
   mockOrg.botTemplateIds = await Promise.all(
     Object.entries(botTemplates).map(async ([key, botTemplate]) => {
       const botTemplateId = uuidv4();

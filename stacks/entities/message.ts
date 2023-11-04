@@ -2,7 +2,6 @@ import { CustomAttributeType, Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 import { string } from 'zod';
 
-import { BotStateContext } from '@/packages/functions/app/api/src/nodes/processInteraction';
 import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
 import { DecisionButtonsData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionButtons';
 import { DecisionCardMessagesData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionCardMessages';
@@ -125,7 +124,7 @@ export const Message = new Entity({
     },
     content: {
       type: 'string',
-      required: true,
+      default: '',
     },
     contentHtml: {
       type: 'string',

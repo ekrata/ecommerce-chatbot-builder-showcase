@@ -21,6 +21,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       ...updateBot
     }: UpdateBot = useJsonBody();
 
+    console.log(updateBot);
+
     delete updateBot?.createdAt;
     delete updateBot?.updatedAt;
     if (!orgId || !botId) {
@@ -30,6 +32,24 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       };
     }
 
+    const body = {
+      ...updateBot,
+      nodes: updateBot.nodes?.map((node) => ({
+        ...node,
+        data:
+          typeof node?.data === 'object'
+            ? JSON.stringify(node.data)
+            : node.data,
+      })),
+      edges: updateBot.edges?.map((edge) => ({
+        ...edge,
+        data:
+          typeof edge?.data === 'object'
+            ? JSON.stringify(edge.data)
+            : edge.data,
+      })),
+    };
+    console.log(body);
     try {
       console.log('innn');
       const res = await appDb.entities.bots
@@ -38,15 +58,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           botId,
         })
         .set({
-          ...updateBot,
-          nodes: updateBot.nodes?.map((node) => ({
-            ...node,
-            data: JSON.stringify(node.data),
-          })),
-          edges: updateBot.edges?.map((edge) => ({
-            ...edge,
-            data: JSON.stringify(edge.data),
-          })),
+          ...body,
         })
         .go({ response: Config.STAGE === 'local' ? 'all_new' : 'default' });
 

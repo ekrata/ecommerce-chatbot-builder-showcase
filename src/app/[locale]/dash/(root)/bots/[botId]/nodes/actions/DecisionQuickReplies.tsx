@@ -101,7 +101,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
         message: '',
         quickReplies: []
       },
-      mode: 'onBlur',
+      mode: 'onChange',
     });
 
 
@@ -137,6 +137,7 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
+    console.log('updatinnodes')
     updateNodes(values, node, nodes, setNodes)
   }
 
@@ -152,10 +153,10 @@ export const DecisionQuickRepliesActionForm: React.FC<Props> = ({ node }) => {
 
       {errors?.quickReplies && <p className='justify-start mb-6 text-xs text-error'>{errors?.quickReplies?.message}</p>}
       {fields.map((field, index) => (
-        <>
+        <div>
           <TextareaField fieldName={'quickReplies'} node={node} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} index={index} fieldArray={fieldArray} register={register} control={control} />
           {errors?.quickReplies?.[index] && <p className='justify-start mb-6 text-xs text-error'>{errors?.quickReplies?.[index]?.message}</p>}
-        </>
+        </div>
       ))}
       <button onClick={() => append('New reply')} className='justify-center normal-case join-item btn btn-outline btn-sm'><BsPlus className='text-xl' />{tForm('addQuickReply')}</button>
       <span className="text-xs text-gray-200 label-text">{tDecisionForm("facebookCatch")}</span>

@@ -1,107 +1,87 @@
-  {
-    "startWhenAnotherBotRunning": false,
-    "helpfulnessPercent": 0.75,
-    "edges": [
-      {
-        "id": "reactflow__edge-0-31",
-        "source": "0",
-        "target": "3",
-        "sourceHandle": "",
-        "targetHandle": "1",
-        "type": "Ask a question",
-        "data": {
-          "label": "✓ Success"
-        }
-      },
-      {
-        "id": "reactflow__edge-3-110",
-        "source": "3",
-        "target": "1",
-        "sourceHandle": "",
-        "targetHandle": "10",
-        "type": "Visitor clicks on the chat icon",
-        "data": {
-          "label": "1"
-        }
-      }
-    ],
-    "nodes": [
-      {
-        "id": "2",
-        "type": "Day",
-        "position": {
-          "x": -200,
-          "y": 200
-        },
-        "data": {}
-      },
-      {
-        "id": "0",
-        "type": "Subscribe for mailing",
-        "position": {
-          "x": 341.54941860465124,
-          "y": 402.9716569767442
-        },
-        "data": {}
-      },
-      {
-        "id": "3",
-        "type": "Ask a question",
-        "position": {
-          "x": 200,
-          "y": 200
-        },
-        "data": {
-          "message": "Hi, want to subscribe to our mailing? Enter your email below :)",
-          "outputs": [
-            "✓ Success",
-            "⤫ Failure"
-          ],
-          "validationType": "Email",
-          "numberOfRepeats": 1,
-          "placeholder": "Enter your email to subscribe",
-          "saveTheAnswerAsAContactProperty": false,
-          "errorMessage": "Oops... that doesn't look correct, try again.",
-          "errors": {}
-        }
-      },
-      {
-        "id": "1",
-        "type": "Visitor clicks on the chat icon",
-        "position": {
-          "x": 415.66749557892115,
-          "y": 119.09105759903095
-        },
-        "data": {
-          "outputs": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"
-          ]
-        }
-      }
-    ],
-    "createdAt": 1698123999084,
-    "name": "emailSubscribe",
-    "botId": "0245d16f-bcdb-4615-bae9-7f439fdfbe42",
-    "active": true,
-    "startWhileOperatorsAreOffline": false,
-    "updatedAt": 1698136976474,
-    "category": "Sales",
-    "orgId": "58fcd099-dfe6-4c08-8e87-81f7c58fb447",
-    "handoffPercent": 0.2,
-    "triggeredCount": 673.5045362712424,
-    "startWhileAnOperatorIsHandlingAnotherConversation": false,
-    "viewport": {
-      "x": 0,
-      "y": 0,
-      "zoom": 1
+{
+  "startWhenAnotherBotRunning": false,
+  "helpfulnessPercent": 0.75,
+  "edges": [
+    {
+      "id": "reactflow__edge-0-31",
+      "source": "0",
+      "target": "3",
+      "sourceHandle": "",
+      "targetHandle": "1",
+      "type": "Ask a question",
+      "data": "{\"label\":\"✓ Success\"}"
+    },
+    {
+      "id": "reactflow__edge-3-110",
+      "source": "3",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Visitor clicks on the chat icon",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-4-09",
+      "source": "4",
+      "target": "0",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Subscribe for mailing",
+      "data": "{\"label\":\"1\"}"
     }
+  ],
+  "nodes": [
+    {
+      "id": "3",
+      "type": "Ask a question",
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "data": "{\"message\":\"Hi, want to subscribe to our mailing? Enter your email below :)\",\"outputs\":[\"✓ Success\",\"⤫ Failure\"],\"validationType\":\"Email\",\"numberOfRepeats\":1,\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"errors\":{}}"
+    },
+    {
+      "id": "1",
+      "type": "Visitor clicks on the chat icon",
+      "position": {
+        "x": 262.3560580918552,
+        "y": 0.9658516663735668
+      },
+      "data": "{\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "0",
+      "type": "Subscribe for mailing",
+      "position": {
+        "x": 341.54941860465124,
+        "y": 402.9716569767442
+      },
+      "data": "{\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "4",
+      "type": "Send a chat message",
+      "position": {
+        "x": 463.9273144466981,
+        "y": 622.3572588310583
+      },
+      "data": "{\"messages\":[\"All done. Is there anything I can help you with? Thanks.\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"]}"
+    }
+  ],
+  "createdAt": 1698123999084,
+  "name": "emailSubscribe",
+  "botId": "b0d3afde-0e3e-44c0-87da-d3057b1d7d0d",
+  "active": true,
+  "startWhileOperatorsAreOffline": false,
+  "updatedAt": 1698972046820,
+  "category": "Marketing",
+  "orgId": "65a64d53-2474-4972-ba2d-354d39fb19e4",
+  "handoffPercent": 0.2,
+  "triggeredCount": 673.5045362712424,
+  "startWhileAnOperatorIsHandlingAnotherConversation": false,
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
   }
+}

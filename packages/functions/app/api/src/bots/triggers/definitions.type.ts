@@ -33,6 +33,8 @@ export const Triggers = {
   ...OperatorInteractionTrigger,
 };
 
+// export const invertedTriggers = invert(Triggers);
+
 export enum Condition {
   BasedOnContactProperty = 'Based on Contact Property',
   Browser = 'Browser',

@@ -1,7 +1,7 @@
+import { getAppDb } from 'packages/functions/app/api/src/db';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
-import { getAppDb } from 'packages/functions/app/api/src/db';
 import * as Sentry from '@sentry/serverless';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);

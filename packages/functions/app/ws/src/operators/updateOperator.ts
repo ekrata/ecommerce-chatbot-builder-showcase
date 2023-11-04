@@ -49,8 +49,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
         })
         .go();
 
-      console.log(conversations);
-
       const customers = (
         await Promise.all(
           conversations?.data

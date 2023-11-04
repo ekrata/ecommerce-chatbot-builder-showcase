@@ -6,7 +6,7 @@ import {
   Node, NodeTypes
 } from 'reactflow';
 
-import { Actions, Conditions, Triggers } from '@/entities/bot';
+import { Actions, Conditions, TriggerValues } from '@/entities/bot';
 import {
   Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
@@ -62,9 +62,9 @@ export const conditionNode = (value: Conditions) => (
   </a>
 )
 
-export const triggerNode = (value: Triggers) => (
+export const triggerNode = (value: TriggerValues) => (
   <a className='flex flex-row w-16 h-16 text-3xl normal-case border-0 bg-success pointer-grab gap-x-2 btn btn-outline mask mask-circle' onDragStart={(event) => onDragStart(event, value as unknown as NodeTypeKey)} draggable>
-    {nodeSubTypeIcons[value as Triggers]}
+    {nodeSubTypeIcons[value as TriggerValues]}
   </a>
 )
 

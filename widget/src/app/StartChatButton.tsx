@@ -3,6 +3,7 @@ import { EntityItem } from 'electrodb';
 import { useTranslations } from 'next-intl';
 import { FC, useId, useState } from 'react';
 import { BsChatLeftFill, BsChevronDown, BsPencilSquare } from 'react-icons/bs';
+import { useLocalStorage, useReadLocalStorage } from 'usehooks-ts';
 
 import { botNodeEvent } from '@/entities/bot';
 import { ConfigLiveChatAppearance, Configuration } from '@/entities/configuration';
@@ -24,14 +25,16 @@ export const StartChatButton: FC = () => {
   const { chatWidget: { widgetState, widgetVisibility, setWidgetVisibility } } = useChatWidgetStore();
   const configuration = useConfigurationQuery(orgId)
   const customerQuery = useCustomerQuery(orgId);
-  const createInteractionMut = useCreateInteractionMut(orgId);
   const widgetAppearance: ConfigLiveChatAppearance = { ...configuration.data?.channels?.liveChat?.appearance }
   const { widgetPosition, enableButtonLabel } = { ...widgetAppearance.widgetAppearance }
+
+  const createInteractionMut = useCreateInteractionMut(orgId);
+  const interactionHistory = useReadLocalStorage<Partial<Record<keyof typeof Triggers, number>>>('interactionHistory') ?? {}
 
   const handleClick = async () => {
     if (widgetVisibility === 'minimized') {
       setWidgetVisibility('open')
-      await createInteractionMut.mutateAsync([orgId, { orgId: orgId, visitId: '', operatorId: '', botId: '', customerId: customerQuery?.data?.customerId, channel: 'website', status: 'unassigned', createdAt: Date.now(), type: Triggers.VisitorClicksChatIcon }])
+      await createInteractionMut.mutateAsync([orgId, { orgId: orgId, visitId: '', operatorId: '', botId: '', customerId: customerQuery?.data?.customerId, channel: 'website', status: 'unassigned', createdAt: Date.now(), type: Triggers.VisitorClicksChatIcon, lastTriggered: interactionHistory?.VisitorClicksChatIcon }])
 
     } else {
       setWidgetVisibility('minimized')

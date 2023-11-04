@@ -5,12 +5,14 @@ import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
 import { botNodeEvent, BotNodeType } from '@/entities/bot';
 import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
+import { SendAChatMessageData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/SendAChatMessage';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 import { BotStateContext } from '../botStateContext';
+import { publishToNextNodes } from '../publishToNextNodes';
 
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent) => {
@@ -27,58 +29,50 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
-        const { id, position, data } = nextNode as BotNodeType;
+        console.log(currentNode);
+        const { id, position, data } = currentNode as BotNodeType;
         const params = {};
         const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
         // const resOne = await appDb.entities.messages;
         // const newid = uuidv5(`${snsMessageId}1`, orgId);
         // console.log(newid);
 
-        const res2 = await appDb.entities.messages
-          .upsert({
-            // messageId based on idempotent interactionId
-            messageId: uuidv4(),
-            conversationId,
-            orgId,
-            operatorId: operatorId ?? '',
-            customerId: customerId ?? '',
-            sender: 'bot',
-            content: (JSON.parse(data ?? '{}') as AskAQuestionData)?.message,
-            createdAt: Date.now() - 5000,
-            sentAt: Date.now() - 5000,
-            // don't need to modify
-            // botStateContext: JSON.stringify(botStateContext),
-          })
-          .go({ response: 'all_new' });
-        // const nextBotStateContext = getNextBotStateContext(botStateContext);
+        const newMessages = await Promise.all(
+          (data as unknown as SendAChatMessageData)?.messages.map(
+            async (message) => {
+              const res = await appDb.entities.messages
+                .upsert({
+                  // messageId based on idempotent interactionId
+                  messageId: uuidv4(),
+                  conversationId,
+                  orgId,
+                  operatorId: operatorId ?? '',
+                  customerId: customerId ?? '',
+                  sender: 'bot',
+                  content: message,
+                  createdAt: Date.now() - 1000,
+                  sentAt: Date.now() - 1000,
+                  // don't need to modify
+                  // botStateContext: JSON.stringify(botStateContext),
+                })
+                .go({ response: 'all_new' });
+              return res?.data;
+              // const nextBotStateContext = getNextBotStateContext(botStateContext);
+            },
+          ),
+        );
 
-        const res = await appDb.entities.messages
-          .upsert({
-            // messageId based on idempotent interactionId
-            messageId: uuidv4(),
-            conversationId,
-            orgId,
-            operatorId: operatorId ?? '',
-            customerId: customerId ?? '',
-            sender: 'bot',
-            content: '',
-            messageFormType: botNodeEvent.AskAQuestion,
-            messageFormData: data,
-            createdAt: Date.now(),
-            sentAt: Date.now(),
-            // don't need to modify
-            // increment currentNode/nextNode
-            botStateContext: JSON.stringify({
-              ...botStateContext,
-              type: nextNode?.type,
-              currentNode: nextNode,
-              nextNode: undefined,
-            } as BotStateContext),
-          })
-          .go({ response: 'all_new' });
+        publishToNextNodes(
+          {
+            ...botStateContext,
+            messages: [...(botStateContext?.messages ?? []), ...newMessages],
+          },
+          appDb,
+        );
+
         return {
           statusCode: 200,
-          body: JSON.stringify(res.data),
+          body: 'Sent messages',
         };
       }
     } catch (err) {

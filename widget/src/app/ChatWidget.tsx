@@ -1,4 +1,5 @@
 'use client'
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import {
   createContext, Dispatch, FC, PropsWithChildren, ReactNode, useEffect, useMemo, useState
@@ -6,11 +7,18 @@ import {
 import { isMobile } from 'react-device-detect';
 import { BsX } from 'react-icons/bs';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { Config } from 'sst/node/config';
+import { useLocalStorage, useReadLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
+
+import { InteractionHistory } from '@/entities/interaction';
+import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useCreateCustomerMut } from './(actions)/mutations/useCreateCustomerMut';
 import { useCreateInteractionMut } from './(actions)/mutations/useCreateInteractionMut';
 import { useCreateVisitMut } from './(actions)/mutations/useCreateVisitMut';
+import { QueryKey } from './(actions)/queries';
 import { useConfigurationQuery } from './(actions)/queries/useConfigurationQuery';
 import { useCustomerQuery } from './(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from './(actions)/queries/useOrgQuery';
@@ -34,6 +42,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   children,
   mockWsUrl,
 }) => {
+  const tWidget = useTranslations('chat-widget')
   const org = useOrgQuery()
   // const searchParams = useSearchParams()
   // const botId = searchParams.get('botId')
@@ -43,18 +52,32 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 
   const { chatWidget: { widgetVisibility, setWidgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
+  const queryClient = useQueryClient()
+  const [buster, setBuster] = useLocalStorage('widgetRqBuster', '')
   const ws = useWidgetSocketContext()
   const configuration = useConfigurationQuery(orgId);
   const visitId = uuidv4()
   const createVisitMut = useCreateVisitMut(orgId, visitId)
-  console.log(configuration?.data)
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
-  console.log(widgetAppearance)
   const customerQuery = useCustomerQuery(orgId);
+  const createCustomerMut = useCreateCustomerMut(orgId, customerQuery?.data?.customerId ?? '');
+
 
   useEffect(() => {
     createVisitMut.mutateAsync([orgId, visitId, { customerId: customerQuery?.data?.customerId ?? '', orgId: orgId, visitId: visitId, url: window.location.href, at: Date.now() }])
   }, [window.location.href])
+
+  const createInteractionMut = useCreateInteractionMut(orgId);
+  const [interactionHistory, setInteractionHistory] = useLocalStorage<Partial<Record<keyof typeof Triggers, number>>>('interactionHistory', {})
+
+
+  // if new customer created, create a first site visit interaction 
+  useEffect(() => {
+    createInteractionMut.mutateAsync([orgId, { orgId: orgId, visitId: '', operatorId: '', botId: '', customerId: customerQuery?.data?.customerId, channel: 'website', status: 'unassigned', createdAt: Date.now(), type: Triggers.FirstVisitOnSite, lastTriggered: interactionHistory?.FirstVisitOnSite }])
+  }, [createCustomerMut.isSuccess && createCustomerMut?.data])
+
+
+
 
   const hideNavbar = (widgetState === 'conversations' && selectedConversationId) || (widgetState === 'help' && selectedArticleId)
 
@@ -83,26 +106,46 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
     }
   }, [widgetState, selectedConversationId, selectedArticleId])
 
+
   return (
-    ws?.readyState === ReadyState.OPEN ?
-      <div className={` ${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-10 md:bottom-10' : 'md:absolute md:right-10 md:bottom-10 '}`}>
-        {widgetVisibility === 'open' &&
-          (
-            <div className="flex flex-col h-screen w-screen md:w-[400px] md:h-[600px] shadow-2xl  rounded-3xl max-w-xl dark:bg-gray-900 bg-white animate-fade-left  mb-10 ">
-              <div className='w-full h-full overflow-y-scroll rounded-3xl '>
-                {content}
+    (ws?.readyState === ReadyState.OPEN && configuration?.isSuccess && customerQuery?.data?.customerId) ?
+      <div className='bg-white'>
+        <div className={` ${widgetAppearance?.widgetPosition === 'left' ? 'md:absolute md:left-10 md:bottom-10' : 'md:absolute md:right-10 md:bottom-10 '}`}>
+          {widgetVisibility === 'open' &&
+            (
+              <div className="flex flex-col h-screen w-screen md:w-[400px] md:h-[600px] shadow-2xl  rounded-3xl max-w-xl bg-white animate-fade-left  mb-10 ">
+                <div className='w-full h-full overflow-y-scroll rounded-3xl '>
+                  {content}
+                </div>
+                {!hideNavbar &&
+                  <NavBar />
+                }
               </div>
-              {!hideNavbar &&
-                <NavBar />
-              }
+            )}
+          {((isMobile && widgetVisibility === 'minimized') || (!isMobile)) &&
+            <div className='bottom-0 right-0 flex flex-col justify-end' >
+              <StartChatButton ></StartChatButton>
+
             </div>
-          )}
-        {((isMobile && widgetVisibility === 'minimized') || (!isMobile)) &&
-          <div className='bottom-0 right-0 flex flex-row justify-end' >
-            <StartChatButton ></StartChatButton>
-          </div>
-        }
-      </div>
+          }
+          {/* if is in dash  */}
+          {process.env.NEXT_PUBLIC_APP_URL && (window?.document.referrer?.includes(process.env.NEXT_PUBLIC_APP_URL) || (window?.document.referrer?.includes(process.env.NEXT_PUBLIC_APP_WIDGET_URL ?? '')))
+            &&
+            <div className='top-0 right-0 flex flex-col gap-x-2'>
+              <button className='z-10 btn btn-sm w-30' onClick={() => {
+                console.log('clicked')
+                setBuster(uuidv4())
+                // customerQuery.remove()
+                setInteractionHistory({})
+                queryClient.clear()
+                // window?.location?.reload()
+              }}>
+                {tWidget('resetVisitor')}</button>
+            </div>
+          }
+        </div >
+
+      </div >
       : null
   )
 

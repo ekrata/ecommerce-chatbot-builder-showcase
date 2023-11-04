@@ -83,7 +83,7 @@ export const ConversationsScreen: FC = () => {
                 <div key={conversationItem?.conversationId} data-testid={conversationItem?.conversationId} className="w-full border-b-2 divide-y-2">
                   <CustomerConversationCard height={'16'} conversationItem={conversationItem} />
                 </div>
-                : null
+                : noData
             ))}
             {(conversationItems.isSuccess && !conversationItems.data.length &&
               noData

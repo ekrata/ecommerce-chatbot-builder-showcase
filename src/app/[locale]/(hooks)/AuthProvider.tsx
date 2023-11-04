@@ -2,10 +2,11 @@
 
 import { EntityItem } from 'electrodb';
 import { uniqueId } from 'lodash';
-import { useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import {
   createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState
 } from 'react';
+import { toast } from 'react-toastify';
 import { useLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,6 +22,7 @@ export const signoutSession = () => {
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [authToken, setAuthToken] = useLocalStorage<string>('authToken', '');
   const [sessionUser, setSessionUser] = useLocalStorage<EntityItem<typeof Operator> | null>('sessionUser', null);
 
@@ -33,9 +35,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             Authorization: `Bearer ${authToken}`
           }
         });
+      console.log(response)
+      if (response.status !== 200) {
+        router.push('/')
+      }
       return await response.json();
     } catch (error) {
-      throw new Error('failed to getUserInfo')
+
+      router.push('/')
+      redirect('/')
     }
   };
 

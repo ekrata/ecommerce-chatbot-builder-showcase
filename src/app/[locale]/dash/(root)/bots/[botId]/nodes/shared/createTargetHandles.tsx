@@ -22,7 +22,7 @@ export const createTargetHandles = (node: NodeProps, nodeEdges: Edge[], arrayKey
 
   const handles = [...new Set(ids)]?.map((id, i) => {
     return (
-      <Handle type="target" data-handleid={id?.toString()} position={i % 2 == 0 ? Position.Left : Position.Right} isConnectable={false} id={id?.toString() ?? ''} className={`w-2 h-2 invisible'}`} />
+      <Handle key={id.toString()} type="target" data-handleid={id?.toString()} position={i % 2 == 0 ? Position.Left : Position.Right} isConnectable={false} id={id?.toString() ?? ''} className={`w-2 h-2 invisible'}`} />
     )
   })
   const unconnectedHandleCount = node?.data?.[arrayKey]?.length - length
@@ -37,7 +37,7 @@ export const createTargetHandles = (node: NodeProps, nodeEdges: Edge[], arrayKey
 
   const unconnectedHandles = unconnectedIds.map((id, i) => {
     return (
-      <Handle type="target" position={id % 2 == 0 ? Position.Left : Position.Right} isConnectable={true} id={id.toString() ?? ''} className={`w-2 h-2 '}`} />
+      <Handle key={id.toString()} type="target" position={id % 2 == 0 ? Position.Left : Position.Right} isConnectable={true} id={id.toString() ?? ''} className={`w-2 h-2 '}`} />
     )
   })
   updateNodeInternals(node?.id)

@@ -22,7 +22,7 @@ export const useCreateCustomerMut = (orgId: string, customerId: string) => {
     mutationFn: async (params: Parameters<typeof createCustomer>) => await createCustomer(...params),
     onSuccess: data => {
       console.log(data)
-      queryClient.setQueryData([orgId, customerId, QueryKey.customer], () => data)
+      queryClient.setQueryData([orgId, QueryKey.customer], () => data)
     }
   })
 }

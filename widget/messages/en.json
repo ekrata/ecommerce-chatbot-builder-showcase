@@ -12,6 +12,8 @@
   },
   "chat-widget": {
     "Name": "Staff",
+    "testTools": "Test tools",
+    "resetVisitor": "Reset visitor",
     "orgName": "Gymshark",
     "Recent message": "Recent message",
     "We're online": "We're online",

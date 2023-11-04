@@ -1,9 +1,8 @@
-import { Entity } from 'electrodb';
+import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
-import { nodeSubType } from './bot';
 import { conversationChannel, conversationStatus } from './conversation';
 
 export const Interaction = new Entity({
@@ -86,6 +85,10 @@ export const Interaction = new Entity({
       watch: '*',
       default: Date.now(),
       set: () => Date.now(),
+    },
+    // last interaction of the same type by the same customer (from frontend)
+    lastTriggered: {
+      type: 'number',
     },
   },
   indexes: {

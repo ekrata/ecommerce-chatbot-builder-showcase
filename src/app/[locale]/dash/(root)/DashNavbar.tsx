@@ -27,7 +27,7 @@ export default function DashNavbar() {
   }, 0)
 
   return (
-    <ul className='flex flex-col text-gray-400 normal-case bg-black place-items-center hover:bg-opacity-0'>
+    <ul className='z-20 flex flex-col text-gray-400 normal-case bg-black place-items-center hover:bg-opacity-0'>
       <li>
         <Link
           href="/dash"
@@ -82,13 +82,26 @@ export default function DashNavbar() {
           className='flex btn btn-ghost hover:bg-opacity-0'
         >
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('bots')}>
-            <div className='indicator'>
-              {/* <span className='text-xs indicator-item badge badge-info'>
+            {/* <span className='text-xs indicator-item badge badge-info'>
                 0
               </span> */}
-              <BsRobot className='w-6 h-6' />
-            </div>
+            <BsRobot className='w-6 h-6' />
           </div>
+        </Link>
+      </li>
+      <li >
+        <Link
+          href={{ pathname: "/dash/sandbox" }}
+          key='sandbox'
+          passHref
+          legacyBehavior
+          className='flex btn btn-ghost hover:bg-opacity-0'
+        >
+          <a target="_blank" rel="noopener noreferrer">
+            <div className='normal-case tooltip lg:tooltip-right' data-tip={t('sandbox')}>
+              <PiBrowsersFill className='w-6 h-6 text-gray-400' />
+            </div>
+          </a>
         </Link>
       </li>
       <li>
@@ -102,21 +115,7 @@ export default function DashNavbar() {
           </div>
         </Link>
       </li>
-      <li >
-        <Link
-          href={{ pathname: "/dash/sandbox" }}
-          key='sandbox'
-          passHref
-          legacyBehavior
-          className='flex btn btn-ghost hover:bg-opacity-0'
-        >
-          {/* <a target="_blank" rel="noopener noreferrer"> */}
-          <div className='normal-case tooltip lg:tooltip-right' data-tip={t('sandbox')}>
-            <PiBrowsersFill className='w-6 h-6 text-gray-400' />
-          </div>
-          {/* </a> */}
-        </Link>
-      </li>
+
       <li className='justify-end'>
         <Link
           href={{ pathname: "/dash/settings" }}

@@ -29,8 +29,8 @@ export default async function LocaleLayout({ children, params: { locale = 'en', 
   if (!isValidLocale) console.log('no valid locale')
 
   return (
-    <html lang={locale}>
-      <body>
+    <html lang={locale} className='bg-transparent'>
+      <body className='bg-transparent'>
         <NextIntlClientProvider locale={locale ?? 'en'} messages={messages}>
           <WidgetProvider>
             {children}

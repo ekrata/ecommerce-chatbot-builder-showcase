@@ -79,7 +79,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
 
   return (
     <div className='w-full bg-gray-200 h-22 group form-control textarea textarea-sm'>
-      <textarea key={useId()} className={`${textareaStyle ?? 'flex h-10 text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event as any)} />
+      <textarea key={useId()} className={`${textareaStyle ?? 'flex  text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event as any)} />
       <label className="justify-end text-gray-100 label place-items-center" >
         <span className="flex flex-row justify-end label-text-alt">
           <div className="invisible text-xl cursor-pointer dropdown dropdown-bottom dropdown-end group-hover:visible">

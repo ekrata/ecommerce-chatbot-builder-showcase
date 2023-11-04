@@ -12,6 +12,8 @@ export enum WsAppDetailType {
   wsAppUpdateCustomer = 'wsAppUpdateCustomer',
 
   wsAppCreateVisit = 'wsAppCreateVisit',
+
+  wsAppTriggerStarted = 'wsAppTriggerStarted',
 }
 
 export enum ApiAppDetailType {

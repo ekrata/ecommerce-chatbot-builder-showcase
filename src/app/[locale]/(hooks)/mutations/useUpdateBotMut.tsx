@@ -18,8 +18,8 @@ export const updateBot = async (
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/bots/${botId}`,
     {
       method: 'PATCH', body: JSON.stringify({
-        ...body, edges: body.edges?.map((edge) => {
-          if (edge.sourceHandle === null) {
+        ...body, edges: body?.edges?.map((edge) => {
+          if (edge?.sourceHandle === null) {
             return { ...edge, sourceHandle: '' }
           }
           return edge

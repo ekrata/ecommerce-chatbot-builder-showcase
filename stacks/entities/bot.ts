@@ -19,7 +19,15 @@ export const triggers = [
   ...Object.values(OperatorInteractionTrigger),
 ] as const;
 
-export type Triggers = (typeof triggers)[number];
+export type TriggerValues = (typeof triggers)[number];
+
+export const triggerKeys = [
+  ...Object.keys(VisitorBotInteractionTrigger),
+  ...Object.keys(VisitorPageInteractionTrigger),
+  ...Object.keys(OperatorInteractionTrigger),
+] as const;
+
+export type TriggerKeys = (typeof triggerKeys)[number];
 
 export const conditions = [
   ...Object.values(Condition),

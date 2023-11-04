@@ -1,4 +1,4 @@
-import { SQSEvent } from 'aws-lambda';
+import { SNSEventRecord, SQSEvent } from 'aws-lambda';
 import { EntityItem } from 'electrodb';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
@@ -9,7 +9,7 @@ import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
-import { BotStateContext } from '../processInteraction';
+import { BotStateContext } from '../botStateContext';
 import { publishToNextNodes } from '../publishToNextNodes';
 
 const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
@@ -20,14 +20,18 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
       console.log('mailing');
       const body = record?.body;
       const snsMessageId = record?.messageId;
-      const botStateContext: BotStateContext = JSON.parse(record?.body);
+      // console.log(record);
+      // console.log((record.body as any)?.Message);
+      const botStateContext: BotStateContext = (record.body as any)?.Message;
       const { type, bot, conversation, interaction, messages } =
         botStateContext;
 
+      console.log(bot, bot.nodes, bot.edges);
       const { orgId } = conversation;
       // const { id, position, data } = nextNode;
       // const params = {};
       const lastNodeMessage = messages?.slice(-1)[0];
+
       if (lastNodeMessage?.content) {
         const res = await appDb.entities.customers
           .update({
@@ -43,21 +47,23 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
           )
           .filter(Boolean);
 
-        console.log(lastNodeMessage);
-        if (filteredMessages?.length) {
-          publishToNextNodes({
+        // console.log(JSON.parse(lastNodeMessage?.botStateContext ?? ''));
+
+        publishToNextNodes(
+          {
             ...botStateContext,
             messages: [
-              ...filteredMessages,
+              ...(filteredMessages ?? []),
               res?.data as EntityItem<typeof Message>,
             ],
-          });
-        }
-        return {
-          statuscode: 200,
-          body: `Successfully subscribed ${lastNodeMessage?.customerId} to mailing list`,
-        };
+          },
+          appDb,
+        );
       }
+      return {
+        statuscode: 200,
+        body: `Successfully subscribed ${lastNodeMessage?.customerId} to mailing list`,
+      };
     }
   } catch (err) {
     console.log(err);

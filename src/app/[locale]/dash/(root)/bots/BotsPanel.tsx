@@ -11,15 +11,20 @@ import {
 import { FaRegClone } from 'react-icons/fa';
 import { GrTest } from 'react-icons/gr';
 import { TbRobotOff } from 'react-icons/tb';
+import { Node } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Bot, BotCategory } from '@/entities/bot';
+import { Bot, BotCategory, BotNodeType } from '@/entities/bot';
+import { CreateBot, UpdateBot } from '@/entities/entities';
+import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { getBotTriggers } from '@/packages/functions/app/api/src/nodes/getBotTriggers';
 
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
 import { useCreateBotMut } from '../../../(hooks)/mutations/useCreateBotMut';
 import { useDeleteBotMut } from '../../../(hooks)/mutations/useDeleteBotMut';
 import { useUpdateBotMut } from '../../../(hooks)/mutations/useUpdateBotMut';
 import { useBotsQuery } from '../../../(hooks)/queries/useBotsQuery';
+import { getNodeForm } from './[botId]/getNodeForm';
 
 interface Props {
   title: BotCategory | 'All'
@@ -45,6 +50,13 @@ export const BotsPanel: FC<Props> = ({ title }) => {
       bots.refetch()
     }
   }, [operatorSession?.orgId])
+
+  const onChange = async (botId: string, updateBot: CreateBot) => {
+    delete updateBot?.botId
+    delete updateBot?.createdAt;
+    delete (updateBot as { orgId?: string })?.orgId;
+    await updateBotMut.mutateAsync([orgId, botId, updateBot as UpdateBot])
+  }
 
   return (
     < div className="flex flex-col justify-between w-full h-full p-2 bg-white " >
@@ -80,6 +92,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                     </label>
                   </th>
                   <th className='text-lg normal-case bg-transparent'>{tDash('Name')}</th>
+                  <th className='text-lg normal-case bg-transparent'>{tBots('Triggers')}</th>
                   <th className='text-lg normal-case bg-transparent'>{tBots('Triggered')}</th>
                   <th className='text-lg normal-case bg-transparent'>{tBots('Engagement')}</th>
                   <th className='text-lg normal-case bg-transparent'>{tBots('Satisfaction')}</th>
@@ -113,6 +126,26 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                           </div>
                         </Link>
                       </td>
+                      <td className='group-hover:bg-gray-300 '>
+                        <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
+                          <div className="flex items-center space-x-3">
+                            <h5 className='text-semi-bold'>
+                              {bots?.isFetching ? <div className="h-2.5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2.5"></div> :
+                                <div className='flex flex-col'>
+                                  {Object.entries(getBotTriggers([bot]))?.map(([key, value]) => {
+                                    console.log(value)
+
+                                    return (value as BotNodeType[]).map((item) => <div className='flex flex-row'>
+                                      {getNodeForm(item as Node, false)}
+                                      {/* {nodeSubTypeIcons[item?.type as keyof typeof nodeSubTypeIcons]} */}
+                                    </div>)
+                                  })}
+                                </div>
+                              }
+                            </h5>
+                          </div>
+                        </Link>
+                      </td>
                       <td className='group-hover:bg-gray-300'>
                         <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
                           <p>
@@ -139,9 +172,9 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                         </Link>
                       </td>
                       <td className='group-hover:bg-gray-300'>
-                        <Link href={{ pathname: `/dash/bots/${bot?.botId}` }}>
-                          {bots?.isFetching ? <div className="h-2.5 animate-pulse -z-10 bg-gray-200 rounded-full dark:bg-gray-700 w-8 mb-2.5"></div> : <input type="checkbox" className="toggle toggle-primary" defaultChecked={bot?.active} />}
-                        </Link>
+                        {bots?.isFetching ? <div className="h-2.5 animate-pulse -z-10 bg-gray-200 rounded-full dark:bg-gray-700 w-8 mb-2.5"></div> : <input type="checkbox" className="toggle toggle-info"
+                          onClick={() => onChange(bots?.data?.[i]?.botId ?? '', { ...bots?.data?.[i], active: !bots?.data?.[i]?.active } as CreateBot)}
+                          defaultChecked={bot?.active} />}
                       </td>
                       <td className='w-full group-hover:bg-gray-300 dropdown dropdown-end'>
                         <label tabIndex={0} className={`invisible  btn btn-ghost ${!bots?.isFetching && 'hover:bg-black group-hover:visible hover:text-white'}`}><BsThreeDotsVertical className='text-xl' /></label>
