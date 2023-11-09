@@ -1,4 +1,4 @@
-import { Config, StackContext } from 'sst/constructs';
+import { Config, EventBus, StackContext, Topic } from 'sst/constructs';
 
 export const getAllowedOrigins = (stage: string, domain: string) => {
   if (stage === 'local') {
@@ -28,6 +28,14 @@ export function paramStack({ stack, app }: StackContext) {
   const STAGE = new Config.Parameter(stack, 'STAGE', {
     value: app.stage,
   });
+
+  const defaultFunctionTimeout = new Config.Parameter(
+    stack,
+    'DEFAULT_FUNCTION_TIMEOUT',
+    {
+      value: '200',
+    },
+  );
 
   const getFrontendUrl = () => {
     return getAllowedOrigins(stack.stage, domain)?.[0];
@@ -60,9 +68,16 @@ export function paramStack({ stack, app }: StackContext) {
   const metaAppSecret = new Config.Secret(stack, 'META_APP_SECRET');
   const metaVerifySecret = new Config.Secret(stack, 'META_VERIFY_SECRET');
 
+  const appEventBus = new EventBus(stack, 'appEventBus', {});
+  const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
+  const botNodeTopic = new Topic(stack, 'BotNodeTopic', {});
+
   return {
     appName,
     domain,
+    appEventBus,
+    ddbStreamTopic,
+    botNodeTopic,
     REGION,
     STAGE,
     tableName,
@@ -71,6 +86,7 @@ export function paramStack({ stack, app }: StackContext) {
     oauthGoogleClientId,
     oauthGoogleSecret,
     stripeKeySecret,
+    defaultFunctionTimeout,
     metaAppSecret,
     metaVerifySecret,
   };

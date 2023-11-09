@@ -5,28 +5,28 @@
 import './index.css';
 import 'reactflow/dist/style.css';
 
+import { isEqual } from 'lodash';
 import { Link, useTranslations } from 'next-intl';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
-  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
-  useState
+    createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useRef, useState
 } from 'react';
 import { useForm } from 'react-hook-form';
-import { BiLoaderAlt, BiRedo, BiTestTube, BiTrash, BiUndo, BiX } from 'react-icons/bi';
+import { BiLoaderAlt, BiTestTube, BiTrash, BiX } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-  addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-  ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
-  ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
+    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+    ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
+    ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
 } from 'reactflow';
-import { useDebounce } from 'usehooks-ts';
+import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import { actions, botCategory, BotNodeType, conditions, triggers } from '@/entities/bot';
 import {
-  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { useDeleteBotMut } from '@/src/app/[locale]/(hooks)/mutations/useDeleteBotMut';
@@ -34,21 +34,17 @@ import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateB
 import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-  actionNode, conditionNode, edgeTypes, NodeForm, nodeTypes, renderConnectionLine, triggerNode
+    actionNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
 import { getNodeForm } from './getNodeForm';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
-import { onDragStart } from './onDragStart';
 
 export type NodeMenuState = '' | 'trigger' | 'condition' | 'action'
 
 let id: number = 0;
 const getId = () => `dndnode_${id++}`;
-
-
 
 
 type NodeContextType = [...ReturnType<typeof useNodesState>, ...ReturnType<typeof useState<Node | null>>]
@@ -92,6 +88,19 @@ export const BotEditor: React.FC = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
 
+  const onNodesChange = useCallback(
+    (changes: any) => {
+      console.log('node changed')
+      return setNodes((nds) => applyNodeChanges(changes, nds))
+    },
+    [setNodes])
+
+  const onEdgesChange = useCallback(
+    (changes: any) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    [setEdges]
+  );
+
+
   const { register,
     handleSubmit,
     control,
@@ -108,15 +117,6 @@ export const BotEditor: React.FC = () => {
     });
 
 
-
-  const onNodesChange = useCallback(
-    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
-  );
-  const onEdgesChange = useCallback(
-    (changes: any) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
-  );
 
   // const { state, set, undo, redo, clear, canUndo, canRedo } = useHistoryState<{ nodes: Node[], edges: Edge[] }>({
   //   ...nodes,
@@ -152,14 +152,11 @@ export const BotEditor: React.FC = () => {
     setSelectedFormNode(null)
     setNodes(nodes?.map((node) => {
       return { ...node, selected: false }
-
     }))
   };
 
   useEffect(() => {
     const restoreFlow = async () => {
-      // const flow = JSON.parse(localStorage.getItem(flowKey));
-
       if (botQuery?.data) {
         // const { x = 0, y = 0, zoom = 1 } = botQuery.data?.viewport;
         setNodes(botQuery.data?.nodes as Node[]);
@@ -172,7 +169,6 @@ export const BotEditor: React.FC = () => {
 
     restoreFlow();
   }, [botQuery.dataUpdatedAt]);
-
 
   const onDrop = useCallback(
     (event: any) => {
@@ -272,18 +268,14 @@ export const BotEditor: React.FC = () => {
 
   const updateBotMut = useUpdateBotMut(orgId)
 
-  // update api with node/edges changes at most every 5 seconds
-  const debouncedNodes = useDebounce<Node<any, string>[]>(nodes as Node<any, string>[], 5000)
-  const debouncedEdges = useDebounce<Edge[]>(edges, 5000)
+  const [debouncedNodes, set] = useDebounce(nodes, 5000, { equalityFn: isEqual })
+  const [debouncedEdges] = useDebounce<Edge[]>(edges, 5000, { equalityFn: isEqual })
 
-  // update whenever nodes array changes 
   useEffect(() => {
-    console.log('update')
-    // && isEquivalentArray(botQuery?.data?.nodes, debouncedNodes) && isEquivalentArray(botQuery?.data?.edges, debouncedEdges)
+    console.log('hi')
+    console.log(nodes)
+    console.log(edges)
     if (reactFlowInstance) {
-      console.log('hi')
-      console.log(nodes)
-      console.log(edges)
       const { active, name, category } = getValues()
       const updateBody = {
         ...botQuery?.data,
@@ -298,26 +290,44 @@ export const BotEditor: React.FC = () => {
       const updateBot = async () => await updateBotMut.mutateAsync([orgId, botId, updateBody])
       updateBot()
     }
-  }, [debouncedNodes, debouncedEdges, getValues()?.active, getValues()?.name, getValues()?.category])
+  }, [debouncedEdges, debouncedNodes, getValues()?.active, getValues()?.name, getValues()?.category])
 
-  // update history on change
-  // useEffect(() => {
-  //   console.log('setting history')
-  //   console.log('history prior: ', state)
+
+
+  // const updateBotCallback = () => {
+  //   console.log('update')
+  //   console.log('hi')
   //   console.log(nodes)
-  //   set({ nodes, edges })
-  //   console.log('history now: ', state)
-  // }, [debouncedNodes, debouncedEdges])
+  //   console.log(edges)
+  //   const { active, name, category } = getValues()
+  //   const updateBody = {
+  //     ...botQuery?.data,
+  //     nodes: nodes as any,
+  //     edges: edges as any,
+  //     name,
+  //     active,
+  //     category
+  //   }
+  //   delete updateBody?.botId
+  //   delete updateBody?.orgId
+  //   const updateBot = async () => await updateBotMut.mutateAsync([orgId, botId, updateBody])
+  //   updateBot()
+  // }
 
+  // const debouncedUpdateBotHandler = useMemo(() => {
+  //   return debounce(updateBotCallback, 5000)
+  // }, [debouncedNodes, debouncedEdges, getValues()?.active, getValues()?.name, getValues()?.category])
 
-  // // update real node state on undo/redo
+  // // Stop the invocation of the debounced function
+  // // after unmounting
   // useEffect(() => {
-  //   console.log('setting real')
-  //   console.log('real prior: ', nodes)
-  //   setNodes(nodes)
-  //   setEdges(edges)
-  //   console.log('real now: ', nodes)
-  // }, [redo, undo])
+  //   return () => {
+  //     debouncedUpdateBotHandler.cancel();
+  //   }
+  // }, []);
+
+  // debouncedUpdateBotHandler()
+
 
   const renderNodeForm = useCallback(() => {
     if (selectedFormNode) {

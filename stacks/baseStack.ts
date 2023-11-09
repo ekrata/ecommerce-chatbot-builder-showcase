@@ -4,29 +4,14 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { Duration } from 'aws-cdk-lib/core';
 import {
-  Api,
-  ApiRouteProps,
-  Auth,
-  Bucket,
-  Config,
-  EventBus,
-  EventBusRuleProps,
-  FunctionInlineDefinition,
-  NextjsSite,
-  Queue,
-  StackContext,
-  StaticSite,
-  Table,
-  Topic,
-  TopicFunctionSubscriberProps,
-  TopicQueueSubscriberProps,
-  use,
-  WebSocketApi,
-  WebSocketApiFunctionRouteProps,
+    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
+    NextjsSite, Queue, StackContext, StaticSite, Table, Topic, TopicFunctionSubscriberProps,
+    TopicQueueSubscriberProps, use, WebSocketApi, WebSocketApiFunctionRouteProps
 } from 'sst/constructs';
 
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
 
+import { dbStack } from './dbStack';
 import { botNodeEvent } from './entities/bot';
 import { getAllowedOrigins, paramStack } from './paramStack';
 
@@ -46,19 +31,22 @@ export function baseStack({ stack, app }: StackContext) {
     REGION,
     tableName,
     frontendUrl,
+    defaultFunctionTimeout: functionTimeoutConfig,
     allowedOrigins,
     oauthGoogleClientId,
     oauthGoogleSecret,
     stripeKeySecret,
+    ddbStreamTopic,
+    botNodeTopic,
+    appEventBus,
     metaAppSecret,
     metaVerifySecret,
   } = use(paramStack);
 
-  if (app.stage !== 'prod') {
-    app.setDefaultRemovalPolicy('destroy');
-  }
+  const defaultFunctionTimeout = parseInt(functionTimeoutConfig.value, 10);
 
-  const defaultFunctionTimeout = 200;
+  const { table } = use(dbStack);
+
   if (!app.local) {
     const sentry = lambda.LayerVersion.fromLayerVersionArn(
       stack,
@@ -72,60 +60,6 @@ export function baseStack({ stack, app }: StackContext) {
       NODE_OPTIONS: '-r @sentry/serverless/dist/awslambda-auto',
     });
   }
-
-  const appEventBus = new EventBus(stack, 'appEventBus', {});
-  const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
-  const botNodeTopic = new Topic(stack, 'BotNodeTopic', {});
-
-  const table = new Table(stack, `app`, {
-    fields: {
-      pk: 'string',
-      sk: 'string',
-      gsi1pk: 'string',
-      gsi1sk: 'string',
-      gsi2pk: 'string',
-      gsi2sk: 'string',
-      gsi3pk: 'string',
-      gsi3sk: 'string',
-    },
-    primaryIndex: { partitionKey: 'pk', sortKey: 'sk' },
-    globalIndexes: {
-      'gsi1pk-gsi1sk-index': {
-        partitionKey: 'gsi1pk',
-        sortKey: 'gsi1sk',
-        projection: 'all',
-      },
-      'gsi2pk-gsi2sk-index': {
-        partitionKey: 'gsi2pk',
-        sortKey: 'gsi2sk',
-        projection: 'all',
-      },
-      'gsi3pk-gsi3sk-index': {
-        partitionKey: 'gsi3pk',
-        sortKey: 'gsi3sk',
-        projection: 'all',
-      },
-    },
-    stream: true,
-    consumers: {
-      consumer1: {
-        function: {
-          handler:
-            'packages/functions/app/api/src/ddb-stream/processBatch.handler',
-          timeout: defaultFunctionTimeout,
-          bind: [ddbStreamTopic, botNodeTopic, REGION],
-          // permissions: ['events:PutEvents'],
-        },
-        cdk: {
-          eventSource: {
-            startingPosition: lambda.StartingPosition.LATEST,
-          },
-        },
-      },
-    },
-  });
-
-  table.bindToConsumer('consumer1', [table]);
 
   if (app.local) {
     // const script = new Script(stack, "Script", {

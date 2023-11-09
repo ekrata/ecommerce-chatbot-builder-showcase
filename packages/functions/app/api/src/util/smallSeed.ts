@@ -1,3 +1,4 @@
+import { writeFile } from 'fs';
 import { ApiHandler } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
@@ -49,6 +50,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           console.log('seed', i);
           return seed(db, mockArgs, i);
         }),
+      );
+
+      writeFile(
+        'packages/functions/app/api/src/util/mockOrgIds.json',
+        JSON.stringify(seedRes),
+        () => {
+          console.log('saved ');
+        },
       );
 
       return {

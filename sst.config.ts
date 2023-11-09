@@ -1,4 +1,5 @@
 import { SSTConfig } from 'sst';
+import { dbStack } from 'stacks/dbStack';
 
 import {
     articleContentsStack
@@ -35,6 +36,7 @@ export default {
     }
     app
       .stack(paramStack)
+      .stack(dbStack)
       .stack(baseStack)
       .stack(articlesStack)
       .stack(orgsStack)

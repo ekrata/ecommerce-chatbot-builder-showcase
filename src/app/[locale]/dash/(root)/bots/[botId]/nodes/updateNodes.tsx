@@ -14,7 +14,7 @@ export const updateNodes = (values: object, currentNode: Node<unknown, string | 
         ...currentNode, position: { x: position?.x, y: position?.y }, data: { ...values, errors }
       }]
       console.log(newNodes)
-      setNodes(newNodes)
+      setNodes([...newNodes])
     }
   }
 }
