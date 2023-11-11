@@ -27,57 +27,56 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
-        console.log(currentNode);
-        // const { id,  } = currentNode as BotNodeType;
-        const data = JSON.parse(currentNode?.data ?? '{}') as AskAQuestionData;
+        const { data } = currentNode as BotNodeType;
+        const askAQuestionData = JSON.parse(
+          currentNode?.data ?? '{}',
+        ) as AskAQuestionData;
         console.log(data);
 
-        const initiateAt = Date.now() - 5000;
-        const res2 = await appDb.entities.messages
-          .upsert({
-            // messageId based on idempotent interactionId
-            messageId: uuidv4(),
-            conversationId,
-            orgId,
-            operatorId: operatorId ?? '',
-            customerId: customerId ?? '',
-            sender: 'bot',
-            content: data?.message,
-            createdAt: initiateAt,
-            sentAt: initiateAt,
-            // don't need to modify
-            // botStateContext: JSON.stringify(botStateContext),
-          })
-          .go({ response: 'all_new' });
-        // const nextBotStateContext = getNextBotStateContext(botStateContext);
+        const initiateAt = Date.now() - 10000;
 
-        const res = await appDb.entities.messages
-          .upsert({
-            // messageId based on idempotent interactionId
-            messageId: uuidv4(),
-            conversationId,
-            orgId,
-            operatorId: operatorId ?? '',
-            customerId: customerId ?? '',
-            sender: 'bot',
-            content: '',
-            messageFormType: botNodeEvent.AskAQuestion,
-            messageFormData: JSON.stringify(data),
-            createdAt: initiateAt + 5000,
-            sentAt: initiateAt + 5000,
-            // don't need to modify
-            // increment currentNode/nextNode
-            botStateContext: JSON.stringify({
-              ...botStateContext,
-              type: nextNode?.type,
-              currentNode: nextNode,
-              nextNode: {},
-            } as BotStateContext),
-          })
-          .go({ response: 'all_new' });
+        await appDb.transaction
+          .write(({ messages }) => [
+            messages
+              .upsert({
+                messageId: uuidv4(),
+                conversationId,
+                orgId,
+                operatorId: operatorId ?? '',
+                customerId: customerId ?? '',
+                sender: 'bot',
+                content: askAQuestionData?.message,
+                createdAt: initiateAt,
+                sentAt: initiateAt,
+              })
+              .commit(),
+            messages
+              .upsert({
+                messageId: uuidv4(),
+                conversationId,
+                orgId,
+                operatorId: operatorId ?? '',
+                customerId: customerId ?? '',
+                sender: 'bot',
+                content: '',
+                messageFormType: botNodeEvent.AskAQuestion,
+                messageFormData: data,
+                createdAt: initiateAt + 10000,
+                sentAt: initiateAt + 10000,
+                // don't need to modify
+                // increment currentNode/nextNode
+                botStateContext: JSON.stringify({
+                  ...botStateContext,
+                  // currentNode: nextNode,
+                  // nextNode: {},
+                } as BotStateContext),
+              })
+              .commit(),
+          ])
+          .go({});
         return {
           statusCode: 200,
-          body: JSON.stringify(res.data),
+          body: '',
         };
       }
     } catch (err) {

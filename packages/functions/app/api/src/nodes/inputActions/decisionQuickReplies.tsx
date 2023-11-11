@@ -40,9 +40,9 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         console.log('typeof', typeof quickRepliesData)
         const initiateDate = Date.now() - 10000
 
-        const res2 = await appDb.entities.messages
-          .upsert({
-            // messageId based on idempotent interactionId
+
+        await appDb.transaction.write(({ messages }) => [
+          messages.upsert({
             messageId: uuidv4(),
             conversationId,
             orgId,
@@ -52,14 +52,8 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             content: quickRepliesData.message,
             createdAt: initiateDate,
             sentAt: initiateDate,
-            // don't need to modify
-            // botStateContext: JSON.stringify(botStateContext),
-          }).go({ response: 'all_new' });
-        // const nextBotStateContext = getNextBotStateContext(botStateContext);
-
-        const res = await appDb.entities.messages
-          .upsert({
-            // messageId based on idempotent interactionI
+          }).commit(),
+          messages.upsert({
             messageId: uuidv4(),
             conversationId,
             orgId,
@@ -69,19 +63,17 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             messageFormType: botNodeEvent.DecisionQuickReplies,
             messageFormData: data,
             content: '',
-            createdAt: initiateDate + 5000,
-            sentAt: initiateDate + 5000,
+            createdAt: initiateDate + 10000,
+            sentAt: initiateDate + 10000,
             botStateContext: JSON.stringify({
               ...botStateContext,
-              // type: nextNode?.type,
-              // currentNode: nextNode,
-              // nextnode: {}
-            } as BotStateContext),
-          })
-          .go({ response: 'all_new' });
+            } as BotStateContext)
+          }).commit()
+        ]).go({})
+
         return {
           statusCode: 200,
-          body: JSON.stringify(res.data),
+          body: '',
         };
       }
     } catch (err) {

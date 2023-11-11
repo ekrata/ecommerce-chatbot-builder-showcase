@@ -1,9 +1,10 @@
 import 'reactflow/dist/style.css';
 
 import { EntityItem } from 'electrodb';
+import { a } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiSend } from 'react-icons/bi';
 import { BsPlus } from 'react-icons/bs';
@@ -27,9 +28,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 interface Props {
   message: EntityItem<typeof Message>
+  formSubmittedState?: [boolean, Dispatch<SetStateAction<boolean>>]
 }
 
-export const AskAQuestionMessageForm: React.FC<Props> = ({ message }) => {
+export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmittedState }) => {
+  const [_, setLatestedFormSubmitted] = formSubmittedState ?? []
   const tNodes = useTranslations('dash.bots.nodes')
   const tDash = useTranslations('dash.bots')
   const tWidget = useTranslations('chat-widget')
@@ -133,6 +136,12 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message }) => {
   const onSubmit: SubmitHandler<z.infer<typeof schema>> = async (values) => {
     await updateMessageMut.mutateAsync([orgId, message?.conversationId, message?.messageId, values])
   }
+
+  useEffect(() => {
+    if (updateMessageMut.isSuccess) {
+      setLatestedFormSubmitted?.(true)
+    }
+  }, [updateMessageMut.isSuccess])
 
   return (
     <form className='flex flex-col justify-end w-2/3 form' onSubmit={handleSubmit(onSubmit)} ref={ref}>

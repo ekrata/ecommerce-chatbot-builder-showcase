@@ -3,7 +3,7 @@ import 'reactflow/dist/style.css';
 import { EntityItem } from 'electrodb';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { BiLoaderAlt, BiSend } from 'react-icons/bi';
 import { BsPlus } from 'react-icons/bs';
@@ -26,11 +26,13 @@ const schema = z.object({
 
 interface Props {
   message: EntityItem<typeof Message>
+  formSubmittedState?: [boolean, Dispatch<SetStateAction<boolean>>]
 }
 
 type FormResponse = z.infer<typeof schema>
 
-export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message }) => {
+export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message, formSubmittedState }) => {
+  const [_, setLatestedFormSubmitted] = formSubmittedState ?? []
   const tNodes = useTranslations('dash.bots.nodes')
   const tDash = useTranslations('dash.bots')
   const tWidget = useTranslations('chat-widget')
@@ -96,9 +98,15 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message }) =>
     )
   }
 
+  useEffect(() => {
+    if (updateMessageMut.isSuccess) {
+      setLatestedFormSubmitted?.(true)
+    }
+  }, [updateMessageMut.isSuccess])
+
 
   return (
-    <form className='flex flex-col justify-end w-2/3 py-2 form' onSubmit={handleSubmit(onSubmit)} ref={ref}>
+    <form className='flex flex-col justify-end w-2/3 py-2 form' ref={ref}>
       <div className="w-full max-w-xs form-control">
         {/* <label className="label">
           <span className="label-text">{tForm('validationTypeLabel')}</span>
@@ -108,7 +116,7 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message }) =>
         {/* {updateMessageMut.isLoading && <Cg className='text-xl text-gray-400 animate-spin' />} */}
         {quickReplies?.map((quickReply, i) => (
           <div className='flex flex-row w-full place-items-center gap-x-1 '>
-            <button className="normal-case rounded-full grow gap-x-4 place-items-center btn btn-outline btn-sm" type="submit" disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess} onClick={() => {
+            <button className="justify-start p-2 text-sm normal-case bg-gray-200 grow gap-x-4 rounded-xl place-items-start btn-outline hover:bg-black " type="submit" disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess} onClick={() => {
               setSelection(i)
               onSubmit({ i })
             }}>{quickReply} </button>

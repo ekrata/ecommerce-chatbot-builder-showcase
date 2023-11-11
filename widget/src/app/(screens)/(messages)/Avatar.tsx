@@ -20,14 +20,11 @@ export const Avatar: React.FC<Props> = ({ conversationItem, message, toggleIndic
   const orgId = org?.data?.orgId ?? ''
   const configuration = useConfigurationQuery(orgId);
   return (
-    <div className={`avatar indicator   align-center items-center place-items-center align-center content-center background rounded-full p-1 ring-1 ring-info ${message?.sender === 'operator' && conversationItem?.operator.online ? 'online' : ''}`} >
+    <div className={`avatar indicator animate-fade-left   align-center items-center place-items-center align-center content-center background rounded-full p-1 ring-1 ring-info ${message?.sender === 'operator' && conversationItem?.operator.online ? 'online' : ''}`} >
       {toggleIndicator &&
         <span
           data-testid="status-badge"
-          className={`indicator-item  badge-success ring-white ring-2 badge-xs text-white dark:text-default rounded-full ${!message?.sentAt
-            ? 'mx-0 my-0 indicator-bottom animate-bounce'
-            : 'my-2 mx-2 indicator-top'
-            }`}
+          className={`indicator-item  badge-success ring-white ring-2 badge-xs text-white dark:text-default rounded-full mx-0 my-0 indicator-bottom animate-bounce`}
         >
           <span className='animate-pulse '>
             ...

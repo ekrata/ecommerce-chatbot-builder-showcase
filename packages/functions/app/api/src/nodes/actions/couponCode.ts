@@ -53,7 +53,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           })
           .go({ response: 'all_new' });
 
-        publishToNextNodes(
+        await publishToNextNodes(
           {
             ...botStateContext,
             messages: [
