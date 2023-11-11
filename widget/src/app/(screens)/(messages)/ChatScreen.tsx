@@ -54,7 +54,7 @@ export const ChatScreen: FC = ({ }) => {
         >
           <MinimiseMobileButton />
           {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
-          <button><BiChevronLeft className='text-5xl' onClick={() => setSelectedConversationId()}></BiChevronLeft></button>
+          <button><BiChevronLeft className='text-3xl' onClick={() => setSelectedConversationId()}></BiChevronLeft></button>
           {conversationItem?.operator?.operatorId && (
             <>
               <Avatar conversationItem={conversationItem} message={conversationItem?.messages?.slice(-1)[0]} />

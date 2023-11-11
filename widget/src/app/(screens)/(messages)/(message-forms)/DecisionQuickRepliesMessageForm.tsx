@@ -116,7 +116,7 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message, form
         {/* {updateMessageMut.isLoading && <Cg className='text-xl text-gray-400 animate-spin' />} */}
         {quickReplies?.map((quickReply, i) => (
           <div className='flex flex-row w-full place-items-center gap-x-1 '>
-            <button className="justify-start p-2 text-sm normal-case bg-gray-200 grow gap-x-4 rounded-xl place-items-start btn-outline hover:bg-black " type="submit" disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess} onClick={() => {
+            <button className="p-2 text-xs text-center normal-case bg-gray-200 btn-sm btn btn-ghost grow gap-x-4 rounded-xl place-items-start hover:bg-black hover:text-white" type="submit" disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess} onClick={() => {
               setSelection(i)
               onSubmit({ i })
             }}>{quickReply} </button>

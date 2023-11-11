@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
-    require('tailwindcss-animated'),
+    require("tailwindcss-animated"),
     require('daisyui'),
   ],
 };

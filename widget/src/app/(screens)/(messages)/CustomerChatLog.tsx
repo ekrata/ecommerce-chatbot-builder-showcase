@@ -51,7 +51,7 @@ export const CustomerChatLog: FC = ({ }) => {
   useEffect(() => {
     setLatestedFormSubmitted(false)
     console.log('sorting')
-    conversationItem?.messages?.sort((a, b) => a?.createdAt ?? 0 - (b?.createdAt ?? 0))
+    conversationItem?.messages?.sort((a, b) => b?.createdAt ?? 0 - a?.createdAt ?? 0)
     console.log(conversationItem?.messages)
   }, [conversationItem?.messages?.length])
 
@@ -74,6 +74,7 @@ export const CustomerChatLog: FC = ({ }) => {
       }
     } else {
       setToggleUserMessaging(true)
+      setBotTyping(false)
     }
   }, [conversationItem?.messages?.length, latestFormSubmitted])
 
@@ -82,9 +83,9 @@ export const CustomerChatLog: FC = ({ }) => {
   const messageLog = useMemo(() =>
     conversationItem?.messages
       ?.map((message, i) => (
-        <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
+        <div className="px-4 text-xs" key={message.messageId} data-testid={`message-${message.messageId}`}>
           {message.sender === 'bot' && message?.messageFormType && (
-            <div className="flex flex-col chat chat-end">
+            <div className="flex flex-col chat chat-end animate-fade-left">
               {getMessageForm(message, i + 1 === conversationItem?.messages?.length ? [latestFormSubmitted, setLatestedFormSubmitted] : undefined)}
               {/* <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
                   
@@ -97,7 +98,7 @@ export const CustomerChatLog: FC = ({ }) => {
             </div>
           )}
           {(message.sender === 'operator' || (message.sender === 'bot' && !message?.messageFormType)) && (
-            <div className="flex flex-col justify-start w-full gap-x-2 gap-y-1" >
+            <div className="flex flex-col justify-start w-full gap-x-2 gap-y-1 animate-fade-right" >
               <div className="flex flex-row place-items-center gap-x-2">
                 <Avatar conversationItem={conversationItem} message={message} />
                 <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
@@ -109,7 +110,7 @@ export const CustomerChatLog: FC = ({ }) => {
                 </p>
               </div>
               {i + 1 === conversationItem?.messages?.length && (
-                <div className="flex justify-start place-items-center ">
+                <div className="flex justify-start place-items-center animate-fade animate-delay-1000 ">
                   <CustomerMessageTimeLabel conversationItem={conversationItem} />
                 </div>
               )}
@@ -137,7 +138,7 @@ export const CustomerChatLog: FC = ({ }) => {
       data-testid="chat-log"
     >
       {messageLog}
-      {botTyping && <div className="flex flex-col justify-start w-full px-4 gap-x-2 gap-y-1" >
+      {botTyping && <div className="flex flex-col justify-start w-full px-4 animate-fade-left gap-x-2 gap-y-1" >
         <div className="flex flex-row place-items-center gap-x-2">
           <Avatar conversationItem={conversationItem} toggleIndicator={true} />
           {/* <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 animate-pulse

@@ -20,7 +20,7 @@ export const Avatar: React.FC<Props> = ({ conversationItem, message, toggleIndic
   const orgId = org?.data?.orgId ?? ''
   const configuration = useConfigurationQuery(orgId);
   return (
-    <div className={`avatar indicator animate-fade-left   align-center items-center place-items-center align-center content-center background rounded-full p-1 ring-1 ring-info ${message?.sender === 'operator' && conversationItem?.operator.online ? 'online' : ''}`} >
+    <div className={`avatar indicator animate-fade-right  align-center items-center place-items-center align-center content-center background rounded-full p-1 ring-1 ring-info ${message?.sender === 'operator' && conversationItem?.operator.online ? 'online' : ''}`} >
       {toggleIndicator &&
         <span
           data-testid="status-badge"
@@ -33,7 +33,7 @@ export const Avatar: React.FC<Props> = ({ conversationItem, message, toggleIndic
         </span>
       }
       {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />}
-      <div className={` w-8 `}>
+      <div className={` w-6`}>
         {message?.sender === 'operator' ? <img src={conversationItem?.operator.profilePicture} /> : <img src={configuration?.data?.channels?.liveChat?.appearance?.widgetAppearance?.botLogo} />}
       </div>
     </div>

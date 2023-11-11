@@ -1,17 +1,11 @@
 import { SSTConfig } from 'sst';
 import { dbStack } from 'stacks/dbStack';
 
-import {
-    articleContentsStack
-} from './packages/functions/app/api/src/article-contents/articleContentsStack';
+import { articleContentsStack } from './packages/functions/app/api/src/article-contents/articleContentsStack';
 import { articlesStack } from './packages/functions/app/api/src/articles/articlesStack';
 import { botsStack } from './packages/functions/app/api/src/bots/botsStack';
-import {
-    configurationStack
-} from './packages/functions/app/api/src/configuration/configurationStack';
-import {
-    conversationsStack
-} from './packages/functions/app/api/src/conversations/conversationsStack';
+import { configurationStack } from './packages/functions/app/api/src/configuration/configurationStack';
+import { conversationsStack } from './packages/functions/app/api/src/conversations/conversationsStack';
 import { customersStack } from './packages/functions/app/api/src/customers/customersStack';
 import { interactionsStack } from './packages/functions/app/api/src/interactions/interactionsStack';
 import { messagesStack } from './packages/functions/app/api/src/messages/messagesStack';
@@ -27,7 +21,7 @@ export default {
   config(_input) {
     return {
       name: 'echat',
-      region: 'us-east-1',
+      region: 'ap-southeast-2',
     };
   },
   stacks(app) {

@@ -73,11 +73,10 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 
   // if new customer created, create a first site visit interaction 
   useEffect(() => {
-    createInteractionMut.mutateAsync([orgId, { orgId: orgId, visitId: '', operatorId: '', botId: '', customerId: customerQuery?.data?.customerId, channel: 'website', status: 'unassigned', createdAt: Date.now(), type: Triggers.FirstVisitOnSite, lastTriggered: interactionHistory?.FirstVisitOnSite }])
-  }, [createCustomerMut.isSuccess && createCustomerMut?.data])
-
-
-
+    if (orgId) {
+      createInteractionMut.mutateAsync([orgId, { orgId: orgId, visitId: '', operatorId: '', botId: '', customerId: customerQuery?.data?.customerId, channel: 'website', status: 'unassigned', createdAt: Date.now(), type: Triggers.FirstVisitOnSite, lastTriggered: interactionHistory?.FirstVisitOnSite }])
+    }
+  }, [createCustomerMut.isSuccess && createCustomerMut?.data, orgId])
 
   const hideNavbar = (widgetState === 'conversations' && selectedConversationId) || (widgetState === 'help' && selectedArticleId)
 
