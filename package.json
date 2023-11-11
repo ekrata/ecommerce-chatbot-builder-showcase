@@ -15,15 +15,10 @@
     "sst-dev": "npx sst dev --stage local",
     "lint": "next lint",
     "sst build": "sst build",
-<<<<<<< HEAD
     "timeout": "node -e \"setTimeout(() => process.exit(0), 10000)\" ",
     "timeout-long": "node -e \"setTimeout(() => process.exit(0), 30000)\" ",
     "timeout-seed": "npm-run-all timeout-long seed",
     "reset-local-db": "npm-run-all remove-local-db --parallel sst-dev timeout-seed",
-=======
-    "reset-local-db": "npm-run-all remove-local-db --parallel sst-dev seed",
-    "timeout": "node -e \"setTimeout(() => process.exit(0), 10000)\"",
->>>>>>> 1b08bd9c72885061fff97f939a5089b6b6db7f37
     "test-app-api": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run --threads=false -c vitest/appApi.config.ts'",
     "test-app-ws": "node -e \"setTimeout(() => process.exit(0), 10000)\" && sst bind 'vitest run --threads=false -c vitest/appWs.config.ts'",
     "test-app-api-{articles}": "sst bind 'vitest run --threads=false -c vitest/appApi.config.ts articles'",

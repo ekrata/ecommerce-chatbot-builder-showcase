@@ -27,9 +27,9 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
-        console.log(nextNode);
-        const { id, position } = nextNode as BotNodeType;
-        const data = JSON.parse(nextNode?.data ?? '{}') as AskAQuestionData;
+        console.log(currentNode);
+        // const { id,  } = currentNode as BotNodeType;
+        const data = JSON.parse(currentNode?.data ?? '{}') as AskAQuestionData;
         console.log(data);
 
         const initiateAt = Date.now() - 5000;

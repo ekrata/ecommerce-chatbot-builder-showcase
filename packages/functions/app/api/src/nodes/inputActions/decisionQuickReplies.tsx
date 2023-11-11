@@ -59,7 +59,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const res = await appDb.entities.messages
           .upsert({
-            // messageId based on idempotent interactionId
+            // messageId based on idempotent interactionI
             messageId: uuidv4(),
             conversationId,
             orgId,
@@ -73,8 +73,9 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             sentAt: initiateDate + 5000,
             botStateContext: JSON.stringify({
               ...botStateContext,
-              currentNode: nextNode,
-              nextnode: {}
+              // type: nextNode?.type,
+              // currentNode: nextNode,
+              // nextnode: {}
             } as BotStateContext),
           })
           .go({ response: 'all_new' });
