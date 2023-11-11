@@ -1,10 +1,13 @@
 import { SNSEvent, SNSEventRecord, SNSMessage, SQSEvent } from 'aws-lambda';
+import { EntityItem } from 'electrodb';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
 import { botNodeEvent, BotNodeType } from '@/entities/bot';
+import { Message } from '@/entities/message';
 import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
+import { CouponData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/CouponCode';
 import { SendAChatMessageData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/SendAChatMessage';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
@@ -19,8 +22,8 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
     try {
       const appDb = getAppDb(Config.REGION, Table.app.tableName);
       const { Records } = event;
+      console.log(Records);
       for (const record of Records) {
-        const snsMessageId = record.messageId;
         const botStateContext: BotStateContext = (
           record.body as unknown as SNSMessage
         )?.Message as unknown as BotStateContext;
@@ -31,38 +34,32 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           conversation;
         console.log(currentNode);
         const { id, position } = currentNode as BotNodeType;
-        const data = JSON.parse(currentNode?.data ?? '{}') as BotNodeType;
-        console.log('sendmessage', data);
+        const data = JSON.parse(currentNode?.data ?? '{}') as CouponData;
+        console.log('couponCode', data);
 
-        const newMessages = await Promise.all(
-          (data as unknown as SendAChatMessageData)?.messages.map(
-            async (message) => {
-              const res = await appDb.entities.messages
-                .upsert({
-                  // messageId based on idempotent interactionId
-                  messageId: uuidv4(),
-                  conversationId,
-                  orgId,
-                  operatorId: operatorId ?? '',
-                  customerId: customerId ?? '',
-                  sender: 'bot',
-                  content: message,
-                  createdAt: Date.now() - 1000,
-                  sentAt: Date.now() - 1000,
-                  // don't need to modify
-                  // botStateContext: JSON.stringify(botStateContext),
-                })
-                .go({ response: 'all_new' });
-              return res?.data;
-              // const nextBotStateContext = getNextBotStateContext(botStateContext);
-            },
-          ),
-        );
+        const res = await appDb.entities.messages
+          .upsert({
+            // messageId based on idempotent interactionId
+            messageId: uuidv4(),
+            conversationId,
+            orgId,
+            operatorId: operatorId ?? '',
+            customerId: customerId ?? '',
+            sender: 'bot',
+            content: `${data?.message} ${data?.couponCode}`,
+
+            createdAt: Date.now() - 1000,
+            sentAt: Date.now() - 1000,
+          })
+          .go({ response: 'all_new' });
 
         publishToNextNodes(
           {
             ...botStateContext,
-            messages: [...(botStateContext?.messages ?? []), ...newMessages],
+            messages: [
+              ...(botStateContext?.messages ?? []),
+              res?.data as EntityItem<typeof Message>,
+            ],
           },
           appDb,
         );
@@ -72,14 +69,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           body: 'Sent messages',
         };
       }
-    } catch (err) {
-      console.log(err);
-      Sentry.captureException(err);
-      return {
-        statusCode: 500,
-        body: JSON.stringify(err),
-      };
-    }
+    } catch (err) {}
   },
 );
 

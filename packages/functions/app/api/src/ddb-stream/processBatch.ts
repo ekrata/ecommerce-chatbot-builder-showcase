@@ -155,6 +155,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             });
             const messageData = messageParsed?.data;
 
+            console.log('updateMessage', messageData);
+
             // route responses to bot actions/conditions to the appropriate next node
             if (
               messageData?.messageFormType !== '' &&
@@ -169,6 +171,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 botStateContext?.bot?.nodes &&
                 botStateContext?.bot?.edges
               ) {
+                console.log(botStateContext);
                 // current/next node incrementation for inputAction's updating message occurs here rather than in the lambda
                 const newBotStateContext = {
                   ...botStateContext,

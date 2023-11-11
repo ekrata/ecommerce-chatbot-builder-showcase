@@ -50,6 +50,8 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
+export type CouponData = FormValues
+
 const type = Action.CouponCode
 
 export const CouponCodeActionNode: FC<NodeProps> = (node) => {

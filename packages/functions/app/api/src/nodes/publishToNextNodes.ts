@@ -15,8 +15,10 @@ export const publishToNextNodes = async (
   appDb: ReturnType<typeof getAppDb>,
 ) => {
   const { customerId, orgId } = botStateContext?.conversation;
+  console.log(botStateContext);
   const nextNodes = findNextNodes(botStateContext);
   console.log(nextNodes);
+  // stop bot
   if (!nextNodes?.length && customerId) {
     await appDb.entities.customers
       ?.update({ customerId, orgId })

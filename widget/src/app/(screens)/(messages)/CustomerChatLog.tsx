@@ -1,6 +1,6 @@
 import { EntityItem } from 'electrodb';
 import { useFormatter, useTranslations } from 'next-intl';
-import { FC, useCallback, useEffect, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
@@ -12,10 +12,12 @@ import { sortConversationItems } from 'src/app/(helpers)/sortConversationItems';
 
 import { Message, messageFormType } from '@/entities/message';
 import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { findNextNodes } from '@/packages/functions/app/api/src/nodes/getNextNodes';
 
 import { useChatWidgetStore } from '../../(actions)/useChatWidgetStore';
 import { getItem } from '../../(helpers)/helpers';
 import { AskAQuestionMessageForm } from './(message-forms)/AskAQuestionMessageForm';
+import { getMessageForm } from './(message-forms)/getMessageForm';
 import { Avatar } from './Avatar';
 import { CustomerMessageTimeLabel } from './CustomerMessageTimeLabel';
 
@@ -31,9 +33,10 @@ interface Props {
  */
 export const CustomerChatLog: FC = ({ }) => {
   const t = useTranslations('chat-widget')
-  const { chatWidget: { selectedConversationId } } = useChatWidgetStore();
+  const { chatWidget: { selectedConversationId, setToggleUserMessaging } } = useChatWidgetStore();
   const org = useOrgQuery()
   const orgId = org?.data?.orgId ?? ''
+  const [botTyping, setBotTyping] = useState<boolean>(false)
   const customer = useCustomerQuery(orgId);
   const conversationItems = useConversationItemsByCustomerQuery(orgId, customer?.data?.customerId ?? '')
   console.log(conversationItems)
@@ -47,15 +50,26 @@ export const CustomerChatLog: FC = ({ }) => {
   const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '')
   const { relativeTime } = useFormatter()
 
-  const getForm = (message: EntityItem<typeof Message>) => {
-    switch (message?.messageFormType) {
-      case Action.AskAQuestion:
-        return <AskAQuestionMessageForm message={message} />
-      default:
-        return <></>
+  useEffect(() => {
+    const message = conversationItem?.messages?.slice(-1)[0];
+    console.log('hzi')
+    // disable user text input if most recent message is a form and is expecting a user decision.
+    if (message?.sender === 'bot' && message?.messageFormType && message?.botStateContext) {
+      setToggleUserMessaging(false)
+      // if the last message was a form message, the user has selected(content set), and there are next nodes, show the bot as typing 
+      const botStateContext = JSON.parse(message?.botStateContext)
+      console.log(botStateContext)
+      const nextNodes = findNextNodes(botStateContext)
+      console.log(nextNodes, message?.content)
+      if (message?.content && nextNodes?.length) {
+        setBotTyping(true)
+      } else {
+        setBotTyping(false)
+      }
+    } else {
+      setToggleUserMessaging(true)
     }
-  }
-
+  }, [conversationItem?.messages.slice(-1)[0]?.content])
 
   return (
     <div
@@ -67,7 +81,8 @@ export const CustomerChatLog: FC = ({ }) => {
           <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
             {message.sender === 'bot' && message?.messageFormType && (
               <div className="flex flex-col chat chat-end">
-                {getForm(message)}
+                {getMessageForm(message)}
+                { }
                 {/* <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
                   
                 </div> */}
@@ -112,6 +127,20 @@ export const CustomerChatLog: FC = ({ }) => {
           </div>
         ))
       }
-    </div >
+      {botTyping && <div className="flex flex-col justify-start w-full px-4 gap-x-2 gap-y-1" >
+        <div className="flex flex-row place-items-center gap-x-2">
+          <Avatar conversationItem={conversationItem} toggleIndicator={true} />
+          {/* <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 animate-pulse
+             tooltip-bottom z-10`}
+            data-testid={`operator-message-content-typing`}
+            data-tip={<CustomerMessageTimeLabel conversationItem={conversationItem} />}
+          >
+          </p> */}
+        </div>
+      </div>
+      }
+    </div>
+
+
   )
 };

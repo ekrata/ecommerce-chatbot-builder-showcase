@@ -137,10 +137,6 @@ export const Message = new Entity({
       type: 'string',
       default: '{}',
     },
-    selectedEdgeLabel: {
-      type: 'string',
-      default: '',
-    },
     botStateContext: {
       type: 'string',
       default: '',

@@ -27,13 +27,12 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
-        const { id, position, data } = nextNode as BotNodeType;
-        const params = {};
-        const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-        // const resOne = await appDb.entities.messages;
-        // const newid = uuidv5(`${snsMessageId}1`, orgId);
-        // console.log(newid);
+        console.log(nextNode);
+        const { id, position } = nextNode as BotNodeType;
+        const data = JSON.parse(nextNode?.data ?? '{}') as AskAQuestionData;
+        console.log(data);
 
+        const initiateAt = Date.now() - 5000;
         const res2 = await appDb.entities.messages
           .upsert({
             // messageId based on idempotent interactionId
@@ -43,9 +42,9 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             operatorId: operatorId ?? '',
             customerId: customerId ?? '',
             sender: 'bot',
-            content: (JSON.parse(data ?? '{}') as AskAQuestionData)?.message,
-            createdAt: Date.now() - 5000,
-            sentAt: Date.now() - 5000,
+            content: data?.message,
+            createdAt: initiateAt,
+            sentAt: initiateAt,
             // don't need to modify
             // botStateContext: JSON.stringify(botStateContext),
           })
@@ -63,16 +62,16 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             sender: 'bot',
             content: '',
             messageFormType: botNodeEvent.AskAQuestion,
-            messageFormData: data,
-            createdAt: Date.now(),
-            sentAt: Date.now(),
+            messageFormData: JSON.stringify(data),
+            createdAt: initiateAt + 5000,
+            sentAt: initiateAt + 5000,
             // don't need to modify
             // increment currentNode/nextNode
             botStateContext: JSON.stringify({
               ...botStateContext,
               type: nextNode?.type,
               currentNode: nextNode,
-              nextNode: undefined,
+              nextNode: {},
             } as BotStateContext),
           })
           .go({ response: 'all_new' });

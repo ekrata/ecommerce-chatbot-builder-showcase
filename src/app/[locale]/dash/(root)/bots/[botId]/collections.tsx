@@ -1,5 +1,6 @@
 import 'reactflow/dist/style.css';
 
+import { EntityItem } from 'electrodb';
 import { ComponentType, ReactElement } from 'react';
 import {
   ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
@@ -7,6 +8,7 @@ import {
 } from 'reactflow';
 
 import { Actions, Conditions, TriggerValues } from '@/entities/bot';
+import { Message } from '@/entities/message';
 import {
   Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
@@ -123,6 +125,8 @@ export const edgeTypes: EdgeTypes = {
 interface Props {
   node: Node
 }
+
+
 
 export const NodeForm: React.FC<Props> = ({ node }) => {
   switch (node.type) {

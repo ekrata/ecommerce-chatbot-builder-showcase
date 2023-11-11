@@ -77,10 +77,10 @@ export enum Action {
 }
 
 export enum ShopifyAction {
-  CheckOrderStatus = 'Check Order Status',
-  ProductAvailability = 'Product Availability',
-  ShippingZones = 'Shipping Zones',
-  CouponCode = 'Coupon code',
+  CheckOrderStatus = 'Shopify Check Order Status',
+  ProductAvailability = 'Shopify Product Availability',
+  ShippingZones = 'Shopify Shipping Zones',
+  ShopifyCouponCode = 'Shopify Coupon code',
 }
 
 export const nodeType = {

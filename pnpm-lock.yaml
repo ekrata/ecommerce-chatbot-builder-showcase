@@ -245,11 +245,11 @@ importers:
       typescript:
         specifier: 5.0.4
         version: 5.0.4
-      usehooks:
-        specifier: link:@types/@uidotdev/usehooks
-        version: link:@types/@uidotdev/usehooks
+      use-debounce:
+        specifier: ^10.0.0
+        version: 10.0.0(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       uuid:
         specifier: ^9.0.1
@@ -424,8 +424,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(@pollyjs/core@6.0.6)
       sst:
-        specifier: 2.31.0
-        version: 2.31.0(@types/react@18.0.38)
+        specifier: 2.34.7
+        version: 2.34.7(@types/react@18.0.38)
       storybook:
         specifier: ^7.5.1
         version: 7.5.1
@@ -460,8 +460,8 @@ importers:
         specifier: ^2.0.18
         version: 2.0.18(react@18.2.0)
       '@hookform/resolvers':
-        specifier: ^3.1.1
-        version: 3.1.1(react-hook-form@7.45.0)
+        specifier: ^3.3.1
+        version: 3.3.2(react-hook-form@7.45.0)
       '@lexical/rich-text':
         specifier: ^0.11.3
         version: 0.11.3(@lexical/clipboard@0.11.3)(@lexical/selection@0.11.3)(@lexical/utils@0.11.3)(lexical@0.11.3)
@@ -688,8 +688,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       zod:
-        specifier: ^3.21.4
-        version: 3.21.4
+        specifier: ^3.21.3
+        version: 3.22.4
       zustand:
         specifier: ^4.3.8
         version: 4.4.3(@types/react@18.0.38)(immer@10.0.2)(react@18.2.0)
@@ -842,8 +842,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(@pollyjs/core@6.0.5)
       sst:
-        specifier: 2.31.0
-        version: 2.31.0(@types/react@18.0.38)
+        specifier: 2.34.7
+        version: 2.34.7(@types/react@18.0.38)
       storybook:
         specifier: ^7.4.0-alpha.2
         version: 7.4.0-alpha.2
@@ -6381,8 +6381,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@hookform/resolvers@3.1.1(react-hook-form@7.45.0):
-    resolution: {integrity: sha512-tS16bAUkqjITNSvbJuO1x7MXbn7Oe8ZziDTJdA9mMvsoYthnOOiznOTGBYwbdlYBgU+tgpI/BtTU3paRbCuSlg==}
+  /@hookform/resolvers@3.3.2(react-hook-form@7.45.0):
+    resolution: {integrity: sha512-Tw+GGPnBp+5DOsSg4ek3LCPgkBOuOgS5DsDV7qsWNH9LZc433kgsWICjlsh2J9p04H2K66hsXPPb9qn9ILdUtA==}
     peerDependencies:
       react-hook-form: ^7.0.0
     dependencies:
@@ -15008,11 +15008,11 @@ packages:
       - utf-8-validate
     dev: true
 
-  /aws-iot-device-sdk@2.2.12:
-    resolution: {integrity: sha512-OcUI6Hq1N3PhAMgceWV3nFhDNkOFmSYPuv1CCqZhQAcWQ7UOhPmA5QSE4aiQcVN3wSIzTEO0UU4sh6ubjMOjPA==}
+  /aws-iot-device-sdk@2.2.13:
+    resolution: {integrity: sha512-rUR68vJxna5q0HSvBFy70QD0kFa91H8mQU2Jdor0JpNxmfNaOhQoiGCcgrZAxR69xY1kGHs+JzWOqqVtAfL0+A==}
     engines: {node: '>=4.0.0'}
     dependencies:
-      crypto-js: 4.0.0
+      crypto-js: 4.2.0
       minimist: 1.2.6
       mqtt: 4.2.8
       websocket-stream: 5.5.2
@@ -16700,12 +16700,12 @@ packages:
       randomfill: 1.0.4
     dev: true
 
-  /crypto-js@4.0.0:
-    resolution: {integrity: sha512-bzHZN8Pn+gS7DQA6n+iUmBfl0hO5DJq++QP3U6uTucDtk/0iGpXd/Gg7CGR0p8tJhofJyaKoWBuJI4eAO00BBg==}
-    dev: true
-
   /crypto-js@4.1.1:
     resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: true
+
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: true
 
   /crypto-random-string@2.0.0:
@@ -26483,8 +26483,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /sst@2.31.0(@types/react@18.0.38):
-    resolution: {integrity: sha512-Ik2LGluUBUhiVgR2yC+ey/CHHzxjVX+m+E/F2bKyCXrdK5sGbkrJX3PjslqoXkgf1gzeUEltpOtWsI9j8kmXyw==}
+  /sst@2.34.7(@types/react@18.0.38):
+    resolution: {integrity: sha512-n2Iiwpt1QXjn2UifHNXo1CpakIKlyWuYK40DRfdq24ibrFqg1OyO3mwk8+b2T3CpYhSNNFK9I48K/zeQWDbU5A==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0
@@ -26523,7 +26523,7 @@ packages:
       '@trpc/server': 9.16.0
       adm-zip: 0.5.10
       aws-cdk-lib: 2.101.1(constructs@10.2.69)
-      aws-iot-device-sdk: 2.2.12
+      aws-iot-device-sdk: 2.2.13
       aws-sdk: 2.1478.0
       builtin-modules: 3.2.0
       cdk-assets: 2.101.1
@@ -27951,6 +27951,15 @@ packages:
       react: 18.2.0
       tslib: 2.6.2
     dev: true
+
+  /use-debounce@10.0.0(react@18.2.0):
+    resolution: {integrity: sha512-XRjvlvCB46bah9IBXVnq/ACP2lxqXyZj0D9hj4K5OzNroMDpTEBg8Anuh1/UfRTRs7pLhQ+RiNxxwZu9+MVl1A==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /use-intl@2.21.0(react@18.2.0):
     resolution: {integrity: sha512-m0gAKo/2OHw1tJtGQV226NIIpUy4Ualf+FKa/whk7hM1W7MXQ2v8c/N54UPrSy+PvJLCrIe7aOQ5xYEmUjnztQ==}

@@ -10,6 +10,7 @@ export type WidgetVisibility = 'expanded' | 'open' | 'minimized';
 export interface ChatWidgetStateDefinition {
   widgetState: WidgetState;
   widgetVisibility: WidgetVisibility;
+  toggleUserMessaging: boolean;
   selectedConversationId?: string;
   selectedArticleId?: string;
 }
@@ -22,6 +23,13 @@ export interface ChatWidgetStateActions {
    * @type {(widgetState: WidgetState) => void}
    */
   setWidgetState: (widgetState: WidgetState) => void;
+  /**
+   * Controls wether user test input is disabled/enabled
+   * @date 13/06/2023 - 12:04:21
+   *
+   * @type {(widgetState: WidgetState) => void}
+   */
+  setToggleUserMessaging: (toggleUserMessaging: boolean) => void;
   /**
    * Sets the visibility of the widget
    * @date 18/06/2023 - 21:20:11

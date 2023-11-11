@@ -22,6 +22,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
     try {
       const appDb = getAppDb(Config.REGION, Table.app.tableName);
       const { Records } = event;
+      console.log('quickreplies', Records)
       for (const record of Records) {
         const snsMessageId = record.messageId;
         const botStateContext: BotStateContext = (
@@ -32,11 +33,12 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
-        const { id, position, data } = nextNode as BotNodeType;
-        console.log('data aaaazzz', data)
+        const { id, position, data } = currentNode as BotNodeType;
+        // data is double stringified here for some reason ignore
         const quickRepliesData = JSON.parse(data ?? '{}') as DecisionQuickRepliesData
-        console.log('data aaaa', quickRepliesData)
-        console.log('data aaaa', quickRepliesData?.message)
+        console.log(quickRepliesData)
+        console.log('typeof', typeof quickRepliesData)
+        const initiateDate = Date.now() - 10000
 
         const res2 = await appDb.entities.messages
           .upsert({
@@ -47,9 +49,9 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             operatorId: operatorId ?? '',
             customerId: customerId ?? '',
             sender: 'bot',
-            content: quickRepliesData?.["message"],
-            createdAt: Date.now() - 5000,
-            sentAt: Date.now() - 5000,
+            content: quickRepliesData.message,
+            createdAt: initiateDate,
+            sentAt: initiateDate,
             // don't need to modify
             // botStateContext: JSON.stringify(botStateContext),
           }).go({ response: 'all_new' });
@@ -67,15 +69,12 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             messageFormType: botNodeEvent.DecisionQuickReplies,
             messageFormData: data,
             content: '',
-            createdAt: Date.now(),
-            sentAt: Date.now(),
-            // don't need to modify
-            // increment currentNode/nextNode
+            createdAt: initiateDate + 5000,
+            sentAt: initiateDate + 5000,
             botStateContext: JSON.stringify({
               ...botStateContext,
-              type: nextNode?.type,
               currentNode: nextNode,
-              nextNode: undefined,
+              nextnode: {}
             } as BotStateContext),
           })
           .go({ response: 'all_new' });

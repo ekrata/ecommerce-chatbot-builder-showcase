@@ -134,7 +134,6 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message }) => {
     await updateMessageMut.mutateAsync([orgId, message?.conversationId, message?.messageId, values])
   }
 
-
   return (
     <form className='flex flex-col justify-end w-2/3 form' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       <div className="w-full max-w-xs form-control">

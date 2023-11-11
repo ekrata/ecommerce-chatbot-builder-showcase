@@ -22,10 +22,11 @@ type Inputs = {
 }
 
 export const ChatInput: FC = () => {
-  const { chatWidget: { selectedConversationId } } = useChatWidgetStore()
+  const { chatWidget: { selectedConversationId, toggleUserMessaging } } = useChatWidgetStore()
   const t = useTranslations('chat-widget');
   const org = useOrgQuery()
   const orgId = org?.data?.orgId ?? ''
+
   const customer = useCustomerQuery(orgId);
   const configuration = useConfigurationQuery(orgId);
   const widgetAppearance = configuration.data?.channels?.liveChat?.appearance
@@ -56,10 +57,11 @@ export const ChatInput: FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='w-full'>
       <div className="rounded-b-lg form-control">
-        <div className="rounded-b-lg input-group gap-x-1">
+        <div className="rounded-b-lg input-group">
           <div className="flex flex-col w-full rounded-b-lg">
             <input
               type="text"
+              disabled={!toggleUserMessaging}
               placeholder="Enter your message..."
               className="w-full rounded-b-lg input hover:outline-0 hover:ring-0 focus:ring-0 focus:outline-0 rounded-xs "
               data-testid="msg-input"
@@ -78,7 +80,7 @@ export const ChatInput: FC = () => {
             className={`btn text-xl border-0 rounded-br-lg`}
             data-testid="msg-send"
             type="submit"
-            disabled={createMessageMut.isLoading}
+            disabled={createMessageMut.isLoading || !toggleUserMessaging}
           >
             {createMessageMut.isLoading ?
               <CgSpinner className="text-2xl animate-spin text-base-100" />

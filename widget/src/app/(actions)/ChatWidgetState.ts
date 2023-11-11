@@ -15,6 +15,7 @@ import {
 const initialChatWidgetState: ChatWidgetStateDefinition = {
   widgetState: 'home',
   widgetVisibility: 'minimized',
+  toggleUserMessaging: true,
 };
 
 /**
@@ -30,6 +31,10 @@ export const createChatWidgetState: StateSlice<ChatWidgetStateType> = (
   setWidgetState: (widgetState: WidgetState) =>
     set((state) => {
       state.chatWidget.widgetState = widgetState;
+    }),
+  setToggleUserMessaging: (toggleUserMessaging: boolean) =>
+    set((state) => {
+      state.chatWidget.toggleUserMessaging = toggleUserMessaging;
     }),
   setWidgetVisibility: (widgetVisibility: WidgetVisibility) =>
     set((state) => {
