@@ -106,7 +106,7 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message, form
 
 
   return (
-    <form className='flex flex-col justify-end w-2/3 py-2 form' ref={ref}>
+    <form className='flex flex-col justify-end w-2/3 py-2 select-none form' ref={ref}>
       <div className="w-full max-w-xs form-control">
         {/* <label className="label">
           <span className="label-text">{tForm('validationTypeLabel')}</span>

@@ -63,13 +63,14 @@ export const ChatInput: FC = () => {
               type="text"
               disabled={!toggleUserMessaging}
               placeholder="Enter your message..."
-              className="w-full rounded-b-lg input hover:outline-0 hover:ring-0 focus:ring-0 focus:outline-0 rounded-xs "
+              autoComplete='off'
+              className="w-full h-full text-xs rounded-bl-3xl focus:outline-0 active:outline-0 focus:border-0 input-sm input hover:outline-0 hover:ring-0 focus:ring-0 rounded-xs "
               data-testid="msg-input"
               {...register('msg', { required: true })}
             />
             {errors.msg && (
               <span
-                className="text-red-600 bg-transparent"
+                className="bg-transparent text-error"
                 data-testid="msg-error"
               >
                 Write a message first.
@@ -77,14 +78,14 @@ export const ChatInput: FC = () => {
             )}
           </div>
           <button
-            className={`btn text-xl border-0 rounded-br-lg`}
+            className={`btn text-lg border-0 rounded-br-lg`}
             data-testid="msg-send"
             type="submit"
             disabled={createMessageMut.isLoading || !toggleUserMessaging}
           >
             {createMessageMut.isLoading ?
-              <CgSpinner className="text-2xl animate-spin text-base-100" />
-              : <BiSend className="text-2xl" />}
+              <CgSpinner className="text-md animate-spin text-base-100" />
+              : <BiSend className="text-md" />}
             {/* {configuration.data && <DynamicBackground configuration={configuration.data} />} */}
           </button>
         </div>
