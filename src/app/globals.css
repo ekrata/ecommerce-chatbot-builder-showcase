@@ -49,6 +49,10 @@ body {
   background: #c0a0b9;
 }
 
+.toggle {
+  @apply border-0 rounded-md drop-shadow ; 
+}
+
 
 .modal {
 

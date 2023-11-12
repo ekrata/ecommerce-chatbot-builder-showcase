@@ -124,20 +124,19 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
           {((isMobile && widgetVisibility === 'minimized') || (!isMobile)) &&
             <div className='bottom-0 right-0 flex flex-col justify-end' >
               <StartChatButton ></StartChatButton>
-
             </div>
           }
           {/* if is in dash  */}
           {process.env.NEXT_PUBLIC_APP_URL && (window?.document.referrer?.includes(process.env.NEXT_PUBLIC_APP_URL) || (window?.document.referrer?.includes(process.env.NEXT_PUBLIC_APP_WIDGET_URL ?? '')))
             &&
-            <div className='top-0 right-0 flex flex-col gap-x-2'>
-              <button className='z-10 btn btn-sm w-30' onClick={() => {
+            <div className='top-0 right-0 flex flex-col mt-4 gap-x-2'>
+              <button className='z-10 btn btn-sm w-30 rounded-xl' onClick={() => {
                 console.log('clicked')
                 setBuster(uuidv4())
                 // customerQuery.remove()
                 setInteractionHistory({})
                 queryClient.clear()
-                // window?.location?.reload()
+                parent.location.reload()
               }}>
                 {tWidget('resetVisitor')}</button>
             </div>

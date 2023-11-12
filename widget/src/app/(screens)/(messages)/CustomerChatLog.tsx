@@ -50,10 +50,7 @@ export const CustomerChatLog: FC = ({ }) => {
 
   useEffect(() => {
     setLatestedFormSubmitted(false)
-    console.log('sorting')
-    conversationItem?.messages?.sort((a, b) => b?.createdAt ?? 0 - a?.createdAt ?? 0)
-    console.log(conversationItem?.messages)
-  }, [conversationItem?.messages?.length])
+  }, [conversationItem?.messages?.length, conversationItem?.messages])
 
   useEffect(() => {
     const message = conversationItem?.messages?.slice(-1)[0];
@@ -81,7 +78,7 @@ export const CustomerChatLog: FC = ({ }) => {
 
 
   const messageLog = useMemo(() =>
-    conversationItem?.messages
+    conversationItem?.messages?.sort((a, b) => a?.createdAt ?? 0 - b?.createdAt ?? 0)
       ?.map((message, i) => (
         <div className="px-4 text-xs" key={message.messageId} data-testid={`message-${message.messageId}`}>
           {message.sender === 'bot' && message?.messageFormType && (
@@ -130,7 +127,7 @@ export const CustomerChatLog: FC = ({ }) => {
           )}
         </div>
       ))
-    , [conversationItem?.messages, conversationItem?.messages?.slice(-1)[0]?.messageId])
+    , [conversationItem?.messages, conversationItem?.messages?.slice(-1)[0]?.messageId, latestFormSubmitted])
 
   return (
     <div

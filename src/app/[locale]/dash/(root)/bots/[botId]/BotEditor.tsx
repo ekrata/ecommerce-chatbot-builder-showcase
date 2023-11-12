@@ -9,24 +9,24 @@ import { isEqual } from 'lodash';
 import { Link, useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import {
-    createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useRef, useState
+  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useRef, useState
 } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiTestTube, BiTrash, BiX } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-    ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
-    ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
+  addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+  ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
+  ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
 } from 'reactflow';
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import { actions, botCategory, BotNodeType, conditions, triggers } from '@/entities/bot';
 import {
-    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { useDeleteBotMut } from '@/src/app/[locale]/(hooks)/mutations/useDeleteBotMut';
@@ -36,7 +36,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-    actionNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
+  actionNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
 import { getNodeForm } from './getNodeForm';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
@@ -90,7 +90,6 @@ export const BotEditor: React.FC = () => {
 
   const onNodesChange = useCallback(
     (changes: any) => {
-      console.log('node changed')
       return setNodes((nds) => applyNodeChanges(changes, nds))
     },
     [setNodes])
@@ -272,9 +271,6 @@ export const BotEditor: React.FC = () => {
   const [debouncedEdges] = useDebounce<Edge[]>(edges, 5000, { equalityFn: isEqual })
 
   useEffect(() => {
-    console.log('hi')
-    console.log(nodes)
-    console.log(edges)
     if (reactFlowInstance) {
       const { active, name, category } = getValues()
       const updateBody = {

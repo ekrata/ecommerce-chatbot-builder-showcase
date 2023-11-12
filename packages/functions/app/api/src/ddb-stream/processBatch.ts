@@ -11,6 +11,7 @@ import * as Sentry from '@sentry/serverless';
 import { getAppDb } from '../db';
 import { BotStateContext } from '../nodes/botStateContext';
 import { findNextNodes } from '../nodes/getNextNodes';
+import { handleMessageResponse } from '../nodes/handleMessageResponse';
 import { publishToNextNodes } from '../nodes/publishToNextNodes';
 
 const sns = new AWS.SNS();
@@ -24,7 +25,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       event?.Records?.forEach(async (record: any) => {
         // eslint-disable-next-line no-use-before-define
         // CREATE
-        console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
+        // console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
         if (record.eventName === 'INSERT') {
           if (
             record.dynamodb.NewImage.context?.S === 'interaction' ||
@@ -155,7 +156,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             });
             const messageData = messageParsed?.data;
 
-            console.log('updateMessage', messageData);
+            // console.log('updateMessage', messageData);
 
             // route responses to bot actions/conditions to the appropriate next node
             if (
@@ -165,18 +166,23 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               const botStateContext = JSON.parse(
                 messageData?.botStateContext ?? '{}',
               ) as BotStateContext;
-              console.log(botStateContext);
+              // console.log(botStateContext);
               if (
                 botStateContext?.currentNode?.id &&
                 botStateContext?.bot?.nodes &&
                 botStateContext?.bot?.edges
               ) {
-                console.log(botStateContext);
+                // console.log(botStateContext);
                 // current/next node incrementation for inputAction's updating message occurs here rather than in the lambda
                 const newBotStateContext = {
                   ...botStateContext,
                   messages: [...(botStateContext?.messages ?? []), messageData],
                 };
+                await handleMessageResponse(
+                  messageData,
+                  botStateContext,
+                  appDb,
+                );
                 const nextNodes = await publishToNextNodes(
                   newBotStateContext,
                   appDb,

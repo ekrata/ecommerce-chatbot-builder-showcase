@@ -59,7 +59,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           ),
         );
 
-        publishToNextNodes(
+        await publishToNextNodes(
           {
             ...botStateContext,
             messages: [...(botStateContext?.messages ?? []), ...newMessages],

@@ -7,28 +7,33 @@ import {
   Node, NodeTypes
 } from 'reactflow';
 
-import { Actions, Conditions, TriggerValues } from '@/entities/bot';
-import { Message } from '@/entities/message';
+import {
+  Actions, BotNodeEvent, BotNodeType, Conditions, nodeSubType, TriggerValues
+} from '@/entities/bot';
+import { Message, NodeFormData } from '@/entities/message';
 import {
   Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
-import { nodeSubTypeIcons } from '../nodeSubTypeIcons';
+import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-  AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode
+  AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode, AskAQuestionData
 } from './nodes/actions/AskAQuestion';
 import {
-  CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode
+  CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode, CouponData
 } from './nodes/actions/CouponCode';
 import {
-  DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode
+  DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode,
+  DecisionButtonsData
 } from './nodes/actions/DecisionButtons';
 import {
-  DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode
+  DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode,
+  DecisionCardMessagesData
 } from './nodes/actions/DecisionCardMessages';
 import {
-  DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode
+  DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode,
+  DecisionQuickRepliesData
 } from './nodes/actions/DecisionQuickReplies';
 import {
   SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
@@ -44,14 +49,15 @@ import { ChatStatusConditionEdge } from './nodes/conditions/ChatStatus';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
-  FirstVisitOnSiteTriggerEdge, FirstVisitOnSiteTriggerForm, FirstVisitOnSiteTriggerNode
+  FirstVisitOnSiteData, FirstVisitOnSiteTriggerEdge, FirstVisitOnSiteTriggerForm,
+  FirstVisitOnSiteTriggerNode
 } from './nodes/triggers/FirstVisitOnSite';
 import {
   VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
 import {
-  VisitorClicksOnChatIconTriggerEdge, VisitorClicksOnChatIconTriggerForm,
-  VisitorClicksOnChatIconTriggerNode
+  VisitorClicksOnChatIconData, VisitorClicksOnChatIconTriggerEdge,
+  VisitorClicksOnChatIconTriggerForm, VisitorClicksOnChatIconTriggerNode
 } from './nodes/triggers/VisitorClicksOnChatIcon';
 import {
   VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
@@ -94,6 +100,28 @@ export const nodeTypes: NodeTypes = {
   [`${Action.SendAChatMessage}` as string]: SendAChatMessageActionNode,
 } as const;
 
+export const getNodeFormDataType = (nodeType: BotNodeEvent) => {
+  if (nodeType === Action.DecisionQuickReplies) {
+    return
+  }
+  return {
+    // [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: VisitorClicksBotsButtonTriggerNode,
+    [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesData,
+    [`${VisitorBotInteractionTrigger.VisitorSays}` as string]: VisitorSaysTriggerNode,
+    [`${VisitorPageInteractionTrigger.FirstVisitOnSite}` as string]: FirstVisitOnSiteTriggerNode,
+    // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
+    // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
+    [`${Condition.BasedOnContactProperty}` as string]: BasedOnContactPropertyConditionNode,
+    // [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
+    [`${Action.DecisionQuickReplies}` as string]: DecisionQuickRepliesActionNode,
+    [`${Action.DecisionCardMessages}` as string]: DecisionCardMessagesActionNode,
+    [`${Action.DecisionButtons}` as string]: DecisionButtonsActionNode,
+    [`${Action.AskAQuestion}` as string]: AskAQuestionActionNode,
+    [`${Action.CouponCode}` as string]: CouponCodeActionNode,
+    [`${Action.SubscribeForMailing}` as string]: SubscribeForMailingNode,
+    [`${Action.SendAChatMessage}` as string]: SendAChatMessageActionNode,
+  }
+}
 
 
 export const renderConnectionLine = (params: ConnectionLineComponentProps, edges: Edge[]) => {

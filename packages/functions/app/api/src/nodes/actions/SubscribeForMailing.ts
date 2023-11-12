@@ -49,7 +49,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
 
         // console.log(JSON.parse(lastNodeMessage?.botStateContext ?? ''));
 
-        publishToNextNodes(
+        await publishToNextNodes(
           {
             ...botStateContext,
             messages: [

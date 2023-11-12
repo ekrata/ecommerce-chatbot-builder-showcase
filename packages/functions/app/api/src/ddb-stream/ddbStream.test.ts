@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
 import { getHttp } from '../http';
-import { MockOrgIds } from '../util/seed';
+import { MockOrgIds } from '../util';
 
 // Seed db in vitest beforeAll, then use preexisitng ids
 const http = getHttp(`${Api.appApi.url}`);

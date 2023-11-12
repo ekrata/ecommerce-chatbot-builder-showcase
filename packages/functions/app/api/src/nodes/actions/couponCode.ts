@@ -69,7 +69,14 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           body: 'Sent messages',
         };
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+      Sentry.captureException(err);
+      return {
+        statusCode: 500,
+        body: JSON.stringify(err),
+      };
+    }
   },
 );
 

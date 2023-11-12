@@ -90,6 +90,12 @@ export const Customer = new Entity({
       default: false,
       required: true,
     },
+    orderNumber: {
+      type: 'list',
+      items: {
+        type: 'string',
+      },
+    },
     ip: {
       type: 'string',
     },

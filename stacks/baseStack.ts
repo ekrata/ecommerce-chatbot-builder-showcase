@@ -4,9 +4,25 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { Duration } from 'aws-cdk-lib/core';
 import {
-    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
-    NextjsSite, Queue, StackContext, StaticSite, Table, Topic, TopicFunctionSubscriberProps,
-    TopicQueueSubscriberProps, use, WebSocketApi, WebSocketApiFunctionRouteProps
+  Api,
+  ApiRouteProps,
+  Auth,
+  Bucket,
+  Config,
+  EventBus,
+  EventBusRuleProps,
+  FunctionInlineDefinition,
+  NextjsSite,
+  Queue,
+  StackContext,
+  StaticSite,
+  Table,
+  Topic,
+  TopicFunctionSubscriberProps,
+  TopicQueueSubscriberProps,
+  use,
+  WebSocketApi,
+  WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
@@ -545,7 +561,7 @@ export function baseStack({ stack, app }: StackContext) {
         consumer: {
           function: {
             timeout: defaultFunctionTimeout,
-            bind: [wsApi, api, REGION, table],
+            bind: [wsApi, api, REGION, table, botNodeTopic],
             handler:
               'packages/functions/app/api/src/nodes/actions/subscribeForMailing.handler',
           },
@@ -570,7 +586,7 @@ export function baseStack({ stack, app }: StackContext) {
         consumer: {
           function: {
             timeout: defaultFunctionTimeout,
-            bind: [wsApi, api, REGION, table],
+            bind: [wsApi, api, REGION, table, botNodeTopic],
             handler:
               'packages/functions/app/api/src/nodes/actions/sendAChatMessage.handler',
           },
@@ -645,7 +661,7 @@ export function baseStack({ stack, app }: StackContext) {
         consumer: {
           function: {
             timeout: defaultFunctionTimeout,
-            bind: [wsApi, api, REGION, table],
+            bind: [wsApi, api, REGION, table, botNodeTopic],
             handler:
               'packages/functions/app/api/src/nodes/actions/couponCode.handler',
           },

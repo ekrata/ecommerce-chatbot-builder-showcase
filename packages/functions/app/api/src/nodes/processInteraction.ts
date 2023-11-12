@@ -180,6 +180,7 @@ export const processTrigger = async (
     if (customerId) {
       // start bot
       const bot = bots.find(({ botId }) => botId === matchedBotId);
+      // if bot, we then check additional prerequites are fulfilled
       const newConversationId = uuidv4();
       const nextNodes = getNextNodes(matchedNodeId, bot?.nodes, bot?.edges);
 

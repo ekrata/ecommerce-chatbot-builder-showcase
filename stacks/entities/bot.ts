@@ -79,6 +79,7 @@ export const validationType = [
   'Name',
   'Email',
   'Number',
+  'Order Number',
   'Phone Number',
   'URL',
 ] as const;

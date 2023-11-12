@@ -24,7 +24,7 @@ export const Avatar: React.FC<Props> = ({ conversationItem, message, toggleIndic
       {toggleIndicator &&
         <span
           data-testid="status-badge"
-          className={`indicator-item place-items-center badge-success badge-xs ring-white ring-1 text-white dark:text-default rounded-full mx-0 my-0 indicator-bottom animate-bounce`}
+          className={`indicator-item place-items-center badge-success badge-xs ring-white  ring-2 text-white dark:text-default rounded-full mx-0 my-0 indicator-bottom animate-bounce`}
         >
           <span className=' animate-pulse'>
             ...

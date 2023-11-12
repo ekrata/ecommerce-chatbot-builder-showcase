@@ -11,6 +11,7 @@ import {
 import { FaRegClone } from 'react-icons/fa';
 import { GrTest } from 'react-icons/gr';
 import { TbRobotOff } from 'react-icons/tb';
+import { toast } from 'react-toastify';
 import { Node } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,6 +20,7 @@ import { CreateBot, UpdateBot } from '@/entities/entities';
 import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { getBotTriggers } from '@/packages/functions/app/api/src/nodes/getBotTriggers';
 
+import { ConfirmationModal } from '../../../(components)/ConfirmationModal';
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
 import { useCreateBotMut } from '../../../(hooks)/mutations/useCreateBotMut';
 import { useDeleteBotMut } from '../../../(hooks)/mutations/useDeleteBotMut';
@@ -55,21 +57,37 @@ export const BotsPanel: FC<Props> = ({ title }) => {
     delete updateBot?.botId
     delete updateBot?.createdAt;
     delete (updateBot as { orgId?: string })?.orgId;
+
     await updateBotMut.mutateAsync([orgId, botId, updateBot as UpdateBot])
   }
+  const onDelete = async (orgId: string, botId: string) => {
+    const res = await toast.promise(() => deleteBotMut.mutateAsync([orgId, botId]), {
+      pending: tDash('Deleting'),
+      success: tDash('Deleted'),
+      error: tDash('Failed to delete')
+    }, { position: 'bottom-right' })
+  }
+
+  const onCreate = async () => await toast.promise(() => createBotMut.mutateAsync([{ botId: uuidv4(), category: 'General', name: `new-bot-${generate({ exactly: 1, wordsPerString: 2, separator: "-" })[0]}`, orgId }]), {
+    pending: tDash('Creating'),
+    success: tDash('Created'),
+    error: tDash('Failed to create')
+  }, { position: 'bottom-right' })
+
+  console.log(bots?.data)
 
   return (
     < div className="flex flex-col justify-between w-full h-full p-2 bg-white " >
       <div className='flex flex-row justify-between'>
         <h2 className='text-2xl font-semibold'>{title === 'All' ? tDash('All') : tDash(`bots.categories.${title}`)}</h2>
         <div className="flex gap-x-2" >
-          <button className="flex normal-case btn btn-sm btn-outline gap-x-2" onClick={async () => createBotMut.mutateAsync([{ botId: uuidv4(), category: 'General', name: `new-bot-${generate({ exactly: 1, wordsPerString: 2, separator: "-" })[0]}`, orgId }])}>
+          <button className="flex normal-case btn btn-sm btn-outline gap-x-2" onClick={onCreate}>
             <BsRobot />
             {tBots('Create new bot')}
           </button>
           <button disabled={selectedBotIndex == null} className="flex normal-case btn btn-sm btn-primary gap-x-2" onClick={async () => {
             if (selectedBotIndex != null) {
-              await createBotMut.mutateAsync([{ ...bots?.data?.[selectedBotIndex], botId: uuidv4(), name: `new-bot-${generate({ exactly: 1, wordsPerString: 2, separator: "-" })[0]}`, orgId }])
+              onCreate()
             }
           }}
           >
@@ -100,10 +118,10 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                 </tr>
               </thead>
               <tbody className='h-full animate-fade-left'>
-                {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data)?.map((data, i) => {
+                {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data ?? [])?.map((data, i) => {
                   const bot = (data as EntityItem<typeof Bot>)
                   return (
-                    <tr className='w-full text-lg font-normal group hover:cursor-pointer'
+                    <tr className='w-full text-base font-normal group hover:cursor-pointer'
                     >
                       <th className='group-hover:bg-gray-300'>
                         <label>
@@ -134,7 +152,6 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                                 <div className='flex flex-col'>
                                   {Object.entries(getBotTriggers([bot]))?.map(([key, value]) => {
                                     console.log(value)
-
                                     return (value as BotNodeType[]).map((item) => <div className='flex flex-row'>
                                       {getNodeForm(item as Node, false)}
                                       {/* {nodeSubTypeIcons[item?.type as keyof typeof nodeSubTypeIcons]} */}
@@ -200,8 +217,12 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                           </li>
                           <li className='flex flex-row'>
                             <a className='w-full'>
-                              <BiTrash />
-                              {tDash('Delete')}
+                              <ConfirmationModal actionLabel={tDash('Are you sure you want to delete this?')} leftButtonAction={() => onDelete(bot?.orgId, bot?.botId)} leftButtonLabel={tDash('Delete')} rightButtonLabel={tDash('Cancel')} leftButtonColor={'error'}>
+                                <div className='flex flex-row w-full place-items-center gap-x-3'>
+                                  <BiTrash />
+                                  {tDash('Delete')}
+                                </div>
+                              </ConfirmationModal>
                             </a>
                           </li>
                           <li className='flex flex-row'>
@@ -216,7 +237,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                               {tBots('Test & validate bot')}
                             </a>
                           </li>
-                          <li className='flex flex-row'>
+                          {/* <li className='flex flex-row'>
                             <a className='justify-between w-full'>
                               <div className='flex place-items-center gap-x-2'>
                                 <BsPersonSlash />
@@ -243,7 +264,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
                               </div>
                               <input type="checkbox" className="toggle toggle-primary" defaultChecked={bot?.startWhenAnotherBotRunning} />
                             </a>
-                          </li>
+                          </li> */}
                         </ul>
                       </td>
                     </tr>

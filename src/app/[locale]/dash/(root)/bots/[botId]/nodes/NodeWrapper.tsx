@@ -39,7 +39,7 @@ export const NodeWrapper: React.FC<Props> = ({ nodeElement, nodeName, hasErrors,
         <div className={`justify-center mt-2 focus:animate-jump`}>
           {nodeElement}
         </div>
-        <p className="mt-4 text-xs font-light text-center bg-white shadow-2xl select-none -z-10 group-hover:animate-duration-500 group-hover:animate-fade group-hover:invisible">
+        <p className="p-1 mt-2 text-xs font-light text-center bg-white shadow-md select-none -z-10 group-hover:animate-duration-500 group-hover:animate-fade-up group-hover:invisible">
           {nodeName}
         </p>
       </div >

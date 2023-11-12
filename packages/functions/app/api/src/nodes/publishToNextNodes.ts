@@ -20,6 +20,7 @@ export const publishToNextNodes = async (
   console.log(nextNodes);
   // stop bot
   if (!nextNodes?.length && customerId) {
+    console.log('no more nodes');
     await appDb.entities.customers
       ?.update({ customerId, orgId })
       .set({ botId: '' })

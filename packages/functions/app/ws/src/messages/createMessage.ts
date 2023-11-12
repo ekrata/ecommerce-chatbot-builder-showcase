@@ -62,6 +62,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
         .primary({ orgId, customerId })
         .go();
 
+      console.log('posting to', customer?.data);
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({

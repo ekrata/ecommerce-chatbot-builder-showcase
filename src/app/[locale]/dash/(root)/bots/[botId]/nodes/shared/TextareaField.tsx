@@ -78,10 +78,10 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
   // }, [])
 
   return (
-    <div className='w-full bg-gray-200 h-22 group form-control textarea textarea-sm'>
-      <textarea key={useId()} className={`${textareaStyle ?? 'flex  text-lg bg-gray-200 resize-none min-h-10 textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event as any)} />
+    <div className='flex flex-col w-full bg-gray-200 group form-control textarea textarea-sm'>
+      <textarea key={useId()} className={`${textareaStyle ?? 'flex  text-xs w-full h-6 bg-gray-200 resize-none  textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event as any)} />
       <label className="justify-end text-gray-100 label place-items-center" >
-        <span className="flex flex-row justify-end label-text-alt">
+        <span className="relative flex flex-row justify-end label-text-alt">
           <div className="invisible text-xl cursor-pointer dropdown dropdown-bottom dropdown-end group-hover:visible">
             <label tabIndex={0} className=""><BiCodeCurly className='text-xl' /></label>
             <ul tabIndex={0} className="dropdown-content -[1] menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
@@ -96,7 +96,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
             </ul>
           </div>
           <HiOutlineEmojiHappy onClick={() => setShowEmoji(true)} className='invisible text-xl cursor-pointer group-hover:visible' />
-          <div className='absolute ' ref={ref}>
+          <div className='absolute z-20 w-full ml-20 overflow-visible -left-[300px] ' ref={ref}>
             {showEmoji &&
               <EmojiPicker
                 onEmojiClick={(emojiData: EmojiClickData, event: MouseEvent) => {
@@ -108,7 +108,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
                   setShowEmoji(false)
                 }}
                 autoFocusSearch={false}
-                height="100%" width="100%"
+                // height="100%" width="100%"
                 emojiStyle={EmojiStyle.APPLE}
 
               />}

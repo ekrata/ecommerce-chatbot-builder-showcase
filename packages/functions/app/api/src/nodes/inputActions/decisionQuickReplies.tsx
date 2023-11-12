@@ -38,22 +38,22 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const quickRepliesData = JSON.parse(data ?? '{}') as DecisionQuickRepliesData
         console.log(quickRepliesData)
         console.log('typeof', typeof quickRepliesData)
+        console.log(data)
         const initiateDate = Date.now() - 10000
 
-
-        await appDb.transaction.write(({ messages }) => [
-          messages.upsert({
+        await Promise.all([
+          await appDb?.entities?.messages.upsert({
             messageId: uuidv4(),
             conversationId,
             orgId,
             operatorId: operatorId ?? '',
             customerId: customerId ?? '',
             sender: 'bot',
-            content: quickRepliesData.message,
+            content: '',
             createdAt: initiateDate,
             sentAt: initiateDate,
-          }).commit(),
-          messages.upsert({
+          }).go(),
+          await appDb?.entities?.messages.upsert({
             messageId: uuidv4(),
             conversationId,
             orgId,
@@ -68,9 +68,8 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             botStateContext: JSON.stringify({
               ...botStateContext,
             } as BotStateContext)
-          }).commit()
-        ]).go({})
-
+          }).go()
+        ])
         return {
           statusCode: 200,
           body: '',

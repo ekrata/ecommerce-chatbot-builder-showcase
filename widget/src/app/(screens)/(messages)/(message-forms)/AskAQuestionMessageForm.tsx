@@ -144,7 +144,7 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
   }, [updateMessageMut.isSuccess])
 
   return (
-    <form className='flex flex-col justify-end w-2/3 select-none form' onSubmit={handleSubmit(onSubmit)} ref={ref}>
+    <form className='flex flex-col justify-end w-2/3 py-2 select-none form' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       <div className="w-full max-w-xs form-control">
         {/* <label className="label">
           <span className="label-text">{tForm('validationTypeLabel')}</span>
@@ -152,7 +152,7 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
       </div>
       <div className='flex flex-row select-none place-items-center gap-x-2'>
         {/* {updateMessageMut.isLoading && <Cg className='text-xl text-gray-400 animate-spin' />} */}
-        <input autoComplete='off' disabled={updateMessageMut?.isSuccess || !!message?.content || updateMessageMut.isLoading} placeholder={formPlaceholder ?? tWidget(placeholder)} className={`w-full select-none bg-gray-200 rounded-xl text-xs input input-sm input-bordered focus:outline-0 ${watchContent?.length && !(errors?.content?.message as string) && 'input-success'} ${watchContent?.length && (errors?.content?.message as string) && 'input-error'}`} {...register('content')} />
+        <input autoComplete='off' disabled={updateMessageMut?.isSuccess || !!message?.content || updateMessageMut.isLoading} placeholder={formPlaceholder ?? tWidget(placeholder)} className={`w-full select-none bg-gray-200 rounded-xl text-xs input input-sm  focus:outline-0 ${watchContent?.length && !(errors?.content?.message as string) && 'input-success'} ${watchContent?.length && (errors?.content?.message as string) && 'input-error'}`} {...register('content')} />
         <button
           className={`w-4 h-4 text-md border-0 rounded-m place-items-center`}
           data-testid="msg-send"
