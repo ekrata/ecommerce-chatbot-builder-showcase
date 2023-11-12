@@ -149,6 +149,14 @@ export const Conversation = new Entity({
       type: 'boolean',
       default: false,
     },
+    // order numbers associated with this conversation
+    orderNumbers: {
+      type: 'list',
+      items: {
+        type: 'string',
+      },
+      default: [],
+    },
     preventCustomerReplies: {
       type: 'boolean',
       default: false,
@@ -157,6 +165,7 @@ export const Conversation = new Entity({
       type: 'number',
       default: undefined,
     },
+
     createdAt: {
       type: 'number',
       default: Date.now(),

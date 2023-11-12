@@ -174,10 +174,6 @@ export const DecisionCardMessagesActionForm: React.FC<Props> = ({ node }) => {
 
   return (
     <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
-      {/* {actionNode(Action.DecisionQuickReplies)} */}
-      {/* {tNodes(`Action.DecisionQuickReplies`)} */}
-      {/* {node?.id} */}
-      {/* <textarea className='w-full h-20 p-2 mx-4 bg-gray-200 resize-none gap-y-1 textarea' {...register("message")} /> */}
       <div className='flex flex-col justify-center p-2 border-[1px] border-black rounded-md shadow-lg'>
         <div className='relative w-full bg-gray-200/10 group' >
           {image && <BsX onClick={() => {

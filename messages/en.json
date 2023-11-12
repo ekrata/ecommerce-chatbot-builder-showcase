@@ -281,6 +281,8 @@
       "phone": "phone",
       "email": "email",
       "countryCode": "country code",
+      "orderNumber": "order number",
+      "address": "address",
       "city": "city",
       "projectDomain": "project domain",
       "projectName": "project name"

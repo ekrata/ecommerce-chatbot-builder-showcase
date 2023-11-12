@@ -79,6 +79,10 @@ export const Customer = new Entity({
     projectDomain: {
       type: 'string',
     },
+    address: {
+      type: 'string',
+      default: '',
+    },
     projectName: {
       type: 'string',
     },
@@ -89,12 +93,6 @@ export const Customer = new Entity({
       type: 'boolean',
       default: false,
       required: true,
-    },
-    orderNumber: {
-      type: 'list',
-      items: {
-        type: 'string',
-      },
     },
     ip: {
       type: 'string',

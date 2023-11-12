@@ -34,17 +34,19 @@ export const handleMessageResponse = async (
       case 'Name':
         fieldToUpdate = { name: message?.content };
       case 'Order Number':
-        await appDb?.entities?.customers
+        await appDb?.entities?.conversations
           .update({
-            customerId: customerId ?? conversation?.customerId,
+            conversationId: conversation?.conversationId,
             orgId: orgId,
           })
-          .append({ orderNumber: [message?.content ?? ''] })
+          .append({ orderNumbers: [message?.content ?? ''] })
           .go();
       case 'None':
         fieldToUpdate = {};
       case 'Phone Number':
         fieldToUpdate = { phone: message?.content };
+      case 'Address':
+        fieldToUpdate = { address: message?.content };
       case 'URL':
         fieldToUpdate = { projectDomain: message?.content };
     }

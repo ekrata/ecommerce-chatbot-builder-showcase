@@ -157,36 +157,13 @@ export const Message = new Entity({
       type: 'map',
       properties: {},
     },
+    // links to s3 ${orgId}/${conversationId}/${messageId}/attachments/${fileName}.${fileExt}
     attachments: {
       type: 'list',
       items: {
         type: 'string',
-        properties: {
-          type: {
-            type: attachmentType,
-            default: '',
-          },
-          payload: {
-            type: 'map',
-            properties: {
-              url: {
-                type: 'string',
-                default: '',
-              },
-              title: {
-                type: 'string',
-                default: '',
-              },
-              product: {
-                elements: {
-                  type: 'list',
-                  default: [{}],
-                },
-              },
-            },
-          },
-        },
       },
+      default: [],
     },
     referralProductId: {
       type: 'string',

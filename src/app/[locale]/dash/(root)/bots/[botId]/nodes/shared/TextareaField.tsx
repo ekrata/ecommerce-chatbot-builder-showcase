@@ -90,6 +90,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
               <li><a onClick={() => addContactField(tOperator('phone'))}>{tOperator('phone')}</a></li>
               <li><a onClick={() => addContactField(tOperator('email'))}>{tOperator('email')}</a></li>
               <li><a onClick={() => addContactField(tOperator('countryCode'))}>{tOperator('countryCode')}</a></li>
+              <li><a onClick={() => addContactField(tOperator('orderNumber'))}>{tOperator('orderNumber')}</a></li>
               <li><a onClick={() => addContactField(tOperator('city'))}>{tOperator('city')}</a></li>
               <li><a onClick={() => addContactField(tOperator('projectDomain'))}>{tOperator('projectDomain')}</a></li>
               <li><a onClick={() => addContactField(tOperator('projectName'))}>{tOperator('projectName')}</a></li>

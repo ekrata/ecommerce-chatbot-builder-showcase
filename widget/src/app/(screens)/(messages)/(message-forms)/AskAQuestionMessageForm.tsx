@@ -7,9 +7,9 @@ import { useParams } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiSend } from 'react-icons/bi';
-import { BsPlus } from 'react-icons/bs';
+import { BsPlus, BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
-import { FcCheckmark } from 'react-icons/fc';
+import { FcCheckmark, FcPicture } from 'react-icons/fc';
 import {
   Edge, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge, useEdges
 } from 'reactflow';
@@ -49,8 +49,6 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
     }).email()?.min(1)
   })
 
-
-
   const nameSchema = z.object({
     content: z.string(
       { required_error: errorMessage }
@@ -70,6 +68,10 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
     content: z.number({ required_error: errorMessage })
   })
 
+  const filesSchema = z.object({
+    attachments: z?.custom<FileList>()?.optional()
+  })
+
   const urlSchema = z.object({
     content: z.string({ required_error: errorMessage }).url()
   })
@@ -82,6 +84,7 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
   const params = useParams();
   const botId = params?.botId as string
   const ref = useRef(null)
+  const [attachments, setAttachments] = useState<string[]>([])
   useEffect(() => {
     if (typeof message?.messageFormData === 'string') {
       if (validationType === 'Email') {
@@ -99,6 +102,9 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
       } else if (validationType === 'URL') {
         setSchema(urlSchema)
         setPlaceholder('urlInputPlaceholder')
+      } else if (validationType === 'File') {
+        setSchema(filesSchema)
+        setPlaceholder('filesSchema')
       }
     }
   }, [validationType])
@@ -130,7 +136,12 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
 
   useEffect(() => {
     setValue('content', message?.content)
-    // setError('quickReplies', node?.data?.errors?.quickReplies)
+    setValue('attachments', message?.attachments)
+    if (message?.attachments) {
+      console.log(message?.attachments)
+      setAttachments(message?.attachments ?? []);
+      // message?.attachments?.map((attachment) => URL?.createObjectURL(attachment)
+    }
   }, [message])
 
   const onSubmit: SubmitHandler<z.infer<typeof schema>> = async (values) => {
@@ -143,6 +154,13 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
     }
   }, [updateMessageMut.isSuccess])
 
+  const onFileInputChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const files = e?.currentTarget?.files;
+    for (let i = 0; i < (files?.length ?? 0); i++) {
+      setAttachments([...attachments, URL?.createObjectURL(files?.item(i) as Blob)])
+    }
+  }
+
   return (
     <form className='flex flex-col justify-end w-2/3 py-2 select-none form' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       <div className="w-full max-w-xs form-control">
@@ -150,25 +168,41 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
           <span className="label-text">{tForm('validationTypeLabel')}</span>
         </label> */}
       </div>
-      <div className='flex flex-row select-none place-items-center gap-x-2'>
-        {/* {updateMessageMut.isLoading && <Cg className='text-xl text-gray-400 animate-spin' />} */}
-        <input autoComplete='off' disabled={updateMessageMut?.isSuccess || !!message?.content || updateMessageMut.isLoading} placeholder={formPlaceholder ?? tWidget(placeholder)} className={`w-full select-none bg-gray-200 rounded-xl text-xs input input-sm  focus:outline-0 ${watchContent?.length && !(errors?.content?.message as string) && 'input-success'} ${watchContent?.length && (errors?.content?.message as string) && 'input-error'}`} {...register('content')} />
-        <button
-          className={`w-4 h-4 text-md border-0 rounded-m place-items-center`}
-          data-testid="msg-send"
-          type="submit"
-          disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess}
-        >
-          {updateMessageMut.isSuccess ? <FcCheckmark className='text-lg' /> :
-            (updateMessageMut.isLoading ?
-              <CgSpinner className="text-lg text-black animate-spin" />
-              : <BiSend className="text-lg" />)
-            /* {configuration.data && <DynamicBackground configuration={configuration.data} />} */
-          }
-        </button>
-
-      </div>
-      {errors?.content && <p className='justify-end text-xs text-end text-error'>{!!watchContent?.length && errors?.content?.message as string}</p>}
+      {validationType === 'File' ?
+        (<div className='relative w-full bg-gray-200/10 group'>
+          {attachments.map((attachmentSrc, i) => (
+            <>
+              <BsX onClick={() => {
+                setAttachments(attachments.splice(i, 1))
+              }} className='absolute top-0 right-0 z-10 invisible text-2xl hover:cursor-pointer group-hover:visible'></BsX>
+              <img src={attachmentSrc} className='h-20 aspect-square'></img>
+            </>
+          ))}
+          <div className='flex flex-row'>
+            <input type="file" accept=".jpg, .jpeg, .png, .pdf, .docx, .gif" className="w-full max-w-xs h-200 file-input file-input-sm input-ghost"  {...register('attachments')} name={'attachments'} onChange={onFileInputChange} />
+            <FcPicture className='text-2xl' />
+          </div>
+          {errors?.attachments && <p className='justify-start text-xs text-error'>{errors?.attachments?.message}</p>}
+        </div>)
+        :
+        <div className='flex flex-row select-none place-items-center gap-x-2'>
+          <input autoComplete='off' disabled={updateMessageMut?.isSuccess || !!message?.content || updateMessageMut.isLoading} placeholder={formPlaceholder ?? tWidget(placeholder)} className={`w-full select-none bg-gray-200 rounded-xl text-xs input input-sm  focus:outline-0 ${watchContent?.length && !(errors?.content?.message as string) && 'input-success'} ${watchContent?.length && (errors?.content?.message as string) && 'input-error'}`} {...register('content')} />
+          <button
+            className={`w-4 h-4 text-md border-0 rounded-m place-items-center`}
+            data-testid="msg-send"
+            type="submit"
+            disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess}
+          >
+            {updateMessageMut.isSuccess ? <FcCheckmark className='text-lg' /> :
+              (updateMessageMut.isLoading ?
+                <CgSpinner className="text-lg text-black animate-spin" />
+                : <BiSend className="text-lg" />)
+              /* {configuration.data && <DynamicBackground configuration={configuration.data} />} */
+            }
+          </button>
+          {errors?.content && <p className='justify-end text-xs text-end text-error'>{!!watchContent?.length && errors?.content?.message as string}</p>}
+        </div>
+      }
     </form >
   )
 }
