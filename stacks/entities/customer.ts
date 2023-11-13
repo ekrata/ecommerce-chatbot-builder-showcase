@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { rating } from './conversation';
 
-export const contactProperties = [
+export enum ContactPropertiesEnum {
   'name',
   'firstName',
   'phone',
@@ -11,10 +11,13 @@ export const contactProperties = [
   'countryCode',
   'city',
   'averageUnassignedWaitTime',
-  'averageSolveWaitTime',
-  'projectDomain',
-  'projectName',
-  'projectDomain',
+  'averageOpenWaitTime',
+  'orgDomain',
+  'orgName',
+}
+
+export const contactProperties = [
+  ...Object.keys(ContactPropertiesEnum),
 ] as const;
 
 export const contactSelector = [

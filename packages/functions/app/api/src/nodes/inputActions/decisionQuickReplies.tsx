@@ -16,6 +16,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 import { BotStateContext } from '../botStateContext';
+import { formatMessage } from '../formatMessage';
 
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent) => {
@@ -40,7 +41,11 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         console.log('typeof', typeof quickRepliesData)
         console.log(data)
         const initiateDate = Date.now() - 10000
-
+        const message = await formatMessage(
+          quickRepliesData?.message ?? '',
+          botStateContext,
+          appDb,
+        );
         await Promise.all([
           await appDb?.entities?.messages.upsert({
             messageId: uuidv4(),
@@ -49,7 +54,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             operatorId: operatorId ?? '',
             customerId: customerId ?? '',
             sender: 'bot',
-            content: '',
+            content: message,
             createdAt: initiateDate,
             sentAt: initiateDate,
           }).go(),

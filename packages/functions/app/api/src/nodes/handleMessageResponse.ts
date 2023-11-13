@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { botNodeEvent } from '@/entities/bot';
+import { ContactPropertiesEnum } from '@/entities/customer';
 import { Message, NodeFormData } from '@/entities/message';
 import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
 import { DecisionButtonsData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionButtons';
@@ -11,6 +12,7 @@ import { DecisionQuickRepliesData } from '@/src/app/[locale]/dash/(root)/bots/[b
 
 import { getAppDb } from '../db';
 import { BotStateContext } from './botStateContext';
+import { formatMessage } from './formatMessage';
 
 export const handleMessageResponse = async (
   message: EntityItem<typeof Message>,
@@ -72,7 +74,11 @@ export const handleMessageResponse = async (
           operatorId: operatorId ?? '',
           customerId: customerId ?? '',
           sender: 'bot',
-          content: 'Transfering you to an operator...',
+          content: await formatMessage(
+            'Transfering you to an operator...',
+            botStateContext,
+            appDb,
+          ),
           createdAt: initiateDate,
           sentAt: initiateDate,
         })
@@ -85,8 +91,11 @@ export const handleMessageResponse = async (
           operatorId: operatorId ?? '',
           customerId: customerId ?? '',
           sender: 'bot',
-          content:
-            'The average wait time is {time}. We will be with you as soon as possible.',
+          content: await formatMessage(
+            `The average wait time is {${ContactPropertiesEnum.averageUnassignedWaitTime}}. We will be with you as soon as possible.`,
+            botStateContext,
+            appDb,
+          ),
           createdAt: initiateDate + 10000,
           sentAt: initiateDate + 10000,
           botStateContext: JSON.stringify({

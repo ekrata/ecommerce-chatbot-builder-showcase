@@ -125,6 +125,9 @@ export const Message = new Entity({
     content: {
       type: 'string',
       default: '',
+      set: (val?: string) => {
+        return val;
+      },
     },
     contentHtml: {
       type: 'string',

@@ -11,6 +11,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 import { BotStateContext } from '../botStateContext';
+import { formatMessage } from '../formatMessage';
 
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent) => {
@@ -35,44 +36,43 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const initiateAt = Date.now() - 10000;
 
-        await appDb.transaction
-          .write(({ messages }) => [
-            messages
-              .upsert({
-                messageId: uuidv4(),
-                conversationId,
-                orgId,
-                operatorId: operatorId ?? '',
-                customerId: customerId ?? '',
-                sender: 'bot',
-                content: askAQuestionData?.message,
-                createdAt: initiateAt,
-                sentAt: initiateAt,
-              })
-              .commit(),
-            messages
-              .upsert({
-                messageId: uuidv4(),
-                conversationId,
-                orgId,
-                operatorId: operatorId ?? '',
-                customerId: customerId ?? '',
-                sender: 'bot',
-                content: '',
-                messageFormType: botNodeEvent.AskAQuestion,
-                messageFormData: data,
-                createdAt: initiateAt + 10000,
-                sentAt: initiateAt + 10000,
-                // don't need to modify
-                // increment currentNode/nextNode
-                botStateContext: JSON.stringify({
-                  ...botStateContext,
-                  // currentNode: nextNode,
-                  // nextNode: {},
-                } as BotStateContext),
-              })
-              .commit(),
-          ])
+        const questionMessage = await formatMessage(
+          askAQuestionData?.message ?? '',
+          botStateContext,
+          appDb,
+        );
+
+        await appDb.entities.messages
+          ?.upsert({
+            messageId: uuidv4(),
+            conversationId,
+            orgId,
+            operatorId: operatorId ?? '',
+            customerId: customerId ?? '',
+            sender: 'bot',
+            content: questionMessage,
+            createdAt: initiateAt,
+            sentAt: initiateAt,
+          })
+          .go();
+
+        await appDb.entities?.messages
+          .upsert({
+            messageId: uuidv4(),
+            conversationId,
+            orgId,
+            operatorId: operatorId ?? '',
+            customerId: customerId ?? '',
+            sender: 'bot',
+            content: '',
+            messageFormType: botNodeEvent.AskAQuestion,
+            messageFormData: data,
+            createdAt: initiateAt + 10000,
+            sentAt: initiateAt + 10000,
+            botStateContext: JSON.stringify({
+              ...botStateContext,
+            } as BotStateContext),
+          })
           .go({});
         return {
           statusCode: 200,

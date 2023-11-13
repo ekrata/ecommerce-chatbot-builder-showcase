@@ -15,6 +15,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 import { BotStateContext } from '../botStateContext';
+import { formatMessage } from '../formatMessage';
 import { publishToNextNodes } from '../publishToNextNodes';
 
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
@@ -37,6 +38,12 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const data = JSON.parse(currentNode?.data ?? '{}') as CouponData;
         console.log('couponCode', data);
 
+        const message = await formatMessage(
+          `${data?.message} ${data?.couponCode}`,
+          botStateContext,
+          appDb,
+        );
+
         const res = await appDb.entities.messages
           .upsert({
             // messageId based on idempotent interactionId
@@ -46,8 +53,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             operatorId: operatorId ?? '',
             customerId: customerId ?? '',
             sender: 'bot',
-            content: `${data?.message} ${data?.couponCode}`,
-
+            content: message,
             createdAt: Date.now() - 1000,
             sentAt: Date.now() - 1000,
           })

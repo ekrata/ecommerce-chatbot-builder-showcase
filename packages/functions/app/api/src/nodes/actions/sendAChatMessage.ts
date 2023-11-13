@@ -12,6 +12,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 import { BotStateContext } from '../botStateContext';
+import { formatMessage } from '../formatMessage';
 import { publishToNextNodes } from '../publishToNextNodes';
 
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
@@ -37,6 +38,11 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const newMessages = await Promise.all(
           (data as unknown as SendAChatMessageData)?.messages.map(
             async (message) => {
+              const formattedMessage = await formatMessage(
+                message,
+                botStateContext,
+                appDb,
+              );
               const res = await appDb.entities.messages
                 .upsert({
                   // messageId based on idempotent interactionId
@@ -46,7 +52,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
                   operatorId: operatorId ?? '',
                   customerId: customerId ?? '',
                   sender: 'bot',
-                  content: message,
+                  content: formattedMessage,
                   createdAt: Date.now() - 1000,
                   sentAt: Date.now() - 1000,
                   // don't need to modify
