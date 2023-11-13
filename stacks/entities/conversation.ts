@@ -157,6 +157,28 @@ export const Conversation = new Entity({
       },
       default: [],
     },
+    // timestamp when assigned to operator
+    timeAtOpen: {
+      type: 'number',
+      watch: ['status'],
+      set: (timeAtOpen, { status }) => {
+        if (status === 'open' && !timeAtOpen) {
+          return Date.now();
+        }
+        return timeAtOpen;
+      },
+    },
+    // timestamp when resolved
+    timeAtResolved: {
+      type: 'number',
+      watch: ['status'],
+      set: (timeAtResolved, { status }) => {
+        if (status === 'solved' && !timeAtResolved) {
+          return Date.now();
+        }
+        return timeAtResolved;
+      },
+    },
     preventCustomerReplies: {
       type: 'boolean',
       default: false,
@@ -165,7 +187,6 @@ export const Conversation = new Entity({
       type: 'number',
       default: undefined,
     },
-
     createdAt: {
       type: 'number',
       default: Date.now(),

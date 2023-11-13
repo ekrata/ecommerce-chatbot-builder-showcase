@@ -182,7 +182,7 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
             <input type="file" accept=".jpg, .jpeg, .png, .pdf, .docx, .gif" className="w-full max-w-xs h-200 file-input file-input-sm input-ghost"  {...register('attachments')} name={'attachments'} onChange={onFileInputChange} />
             <FcPicture className='text-2xl' />
           </div>
-          {errors?.attachments && <p className='justify-start text-xs text-error'>{errors?.attachments?.message}</p>}
+          {errors?.attachments && <p className='justify-start text-xs text-error'>{errors?.attachments?.message?.toString()}</p>}
         </div>)
         :
         <div className='flex flex-row select-none place-items-center gap-x-2'>

@@ -1,4 +1,4 @@
-import { StackContext, use } from 'sst/constructs';
+import { Cron, StackContext, use } from 'sst/constructs';
 import { baseStack } from 'stacks/baseStack';
 
 export function conversationsStack({ stack }: StackContext) {
@@ -19,7 +19,14 @@ export function conversationsStack({ stack }: StackContext) {
       'packages/functions/app/api/src/conversations/create.handler',
     'PUT /orgs/{orgId}/conversations/{conversationId}':
       'packages/functions/app/api/src/conversations/put.handler',
+    'PUT orgs/conversations/updateAverageWaitTime':
+      'packages/functions/app/api/src/conversations/updateAverageWaitTime.handler',
     'PATCH /orgs/{orgId}/conversations/{conversationId}':
       'packages/functions/app/api/src/conversations/update.handler',
+  });
+
+  new Cron(stack, 'orgs-conversations-updaateAverageWaitTimeChron', {
+    schedule: 'rate(1 day)',
+    job: 'packages/functions/app/api/src/conversations/updateAverageWaitTime.handler',
   });
 }

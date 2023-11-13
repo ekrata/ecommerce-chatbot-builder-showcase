@@ -47,6 +47,34 @@ export const Org = new Entity({
       required: true,
       default: 1,
     },
+    averageUnassignedWaitTime: {
+      type: 'list',
+      items: {
+        type: 'map',
+        properties: {
+          startDayTime: {
+            type: 'number',
+          },
+          averageWaitTime: {
+            type: 'number',
+          },
+        },
+      },
+    },
+    averageOpenWaitTime: {
+      type: 'list',
+      items: {
+        type: 'map',
+        properties: {
+          startDayTime: {
+            type: 'number',
+          },
+          averageWaitTime: {
+            type: 'number',
+          },
+        },
+      },
+    },
     planChatbotConversations: {
       type: 'number',
       required: true,

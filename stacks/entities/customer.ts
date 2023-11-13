@@ -10,6 +10,8 @@ export const contactProperties = [
   'email',
   'countryCode',
   'city',
+  'averageUnassignedWaitTime',
+  'averageSolveWaitTime',
   'projectDomain',
   'projectName',
   'projectDomain',
