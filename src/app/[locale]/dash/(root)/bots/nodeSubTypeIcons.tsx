@@ -1,28 +1,28 @@
 import { ReactNode } from 'react';
 import { BiMailSend, BiSolidContact, BiSolidCoupon, BiSolidTagX, BiTimer } from 'react-icons/bi';
 import {
-  BsCalendarDay, BsCalendarEvent, BsCardChecklist, BsChat, BsChatLeft, BsChatSquareTextFill,
-  BsChatText, BsFillBuildingFill, BsFillCartCheckFill, BsFillSendFill, BsFolderSymlink,
-  BsPersonCheckFill, BsQuestion
+    BsCalendarDay, BsCalendarEvent, BsCardChecklist, BsChat, BsChatLeft, BsChatSquareTextFill,
+    BsChatText, BsFillBuildingFill, BsFillCartCheckFill, BsFillSendFill, BsFolderSymlink,
+    BsPersonCheckFill, BsPersonFillUp, BsQuestion
 } from 'react-icons/bs';
 import { CgBrowser, CgScrollV } from 'react-icons/cg';
 import {
-  FaArrowRight, FaLanguage, FaProductHunt, FaRemoveFormat, FaReply, FaShippingFast, FaWpforms
+    FaArrowRight, FaLanguage, FaProductHunt, FaRemoveFormat, FaReply, FaShippingFast, FaWpforms
 } from 'react-icons/fa';
 import { GiChoice, GiPerspectiveDiceSixFacesRandom, GiReturnArrow } from 'react-icons/gi';
 import { GrContactInfo, GrInstagram, GrReturn, GrSystem } from 'react-icons/gr';
 import { IoMdAnalytics } from 'react-icons/io';
 import {
-  MdMarkChatRead, MdMarkChatUnread, MdNotStarted, MdOutlineFiberNew, MdOutlineMobileFriendly,
-  MdOutlinePageview
+    MdMarkChatRead, MdMarkChatUnread, MdNotStarted, MdOutlineFiberNew, MdOutlineMobileFriendly,
+    MdOutlinePageview
 } from 'react-icons/md';
 import {
-  RiChatDeleteLine, RiChatForwardLine, RiChatOffLine, RiHomeOfficeFill, RiMailDownloadFill,
-  RiMailStarFill, RiRobot2Fill, RiSettings5Line
+    RiChatDeleteLine, RiChatForwardLine, RiChatOffLine, RiHomeOfficeFill, RiMailDownloadFill,
+    RiMailStarFill, RiRobot2Fill, RiSettings5Line
 } from 'react-icons/ri';
 import { SiAbbrobotstudio } from 'react-icons/si';
 import {
-  TbInputCheck, TbInputX, TbMouseOff, TbReorder, TbRobotOff, TbWindowMaximize
+    TbInputCheck, TbInputX, TbMouseOff, TbReorder, TbRobotOff, TbWindowMaximize
 } from 'react-icons/tb';
 
 import { nodeSubType } from '@/entities/bot';
@@ -36,7 +36,7 @@ export const nodeSubTypeIcons: Record<SubNodeType, ReactNode> = {
   'Cart Value': <BsFillCartCheckFill />,
   'Chat status': <BsChatText />,
   'Chat with bot ended': <TbRobotOff />,
-  'Check Order Status': <TbReorder />,
+  'Transfer to operator': <BsPersonFillUp />,
   'Coupon code': <BiSolidCoupon />,
   'Current URL': <BsFolderSymlink />,
   'Day': <BsCalendarDay />,
@@ -62,7 +62,6 @@ export const nodeSubTypeIcons: Record<SubNodeType, ReactNode> = {
   "Operator doesn't take the conversation": <BsChatLeft />,
   "Operator marks conversation as solved": <MdMarkChatRead />,
   "Operator starts the chatbot": <MdMarkChatUnread />,
-  "Product Availability": <FaProductHunt />,
   "Randomize": <GiPerspectiveDiceSixFacesRandom />,
   "Reassign to a department": <BsFillBuildingFill />,
   'Remove a tag': <BiSolidTagX />,
@@ -72,7 +71,6 @@ export const nodeSubTypeIcons: Record<SubNodeType, ReactNode> = {
   "Send an email": <BiMailSend />,
   'Send an event to google analytics': <IoMdAnalytics />,
   'Set contact property': <GrContactInfo />,
-  'Shipping Zones': <FaShippingFast />,
   'Subscribe for mailing': <RiMailDownloadFill />,
   "The visitor hasn't contacted you for some time": <RiChatOffLine />,
   'Visitor clicks on the chat icon': <BsChat />,

@@ -32,7 +32,7 @@ export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQuery
       >
         <DashSocketProvider>
           <div className='dark:bg-gray-900' >{children}</div>
-          <ToastContainer position="top-center"
+          <ToastContainer position="top-center" className={'z-[200]'}
             autoClose={5000}
             hideProgressBar={false}
             newestOnTop={false}

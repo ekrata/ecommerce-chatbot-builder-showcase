@@ -4,7 +4,7 @@ import { EntityItem } from 'electrodb';
 import { a } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiSend } from 'react-icons/bi';
 import { BsPlus, BsX } from 'react-icons/bs';
@@ -64,6 +64,12 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
 
   })
 
+  const messageSchema = z.object({
+    content: z.string(
+      { required_error: errorMessage }
+    )?.min(1)
+  })
+
   const numberSchema = z.object({
     content: z.number({ required_error: errorMessage })
   })
@@ -102,6 +108,9 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
       } else if (validationType === 'URL') {
         setSchema(urlSchema)
         setPlaceholder('urlInputPlaceholder')
+      } else if (validationType === 'Message') {
+        setSchema(messageSchema)
+        setPlaceholder('')
       } else if (validationType === 'File') {
         setSchema(filesSchema)
         setPlaceholder('filesSchema')
@@ -161,6 +170,68 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
     }
   }
 
+  let messageForm: ReactNode
+
+  switch (validationType) {
+    case 'File':
+      messageForm = (<div className='relative w-full bg-gray-200/10 group'>
+        {attachments.map((attachmentSrc, i) => (
+          <>
+            <BsX onClick={() => {
+              setAttachments(attachments.splice(i, 1))
+            }} className='absolute top-0 right-0 z-10 invisible text-2xl hover:cursor-pointer group-hover:visible'></BsX>
+            <img src={attachmentSrc} className='h-20 aspect-square'></img>
+          </>
+        ))}
+        <div className='flex flex-row'>
+          <input type="file" accept=".jpg, .jpeg, .png, .pdf, .docx, .gif" className="w-full max-w-xs h-200 file-input file-input-sm input-ghost"  {...register('attachments')} name={'attachments'} onChange={onFileInputChange} />
+          <FcPicture className='text-2xl' />
+        </div>
+        {errors?.attachments && <p className='justify-start text-xs text-error'>{errors?.attachments?.message?.toString()}</p>}
+      </div>)
+    case 'Message':
+      messageForm = (<div className='flex flex-row select-none place-items-center gap-x-2'>
+        <textarea autoComplete='off' disabled={updateMessageMut?.isSuccess || !!message?.content || updateMessageMut.isLoading} placeholder={formPlaceholder ?? tWidget(placeholder)} className={`w-full select-none bg-gray-200 rounded-xl text-xs resize-none textarea textarea-sm  focus:outline-0 ${watchContent?.length && !(errors?.content?.message as string) && 'input-success'} ${watchContent?.length && (errors?.content?.message as string) && 'input-error'}`} {...register('content')} />
+        <button
+          className={`w-4 h-4 text-md border-0 rounded-m place-items-center`}
+          data-testid="msg-send"
+          type="submit"
+          disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess}
+        >
+          {updateMessageMut.isSuccess ? <FcCheckmark className='text-lg' /> :
+            (updateMessageMut.isLoading ?
+              <CgSpinner className="text-lg text-black animate-spin" />
+              : <BiSend className="text-lg" />)
+            /* {configuration.data && <DynamicBackground configuration={configuration.data} />} */
+          }
+        </button>
+        {errors?.content && <p className='justify-end text-xs text-end text-error'>{!!watchContent?.length && errors?.content?.message as string}</p>}
+      </div>)
+
+    default:
+      messageForm = (<div className='flex flex-row select-none place-items-center gap-x-2'>
+        <input autoComplete='off' disabled={updateMessageMut?.isSuccess || !!message?.content || updateMessageMut.isLoading} placeholder={formPlaceholder ?? tWidget(placeholder)} className={`w-full select-none bg-gray-200 rounded-xl text-xs input input-sm  focus:outline-0 ${watchContent?.length && !(errors?.content?.message as string) && 'input-success'} ${watchContent?.length && (errors?.content?.message as string) && 'input-error'}`} {...register('content')} />
+        <button
+          className={`w-4 h-4 text-md border-0 rounded-m place-items-center`}
+          data-testid="msg-send"
+          type="submit"
+          disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess}
+        >
+          {updateMessageMut.isSuccess ? <FcCheckmark className='text-lg' /> :
+            (updateMessageMut.isLoading ?
+              <CgSpinner className="text-lg text-black animate-spin" />
+              : <BiSend className="text-lg" />)
+            /* {configuration.data && <DynamicBackground configuration={configuration.data} />} */
+          }
+        </button>
+        {errors?.content && <p className='justify-end text-xs text-end text-error'>{!!watchContent?.length && errors?.content?.message as string}</p>}
+      </div>)
+  }
+
+
+
+
+
   return (
     <form className='flex flex-col justify-end w-2/3 py-2 select-none form' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       <div className="w-full max-w-xs form-control">
@@ -168,40 +239,7 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
           <span className="label-text">{tForm('validationTypeLabel')}</span>
         </label> */}
       </div>
-      {validationType === 'File' ?
-        (<div className='relative w-full bg-gray-200/10 group'>
-          {attachments.map((attachmentSrc, i) => (
-            <>
-              <BsX onClick={() => {
-                setAttachments(attachments.splice(i, 1))
-              }} className='absolute top-0 right-0 z-10 invisible text-2xl hover:cursor-pointer group-hover:visible'></BsX>
-              <img src={attachmentSrc} className='h-20 aspect-square'></img>
-            </>
-          ))}
-          <div className='flex flex-row'>
-            <input type="file" accept=".jpg, .jpeg, .png, .pdf, .docx, .gif" className="w-full max-w-xs h-200 file-input file-input-sm input-ghost"  {...register('attachments')} name={'attachments'} onChange={onFileInputChange} />
-            <FcPicture className='text-2xl' />
-          </div>
-          {errors?.attachments && <p className='justify-start text-xs text-error'>{errors?.attachments?.message?.toString()}</p>}
-        </div>)
-        :
-        <div className='flex flex-row select-none place-items-center gap-x-2'>
-          <input autoComplete='off' disabled={updateMessageMut?.isSuccess || !!message?.content || updateMessageMut.isLoading} placeholder={formPlaceholder ?? tWidget(placeholder)} className={`w-full select-none bg-gray-200 rounded-xl text-xs input input-sm  focus:outline-0 ${watchContent?.length && !(errors?.content?.message as string) && 'input-success'} ${watchContent?.length && (errors?.content?.message as string) && 'input-error'}`} {...register('content')} />
-          <button
-            className={`w-4 h-4 text-md border-0 rounded-m place-items-center`}
-            data-testid="msg-send"
-            type="submit"
-            disabled={!!message?.content || updateMessageMut.isLoading || updateMessageMut.isSuccess}
-          >
-            {updateMessageMut.isSuccess ? <FcCheckmark className='text-lg' /> :
-              (updateMessageMut.isLoading ?
-                <CgSpinner className="text-lg text-black animate-spin" />
-                : <BiSend className="text-lg" />)
-              /* {configuration.data && <DynamicBackground configuration={configuration.data} />} */
-            }
-          </button>
-          {errors?.content && <p className='justify-end text-xs text-end text-error'>{!!watchContent?.length && errors?.content?.message as string}</p>}
-        </div>
+      
       }
     </form >
   )

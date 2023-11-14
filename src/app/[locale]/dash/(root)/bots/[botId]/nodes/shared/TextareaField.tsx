@@ -3,8 +3,8 @@ import { snakeCase } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { FormEventHandler, useEffect, useId, useReducer, useRef, useState } from 'react';
 import {
-  Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
-  UseFormRegister, UseFormSetValue, useWatch
+    Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
+    UseFormRegister, UseFormSetValue, useWatch
 } from 'react-hook-form';
 import { BiCodeCurly } from 'react-icons/bi';
 import { BsX } from 'react-icons/bs';
@@ -67,11 +67,12 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
   useOnClickOutside(ref, handleClickOutside)
 
   const addContactField = (field: string) => {
-    const contactField = `{${field}}`
+    console.log(field)
+    const contactField = `${data} {${field}}`
     if (index != null && fieldArray) {
       fieldArray.update(index, contactField as FieldArray<T, never>)
     } else {
-      setValue('message' as Path<T>, contactField as PathValue<T, Path<T>>)
+      setValue(fieldName as Path<T>, contactField as PathValue<T, Path<T>>)
     }
   }
 

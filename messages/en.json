@@ -406,6 +406,10 @@
           "defaultReply2": "No, thanks.",
           "New message": "New message"
         },
+        "TransferToOperator": {
+          "transferMessageLabel": "Transfer Message",
+          "waitTimeMessageLabel": "Wait time & Contact Methods"
+        },
         "DecisionButtons": {
           "messagePlaceholder": "Type in the message that will be sent to the user.",
           "buttonNamePlaceholder": "Type in a button name",
@@ -511,7 +515,8 @@
         },
         "Action": {
           "SendAChatMessage": "Send a chat message",
-          "AskAQuestion": "Ask a question",
+          "AskAQuestion": "Ask a Question",
+          "TransferToOperator": "Transfer to Operator",
           "DecisionQuickReplies": "Decision (Quick Replies)",
           "DecisionButtons": "Decision (Buttons)",
           "OpenWebsiteInModal": "Open website in modal",
@@ -536,7 +541,7 @@
           "CheckOrderStatus": "Check Order Status",
           "ProductAvailability": "Product Availability",
           "ShippingZones": "Shipping Zones",
-          "CouponCode": "Coupon code"
+          "ShopifyCouponCode": "Coupon code"
         }
       }
     },

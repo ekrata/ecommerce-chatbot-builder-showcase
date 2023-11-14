@@ -3,21 +3,23 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { FieldErrors } from 'react-hook-form';
 import { BiSolidError } from 'react-icons/bi';
+import { Node } from 'reactflow';
 
 import { useNodeContext } from '../BotEditor';
 
 interface Props {
+  node?: Node,
   nodeElement: JSX.Element,
   nodeName: string,
   hasErrors?: boolean,
   hasTooManyConnections?: boolean
 }
 
-export const NodeWrapper: React.FC<Props> = ({ nodeElement, nodeName, hasErrors, hasTooManyConnections }) => {
+export const NodeWrapper: React.FC<Props> = ({ node, nodeElement, nodeName, hasErrors, hasTooManyConnections }) => {
   const tDash = useTranslations('dash')
   const tBots = useTranslations('dash.bots')
   const [_, __, ____, selectedNode] = useNodeContext()
-  const [selected, setSelected] = useState<boolean>();
+  const [selected, setSelected] = useState<boolean>(node?.selected ?? false);
 
   useEffect(() => {
     setSelected(false)
@@ -35,8 +37,8 @@ export const NodeWrapper: React.FC<Props> = ({ nodeElement, nodeName, hasErrors,
           <span className="mt-1 shadow-2xl indicator-item indicator-end badge badge-warning"><BiSolidError /></span>
         </div>
       }
-      <div className='flex flex-col justify-center w-20 text-center group gap-y-1 place-items-center' onClick={() => setSelected(!selected)}>
-        <div className={`justify-center mt-2 focus:animate-jump`}>
+      <div className='flex flex-col justify-center w-20 text-center group gap-y-1 place-items-center'>
+        <div className={`justify-center mt-2 focus:animate-jump ${selected && 'shadow-blue-500 shadow-2xl'}`}>
           {nodeElement}
         </div>
         <p className="p-1 mt-2 text-xs font-light text-center bg-white shadow-md select-none -z-10 group-hover:animate-duration-500 group-hover:animate-fade-up group-hover:invisible">

@@ -3,64 +3,67 @@ import 'reactflow/dist/style.css';
 import { EntityItem } from 'electrodb';
 import { ComponentType, ReactElement } from 'react';
 import {
-  ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
-  Node, NodeTypes
+    ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
+    Node, NodeTypes
 } from 'reactflow';
 
 import {
-  Actions, BotNodeEvent, BotNodeType, Conditions, nodeSubType, TriggerValues
+    Actions, BotNodeEvent, BotNodeType, Conditions, nodeSubType, TriggerValues
 } from '@/entities/bot';
 import { Message, NodeFormData } from '@/entities/message';
 import {
-  Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+    Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-  AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode, AskAQuestionData
+    AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode, AskAQuestionData
 } from './nodes/actions/AskAQuestion';
 import {
-  CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode, CouponData
+    CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode, CouponData
 } from './nodes/actions/CouponCode';
 import {
-  DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode,
-  DecisionButtonsData
+    DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode,
+    DecisionButtonsData
 } from './nodes/actions/DecisionButtons';
 import {
-  DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode,
-  DecisionCardMessagesData
+    DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode,
+    DecisionCardMessagesData
 } from './nodes/actions/DecisionCardMessages';
 import {
-  DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode,
-  DecisionQuickRepliesData
+    DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode,
+    DecisionQuickRepliesData
 } from './nodes/actions/DecisionQuickReplies';
 import {
-  SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
+    SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
 } from './nodes/actions/SendAChatMessage';
 import {
-  SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
+    SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
 } from './nodes/actions/SubscribeForMailing';
 import {
-  BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
-  BasedOnContactPropertyConditionNode
+    TransferToOperatorActionEdge, TransferToOperatorActionForm, TransferToOperatorActionNode
+} from './nodes/actions/TransferToOperator';
+import {
+    BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
+    BasedOnContactPropertyConditionNode
 } from './nodes/conditions/BasedOnContactProperty';
 import { ChatStatusConditionEdge } from './nodes/conditions/ChatStatus';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
-  FirstVisitOnSiteData, FirstVisitOnSiteTriggerEdge, FirstVisitOnSiteTriggerForm,
-  FirstVisitOnSiteTriggerNode
+    FirstVisitOnSiteData, FirstVisitOnSiteTriggerEdge, FirstVisitOnSiteTriggerForm,
+    FirstVisitOnSiteTriggerNode
 } from './nodes/triggers/FirstVisitOnSite';
 import {
-  VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
+    VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
 import {
-  VisitorClicksOnChatIconData, VisitorClicksOnChatIconTriggerEdge,
-  VisitorClicksOnChatIconTriggerForm, VisitorClicksOnChatIconTriggerNode
+    VisitorClicksOnChatIconData, VisitorClicksOnChatIconTriggerEdge,
+    VisitorClicksOnChatIconTriggerForm, VisitorClicksOnChatIconTriggerNode
 } from './nodes/triggers/VisitorClicksOnChatIcon';
 import {
-  VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
+    VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
 } from './nodes/triggers/VisitorSays';
 import { onDragStart } from './onDragStart';
 
@@ -90,7 +93,6 @@ export const nodeTypes: NodeTypes = {
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
   [`${Condition.BasedOnContactProperty}` as string]: BasedOnContactPropertyConditionNode,
-  // [`${Action.SendAChatMessage}`]: SendAChatMessageActionNode,
   [`${Action.DecisionQuickReplies}` as string]: DecisionQuickRepliesActionNode,
   [`${Action.DecisionCardMessages}` as string]: DecisionCardMessagesActionNode,
   [`${Action.DecisionButtons}` as string]: DecisionButtonsActionNode,
@@ -98,6 +100,7 @@ export const nodeTypes: NodeTypes = {
   [`${Action.CouponCode}` as string]: CouponCodeActionNode,
   [`${Action.SubscribeForMailing}` as string]: SubscribeForMailingNode,
   [`${Action.SendAChatMessage}` as string]: SendAChatMessageActionNode,
+  [`${Action.TransferToOperator}` as string]: TransferToOperatorActionNode,
 } as const;
 
 export const getNodeFormDataType = (nodeType: BotNodeEvent) => {
@@ -143,6 +146,7 @@ export const edgeTypes: EdgeTypes = {
   [`${Action.SendAChatMessage}`]: SendAChatMessageActionEdge,
   [`${Action.SubscribeForMailing}`]: SubscribeForMailingEdge,
   [`${Action.AskAQuestion}`]: AskAQuestionActionEdge,
+  [`${Action.TransferToOperator}`]: TransferToOperatorActionEdge,
   [`${Condition.BasedOnContactProperty}`]: BasedOnContactPropertyConditionEdge,
   [`${Condition.ChatStatus}`]: ChatStatusConditionEdge,
   [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: VisitorClicksOnChatIconTriggerEdge,
@@ -172,6 +176,8 @@ export const NodeForm: React.FC<Props> = ({ node }) => {
       return <CouponCodeActionForm node={node} />
     case Action.SubscribeForMailing:
       return <SubscribeForMailingForm node={node} />
+    case Action.TransferToOperator:
+      return <TransferToOperatorActionForm node={node} />
     case Condition.BasedOnContactProperty:
       return <BasedOnContactPropertyConditionForm node={node} />
     case VisitorBotInteractionTrigger.VisitorClicksBotsButton:

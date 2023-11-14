@@ -60,6 +60,7 @@ export enum Action {
   OpenWebsiteInModal = 'Open website in modal',
   DecisionCardMessages = 'Decision (Card Messages)',
   SendAnEmail = 'Send an email',
+  TransferToOperator = 'Transfer to operator',
   Delay = 'Delay',
   Randomize = 'Randomize',
   SetContactProperty = 'Set contact property',

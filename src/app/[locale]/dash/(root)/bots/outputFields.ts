@@ -1,14 +1,12 @@
 import {
-  Action,
-  Condition,
-  VisitorBotInteractionTrigger,
-  VisitorPageInteractionTrigger,
+    Action, Condition, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 export const OutputFieldsKeys = {
   [`${Action.AskAQuestion}`]: 'outputs',
   [`${Action.CouponCode}`]: 'outputs',
   [`${Action.SendAChatMessage}`]: 'outputs',
+  [`${Action.TransferToOperator}`]: 'outputs',
   [`${Action.DecisionQuickReplies}`]: 'quickReplies',
   [`${Action.DecisionCardMessages}`]: 'choices',
   [`${Action.DecisionButtons}`]: 'choices',

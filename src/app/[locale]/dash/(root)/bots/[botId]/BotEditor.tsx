@@ -9,25 +9,25 @@ import { isEqual } from 'lodash';
 import { Link, useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import {
-  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
-  useState
+    createContext, Dispatch, DragEventHandler, SetStateAction, useCallback, useContext, useEffect,
+    useMemo, useRef, useState
 } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiTestTube, BiTrash, BiX } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-  addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-  ConnectionLineComponentProps, Controls, Edge, EdgeTypes, Node, OnSelectionChangeParams, Panel,
-  ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
+    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+    ConnectionLineComponentProps, Controls, Edge, EdgeTypes, Node, OnSelectionChangeParams, Panel,
+    ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
 } from 'reactflow';
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import { actions, botCategory, BotNodeType, conditions, triggers } from '@/entities/bot';
 import {
-  Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { useDeleteBotMut } from '@/src/app/[locale]/(hooks)/mutations/useDeleteBotMut';
@@ -37,7 +37,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-  actionNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
+    actionNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
 import { getNodeForm } from './getNodeForm';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
@@ -186,21 +186,12 @@ export const BotEditor: React.FC = () => {
   }, [botQuery.dataUpdatedAt]);
 
   const onDrop = useCallback(
-    (event: any) => {
-      event.preventDefault();
+    async (event: any, clonedNode?: Node): Promise<DragEventHandler<HTMLDivElement> | undefined> => {
       const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect() as any;
-      const type = event.dataTransfer.getData('application/reactflow');
-
-      // check if the dropped element is valid
-      if (typeof type === 'undefined' || !type) {
-        return;
-      }
-
       const position = reactFlowInstance?.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       }) ?? { x: 0, y: 0 }
-
       let nextNodeId = '0'
       if (nodes?.length) {
         const nodeIds = nodes?.map(({ id }) => {
@@ -208,14 +199,41 @@ export const BotEditor: React.FC = () => {
         })
         nextNodeId = ((Math.max(...nodeIds)) + 1).toString()
       }
+      if (clonedNode) {
+        console.log(clonedNode?.position)
+        const newClonedNode: Node = {
+          id: nextNodeId,
+          type: clonedNode?.type,
+          data: clonedNode?.data,
+          // at mouse pos
+          position: { x: clonedNode?.position.x - 50, y: clonedNode?.position?.y - 50 }
+        };
+        // await toast.promise(() => new Promise(() => { success: `Copied a ${clonedNode?.type}` }), { position: 'bottom-right' })
+        setNodes([...nodes, newClonedNode]);
+        return
+
+      }
+      event.preventDefault();
+      const type = event.dataTransfer.getData('application/reactflow');
+
+      // check if the dropped element is valid
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+
+
+
+
+
+
       const newNode: Node = {
         id: nextNodeId,
         type,
         data: {},
         position,
       };
-
       setNodes([...nodes, newNode]);
+
       // setSelectedFormNode([newNode as Node])
     },
     [reactFlowInstance, nodes, edges]
@@ -241,7 +259,7 @@ export const BotEditor: React.FC = () => {
     }
   }, [nodes])
 
-  const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => {
+  const onConnect = useCallback((params: Connection | Edge, clonedEdge?: Edge) => setEdges((eds) => {
     const nodeTarget = nodes?.find((node) => node.id === params?.target)
 
     // Outputs is not bound to a field count, so we allow the user to draw infinite lines by programmatically creating new outputs
@@ -338,6 +356,38 @@ export const BotEditor: React.FC = () => {
 
   // debouncedUpdateBotHandler()
 
+  const [keyboardState, setKeyboardState] = useState('');
+  const [copiedNodes, setCopiedNodes] = useState<Node[]>([]);
+  const [copiedEdges, setCopiedEdges] = useState<Edge[]>([]);
+
+  const handleKeyDown = useCallback((event: any) => {
+    event.preventDefault();
+    const code = event.which || event.keyCode;
+
+    let charCode = String.fromCharCode(code).toLowerCase();
+    if ((event.ctrlKey || event.metaKey) && charCode === 's') {
+      setKeyboardState('CTRL+S');
+      // alert('CTRL+S Pressed');
+    } else if ((event.ctrlKey || event.metaKey) && charCode === 'c') {
+      setKeyboardState('CTRL+C');
+      console.log(nodes)
+      setCopiedNodes(nodes?.filter((node) => node?.selected));
+      setCopiedEdges(edges?.filter((edge) => edge?.selected))
+      console.log(copiedNodes)
+    } else if ((event.ctrlKey || event.metaKey) && charCode === 'v') {
+      setKeyboardState('CTRL+V');
+      copiedNodes?.map((copiedNode) => {
+        onDrop(event, copiedNode)
+      })
+      copiedNodes?.map((copiedNode) => {
+        onDrop(event, copiedNode)
+      })
+    }
+  }, [nodes, edges])
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const renderNodeForm = useCallback(() => {
     if (selectedFormNode) {
