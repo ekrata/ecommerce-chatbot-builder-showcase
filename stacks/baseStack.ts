@@ -4,25 +4,9 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { Duration } from 'aws-cdk-lib/core';
 import {
-  Api,
-  ApiRouteProps,
-  Auth,
-  Bucket,
-  Config,
-  EventBus,
-  EventBusRuleProps,
-  FunctionInlineDefinition,
-  NextjsSite,
-  Queue,
-  StackContext,
-  StaticSite,
-  Table,
-  Topic,
-  TopicFunctionSubscriberProps,
-  TopicQueueSubscriberProps,
-  use,
-  WebSocketApi,
-  WebSocketApiFunctionRouteProps,
+    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
+    NextjsSite, Queue, StackContext, StaticSite, Table, Topic, TopicFunctionSubscriberProps,
+    TopicQueueSubscriberProps, use, WebSocketApi, WebSocketApiFunctionRouteProps
 } from 'sst/constructs';
 
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
@@ -598,6 +582,31 @@ export function baseStack({ stack, app }: StackContext) {
             type: FilterOrPolicy.filter(
               SubscriptionFilter.stringFilter({
                 allowlist: [botNodeEvent.SendAChatMessage],
+              }),
+            ),
+          },
+        },
+      },
+    },
+    [botNodeEvent.TransferToOperator]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_action_TransferToOperator_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            timeout: defaultFunctionTimeout,
+            bind: [wsApi, api, REGION, table, botNodeTopic],
+            handler:
+              'packages/functions/app/api/src/nodes/actions/transferToOperator.handler',
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.TransferToOperator],
               }),
             ),
           },
