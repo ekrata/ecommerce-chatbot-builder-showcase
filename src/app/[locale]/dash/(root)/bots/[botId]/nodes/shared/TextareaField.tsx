@@ -12,6 +12,8 @@ import { HiOutlineEmojiHappy } from 'react-icons/hi';
 import { Node, useEdges } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 
+import { ContactPropertiesEnum } from '@/entities/customer';
+
 import { useEdgeContext } from '../../BotEditor';
 
 interface Props<T extends FieldValues> {
@@ -65,7 +67,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
   useOnClickOutside(ref, handleClickOutside)
 
   const addContactField = (field: string) => {
-    const contactField = `${data}{${snakeCase(field)}}`
+    const contactField = `{${field}}`
     if (index != null && fieldArray) {
       fieldArray.update(index, contactField as FieldArray<T, never>)
     } else {
@@ -84,16 +86,18 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
         <span className="relative flex flex-row justify-end label-text-alt">
           <div className="invisible text-xl cursor-pointer dropdown dropdown-bottom dropdown-end group-hover:visible">
             <label tabIndex={0} className=""><BiCodeCurly className='text-xl' /></label>
-            <ul tabIndex={0} className="dropdown-content -[1] menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-              {/* <li onClick={() => update(index, `${fieldValue}{name}`)}><a>{tOperator('name')}</a></li> */}
-              <li><a onClick={() => addContactField(tOperator('firstName'))}>{tOperator('firstName')}</a></li>
-              <li><a onClick={() => addContactField(tOperator('phone'))}>{tOperator('phone')}</a></li>
-              <li><a onClick={() => addContactField(tOperator('email'))}>{tOperator('email')}</a></li>
-              <li><a onClick={() => addContactField(tOperator('countryCode'))}>{tOperator('countryCode')}</a></li>
-              <li><a onClick={() => addContactField(tOperator('orderNumber'))}>{tOperator('orderNumber')}</a></li>
-              <li><a onClick={() => addContactField(tOperator('city'))}>{tOperator('city')}</a></li>
-              <li><a onClick={() => addContactField(tOperator('projectDomain'))}>{tOperator('projectDomain')}</a></li>
-              <li><a onClick={() => addContactField(tOperator('projectName'))}>{tOperator('projectName')}</a></li>
+            <ul tabIndex={0} className="dropdown-content -[1] menu shadow bg-base-100 rounded-box w-52 text-xs">
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.firstName)}>{tOperator(ContactPropertiesEnum.firstName)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.phone)}>{tOperator(ContactPropertiesEnum.phone)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.email)}>{tOperator(ContactPropertiesEnum.email)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.countryCode)}>{tOperator(ContactPropertiesEnum.countryCode)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.orderNumber)}>{tOperator(ContactPropertiesEnum.orderNumber)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.address)}>{tOperator(ContactPropertiesEnum.address)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.city)}>{tOperator(ContactPropertiesEnum.city)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.orgName)}>{tOperator(ContactPropertiesEnum.orgName)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.orgDomain)}>{tOperator(ContactPropertiesEnum.orgDomain)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.averageOpenWaitTime)}>{tOperator(ContactPropertiesEnum.averageOpenWaitTime)}</a></li>
+              <li><a onClick={() => addContactField(ContactPropertiesEnum.averageUnassignedWaitTime)}>{tOperator(ContactPropertiesEnum.averageUnassignedWaitTime)}</a></li>
             </ul>
           </div>
           <HiOutlineEmojiHappy onClick={() => setShowEmoji(true)} className='invisible text-xl cursor-pointer group-hover:visible' />

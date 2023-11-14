@@ -1,0 +1,309 @@
+{
+  "startWhenAnotherBotRunning": false,
+  "edges": [
+    {
+      "id": "reactflow__edge-1-010",
+      "source": "1",
+      "target": "0",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Visitor clicks on the chat icon",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-4-16",
+      "source": "4",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "6",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Item / Order Issue 😢\"}"
+    },
+    {
+      "id": "reactflow__edge-5-112",
+      "source": "5",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "12",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Delivery & Shipping 🚚\"}"
+    },
+    {
+      "id": "reactflow__edge-6-119",
+      "source": "6",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "19",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Returns & Refunds ↩️\"}"
+    },
+    {
+      "id": "reactflow__edge-7-125",
+      "source": "7",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "25",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Products 🛍️\"}"
+    },
+    {
+      "id": "reactflow__edge-8-131",
+      "source": "8",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "31",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Discounts & Payments 💰\"}"
+    },
+    {
+      "id": "reactflow__edge-9-138",
+      "source": "9",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "38",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Technical 👩‍💻\"}"
+    },
+    {
+      "id": "reactflow__edge-10-145",
+      "source": "10",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "45",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Something else 🤔\"}"
+    },
+    {
+      "id": "reactflow__edge-11-75",
+      "source": "11",
+      "target": "7",
+      "sourceHandle": "",
+      "targetHandle": "5",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I have a faulty item 🛍️\"}"
+    },
+    {
+      "id": "reactflow__edge-12-1110",
+      "source": "12",
+      "target": "11",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-13-122",
+      "source": "13",
+      "target": "12",
+      "sourceHandle": "",
+      "targetHandle": "2",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Refund 💰\"}"
+    },
+    {
+      "id": "reactflow__edge-14-125",
+      "source": "14",
+      "target": "12",
+      "sourceHandle": "",
+      "targetHandle": "5",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Replacement 📦\"}"
+    },
+    {
+      "id": "reactflow__edge-15-127",
+      "source": "15",
+      "target": "12",
+      "sourceHandle": "",
+      "targetHandle": "7",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"E-Gift Card \"}"
+    },
+    {
+      "id": "reactflow__edge-16-1410",
+      "source": "16",
+      "target": "14",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-17-1610",
+      "source": "17",
+      "target": "16",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "0",
+      "type": "Visitor clicks on the chat icon",
+      "position": {
+        "x": 279.03280507120746,
+        "y": 107.99478481742534
+      },
+      "data": "{\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "1",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": 70.85486612521848,
+        "y": 342.79438937132403
+      },
+      "data": "{\"message\":\"Hi 👋 I am a bot 🤖. I will try to help you as best I can, but I will connect you with a human team member if required. What can I help you with today?\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"Item / Order Issue 😢\",\"Delivery & Shipping 🚚\",\"Returns & Refunds ↩️\",\"Products 🛍️\",\"Discounts & Payments 💰\",\"Technical 👩‍💻\",\"Something else 🤔\"]}"
+    },
+    {
+      "id": "4",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -208.52399774160858,
+        "y": 689.9738206678418
+      },
+      "data": "{}"
+    },
+    {
+      "id": "5",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": 242.8100356684753,
+        "y": 694.1197133252318
+      },
+      "data": "{}"
+    },
+    {
+      "id": "6",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -54.33006876598453,
+        "y": 779.6380848453933
+      },
+      "data": "{}"
+    },
+    {
+      "id": "8",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -389.1562352262783,
+        "y": 612.9497335772818
+      },
+      "data": "{}"
+    },
+    {
+      "id": "9",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": 125.1938341525204,
+        "y": 802.8391168279734
+      },
+      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"quickReplies\":[\"Yes, please!\",\"No, thanks.\"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "10",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -588.2751810456048,
+        "y": 594.8500416586235
+      },
+      "data": "{}"
+    },
+    {
+      "id": "7",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": 1385.8888557596906,
+        "y": 602.4348210343239
+      },
+      "data": "{\"message\":\"We'd love to answer any questions you have about our products. Please  let us know by selecting one of the options below.\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"I have a faulty item 🛍️\",\"I need a recommendation🫣\",\"Is my favourite item restocking? 🥰\",\"I have a size question ❓\",\"It's something else 🙋‍♀️\",\"Take me back 🔙\"]}"
+    },
+    {
+      "id": "3",
+      "type": "Ask a question",
+      "position": {
+        "x": 965.4274654526615,
+        "y": 243.33156116899633
+      },
+      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
+    },
+    {
+      "id": "11",
+      "type": "Ask a question",
+      "position": {
+        "x": 1186.7621837589397,
+        "y": 860.2361466069657
+      },
+      "data": "{\"message\":\"Sorry about that! We'll need your order number to continue. You can find it on your confirmation email or invoice.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Order Number\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "12",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": 1166.9394373804137,
+        "y": 1261.6772158819929
+      },
+      "data": "{\"message\":\"Alright. I'll pass your query to our humans 👩‍💻. In the meantime, please select your preferred option from below.\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"Refund 💰\",\"Replacement 📦\",\"E-Gift Card \"]}"
+    },
+    {
+      "id": "13",
+      "type": "Ask a question",
+      "position": {
+        "x": 1085.5811040130081,
+        "y": 1509.6184772184417
+      },
+      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "14",
+      "type": "Ask a question",
+      "position": {
+        "x": 1298.1108854789147,
+        "y": 1680.9941829810302
+      },
+      "data": "{\"message\":\"Sure. If we can arrange a replacement, what address would you like it delivered to?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "15",
+      "type": "Ask a question",
+      "position": {
+        "x": 908.5059058768106,
+        "y": 1546.4687203171884
+      },
+      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "16",
+      "type": "Ask a question",
+      "position": {
+        "x": 1285.1391865346263,
+        "y": 1961.1843960097603
+      },
+      "data": "{\"message\":\"All we need are some photos. Please send us a photo of the product, and a second photo of the product with the fault clearly displayed. Thanks 📸\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"File\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "17",
+      "type": "Send a chat message",
+      "position": {
+        "x": 1055.806837357043,
+        "y": 2192.5895904135928
+      },
+      "data": "{\"messages\":[\"Great! I'll pass this onto a human! \",\"Our average reply time is   You'll receive their responses at {email} and here. Thank you for your patience. 😌\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    }
+  ],
+  "createdAt": 1699772434154,
+  "name": "General Purpose",
+  "botId": "afd36fd5-4e09-451d-ba87-f8c4beef6a2f",
+  "active": false,
+  "startWhileOperatorsAreOffline": false,
+  "updatedAt": 1699921697571,
+  "category": "General",
+  "orgId": "b9ac14c1-6501-4a9e-8565-8e5cd59699a5",
+  "startWhileAnOperatorIsHandlingAnotherConversation": false,
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}

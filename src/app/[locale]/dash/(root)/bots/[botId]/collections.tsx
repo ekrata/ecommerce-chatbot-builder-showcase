@@ -106,7 +106,7 @@ export const getNodeFormDataType = (nodeType: BotNodeEvent) => {
   }
   return {
     // [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: VisitorClicksBotsButtonTriggerNode,
-    [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesData,
+    [`${Action.DecisionQuickReplies}`]: DecisionQuickRepliesActionNode,
     [`${VisitorBotInteractionTrigger.VisitorSays}` as string]: VisitorSaysTriggerNode,
     [`${VisitorPageInteractionTrigger.FirstVisitOnSite}` as string]: FirstVisitOnSiteTriggerNode,
     // [VisitorBotInteractionTrigger.InstagramStoryReply]: <VisitorClicksBotsButtonTriggerNode />,
@@ -148,7 +148,7 @@ export const edgeTypes: EdgeTypes = {
   [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: VisitorClicksOnChatIconTriggerEdge,
   [`${VisitorBotInteractionTrigger.VisitorSays}`]: VisitorSaysTriggerEdge,
   [`${VisitorPageInteractionTrigger.FirstVisitOnSite}`]: FirstVisitOnSiteTriggerEdge,
-}
+} as const
 
 interface Props {
   node: Node

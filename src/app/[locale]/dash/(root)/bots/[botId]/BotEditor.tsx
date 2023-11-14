@@ -9,7 +9,8 @@ import { isEqual } from 'lodash';
 import { Link, useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import {
-  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useRef, useState
+  createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useMemo, useRef,
+  useState
 } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiTestTube, BiTrash, BiX } from 'react-icons/bi';
@@ -17,7 +18,7 @@ import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
   addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-  ConnectionLineComponentProps, Controls, Edge, Node, OnSelectionChangeParams, Panel,
+  ConnectionLineComponentProps, Controls, Edge, EdgeTypes, Node, OnSelectionChangeParams, Panel,
   ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
 } from 'reactflow';
 import { useDebounce } from 'use-debounce';
@@ -69,6 +70,20 @@ type FormValues = BotEditorData
 
 export const BotEditor: React.FC = () => {
   const ref = useRef(null)
+  useEffect(() => {
+    console.log(nodeTypes)
+  }, [nodeTypes])
+
+  const nodeTypesMemo = useMemo(
+    () => nodeTypes,
+    [],
+  );
+
+  const edgeTypesMemo = useMemo(
+    () => edgeTypes,
+    [],
+  );
+
 
   const router = useRouter()
   const params = useParams()
@@ -155,17 +170,18 @@ export const BotEditor: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log(botQuery.dataUpdatedAt)
     const restoreFlow = async () => {
       if (botQuery?.data) {
         // const { x = 0, y = 0, zoom = 1 } = botQuery.data?.viewport;
-        setNodes(botQuery.data?.nodes as Node[]);
-        setEdges(botQuery.data?.edges as Edge[]);
-        setValue('name', botQuery?.data?.name ?? '',)
-        setValue('active', botQuery?.data?.active ?? false,)
+        console.log(botQuery?.data?.nodes)
+        setNodes(botQuery?.data?.nodes as Node[] ?? []);
+        setEdges(botQuery?.data?.edges as Edge[] ?? []);
+        setValue('name', botQuery?.data?.name ?? '')
+        setValue('active', botQuery?.data?.active ?? false)
         setValue('category', botQuery?.data?.category ?? 'General')
       }
     };
-
     restoreFlow();
   }, [botQuery.dataUpdatedAt]);
 
@@ -205,27 +221,25 @@ export const BotEditor: React.FC = () => {
     [reactFlowInstance, nodes, edges]
   );
 
-  const onSelectionChange = (params: OnSelectionChangeParams): void => {
-    // find existing selected node
+  const onSelectionChange = useCallback((params: OnSelectionChangeParams): void => {
     const newNode = params?.nodes?.[0]
     if (newNode) {
-      const oldNode = selectedFormNode
       setSelectedFormNode(newNode)
-      setNodes(nodes.map((node) => {
-        if (node.id === newNode?.id) {
-          return { ...node, selected: true }
-        } else {
-          return { ...node, selected: false }
-        }
-      }))
+      // setNodes([...nodes.map((node) => {
+      //   if (node.id === newNode?.id) {
+      //     return { ...node, selected: true }
+      //   } else {
+      //     return { ...node, selected: false }
+      //   }
+      // })])
 
     } else {
       setSelectedFormNode(null)
-      setNodes(nodes.map((node) => ({
-        ...node, selected: false
-      })))
+      // setNodes([...nodes.map((node) => ({
+      //   ...node, selected: false
+      // }))])
     }
-  }
+  }, [nodes])
 
   const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => {
     const nodeTarget = nodes?.find((node) => node.id === params?.target)
@@ -365,10 +379,10 @@ export const BotEditor: React.FC = () => {
                 nodesConnectable
                 nodesDraggable
                 onInit={setReactFlowInstance}
-                nodeTypes={nodeTypes}
+                nodeTypes={nodeTypesMemo}
+                edgeTypes={edgeTypesMemo}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
-                edgeTypes={edgeTypes}
                 onPaneClick={onPaneClick}
                 attributionPosition='bottom-left'
                 connectionLineComponent={onConnectionLine}

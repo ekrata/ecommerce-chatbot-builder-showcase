@@ -4,16 +4,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { rating } from './conversation';
 
 export enum ContactPropertiesEnum {
-  'name',
-  'firstName',
-  'phone',
-  'email',
-  'countryCode',
-  'city',
-  'averageUnassignedWaitTime',
-  'averageOpenWaitTime',
-  'orgDomain',
-  'orgName',
+  name = 'name',
+  firstName = 'firstName',
+  phone = 'phone',
+  email = 'email',
+  address = 'address',
+  countryCode = 'countryCode',
+  orderNumber = 'orderNumber',
+  city = 'city',
+  averageUnassignedWaitTime = 'averageUnassignedWaitTime',
+  averageOpenWaitTime = 'averageOpenWaitTime',
+  orgDomain = 'orgDomain',
+  orgName = 'orgName',
 }
 
 export const contactProperties = [

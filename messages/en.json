@@ -276,16 +276,18 @@
     "Visit our Knowledge base": "Visit our Knowledge base",
     "The help screen, articles and our in-built CMS is only available to + users": "The help screen, articles and our in-built CMS is only available to + users",
     "operator": {
-      "name": "name",
-      "firstName": "first name",
-      "phone": "phone",
-      "email": "email",
-      "countryCode": "country code",
-      "orderNumber": "order number",
-      "address": "address",
-      "city": "city",
-      "projectDomain": "project domain",
-      "projectName": "project name"
+      "name": "Name",
+      "firstName": "First name",
+      "phone": "Phone",
+      "email": "Email",
+      "countryCode": "Country code",
+      "city": "City",
+      "address": "Address",
+      "orderNumber": "Order number",
+      "orgDomain": "Organisation domain",
+      "orgName": "Organisation name",
+      "averageUnassignedWaitTime": "Average time elapsed until a conversation is assigned",
+      "averageOpenWaitTime": "Average time it takes to resolve a conversation"
     },
     "bots": {
       "categories": {
