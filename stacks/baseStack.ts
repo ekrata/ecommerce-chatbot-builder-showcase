@@ -2,6 +2,7 @@ import * as codeartifact from 'aws-cdk-lib/aws-codeartifact';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
+import { IQueue, QueueProps } from 'aws-cdk-lib/aws-sqs';
 import { Duration } from 'aws-cdk-lib/core';
 import {
     Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
@@ -364,10 +365,16 @@ export function baseStack({ stack, app }: StackContext) {
   //   sourceArn: processInteractionRule?.ruleArn,
   // });
 
-  const defaultQueueConfig = {
+  const defaultQueueConfig:
+    | {
+        id?: string | undefined;
+        queue?: IQueue | QueueProps | undefined;
+      }
+    | undefined = {
     queue: {
       // queueName: "my-queue",
       visibilityTimeout: Duration.seconds(defaultFunctionTimeout * 60),
+      receiveMessageWaitTime: Duration.seconds(10),
     },
   };
 
@@ -381,11 +388,11 @@ export function baseStack({ stack, app }: StackContext) {
       >
     | undefined = wsApi.routes.reduce((acc, route) => {
     const wsFunc = wsApi.getFunction(route);
-    console.log(wsFunc?.id);
     if (wsFunc && !wsFunc.id.includes('$')) {
+      console.log(wsFunc?.id);
       return {
         ...acc,
-        [`${wsFunc.id}-sub`]: {
+        [`${wsFunc.id}`]: {
           type: 'queue',
           queue: new Queue(stack, `${route}_queue`, {
             cdk: defaultQueueConfig,

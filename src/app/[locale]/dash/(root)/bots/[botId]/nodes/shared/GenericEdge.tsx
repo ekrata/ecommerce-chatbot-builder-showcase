@@ -55,7 +55,7 @@ export const GenericEdge: FC<GenericEdgeProps> = (
         <div
           style={{
             position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 0.2 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 4}px)`,
+            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY - 1 * parseInt(edge?.targetHandle?.replace(/\D/g, '') ?? '1', 10) + 8}px)`,
             fontSize: 12,
             padding: 10,
             borderRadius: 5,

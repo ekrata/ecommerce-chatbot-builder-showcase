@@ -25,7 +25,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       event?.Records?.forEach(async (record: any) => {
         // eslint-disable-next-line no-use-before-define
         // CREATE
-        // console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
+        console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
         if (record.eventName === 'INSERT') {
           if (
             record.dynamodb.NewImage.context?.S === 'interaction' ||
@@ -50,6 +50,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             record.dynamodb.NewImage.context?.S === 'message' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'message'
           ) {
+            console.log('publishing');
             await sns
               .publish({
                 TopicArn: Topic.DdbStreamTopic.topicArn,

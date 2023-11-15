@@ -100,8 +100,8 @@ export const TransferToOperatorActionForm: React.FC<Props> = ({ node }) => {
     formState: { errors }, } = useForm<FormValues>({
       resolver: zodResolver(schema),
       defaultValues: {
-        transferMessage: "All done! I'll pass this onto a human now!",
-        waitTimeMessage: "Our average reply time is  You'll receive their responses at {email} and here. Thank you for your patience. 😌",
+        transferMessage: "I'll pass this onto a human now!",
+        waitTimeMessage: "Our average reply time is {averageUnassignedWaitTime}. You'll receive their responses at {email} and here. Thank you for your patience. 😌",
         outputs: defaultOutputs,
       },
       mode: 'onBlur',

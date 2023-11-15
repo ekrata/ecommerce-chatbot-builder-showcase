@@ -16,7 +16,7 @@ import * as z from 'zod';
 
 import { Message } from '@/entities/message';
 import {
-  DecisionQuickRepliesData
+    DecisionQuickRepliesData
 } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -112,7 +112,7 @@ export const DecisionQuickRepliesMessageForm: React.FC<Props> = ({ message, form
           <span className="label-text">{tForm('validationTypeLabel')}</span>
         </label> */}
       </div>
-      <div className='flex flex-col gap-2 '>
+      <div className='flex flex-row flex-wrap gap-2 '>
         {/* {updateMessageMut.isLoading && <Cg className='text-xl text-gray-400 animate-spin' />} */}
         {quickReplies?.map((quickReply, i) => (
           <div className='flex flex-row w-full place-items-center gap-x-1 '>

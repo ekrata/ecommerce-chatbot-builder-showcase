@@ -67,7 +67,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
   useOnClickOutside(ref, handleClickOutside)
 
   const addContactField = (field: string) => {
-    console.log(field)
+    console.log(field, fieldName)
     const contactField = `${data} {${field}}`
     if (index != null && fieldArray) {
       fieldArray.update(index, contactField as FieldArray<T, never>)

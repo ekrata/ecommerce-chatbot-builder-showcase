@@ -5,10 +5,10 @@ import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
 import { botNodeEvent, BotNodeType } from '@/entities/bot';
 import {
-  AskAQuestionData
+    AskAQuestionData
 } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
 import {
-  DecisionQuickRepliesData
+    DecisionQuickRepliesData
 } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
@@ -46,35 +46,35 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           botStateContext,
           appDb,
         );
-        await Promise.all([
-          await appDb?.entities?.messages.upsert({
-            messageId: uuidv4(),
-            conversationId,
-            orgId,
-            operatorId: operatorId ?? '',
-            customerId: customerId ?? '',
-            sender: 'bot',
-            content: message,
-            createdAt: initiateDate,
-            sentAt: initiateDate,
-          }).go(),
-          await appDb?.entities?.messages.upsert({
-            messageId: uuidv4(),
-            conversationId,
-            orgId,
-            operatorId: operatorId ?? '',
-            customerId: customerId ?? '',
-            sender: 'bot',
-            messageFormType: botNodeEvent.DecisionQuickReplies,
-            messageFormData: data,
-            content: '',
-            createdAt: initiateDate + 10000,
-            sentAt: initiateDate + 10000,
-            botStateContext: JSON.stringify({
-              ...botStateContext,
-            } as BotStateContext)
-          }).go()
-        ])
+        // await Promise.all([
+        await appDb?.entities?.messages.upsert({
+          messageId: uuidv4(),
+          conversationId,
+          orgId,
+          operatorId: operatorId ?? '',
+          customerId: customerId ?? '',
+          sender: 'bot',
+          content: message,
+          createdAt: initiateDate,
+          sentAt: initiateDate,
+        }).go()
+        await appDb?.entities?.messages.upsert({
+          messageId: uuidv4(),
+          conversationId,
+          orgId,
+          operatorId: operatorId ?? '',
+          customerId: customerId ?? '',
+          sender: 'bot',
+          messageFormType: botNodeEvent.DecisionQuickReplies,
+          messageFormData: data,
+          content: '',
+          createdAt: initiateDate + 10000,
+          sentAt: initiateDate + 10000,
+          botStateContext: JSON.stringify({
+            ...botStateContext,
+          } as BotStateContext)
+        }).go()
+        // ])
         return {
           statusCode: 200,
           body: '',

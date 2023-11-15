@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from 'src/app/(actions)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
@@ -138,16 +138,22 @@ export const CustomerChatLog: FC = ({ }) => {
       {botTyping && <div className="flex flex-col justify-start w-full px-4 animate-fade-left gap-x-2 gap-y-1" >
         <div className="flex flex-row place-items-center gap-x-2">
           <Avatar conversationItem={conversationItem} toggleIndicator={true} />
-          {/* <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 animate-pulse
-             tooltip-bottom z-10`}
+          <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
+            } tooltip-bottom z-10`}
             data-testid={`operator-message-content-typing`}
-            data-tip={<CustomerMessageTimeLabel conversationItem={conversationItem} />}
+          // data-tip={<CustomerMessageTimeLabel conversationItem={conversationItem} />}
           >
-          </p> */}
+            <div className='flex items-center justify-center h-screen space-x-2 bg-white animate-pulse'>
+              <span className='sr-only'>Loading...</span>
+              <div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+              <div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+              <div className='w-8 h-8 bg-black rounded-full animate-bounce'></div>
+            </div>
+          </p>
         </div>
       </div>
       }
-    </div>
+    </div >
 
 
   )

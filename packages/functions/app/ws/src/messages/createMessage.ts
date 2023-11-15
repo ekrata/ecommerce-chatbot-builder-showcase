@@ -21,6 +21,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
   try {
     const { Records } = event;
     for (const record of Records) {
+      console.log('createmessage', record);
       const newImage = getNewImage(record);
       const messageData = Message.parse({ Item: newImage }).data;
       if (!messageData) {

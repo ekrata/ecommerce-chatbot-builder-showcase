@@ -361,7 +361,7 @@ export const BotEditor: React.FC = () => {
   const [copiedEdges, setCopiedEdges] = useState<Edge[]>([]);
 
   const handleKeyDown = useCallback((event: any) => {
-    event.preventDefault();
+    // event.preventDefault();
     const code = event.which || event.keyCode;
 
     let charCode = String.fromCharCode(code).toLowerCase();

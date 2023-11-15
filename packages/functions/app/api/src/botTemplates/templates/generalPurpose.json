@@ -11,69 +11,6 @@
       "data": "{\"label\":\"1\"}"
     },
     {
-      "id": "reactflow__edge-4-16",
-      "source": "4",
-      "target": "1",
-      "sourceHandle": "",
-      "targetHandle": "6",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Item / Order Issue 😢\"}"
-    },
-    {
-      "id": "reactflow__edge-5-112",
-      "source": "5",
-      "target": "1",
-      "sourceHandle": "",
-      "targetHandle": "12",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Delivery & Shipping 🚚\"}"
-    },
-    {
-      "id": "reactflow__edge-6-119",
-      "source": "6",
-      "target": "1",
-      "sourceHandle": "",
-      "targetHandle": "19",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Returns & Refunds ↩️\"}"
-    },
-    {
-      "id": "reactflow__edge-7-125",
-      "source": "7",
-      "target": "1",
-      "sourceHandle": "",
-      "targetHandle": "25",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Products 🛍️\"}"
-    },
-    {
-      "id": "reactflow__edge-8-131",
-      "source": "8",
-      "target": "1",
-      "sourceHandle": "",
-      "targetHandle": "31",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Discounts & Payments 💰\"}"
-    },
-    {
-      "id": "reactflow__edge-9-138",
-      "source": "9",
-      "target": "1",
-      "sourceHandle": "",
-      "targetHandle": "38",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Technical 👩‍💻\"}"
-    },
-    {
-      "id": "reactflow__edge-10-145",
-      "source": "10",
-      "target": "1",
-      "sourceHandle": "",
-      "targetHandle": "45",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Something else 🤔\"}"
-    },
-    {
       "id": "reactflow__edge-11-75",
       "source": "11",
       "target": "7",
@@ -81,24 +18,6 @@
       "targetHandle": "5",
       "type": "Decision (Quick Replies)",
       "data": "{\"label\":\"I have a faulty item 🛍️\"}"
-    },
-    {
-      "id": "reactflow__edge-12-1110",
-      "source": "12",
-      "target": "11",
-      "sourceHandle": "",
-      "targetHandle": "10",
-      "type": "Ask a question",
-      "data": "{\"label\":\"1\"}"
-    },
-    {
-      "id": "reactflow__edge-13-122",
-      "source": "13",
-      "target": "12",
-      "sourceHandle": "",
-      "targetHandle": "2",
-      "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"Refund 💰\"}"
     },
     {
       "id": "reactflow__edge-14-125",
@@ -110,17 +29,296 @@
       "data": "{\"label\":\"Replacement 📦\"}"
     },
     {
-      "id": "reactflow__edge-15-127",
-      "source": "15",
-      "target": "12",
+      "id": "reactflow__edge-18-711",
+      "source": "18",
+      "target": "7",
       "sourceHandle": "",
-      "targetHandle": "7",
+      "targetHandle": "11",
       "type": "Decision (Quick Replies)",
-      "data": "{\"label\":\"E-Gift Card \"}"
+      "data": "{\"label\":\"I need a recommendation🫣\"}"
     },
     {
-      "id": "reactflow__edge-16-1410",
+      "id": "reactflow__edge-20-1810",
+      "source": "20",
+      "target": "18",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-21-715",
+      "source": "21",
+      "target": "7",
+      "sourceHandle": "",
+      "targetHandle": "15",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"It's something else 🙋‍♀️\"}"
+    },
+    {
+      "id": "reactflow__edge-23-151",
+      "source": "23",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "51",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Products 🛍️\"}"
+    },
+    {
+      "id": "reactflow__edge-24-239",
+      "source": "24",
+      "target": "23",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-7-249",
+      "source": "7",
+      "target": "24",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-28-157",
+      "source": "28",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "57",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Delivery & Shipping 🚚\"}"
+    },
+    {
+      "id": "reactflow__edge-29-289",
+      "source": "29",
+      "target": "28",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-30-2910",
+      "source": "30",
+      "target": "29",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-32-3010",
+      "source": "32",
+      "target": "30",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-12-331",
+      "source": "12",
+      "target": "33",
+      "sourceHandle": "",
+      "targetHandle": "1",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"There has been no update for more than three working days 😕\"}"
+    },
+    {
+      "id": "reactflow__edge-33-329",
+      "source": "33",
+      "target": "32",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"The tracking for my order has stopped updating 🔴 \"}"
+    },
+    {
+      "id": "reactflow__edge-12-3219",
+      "source": "12",
+      "target": "32",
+      "sourceHandle": "",
+      "targetHandle": "19",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"My order shows as delivered, but I haven't received it? 🤷‍♀️\"}"
+    },
+    {
+      "id": "reactflow__edge-12-3229",
+      "source": "12",
+      "target": "32",
+      "sourceHandle": "",
+      "targetHandle": "29",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I haven't received any tracking information 🫤\"}"
+    },
+    {
+      "id": "reactflow__edge-12-3239",
+      "source": "12",
+      "target": "32",
+      "sourceHandle": "",
+      "targetHandle": "39",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"My order is still in transit 🚚\"}"
+    },
+    {
+      "id": "reactflow__edge-38-3710",
+      "source": "38",
+      "target": "37",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-39-383",
+      "source": "39",
+      "target": "38",
+      "sourceHandle": "",
+      "targetHandle": "3",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"No, thanks. \"}"
+    },
+    {
+      "id": "reactflow__edge-40-392",
+      "source": "40",
+      "target": "39",
+      "sourceHandle": "",
+      "targetHandle": "2",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I have another question❓\"}"
+    },
+    {
+      "id": "reactflow__edge-1-395",
+      "source": "1",
+      "target": "39",
+      "sourceHandle": "",
+      "targetHandle": "5",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Take me back 🔙\"}"
+    },
+    {
+      "id": "reactflow__edge-39-333",
+      "source": "39",
+      "target": "33",
+      "sourceHandle": "",
+      "targetHandle": "3",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"It's been updated recently 🥳\"}"
+    },
+    {
+      "id": "reactflow__edge-39-2110",
+      "source": "39",
+      "target": "21",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-40-398",
+      "source": "40",
+      "target": "39",
+      "sourceHandle": "",
+      "targetHandle": "8",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I need to speak with a human 👩‍💻\"}"
+    },
+    {
+      "id": "reactflow__edge-16-1110",
       "source": "16",
+      "target": "11",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-12-1610",
+      "source": "12",
+      "target": "16",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-12-3248",
+      "source": "12",
+      "target": "32",
+      "sourceHandle": "",
+      "targetHandle": "48",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"My order is being sent back to {orgName} 🔙\"}"
+    },
+    {
+      "id": "reactflow__edge-16-3267",
+      "source": "16",
+      "target": "32",
+      "sourceHandle": "",
+      "targetHandle": "67",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"My order has been damaged 💔\"}"
+    },
+    {
+      "id": "reactflow__edge-41-164",
+      "source": "41",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "64",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Item / Order Issue 😢\"}"
+    },
+    {
+      "id": "reactflow__edge-42-4110",
+      "source": "42",
+      "target": "41",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-43-429",
+      "source": "43",
+      "target": "42",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-44-4310",
+      "source": "44",
+      "target": "43",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-45-448",
+      "source": "45",
+      "target": "44",
+      "sourceHandle": "",
+      "targetHandle": "8",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Can I change or cancel my order?  ❌\"}"
+    },
+    {
+      "id": "reactflow__edge-48-4010",
+      "source": "48",
+      "target": "40",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-48-1410",
+      "source": "48",
       "target": "14",
       "sourceHandle": "",
       "targetHandle": "10",
@@ -128,88 +326,511 @@
       "data": "{\"label\":\"1\"}"
     },
     {
-      "id": "reactflow__edge-17-1610",
-      "source": "17",
-      "target": "16",
+      "id": "reactflow__edge-48-127",
+      "source": "48",
+      "target": "12",
+      "sourceHandle": "",
+      "targetHandle": "7",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Refund 💰\"}"
+    },
+    {
+      "id": "reactflow__edge-48-1210",
+      "source": "48",
+      "target": "12",
       "sourceHandle": "",
       "targetHandle": "10",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"E-Gift Card \"}"
+    },
+    {
+      "id": "reactflow__edge-37-3277",
+      "source": "37",
+      "target": "32",
+      "sourceHandle": "",
+      "targetHandle": "77",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Only a few of my items are on the way 🤏\"}"
+    },
+    {
+      "id": "reactflow__edge-48-385",
+      "source": "48",
+      "target": "38",
+      "sourceHandle": "",
+      "targetHandle": "5",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Yes, please! 📦\"}"
+    },
+    {
+      "id": "reactflow__edge-48-459",
+      "source": "48",
+      "target": "45",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-16-4415",
+      "source": "16",
+      "target": "44",
+      "sourceHandle": "",
+      "targetHandle": "15",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I have a faulty item 🤕\"}"
+    },
+    {
+      "id": "reactflow__edge-52-4422",
+      "source": "52",
+      "target": "44",
+      "sourceHandle": "",
+      "targetHandle": "22",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I am missing an item 🤷‍♀️\"}"
+    },
+    {
+      "id": "reactflow__edge-54-522",
+      "source": "54",
+      "target": "52",
+      "sourceHandle": "",
+      "targetHandle": "2",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"It's on my shipping confirmation email ✅\"}"
+    },
+    {
+      "id": "reactflow__edge-12-549",
+      "source": "12",
+      "target": "54",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-55-523",
+      "source": "55",
+      "target": "52",
+      "sourceHandle": "",
+      "targetHandle": "3",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"It's not on my shipping confirmation email ❌\"}"
+    },
+    {
+      "id": "reactflow__edge-54-5510",
+      "source": "54",
+      "target": "55",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-54-4429",
+      "source": "54",
+      "target": "44",
+      "sourceHandle": "",
+      "targetHandle": "29",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I have received a wrong item or order ❌\"}"
+    },
+    {
+      "id": "reactflow__edge-56-4437",
+      "source": "56",
+      "target": "44",
+      "sourceHandle": "",
+      "targetHandle": "37",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Apply a discount to my order 🏷️\"}"
+    },
+    {
+      "id": "reactflow__edge-39-569",
+      "source": "39",
+      "target": "56",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-39-5810",
+      "source": "39",
+      "target": "58",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-60-594",
+      "source": "60",
+      "target": "59",
+      "sourceHandle": "",
+      "targetHandle": "4",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Can I return my item? 🤷‍♀️\"}"
+    },
+    {
+      "id": "reactflow__edge-12-609",
+      "source": "12",
+      "target": "60",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-58-598",
+      "source": "58",
+      "target": "59",
+      "sourceHandle": "",
+      "targetHandle": "8",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Can I exchange my item?🔀\"}"
+    },
+    {
+      "id": "reactflow__edge-61-5910",
+      "source": "61",
+      "target": "59",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I'm waiting on my refund💵\"}"
+    },
+    {
+      "id": "reactflow__edge-48-612",
+      "source": "48",
+      "target": "61",
+      "sourceHandle": "",
+      "targetHandle": "2",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"It's been longer than three days since I organised the refund 📅\"}"
+    },
+    {
+      "id": "reactflow__edge-12-615",
+      "source": "12",
+      "target": "61",
+      "sourceHandle": "",
+      "targetHandle": "5",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I want to request a refund💰\"}"
+    },
+    {
+      "id": "reactflow__edge-39-617",
+      "source": "39",
+      "target": "61",
+      "sourceHandle": "",
+      "targetHandle": "7",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I requested a refund recently \"}"
+    },
+    {
+      "id": "reactflow__edge-63-5914",
+      "source": "63",
+      "target": "59",
+      "sourceHandle": "",
+      "targetHandle": "14",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"My refund value is not correct 💰\"}"
+    },
+    {
+      "id": "reactflow__edge-64-632",
+      "source": "64",
+      "target": "63",
+      "sourceHandle": "",
+      "targetHandle": "2",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I used a discount code on my order 🏷\"}"
+    },
+    {
+      "id": "reactflow__edge-39-649",
+      "source": "39",
+      "target": "64",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-65-635",
+      "source": "65",
+      "target": "63",
+      "sourceHandle": "",
+      "targetHandle": "5",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I used a gift card on my order 💳\"}"
+    },
+    {
+      "id": "reactflow__edge-39-6510",
+      "source": "39",
+      "target": "65",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-48-637",
+      "source": "48",
+      "target": "63",
+      "sourceHandle": "",
+      "targetHandle": "7",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"None of the above 🤷‍♀️\"}"
+    },
+    {
+      "id": "reactflow__edge-21-5920",
+      "source": "21",
+      "target": "59",
+      "sourceHandle": "",
+      "targetHandle": "20",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"It's something else 🤷\"}"
+    },
+    {
+      "id": "reactflow__edge-1-5925",
+      "source": "1",
+      "target": "59",
+      "sourceHandle": "",
+      "targetHandle": "25",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Go back 🔙\"}"
+    },
+    {
+      "id": "reactflow__edge-68-170",
+      "source": "68",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "70",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Returns & Refunds ↩️\"}"
+    },
+    {
+      "id": "reactflow__edge-67-6810",
+      "source": "67",
+      "target": "68",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-69-176",
+      "source": "69",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "76",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Discounts & Payments 💰\"}"
+    },
+    {
+      "id": "reactflow__edge-70-699",
+      "source": "70",
+      "target": "69",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-72-7010",
+      "source": "72",
+      "target": "70",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-73-724",
+      "source": "73",
+      "target": "72",
+      "sourceHandle": "",
+      "targetHandle": "4",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"My payment isn't working 💳\"}"
+    },
+    {
+      "id": "reactflow__edge-40-739",
+      "source": "40",
+      "target": "73",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-74-727",
+      "source": "74",
+      "target": "72",
+      "sourceHandle": "",
+      "targetHandle": "7",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"My discount code isn't working ❌\"}"
+    },
+    {
+      "id": "reactflow__edge-39-7410",
+      "source": "39",
+      "target": "74",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-75-7211",
+      "source": "75",
+      "target": "72",
+      "sourceHandle": "",
+      "targetHandle": "11",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Apply a discount to my order 🏷️\"}"
+    },
+    {
+      "id": "reactflow__edge-39-759",
+      "source": "39",
+      "target": "75",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-1-7215",
+      "source": "1",
+      "target": "72",
+      "sourceHandle": "",
+      "targetHandle": "15",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Take me back 🔙\"}"
+    },
+    {
+      "id": "reactflow__edge-77-182",
+      "source": "77",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "82",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Technical 👩‍💻\"}"
+    },
+    {
+      "id": "reactflow__edge-78-7710",
+      "source": "78",
+      "target": "77",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-79-6710",
+      "source": "79",
+      "target": "67",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-59-799",
+      "source": "59",
+      "target": "79",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-9-7810",
+      "source": "9",
+      "target": "78",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-81-91",
+      "source": "81",
+      "target": "9",
+      "sourceHandle": "",
+      "targetHandle": "1",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Your website isn't cooperating with me 🤷‍♀️\"}"
+    },
+    {
+      "id": "reactflow__edge-48-819",
+      "source": "48",
+      "target": "81",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-82-95",
+      "source": "82",
+      "target": "9",
+      "sourceHandle": "",
+      "targetHandle": "5",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"I'm trying to pay 💳\"}"
+    },
+    {
+      "id": "reactflow__edge-48-8210",
+      "source": "48",
+      "target": "82",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Send a chat message",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-81-99",
+      "source": "81",
+      "target": "9",
+      "sourceHandle": "",
+      "targetHandle": "9",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"It's another technical issue 👩‍💻\"}"
+    },
+    {
+      "id": "reactflow__edge-1-913",
+      "source": "1",
+      "target": "9",
+      "sourceHandle": "",
+      "targetHandle": "13",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Take me back 🔙\"}"
+    },
+    {
+      "id": "reactflow__edge-85-8410",
+      "source": "85",
+      "target": "84",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Ask a question",
+      "data": "{\"label\":\"1\"}"
+    },
+    {
+      "id": "reactflow__edge-84-188",
+      "source": "84",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "88",
+      "type": "Decision (Quick Replies)",
+      "data": "{\"label\":\"Something else 🤔\"}"
+    },
+    {
+      "id": "reactflow__edge-40-859",
+      "source": "40",
+      "target": "85",
+      "sourceHandle": "",
+      "targetHandle": "9",
       "type": "Ask a question",
       "data": "{\"label\":\"1\"}"
     }
   ],
   "nodes": [
-    {
-      "id": "0",
-      "type": "Visitor clicks on the chat icon",
-      "position": {
-        "x": 279.03280507120746,
-        "y": 107.99478481742534
-      },
-      "data": "{\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
-    },
-    {
-      "id": "1",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": 70.85486612521848,
-        "y": 342.79438937132403
-      },
-      "data": "{\"message\":\"Hi 👋 I am a bot 🤖. I will try to help you as best I can, but I will connect you with a human team member if required. What can I help you with today?\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"Item / Order Issue 😢\",\"Delivery & Shipping 🚚\",\"Returns & Refunds ↩️\",\"Products 🛍️\",\"Discounts & Payments 💰\",\"Technical 👩‍💻\",\"Something else 🤔\"]}"
-    },
-    {
-      "id": "4",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": -208.52399774160858,
-        "y": 689.9738206678418
-      },
-      "data": "{}"
-    },
-    {
-      "id": "5",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": 242.8100356684753,
-        "y": 694.1197133252318
-      },
-      "data": "{}"
-    },
-    {
-      "id": "6",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": -54.33006876598453,
-        "y": 779.6380848453933
-      },
-      "data": "{}"
-    },
-    {
-      "id": "8",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": -389.1562352262783,
-        "y": 612.9497335772818
-      },
-      "data": "{}"
-    },
-    {
-      "id": "9",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": 125.1938341525204,
-        "y": 802.8391168279734
-      },
-      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"quickReplies\":[\"Yes, please!\",\"No, thanks.\"],\"transferToOperatorMessage\":false}"
-    },
-    {
-      "id": "10",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": -588.2751810456048,
-        "y": 594.8500416586235
-      },
-      "data": "{}"
-    },
     {
       "id": "7",
       "type": "Decision (Quick Replies)",
@@ -217,87 +838,501 @@
         "x": 1385.8888557596906,
         "y": 602.4348210343239
       },
-      "data": "{\"message\":\"We'd love to answer any questions you have about our products. Please  let us know by selecting one of the options below.\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"I have a faulty item 🛍️\",\"I need a recommendation🫣\",\"Is my favourite item restocking? 🥰\",\"I have a size question ❓\",\"It's something else 🙋‍♀️\",\"Take me back 🔙\"]}"
+      "data": "{\"message\":\"We'd love to answer any questions you have about our products. Please  let us know by selecting one of the options below.\",\"quickReplies\":[\"I have a faulty item 🛍️\",\"I need a recommendation🫣\",\"It's something else 🙋‍♀️\",\"Take me back 🔙\"],\"transferToOperatorMessage\":false}"
     },
     {
-      "id": "3",
+      "id": "20",
+      "type": "Transfer to operator",
+      "position": {
+        "x": 1510.6486606365095,
+        "y": 1159.871538207702
+      },
+      "data": "{\"transferMessage\":\"All done! I'll pass this onto a human now!\",\"waitTimeMessage\":\"We usually reply within {averageUnassignedWaitTime}. \\n\\nYou'll receive their responses at {email} and here. Thank you for your patience. 😌 \",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "23",
       "type": "Ask a question",
       "position": {
-        "x": 965.4274654526615,
-        "y": 243.33156116899633
+        "x": 1354.5810372028777,
+        "y": 146.47160961336533
       },
-      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
+      "data": "{\"message\":\"Cool, we just need some details before we begin. Please enter your name\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Name\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{\"formPlaceholder\":{\"message\":\"Required\",\"type\":\"invalid_type\"}}}"
+    },
+    {
+      "id": "29",
+      "type": "Ask a question",
+      "position": {
+        "x": 103.14864347815575,
+        "y": -134.76698706214998
+      },
+      "data": "{\"message\":\"And your email\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "32",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": 179.5819676274489,
+        "y": 302.328448926469
+      },
+      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"quickReplies\":[\"The tracking for my order has stopped updating 🔴 \",\"My order shows as delivered, but I haven't received it? 🤷‍♀️\",\"I haven't received any tracking information 🫤\",\"My order is still in transit 🚚\",\"My order is being sent back to {orgName} 🔙\",\"Only a few of my items are on the way 🤏\",\"My order has been damaged 💔\",\"Change my address 🏘️\",\"Custom fees 🛃\",\"Take me back 🔙\"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "18",
+      "type": "Ask a question",
+      "position": {
+        "x": 1596.1696992178372,
+        "y": 852.7716107581415
+      },
+      "data": "{\"message\":\"Sure! Send us a few details about what you're looking for, and one of our humans will offer you some recommendations.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Message\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "21",
+      "type": "Ask a question",
+      "position": {
+        "x": 948.153905233466,
+        "y": 799.751405995012
+      },
+      "data": "{\"message\":\"That's fine. Please send me some more info on what you need help with, then I can then pass you over to one of our humans to look into this. 😊\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Message\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
+    },
+    {
+      "id": "39",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -1409.7034551143227,
+        "y": 1650.7514934762767
+      },
+      "data": "{\"message\":\"Is there anything else I can help you with?\",\"quickReplies\":[\"I have another question❓\",\"Take me back 🔙\",\"I need to speak with a human 👩‍💻\"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "24",
+      "type": "Ask a question",
+      "position": {
+        "x": 1358.256133457264,
+        "y": 416.08436088751694
+      },
+      "data": "{\"message\":\"We'll also need your email\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "33",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -613.851180021406,
+        "y": 787.5085047514848
+      },
+      "data": "{\"message\":\"Sorry you haven't received your order yet! If your tracking hasn't updated for 3 working days, we’re happy to do some digging into this for you 🕵️\\n\\nRemember, couriers won't process orders during weekends, bank holidays or may have some general delays.\\n\\nHas your tracking been updated in the past three days?\",\"quickReplies\":[\"There has been no update for more than three working days 😕\",\"It's been updated recently 🥳\"],\"transferToOperatorMessage\":false}"
     },
     {
       "id": "11",
       "type": "Ask a question",
       "position": {
-        "x": 1186.7621837589397,
-        "y": 860.2361466069657
+        "x": 310.7621837589397,
+        "y": 186.2361466069657
       },
-      "data": "{\"message\":\"Sorry about that! We'll need your order number to continue. You can find it on your confirmation email or invoice.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Order Number\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+      "data": "{\"message\":\"Sorry about that! We'll need your order number to continue. You can find it on your confirmation email or invoice.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Order Number\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
     },
     {
-      "id": "12",
-      "type": "Decision (Quick Replies)",
-      "position": {
-        "x": 1166.9394373804137,
-        "y": 1261.6772158819929
-      },
-      "data": "{\"message\":\"Alright. I'll pass your query to our humans 👩‍💻. In the meantime, please select your preferred option from below.\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"Refund 💰\",\"Replacement 📦\",\"E-Gift Card \"]}"
-    },
-    {
-      "id": "13",
+      "id": "28",
       "type": "Ask a question",
       "position": {
-        "x": 1085.5811040130081,
-        "y": 1509.6184772184417
+        "x": 221.61059487555985,
+        "y": -250.1752164383765
       },
-      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+      "data": "{\"message\":\"Cool, we just need some details before we begin. Please enter your name\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "44",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -360.9135531053214,
+        "y": -480.86007113491337
+      },
+      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"Can I change or cancel my order?  ❌\",\"I have a faulty item 🤕\",\"I am missing an item 🤷‍♀️\",\"I have received a wrong item or order ❌\",\"Apply a discount to my order 🏷️\",\"My order has been flagged as fraudulent 🤔\",\"It's about something else❓\",\"Take me back \"]}"
     },
     {
       "id": "14",
       "type": "Ask a question",
       "position": {
-        "x": 1298.1108854789147,
-        "y": 1680.9941829810302
+        "x": -469.9329347855944,
+        "y": 1329.8798384289844
       },
-      "data": "{\"message\":\"Sure. If we can arrange a replacement, what address would you like it delivered to?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+      "data": "{\"message\":\"Sure. If we can arrange a replacement, what address would you like it delivered to?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Address\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
     },
     {
-      "id": "15",
+      "id": "38",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": 197.02084171519925,
+        "y": 1229.4158374436684
+      },
+      "data": "{\"message\":\"Did you want us to pass your query about the unshipped items onto one of our humans, so they can provide you with some clarify about the status of your order?\",\"quickReplies\":[\"Yes, please! 📦\",\"No, thanks. \"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "30",
       "type": "Ask a question",
       "position": {
-        "x": 908.5059058768106,
-        "y": 1546.4687203171884
+        "x": 20.05955129923447,
+        "y": 127.49582744168924
       },
-      "data": "{\"message\":\"Hi 👋 Would you like to take a closer look at our offer?\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+      "data": "{\"message\":\"We'll also need your order number.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Order Number\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "45",
+      "type": "Send a chat message",
+      "position": {
+        "x": -626.9308928288492,
+        "y": 432.27840723637496
+      },
+      "data": "{\"messages\":[\"I get it, things change! \\n\\nGood news! Depending on how long ago you placed the order, we may be able to cancel or change it. 🥳\",\"If you need to change your address: \\n\\nOnce your order is dispatched, you could always try to contact the courier directly to change your address.\\n \\nYou’ll be able to see who your courier is in your dispatch email, which will have the title ‘your order is on the way’ 😊\\n \\nIf they’re not able to deliver your order, they’ll probably return this back to us.\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "37",
+      "type": "Send a chat message",
+      "position": {
+        "x": 198.92663901006938,
+        "y": 1055.438002786052
+      },
+      "data": "{\"messages\":[\"We may be waiting for the other items to be restocked soon, and wanted to make sure you received the in-stock products as soon as possible 😍 \\n\\nWe may also be out of stock.\\n\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "52",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -1256.721358726438,
+        "y": 488.8623062738907
+      },
+      "data": "{\"message\":\"Could you check if the item you’re missing is on your shipping confirmation email or not? Your shipping confirmation will say ‘your order is on its way’ 🚚\",\"quickReplies\":[\"It's on my shipping confirmation email ✅\",\"It's not on my shipping confirmation email ❌\"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "55",
+      "type": "Send a chat message",
+      "position": {
+        "x": -926.9308928288492,
+        "y": 694.278407236375
+      },
+      "data": "{\"messages\":[\"We may be waiting for the other items to be restocked soon, and wanted to make sure you received the in-stock products as soon as possible 😍 \\n\\nWe may also be out of stock.\\n\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"]}"
+    },
+    {
+      "id": "48",
+      "type": "Transfer to operator",
+      "position": {
+        "x": -596.7068878257729,
+        "y": 2457.236386367603
+      },
+      "data": "{\"transferMessage\":\"All done! I'll pass this onto a human now!\",\"waitTimeMessage\":\"Our average reply time is {averageUnassignedWaitTime}  You'll receive their responses at {email} and here. Thank you for your patience. 😌 \",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "57",
+      "type": "Send a chat message",
+      "position": {
+        "x": 98.92663901006938,
+        "y": 955.438002786052
+      },
+      "data": "{\"messages\":[\"We may be waiting for the other items to be restocked soon, and wanted to make sure you received the in-stock products as soon as possible 😍 \\n\\nWe may also be out of stock.\\n\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "43",
+      "type": "Ask a question",
+      "position": {
+        "x": -305.1982521056975,
+        "y": -813.8630044600345
+      },
+      "data": "{\"message\":\"We'll also need your order number.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Order Number\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "54",
+      "type": "Ask a question",
+      "position": {
+        "x": -1199.314529906177,
+        "y": 847.8487707552802
+      },
+      "data": "{\"message\":\"Please let us know the full name of the item in your order that you're having trouble with.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Message\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
     },
     {
       "id": "16",
       "type": "Ask a question",
       "position": {
-        "x": 1285.1391865346263,
-        "y": 1961.1843960097603
+        "x": -268.86081346537367,
+        "y": 761.1843960097603
       },
-      "data": "{\"message\":\"All we need are some photos. Please send us a photo of the product, and a second photo of the product with the fault clearly displayed. Thanks 📸\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"File\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+      "data": "{\"message\":\"All we need are some photos. Please send us a photo of the product, and a second photo of the product with the fault or damage clearly displayed. Thanks 📸\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"File\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
     },
     {
-      "id": "17",
+      "id": "12",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -175.40859610055762,
+        "y": 1125.9194430185228
+      },
+      "data": "{\"message\":\"I'll pass your query to our humans 👩‍💻. In the meantime, please select your preferred option from below (if we can't resolve your issue)\",\"quickReplies\":[\"Refund 💰\",\"Replacement 📦\",\"E-Gift Card \"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "61",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -595.0449092971221,
+        "y": -145.5844144074872
+      },
+      "data": "{\"message\":\"That's frustrating.\\n\\nIf it's been longer than three days since you requested a refund, I can get one of our humans to chase this up. \\n\\nOnce placed, refunds may take some time. Thank you for your patience 😊\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"It's been longer than three days since I organised the refund 📅\",\"I want to request a refund💰\",\"I requested a refund recently \"]}"
+    },
+    {
+      "id": "60",
       "type": "Send a chat message",
       "position": {
-        "x": 1055.806837357043,
-        "y": 2192.5895904135928
+        "x": -1595.044909297122,
+        "y": -621.5844144074861
       },
-      "data": "{\"messages\":[\"Great! I'll pass this onto a human! \",\"Our average reply time is   You'll receive their responses at {email} and here. Thank you for your patience. 😌\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+      "data": "{\"messages\":[\"Sorry you weren't happy with one of our products. \\n\\nOne of our humans will be able to organise the return.\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "63",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -1193.044909297122,
+        "y": -729.5844144074872
+      },
+      "data": "{\"message\":\"Sorry to hear that 🥲\\n\\nWhich option below applies to your issue?\",\"quickReplies\":[\"I used a discount code on my order 🏷\",\"I used a gift card on my order 💳\",\"None of the above 🤷‍♀️\"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "58",
+      "type": "Send a chat message",
+      "position": {
+        "x": -920.2727588141506,
+        "y": -799.0753973770788
+      },
+      "data": "{\"messages\":[\"We don't offer item exchanges.\\n\\nSorry about that.\\n\\nHowever, you can still return the item for a gift card or refund and place a new order for something similar!\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "65",
+      "type": "Send a chat message",
+      "position": {
+        "x": -951.0449092971221,
+        "y": -388.0781995698421
+      },
+      "data": "{\"messages\":[\"Sorry for the confusion caused by your refund!\\n \\nIf a Gift Card is used on an order, any refunds are processed back onto the Gift Card first, then anything leftover is refunded back to the other payment method used. \"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "64",
+      "type": "Send a chat message",
+      "position": {
+        "x": -1353.044909297122,
+        "y": -324.87819956984185
+      },
+      "data": "{\"messages\":[\"Sorry for the confusion!\\n \\nWe can only refund the amount you paid at checkout for these items, so if a discount was used, this is also applied when the refund is issued.\",\"The refund you receive is the price you paid for each item, taking the discount into consideration. Did that help?\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "42",
+      "type": "Ask a question",
+      "position": {
+        "x": -284.3332416436291,
+        "y": -993.4939258623072
+      },
+      "data": "{\"message\":\"And your email\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "59",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -1571.685897435571,
+        "y": -1220.8823703002545
+      },
+      "data": "{\"message\":\"What were you needing help with?\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"Can I return my item? 🤷‍♀️\",\"Can I exchange my item?🔀\",\"I'm waiting on my refund💵\",\"My refund value is not correct 💰\",\"It's something else 🤷\",\"Go back 🔙\"]}"
+    },
+    {
+      "id": "73",
+      "type": "Send a chat message",
+      "position": {
+        "x": -2624.4449092971254,
+        "y": -1248.0781995698385
+      },
+      "data": "{\"messages\":[\"Oh no! We’re really sorry to hear you’re having issues with your payment.\\n \"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "56",
+      "type": "Send a chat message",
+      "position": {
+        "x": -1683.314529906177,
+        "y": 1373.4487707552803
+      },
+      "data": "{\"messages\":[\"We can't apply discounts after an order has been placed.\\n\\nSorry about that. \\n\\nYou're welcome to use the discount for your next order. 🤔\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "74",
+      "type": "Send a chat message",
+      "position": {
+        "x": -2136.4449092971254,
+        "y": -1202.8781995698369
+      },
+      "data": "{\"messages\":[\"Oh no! We’re sorry to hear you’re having issues using your discount!\\n \\nPlease don’t worry, we’re here to make sure you get the discount you deserve 💪\",\"• Double-check that you're using the discount code on the correct region.\\n \\n• Some discount codes are linked to the email address they were issued to, so please make sure you're using the email address associated with the code.\\n \\n• Please check your email to ensure that the code is still valid and hasn’t expired 📅\",\"If you received the discount code from a third-party provider, you’ll need to contact them directly to resolve the issue or request a new code 👉\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "75",
+      "type": "Send a chat message",
+      "position": {
+        "x": -2208.2449092971256,
+        "y": -1288.4781995698386
+      },
+      "data": "{\"messages\":[\"I’m afraid we can't edit orders that have already been placed. 😕 This includes applying discounts.\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"]}"
+    },
+    {
+      "id": "72",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -2231.685897435571,
+        "y": -1554.8823703002545
+      },
+      "data": "{\"message\":\"We'd love to answer any questions you have about Payments and Discounts 💵\",\"quickReplies\":[\"My payment isn't working 💳\",\"My discount code isn't working ❌\",\"Apply a discount to my order 🏷️\",\"Take me back 🔙\"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "70",
+      "type": "Ask a question",
+      "position": {
+        "x": -2092.333241643629,
+        "y": -1859.4939258623072
+      },
+      "data": "{\"message\":\"And your email\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "77",
+      "type": "Ask a question",
+      "position": {
+        "x": -2442.8133172975254,
+        "y": -2378.924320580917
+      },
+      "data": "{\"message\":\"Cool, we just need some details before we begin. Please enter your name\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Name\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "69",
+      "type": "Ask a question",
+      "position": {
+        "x": -1984.8133172975254,
+        "y": -2042.9243205809173
+      },
+      "data": "{\"message\":\"Cool, we just need some details before we begin. Please enter your name\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Name\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{\"formPlaceholder\":{\"message\":\"Required\",\"type\":\"invalid_type\"}}}"
+    },
+    {
+      "id": "79",
+      "type": "Ask a question",
+      "position": {
+        "x": -1567.1982521056975,
+        "y": -1393.8630044600345
+      },
+      "data": "{\"message\":\"We'll also need your order number.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Order Number\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "41",
+      "type": "Ask a question",
+      "position": {
+        "x": -260.8133172975254,
+        "y": -1212.9243205809173
+      },
+      "data": "{\"message\":\"Cool, we just need some details before we begin. Please enter your name\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Name\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
+    },
+    {
+      "id": "78",
+      "type": "Ask a question",
+      "position": {
+        "x": -2602.333241643629,
+        "y": -2199.493925862307
+      },
+      "data": "{\"message\":\"And your email\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
+    },
+    {
+      "id": "82",
+      "type": "Send a chat message",
+      "position": {
+        "x": -2874.2302451631394,
+        "y": -1725.422678850142
+      },
+      "data": "{\"messages\":[\"Oh no! We’re really sorry to hear you’re having issues with your payment.\\n\\nOne of our humans should be able to help.\"],\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"]}"
+    },
+    {
+      "id": "81",
+      "type": "Ask a question",
+      "position": {
+        "x": -3261.044909297128,
+        "y": -1710.4781995698404
+      },
+      "data": "{\"message\":\"That's not good. Please send us a description of the issue you're facing. You can also include screenshots.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Message\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "9",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -2985.704332894848,
+        "y": -2100.3731809820883
+      },
+      "data": "{\"message\":\"What seems to be the issue?\",\"transferToOperatorMessage\":false,\"quickReplies\":[\"Your website isn't cooperating with me 🤷‍♀️\",\"I'm trying to pay 💳\",\"It's another technical issue 👩‍💻\",\"Take me back 🔙\"]}"
+    },
+    {
+      "id": "1",
+      "type": "Decision (Quick Replies)",
+      "position": {
+        "x": -855.1451338747815,
+        "y": -2491.605610628676
+      },
+      "data": "{\"message\":\"Hi 👋 I am a bot 🤖. I will try to help you as best I can, but I will connect you with a human team member if required. What can I help you with today?\",\"quickReplies\":[\"Item / Order Issue 😢\",\"Delivery & Shipping 🚚\",\"Returns & Refunds ↩️\",\"Products 🛍️\",\"Discounts & Payments 💰\",\"Technical 👩‍💻\",\"Something else 🤔\"],\"transferToOperatorMessage\":false}"
+    },
+    {
+      "id": "0",
+      "type": "Visitor clicks on the chat icon",
+      "position": {
+        "x": -626.9671949287925,
+        "y": -3178.005215182575
+      },
+      "data": "{\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "68",
+      "type": "Ask a question",
+      "position": {
+        "x": -1452.8133172975254,
+        "y": -1694.9243205809173
+      },
+      "data": "{\"message\":\"Cool, we just need some details before we begin. Please enter your name\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Name\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "84",
+      "type": "Ask a question",
+      "position": {
+        "x": -1064.5115310520077,
+        "y": -1606.221223667779
+      },
+      "data": "{\"message\":\"Cool, we just need some details before we begin. Please enter your name\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Name\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "67",
+      "type": "Ask a question",
+      "position": {
+        "x": -1470.3332416436292,
+        "y": -1565.4939258623072
+      },
+      "data": "{\"message\":\"And your email\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
+    },
+    {
+      "id": "85",
+      "type": "Ask a question",
+      "position": {
+        "x": -1100.0628579968197,
+        "y": -1411.6003733999935
+      },
+      "data": "{\"message\":\"And your email\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Email\",\"saveTheAnswerAsAContactProperty\":true,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1}"
+    },
+    {
+      "id": "40",
+      "type": "Ask a question",
+      "position": {
+        "x": -1087.5872076380624,
+        "y": 1847.7877907926018
+      },
+      "data": "{\"message\":\"Sure, what is it? Please include as much detail as possible about your enquiry and we'll pass it to one of our friendly humans.\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"timeout\":60,\"validationType\":\"Message\",\"saveTheAnswerAsAContactProperty\":false,\"errorMessage\":\"Oops... that doesn't look correct, try again.\",\"numberOfRepeats\":1,\"errors\":{}}"
     }
   ],
   "createdAt": 1699772434154,
   "name": "General Purpose",
   "botId": "afd36fd5-4e09-451d-ba87-f8c4beef6a2f",
-  "active": false,
+  "active": true,
   "startWhileOperatorsAreOffline": false,
-  "updatedAt": 1699921697571,
+  "updatedAt": 1700008859336,
   "category": "General",
   "orgId": "b9ac14c1-6501-4a9e-8565-8e5cd59699a5",
   "startWhileAnOperatorIsHandlingAnotherConversation": false,
