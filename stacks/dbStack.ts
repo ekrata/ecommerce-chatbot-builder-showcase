@@ -19,6 +19,7 @@ export function dbStack({ stack, app }: StackContext) {
   const { REGION, defaultFunctionTimeout, ddbStreamTopic, botNodeTopic } =
     use(paramStack);
 
+  console.log(app?.stage);
   const table = new Table(stack, `app`, {
     fields: {
       pk: 'string',

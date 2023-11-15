@@ -17,7 +17,9 @@ export function webhooksStack({ stack }: StackContext) {
     //   'packages/functions/app/api/src/webhooks/meta/messaging',
     // 'GET /webhooks/meta/messaging':
     //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging',
-    // 'POST /webhooks/email':
-    //   'packages/functions/app/api/src/webhooks/email.handler',
+    'POST /webhooks/email':
+      'packages/functions/app/api/src/webhooks/email.handler',
+    'POST /webhooks/stripe':
+      'packages/functions/app/api/src/webhooks/stripe/webhook.handler',
   });
 }
