@@ -72,3 +72,4 @@ src/app/[locale]/(chat-widget)/(actions)
 mocks/article.json
 packages/functions/app/api/src/nodes/botDump
 packages/functions/app/api/src/botTemplates/botDump
+.env.prod

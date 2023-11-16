@@ -21,10 +21,12 @@ interface Feature {
 
 const features: Array<Feature> = [
   {
-    name: 'Reporting',
-    summary: 'Stay on top of things with always up-to-date reporting features.',
+    name: 'Live chat',
+    summary: "Capture Attention, Drive Conversions, and Build Loyalty with Live Chat",
     description:
-      'We talked about reporting in the section above but we needed three items here, so mentioning it one more time for posterity.',
+      `With live chat, you can gain valuable insights into your visitors' behavior, tracking their browsing activity in real time. This real-time visibility empowers you to understand their interests, preferences, and potential pain points. 
+      
+      Live chat is not just about answering questions; it's about creating a connection, building relationships, and turning visitors into loyal customers. By engaging in real-time conversations, you can address their needs, provide personalized solutions, and ultimately, drive conversions`,
     image: screenshotProfitLoss,
     icon: function ReportingIcon() {
       let id = useId()
@@ -55,11 +57,11 @@ const features: Array<Feature> = [
     },
   },
   {
-    name: 'Inventory',
+    name: 'Chatbot',
     summary:
-      'Never lose track of what’s in stock with accurate inventory tracking.',
+      'Automate Customer Support, Enhance Efficiency, and Boost Conversions with Our AI-Powered Chatbot',
     description:
-      'We don’t offer this as part of our software but that statement is inarguably true. Accurate inventory tracking would help you for sure.',
+      "Our AI-powered chatbot seamlessly integrates into your website, providing real-time support, answering questions, resolving issues, and guiding customers through the purchasing process. This automated assistance not only enhances customer satisfaction but also reduces cart abandonment, leading to increased sales and revenue.",
     image: screenshotInventory,
     icon: function InventoryIcon() {
       return (
@@ -83,11 +85,11 @@ const features: Array<Feature> = [
     },
   },
   {
-    name: 'Contacts',
+    name: 'Help Center',
     summary:
-      'Organize all of your contacts, service providers, and invoices in one place.',
+      "Empower Customers with Self-Service and Unleash Your Team's Potential with Our Comprehensive Help Center",
     description:
-      'This also isn’t actually a feature, it’s just some friendly advice. We definitely recommend that you do this, you’ll feel really organized and professional.',
+      "In today's digital world, customers expect immediate and convenient access to information. Our robust help center empowers you to provide up-to-date information to users, answering frequently asked questions (FAQs) and addressing common concerns. This self-service approach not only enhances customer satisfaction but also frees up your valuable customer service team to focus on maximizing customer satisfaction.",
     image: screenshotContacts,
     icon: function ContactsIcon() {
       return (
@@ -235,11 +237,10 @@ export function SecondaryFeatures() {
       <Container>
         <div className="max-w-2xl mx-auto md:text-center">
           <h2 className="text-3xl tracking-tight font-display text-slate-900 sm:text-4xl">
-            Simplify everyday business tasks.
+            Elevate your customer service with eChat by Ekrata™️ - the AI-driven solution.
           </h2>
           <p className="mt-4 text-lg tracking-tight text-slate-700">
-            Because you’d probably be a little confused if we suggested you
-            complicate your everyday business tasks instead.
+            eChat's AI-powered customer service solutions seamlessly blend human expertise with AI intelligence to provide an unparalleled customer experience.
           </p>
         </div>
         <FeaturesMobile />

@@ -1,0 +1,54 @@
+html,body {
+  margin:0;
+  padding:0;
+  width:100%;
+   height:100%;
+}
+#gradient-canvas {
+  width:100%;
+  height:100%;
+  --gradient-color-1: #ef008f; 
+  --gradient-color-2: #6ec3f4; 
+  --gradient-color-3: #7038ff;  
+  --gradient-color-4: #ffba27;
+}
+
+svg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right:0;
+  left:0;
+  margin: auto;
+}
+
+.monkey {
+  stroke: #FFC300;
+  stroke-width: 2px;
+  stroke-dashoffset: -2000;
+  stroke-dasharray: 2000;
+  animation-name: monkey;
+  animation-duration: 3s;
+  animation-iteration-count:infinite;
+  animation-direction: alternate;
+  }
+  
+  @keyframes monkey {
+    0% {
+      stroke-dashoffset: -2000;
+      stroke: #FFC300;
+    }
+    30% {
+      stroke: #FF5733;
+    }
+    50% {
+      stroke: #FFC300;
+    }
+    70% {
+      stroke: #FF5733;
+    }
+    100% {
+    stroke-dashoffset:0;  
+    stroke: #FFC300;
+    }
+  }

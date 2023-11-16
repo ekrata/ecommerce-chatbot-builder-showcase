@@ -39,9 +39,9 @@ export default function RootLayout({
         inter.variable,
         lexend.variable,
       )}
-    >
-      <body className="flex flex-col h-full">
+    > <body className="flex flex-col h-full bg-white">
         <Header />
+
         {children}
         <Footer />
       </body>

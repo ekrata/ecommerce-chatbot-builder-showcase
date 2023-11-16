@@ -64,10 +64,10 @@ export function PrimaryFeatures() {
     <section
       id="features"
       aria-label="Features for running your books"
-      className="relative pt-20 overflow-hidden bg-blue-600 pb-28 sm:py-32"
+      className="relative overflow-hidden bg-blue-600 md:pb-40 md:py-10"
     >
       <Image
-        className="absolute left-1/2 top-1/2 max-w-none translate-x-[-44%] translate-y-[-42%]"
+        className="absolute left-1/2  max-w-none translate-x-[-44%] translate-y-[-42%]"
         src={backgroundImage}
         alt=""
         width={2245}
@@ -77,11 +77,10 @@ export function PrimaryFeatures() {
       <Container className="relative">
         <div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
           <h2 className="text-3xl tracking-tight text-white font-display sm:text-4xl md:text-5xl">
-            Everything you need to run your books.
+            All you need for excellent customer service.
           </h2>
           <p className="mt-6 text-lg tracking-tight text-blue-100">
-            Well everything you need if you aren’t that picky about minor
-            details like tax compliance.
+            Automate everything with Live chat, AI Chatbots, Help center articles, Custom Bots and more.
           </p>
         </div>
         <Tab.Group

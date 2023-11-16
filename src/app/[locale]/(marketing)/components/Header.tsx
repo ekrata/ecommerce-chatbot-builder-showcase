@@ -1,12 +1,15 @@
 'use client'
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
+import { useTimeout } from 'usehooks-ts';
 
 import { Popover, Transition } from '@headlessui/react';
 
 import { signoutSession, useAuthContext } from '../../(hooks)/AuthProvider';
+import ekrataLogo from '../../../../../public/graphics/ekrataLogo.png';
 import { Button } from './Button';
 import { Container } from './Container';
 import { Logo } from './Logo';
@@ -15,6 +18,17 @@ import { NavLink } from './NavLink';
 export function Header() {
   const t = useTranslations('marketing')
   const [user] = useAuthContext()
+  const [scrolling, setScrolling] = useState<boolean>()
+
+  window?.addEventListener('scroll', () => {
+    setScrolling(true);
+    useTimeout(() => setScrolling(false), 5000);
+  });
+
+  window?.addEventListener('onscrollend', () => {
+    setScrolling(false)
+  });
+
   function MobileNavLink({ href, children, }: {
     href: string
     children: React.ReactNode
@@ -106,12 +120,12 @@ export function Header() {
     )
   }
   return (
-    <header className="fixed z-50 w-full py-2 bg-white">
+    <header className={`fixed z-50 w-full py-2  ${scrolling ? 'bg-white/100 shadow-md animate-fade  ' : 'bg-white/0 border-0 shadow-none'} backdrop-blur-xl`}>
       <Container>
-        <nav className="relative flex justify-between">
+        <nav className="relative flex justify-between animate-fade-down">
           <div className="flex items-center md:gap-x-12">
             <Link href="#" aria-label="Home">
-              <Logo className="w-auto h-10" />
+              <Image src={ekrataLogo} className="w-auto rounded-md shadow-2xl saturate-200 ring-2 ring-blue-400 mask mask-squircle" width={20} height={20} alt={''}></Image>
             </Link>
             <div className="hidden md:flex md:gap-x-6">
               <NavLink href="#features">Features</NavLink>
@@ -128,7 +142,7 @@ export function Header() {
               </NavLink>
             </div>
             <Link href={{ pathname: user ? '/dash/conversations' : '/register' }}>
-              <Button color="blue">
+              <Button color="blue" className='bg-gradient-to-tr from-violet-500 to-orange-300 hover:animate-pulse'>
                 <span>
                   {user ? t('Go to app') : t('Start free trial')}
                 </span>

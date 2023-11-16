@@ -1,7 +1,7 @@
 import { StackContext, use } from 'sst/constructs';
 import { baseStack } from 'stacks/baseStack';
 
-export function botsStack({ stack }: StackContext) {
+export function botTemplatesStack({ stack }: StackContext) {
   const { api } = use(baseStack);
 
   api.addRoutes(stack, {
