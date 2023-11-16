@@ -1,7 +1,7 @@
 'use client'
 import cn from 'classnames';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { BsPerson, BsRobot } from 'react-icons/bs';
 import { FiMinus, FiPlus } from 'react-icons/fi';
 
@@ -75,11 +75,20 @@ function Plan({
   features: Array<string>
   featured?: boolean
 }) {
+  const priceElement = useMemo(() => (
+
+    <p className="flex flex-row order-first text-5xl font-light tracking-tight text-white gap-x-2 place-items-center font-display animate-fade-left ">
+      {price} <span className='flex flex-col text-xs leading-tight gap-y-0'>
+        <span>$USD</span>
+        <span>/month</span>
+      </span>
+    </p>
+  ), [price])
   return (
     <section
       className={clsx(
-        'flex flex-col rounded-3xl px-6 sm:px-8',
-        featured ? 'order-first bg-blue-600 py-8 lg:order-none' : 'lg:py-8',
+        'flex flex-col rounded-3xl px-6 sm:px-8 animate-fade-down',
+        featured ? 'order-first bg-gradient-to-tr from-violet-500 to-orange-300 py-8 lg:order-none' : 'lg:py-8',
       )}
     >
       <h3 className="mt-5 text-lg text-white font-display">{name}</h3>
@@ -93,10 +102,7 @@ function Plan({
       </p>
 
       <div className='flex flex-row justify-between'>
-        <p className="order-first text-5xl font-light tracking-tight text-white font-display">
-          {price}
-        </p>
-        <p>asdasdasd</p>
+        {priceElement}
       </div>
       <ul
         role="list"
@@ -139,16 +145,22 @@ export function Pricing() {
 
   const getPrices = () => {
     if (frequency.value === 'monthly') {
-      const plusPriceMonthly = monthlyPaymentLinks.plusLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex])?.items.reduce((prev, next) => prev + next.unit_amount, 0)
-      monthlyPaymentLinks.starterLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex])
-
+      const plusLink = monthlyPaymentLinks.plusLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex]);
+      const starterLink = (monthlyPaymentLinks.starterLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex]))
+      const plusPrice = (plusLink?.items.reduce((prev, next) => prev + next.unit_amount, 0) ?? 0) / 100
+      const starterPrice = (starterLink?.items.reduce((prev, next) => prev + next.unit_amount, 0) ?? 0) / 100
+      return { plusLink, starterLink, starterPrice, plusPrice }
     }
     if (frequency.value === 'annually') {
-      yearlyPaymentLinks.plusLinks
+      const plusLink = yearlyPaymentLinks.plusLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex]);
+      const starterLink = (yearlyPaymentLinks.starterLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex]))
+      const starterPrice = ((starterLink?.items.reduce((prev, next) => prev + next.unit_amount, 0) ?? 0) / 12) / 100
+      const plusPrice = ((plusLink?.items.reduce((prev, next) => prev + next.unit_amount, 0) ?? 0) / 12) / 100
+      return { plusLink, starterLink, starterPrice, plusPrice }
     }
+    return { plusLink: {}, starterLink: {}, starterPrice: 0, plusPrice: 0 }
   }
-
-  const { starterPrice, plusPrice } = getPrices()
+  const { starterLink, plusLink, starterPrice, plusPrice } = getPrices()
   return (
     <section
       id="pricing"
@@ -164,10 +176,10 @@ export function Pricing() {
             </span>{' '}
             for everyone.
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
+          {/* <p className="mt-4 text-lg text-slate-400">
             It doesn’t matter what size your business is, our software won’t
             work well for you.
-          </p>
+          </p> */}
           <div className="flex justify-center mt-4">
             <RadioGroup
               value={frequency}
@@ -190,32 +202,32 @@ export function Pricing() {
           </div>
           <div className='flex flex-col justify-center md:flex-row gap-x-4'>
 
-            <h2 className="inline-flex p-2 mt-10 text-sm tracking-tight text-white rounded-md md:text-lg place-items-center gap-x-2 font-display sm:text-xl bg-gradient-to-tr from-violet-500 to-orange-300">
+            <h2 className="inline-flex p-2 px-4 mt-10 text-sm tracking-tight text-white rounded-md shadow-2xl bg-gradient-to-tr from-violet-500/25 to-orange-300/75 md:text-base place-items-center gap-x-2 font-display sm:text-xl ">
               <BsPerson></BsPerson>Seats
-              <button className='mx-4 rounded-md btn btn-xs' disabled={seats === 1} onClick={() => setSeats(seats - 1)}><FiMinus /></button>
+              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={seats === 1} onClick={() => setSeats(seats - 1)}><FiMinus /></button>
               {seats}
-              <button className='mx-4 rounded-md btn btn-xs' disabled={seats === 5} onClick={() => setSeats(seats + 1)}><FiPlus /></button>
+              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={seats === 5} onClick={() => setSeats(seats + 1)}><FiPlus /></button>
             </h2>
             <div>
 
             </div>
-            <h2 className="inline-flex p-2 mt-10 text-sm tracking-tight text-white rounded-md place-items-center gap-x-2 font-display md:text-lg bg-gradient-to-tr from-violet-500 to-orange-300">
+            <h2 className="inline-flex p-2 px-4 mt-10 text-sm tracking-tight text-white rounded-md shadow-2xl bg-gradient-to-tr from-violet-500/75 to-orange-300/25 place-items-center gap-x-2 md:text-base font-display ">
               <BsRobot></BsRobot>Triggers
-              <button className='mx-4 rounded-md btn btn-xs' disabled={triggerIndex === 0} onClick={() => setTriggerIndex(triggerIndex - 1)}><FiMinus /></button>
+              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={triggerIndex === 0} onClick={() => setTriggerIndex(triggerIndex - 1)}><FiMinus /></button>
               {triggerAmount[triggerIndex]}
-              <button className='mx-4 rounded-md btn btn-xs' disabled={triggerIndex === triggerCounts.length - 1} onClick={() => setTriggerIndex(triggerIndex + 1)}><FiPlus /></button>
+              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={triggerIndex === triggerCounts.length - 1} onClick={() => setTriggerIndex(triggerIndex + 1)}><FiPlus /></button>
             </h2>
             <div>
 
             </div>
           </div>
         </div >
-        <div className="grid max-w-2xl grid-cols-1 mt-16 -mx-4 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
+        <div className="grid max-w-2xl grid-cols-1 mt-16 -mx-4 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-2 xl:mx-0 xl:gap-x-8">
           <Plan
             name="Starter"
-            price="$usd"
-            description="Good for anyone who is self-employed and just getting started."
-            href="/register"
+            price={starterPrice.toString()}
+            description="Increase website engagement and boost customer satisfaction with website live chat, chatbot, and custom bot creation."
+            href={starterLink?.url ?? ''}
             features={[
               'Send 10 quotes and invoices',
               'Connect up to 2 bank accounts',
@@ -226,10 +238,10 @@ export function Pricing() {
           />
           <Plan
             featured
-            name="Small business"
-            price="$15"
+            name="Scale"
+            price={plusPrice.toString()}
             description="Perfect for small / medium sized businesses."
-            href="/register"
+            href={plusLink?.url ?? ''}
             features={[
               'Send 25 quotes and invoices',
               'Connect up to 5 bank accounts',
@@ -240,7 +252,7 @@ export function Pricing() {
               'Track in multiple currencies',
             ]}
           />
-          <Plan
+          {/* <Plan
             name="Enterprise"
             price="$39"
             description="For even the biggest enterprise companies."
@@ -252,7 +264,7 @@ export function Pricing() {
               'Automated payroll support',
               'Export up to 25 reports, including TPS',
             ]}
-          />
+          /> */}
         </div>
 
       </Container>
