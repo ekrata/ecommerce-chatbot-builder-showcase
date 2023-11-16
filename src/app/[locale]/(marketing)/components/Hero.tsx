@@ -1,5 +1,4 @@
 'use client'
-import './style.css';
 
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -21,7 +20,7 @@ export function Hero() {
     <Container className="h-screen pt-20 pb-16 text-center bg-white md:pt-10 ">
       <div className='flex flex-col w-full text-center md:flex-row animate-fade place-items-center'>
         <div className="max-w-4xl mx-auto text-lg font-medium tracking-tight md:pr-10 lg:pr-40 md:text-xl text-start font-display text-slate-900 sm:text-7xl">
-          <h2 className="inline-flex w-full px-2 py-1 mb-4 text-5xl bg-white rounded-md shadow-md -skew-y-1 place-items-center text-slate-900 bg-gradient-to-tr from-violet-500 to-orange-300">
+          <h2 className="inline-flex w-full px-2 py-1 mb-4 text-5xl bg-white rounded-md shadow-md place-items-center text-slate-900 bg-gradient-to-tr from-violet-500 to-orange-300">
             <span className='ml-2 text-sm font-normal tracking-normal md:text-2xl text-slate-100 animate-fade-left bg-clip-text'>
               eChat by Ekrata™️ - AI Powered Customer Service
             </span>

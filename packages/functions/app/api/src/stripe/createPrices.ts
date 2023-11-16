@@ -7,14 +7,14 @@ import { setTimeout } from 'timers/promises';
 
 import * as Sentry from '@sentry/serverless';
 
-const stripe = new Stripe(Config.STRIPE_KEY_SECRET);
+const stripe = new Stripe(Config.STRIPE_KEY_SECRET, { maxNetworkRetries: 3 });
 
 export const starterSeatPriceMap = {
   1: 0,
-  2: 500,
-  3: 1000,
-  4: 1500,
-  5: 2000,
+  2: 1000,
+  3: 2000,
+  4: 3000,
+  5: 4000,
 };
 
 export const starterChatbotTriggersPriceMap = {
@@ -29,17 +29,17 @@ export const starterChatbotTriggersPriceMap = {
 
 export const plusSeatsPriceMap = {
   1: 0,
-  2: 1000,
-  3: 2000,
-  4: 3000,
-  5: 4000,
+  2: 2000,
+  3: 4000,
+  4: 6000,
+  5: 8000,
 };
 export const plusChatbotTriggersPriceMap = {
   1000: 0,
-  2000: 1500,
-  3000: 2500,
-  5000: 4500,
-  10000: 7500,
+  2000: 1000,
+  3000: 2000,
+  5000: 3500,
+  10000: 6000,
   20000: 10500,
   50000: 14500,
 };
@@ -57,7 +57,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         name: 'eChat Starter',
         tax_code: 'txcd_10103001',
         description:
-          'Includes website live chat, chatbot, custom bot creation and more',
+          'Increase website engagement and boost customer satisfaction with website live chat, chatbot, and custom bot creation.',
       });
 
       // plus product + $0 seats + $0 chatbot triggers
@@ -65,7 +65,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         name: 'eChat Plus',
         tax_code: 'txcd_10103001',
         description:
-          'Includes Help Center, Articles, whatsapp, facebook and instagram messaging.',
+          'Everything in starter, plus the Help Center & Articles, Whatsapp, Facebook and Instagram messaging.',
       });
 
       const monthlyPrices = await createPricesForInterval(
@@ -85,10 +85,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         yearlyPrices,
       } as CreatePricesResponse);
 
-      await writeFile(
-        `packages/functions/app/api/src/stripe/${Config.STAGE}-prices.json`,
-        body,
-      );
+      await writeFile(`data/stripe/${Config.STAGE}-prices.json`, body);
 
       console.log('prices saved');
 
@@ -120,7 +117,7 @@ const createPricesForInterval = async (
   interval: 'month' | 'year',
 ) => {
   const starterPrice = await stripe.prices.create({
-    unit_amount: interval === 'year' ? 1600 * yearlyDiscount : 1600,
+    unit_amount: interval === 'year' ? 1600 * 12 * yearlyDiscount : 1600,
     currency: 'usd',
     recurring: {
       interval,
@@ -128,31 +125,59 @@ const createPricesForInterval = async (
     product: starterProduct.id,
   });
 
+  const plusPrice = await stripe.prices.create({
+    unit_amount: interval === 'year' ? 39000 * 12 * yearlyDiscount : 3900,
+    currency: 'usd',
+    recurring: {
+      interval,
+    },
+
+    product: plusProduct.id,
+  });
+
   const starterSeatPrices = await Promise.all(
     Object.entries(starterSeatPriceMap).map(async ([seatCount, price]) => {
+      const product = await stripe.products.create({
+        name: `${starterProduct.name}: Seats - ${seatCount}`,
+        tax_code: 'txcd_10103001',
+      });
       return await stripe.prices.create({
-        unit_amount: interval === 'year' ? price * yearlyDiscount : price,
+        unit_amount: interval === 'year' ? price * 12 * yearlyDiscount : price,
         currency: 'usd',
         recurring: {
           interval,
         },
-        nickname: `${starterProduct.name}: seats - ${seatCount}`,
-        product: starterProduct.id,
+        metadata: {
+          type: 'starter',
+          seatCount,
+        },
+        nickname: `${starterProduct.name} price: Seats - ${seatCount}`,
+        product: product.id,
       });
     }),
   );
 
+  // triggers always per month
   const starterChatbotTriggerPrices = await Promise.all(
     Object.entries(starterChatbotTriggersPriceMap).map(
       async ([triggerCount, price]) => {
+        const product = await stripe.products.create({
+          name: `${starterProduct.name}: Bot Triggers - ${triggerCount} per month`,
+          tax_code: 'txcd_10103001',
+        });
         return await stripe.prices.create({
-          unit_amount: interval === 'year' ? price * yearlyDiscount : price,
+          unit_amount:
+            interval === 'year' ? price * 12 * yearlyDiscount : price,
           currency: 'usd',
           recurring: {
             interval,
           },
-          nickname: `${starterProduct.name}: bot triggers - ${triggerCount}`,
-          product: starterProduct.id,
+          metadata: {
+            type: 'starter',
+            triggerCount,
+          },
+          nickname: `${starterProduct.name}: Bot Triggers - ${triggerCount} per month`,
+          product: product.id,
         });
       },
     ),
@@ -160,25 +185,24 @@ const createPricesForInterval = async (
 
   console.log('starter prices done');
 
-  const plusPrice = await stripe.prices.create({
-    unit_amount: interval === 'year' ? 39000 * yearlyDiscount : 3900,
-    currency: 'usd',
-    recurring: {
-      interval,
-    },
-    product: plusProduct.id,
-  });
-
   const plusSeatPrices = await Promise.all(
     Object.entries(plusSeatsPriceMap).map(async ([seatCount, price]) => {
+      const product = await stripe.products.create({
+        name: `${plusProduct.name}: Seats - ${seatCount}`,
+        tax_code: 'txcd_10103001',
+      });
       return await stripe.prices.create({
-        unit_amount: interval === 'year' ? price * yearlyDiscount : price,
+        unit_amount: interval === 'year' ? price * 12 * yearlyDiscount : price,
         currency: 'usd',
         recurring: {
           interval,
         },
-        nickname: `${plusProduct.name}: seats - ${seatCount}`,
-        product: plusProduct.id,
+        metadata: {
+          type: 'plus',
+          seatCount,
+        },
+        nickname: `${plusProduct.name}: Seats - ${seatCount}`,
+        product: product.id,
       });
     }),
   );
@@ -186,14 +210,23 @@ const createPricesForInterval = async (
   const plusChatbotTriggerPrices = await Promise.all(
     Object.entries(plusChatbotTriggersPriceMap).map(
       async ([triggerCount, price]) => {
+        const product = await stripe.products.create({
+          name: `${plusProduct.name}: Bot Triggers - ${triggerCount} per month`,
+          tax_code: 'txcd_10103001',
+        });
         return await stripe.prices.create({
-          unit_amount: interval === 'year' ? price * yearlyDiscount : price,
+          unit_amount:
+            interval === 'year' ? price * 12 * yearlyDiscount : price,
           currency: 'usd',
           recurring: {
             interval,
           },
-          nickname: `${plusProduct.name}: Bot Triggers - ${triggerCount}`,
-          product: starterProduct.id,
+          metadata: {
+            type: 'plus',
+            triggerCount,
+          },
+          nickname: `${plusProduct.name}: Bot Triggers - ${triggerCount} per month`,
+          product: product.id,
         });
       },
     ),

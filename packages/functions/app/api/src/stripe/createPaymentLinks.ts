@@ -19,12 +19,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const yearlyPaymentLinks = await createPaymentLinks(body.yearlyPrices);
 
       await writeFile(
-        `packages/functions/app/api/src/stripe/${Config.STAGE}-monthly-paymentLinks.json`,
+        `data/stripe/${Config.STAGE}-monthly-paymentLinks.json`,
         JSON.stringify(monthlyPaymentLinks),
       );
 
       await writeFile(
-        `packages/functions/app/api/src/stripe/${Config.STAGE}-yearly-paymentLinks.json`,
+        `data/stripe/${Config.STAGE}-yearly-paymentLinks.json`,
         JSON.stringify(yearlyPaymentLinks),
       );
 
@@ -62,7 +62,7 @@ const createPaymentLinks = async (prices: CreatePrices) => {
         starterChatbotTriggerPrices.map(async (triggerPrice, j) => {
           // console.log(seatPrice, triggerPrice);
           console.log(seatPrice.unit_amount, triggerPrice.unit_amount);
-          return limit(() =>
+          const res = await limit(() =>
             stripe.paymentLinks.create({
               line_items: [
                 { price: starterPrice.id, quantity: 1 },
@@ -77,6 +77,10 @@ const createPaymentLinks = async (prices: CreatePrices) => {
               ],
               automatic_tax: {
                 enabled: true,
+              },
+              metadata: {
+                ...seatPrice.metadata,
+                ...triggerPrice.metadata,
               },
               allow_promotion_codes: true,
               subscription_data: {
@@ -93,13 +97,17 @@ const createPaymentLinks = async (prices: CreatePrices) => {
               },
             }),
           );
+          return {
+            items: [starterPrice, seatPrice, triggerPrice],
+            ...res,
+          };
         }),
       );
     }),
   );
 
   console.log('starterPaymentLinks done');
-  await setTimeout(20000);
+  await setTimeout(10000);
 
   const plusLinks = await Promise.all(
     plusSeatPrices.map(async (seatPrice, i) => {
@@ -107,7 +115,7 @@ const createPaymentLinks = async (prices: CreatePrices) => {
       return await Promise.all(
         plusChatbotTriggerPrices.map(async (triggerPrice, j) => {
           console.log(seatPrice.unit_amount, triggerPrice.unit_amount);
-          return limit(async () =>
+          const res = await limit(() =>
             stripe.paymentLinks.create({
               line_items: [
                 { price: plusPrice.id, quantity: 1 },
@@ -121,7 +129,8 @@ const createPaymentLinks = async (prices: CreatePrices) => {
                 },
               ],
               metadata: {
-                seats: 1,
+                ...seatPrice.metadata,
+                ...triggerPrice.metadata,
               },
               automatic_tax: {
                 enabled: true,
@@ -141,12 +150,17 @@ const createPaymentLinks = async (prices: CreatePrices) => {
               },
             }),
           );
+          return {
+            items: [plusPrice, seatPrice, triggerPrice],
+            ...res,
+          };
         }),
       );
     }),
   );
 
   console.log('plus links done');
+  await setTimeout(10000);
 
   return {
     starterLinks,

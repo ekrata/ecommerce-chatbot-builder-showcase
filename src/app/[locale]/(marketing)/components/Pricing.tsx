@@ -1,6 +1,15 @@
 'use client'
+import cn from 'classnames';
 import clsx from 'clsx';
+import { useState } from 'react';
+import { BsPerson, BsRobot } from 'react-icons/bs';
+import { FiMinus, FiPlus } from 'react-icons/fi';
 
+import { RadioGroup } from '@headlessui/react';
+
+import monthlyPaymentLinks from '../../../../../data/stripe/local-monthly-paymentLinks.json';
+import yearlyPaymentLinks from '../../../../../data/stripe/local-yearly-paymentLinks.json';
+import { TriggerAmount, triggerAmount } from '../../../../../types/stripe';
 import { Button } from '../components/Button';
 import { Container } from '../components/Container';
 
@@ -113,6 +122,141 @@ function Plan({
         Get started
       </Button>
     </section>
+  )
+}
+
+const frequencies = [
+  { value: 'monthly', label: 'Monthly', priceSuffix: '/month' },
+  { value: 'annually', label: 'Annually', priceSuffix: '/year' },
+]
+
+
+export function Pricing() {
+  const triggerCounts = triggerAmount
+  const [frequency, setFrequency] = useState(frequencies[0])
+  const [seats, setSeats] = useState(1)
+  const [triggerIndex, setTriggerIndex] = useState(0)
+
+  const getPrices = () => {
+    if (frequency.value === 'monthly') {
+      const plusPriceMonthly = monthlyPaymentLinks.plusLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex])?.items.reduce((prev, next) => prev + next.unit_amount, 0)
+      monthlyPaymentLinks.starterLinks.flat().find((link) => parseInt(link.metadata.seatCount, 10) === seats && parseInt(link.metadata.triggerCount, 10) === triggerAmount[triggerIndex])
+
+    }
+    if (frequency.value === 'annually') {
+      yearlyPaymentLinks.plusLinks
+    }
+  }
+
+  const { starterPrice, plusPrice } = getPrices()
+  return (
+    <section
+      id="pricing"
+      aria-label="Pricing"
+      className="py-20 bg-slate-900 sm:py-32"
+    >
+      <Container>
+        <div className="md:text-center">
+          <h2 className="text-3xl tracking-tight text-white font-display sm:text-4xl">
+            <span className="relative whitespace-nowrap">
+              <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-blue-400" />
+              <span className="relative">Simple pricing,</span>
+            </span>{' '}
+            for everyone.
+          </h2>
+          <p className="mt-4 text-lg text-slate-400">
+            It doesn’t matter what size your business is, our software won’t
+            work well for you.
+          </p>
+          <div className="flex justify-center mt-4">
+            <RadioGroup
+              value={frequency}
+              onChange={setFrequency}
+              className="grid grid-cols-2 p-1 text-xs font-semibold leading-5 text-center text-white rounded-full gap-x-1 bg-white/5"
+            >
+              <RadioGroup.Label className="sr-only">Payment frequency</RadioGroup.Label>
+              {frequencies.map((option) => (
+                <RadioGroup.Option
+                  key={option.value}
+                  value={option}
+                  className={({ checked }) =>
+                    cn(checked ? 'bg-gradient-to-tr from-violet-500 to-orange-300 animate-rotate-x' : '', 'cursor-pointer rounded-full px-2.5 py-1')
+                  }
+                >
+                  <span>{option.label}</span>
+                </RadioGroup.Option>
+              ))}
+            </RadioGroup>
+          </div>
+          <div className='flex flex-col justify-center md:flex-row gap-x-4'>
+
+            <h2 className="inline-flex p-2 mt-10 text-sm tracking-tight text-white rounded-md md:text-lg place-items-center gap-x-2 font-display sm:text-xl bg-gradient-to-tr from-violet-500 to-orange-300">
+              <BsPerson></BsPerson>Seats
+              <button className='mx-4 rounded-md btn btn-xs' disabled={seats === 1} onClick={() => setSeats(seats - 1)}><FiMinus /></button>
+              {seats}
+              <button className='mx-4 rounded-md btn btn-xs' disabled={seats === 5} onClick={() => setSeats(seats + 1)}><FiPlus /></button>
+            </h2>
+            <div>
+
+            </div>
+            <h2 className="inline-flex p-2 mt-10 text-sm tracking-tight text-white rounded-md place-items-center gap-x-2 font-display md:text-lg bg-gradient-to-tr from-violet-500 to-orange-300">
+              <BsRobot></BsRobot>Triggers
+              <button className='mx-4 rounded-md btn btn-xs' disabled={triggerIndex === 0} onClick={() => setTriggerIndex(triggerIndex - 1)}><FiMinus /></button>
+              {triggerAmount[triggerIndex]}
+              <button className='mx-4 rounded-md btn btn-xs' disabled={triggerIndex === triggerCounts.length - 1} onClick={() => setTriggerIndex(triggerIndex + 1)}><FiPlus /></button>
+            </h2>
+            <div>
+
+            </div>
+          </div>
+        </div >
+        <div className="grid max-w-2xl grid-cols-1 mt-16 -mx-4 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
+          <Plan
+            name="Starter"
+            price="$usd"
+            description="Good for anyone who is self-employed and just getting started."
+            href="/register"
+            features={[
+              'Send 10 quotes and invoices',
+              'Connect up to 2 bank accounts',
+              'Track up to 15 expenses per month',
+              'Manual payroll support',
+              'Export up to 3 reports',
+            ]}
+          />
+          <Plan
+            featured
+            name="Small business"
+            price="$15"
+            description="Perfect for small / medium sized businesses."
+            href="/register"
+            features={[
+              'Send 25 quotes and invoices',
+              'Connect up to 5 bank accounts',
+              'Track up to 50 expenses per month',
+              'Automated payroll support',
+              'Export up to 12 reports',
+              'Bulk reconcile transactions',
+              'Track in multiple currencies',
+            ]}
+          />
+          <Plan
+            name="Enterprise"
+            price="$39"
+            description="For even the biggest enterprise companies."
+            href="/register"
+            features={[
+              'Send unlimited quotes and invoices',
+              'Connect up to 15 bank accounts',
+              'Track up to 200 expenses per month',
+              'Automated payroll support',
+              'Export up to 25 reports, including TPS',
+            ]}
+          />
+        </div>
+
+      </Container>
+    </section >
   )
 }
 

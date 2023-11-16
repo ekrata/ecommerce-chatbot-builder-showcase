@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import backgroundImage from '../images/background-call-to-action.jpg';
 
-export function SlimLayout({ children }: { children: React.ReactNode }) {
+export const SlimLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div className="relative flex justify-center min-h-full md:px-12 lg:px-0">

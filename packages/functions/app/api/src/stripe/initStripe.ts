@@ -1,5 +1,4 @@
 import { getHttp } from '../http';
-import prices from './local-prices.json';
 
 console.log('creating stripe items... ');
 const http = getHttp(`${process.env.NEXT_PUBLIC_APP_API_URL}`);
@@ -22,7 +21,7 @@ http
       setTimeout(
         () =>
           http
-            .post(`/stripe/create-payment-links`, prices, {
+            .post(`/stripe/create-payment-links`, res?.data, {
               timeout: 1000000,
             })
             .then((res: any) => {
@@ -32,7 +31,7 @@ http
               // console.log(err);
             }),
         // data.data as MockOrgIds[];
-        20000,
+        1000,
       );
     }
   })
