@@ -64,15 +64,11 @@ export function PrimaryFeatures() {
     <section
       id="features"
       aria-label="Features for running your books"
-      className="relative overflow-hidden bg-blue-600 md:pb-40 md:py-10"
+      className="relative overflow-hidden bg-gradient-to-tr from-violet-500 to-orange-300 md:pb-40 md:py-10"
     >
-      <Image
-        className="absolute left-1/2  max-w-none translate-x-[-44%] translate-y-[-42%]"
-        src={backgroundImage}
-        alt=""
-        width={2245}
-        height={1636}
-        unoptimized
+      <div
+        className="absolute left-1/2  max-w-none translate-x-[-44%] translate-y-[-42%]  "
+
       />
       <Container className="relative">
         <div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
