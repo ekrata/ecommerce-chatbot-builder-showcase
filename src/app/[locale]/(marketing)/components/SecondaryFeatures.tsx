@@ -85,7 +85,7 @@ const features: Array<Feature> = [
     },
   },
   {
-    name: 'Help Center',
+    name: 'Help Center & Knowledge Base',
     summary:
       "Empower Customers with Self-Service and Unleash Your Team's Potential with Our Comprehensive Help Center",
     description:

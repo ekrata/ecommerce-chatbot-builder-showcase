@@ -1,9 +1,15 @@
 'use client'
 import cn from 'classnames';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
-import { BsPerson, BsRobot } from 'react-icons/bs';
+import { useTranslations } from 'next-intl';
+import { ReactElement, useMemo, useState } from 'react';
+import { AiOutlineNodeIndex } from 'react-icons/ai';
+import { BiSolidHelpCircle } from 'react-icons/bi';
+import { BsInfinity, BsPerson, BsPersonLinesFill, BsRobot } from 'react-icons/bs';
+import { FaMailBulk, FaShopify } from 'react-icons/fa';
+import { FaFacebookMessenger, FaInstagram, FaPeopleGroup, FaWhatsapp } from 'react-icons/fa6';
 import { FiMinus, FiPlus } from 'react-icons/fi';
+import { MdAutoGraph, MdOutlineDraw } from 'react-icons/md';
 
 import { RadioGroup } from '@headlessui/react';
 
@@ -72,9 +78,10 @@ function Plan({
   price: string
   description: string
   href: string
-  features: Array<string>
+  features: Array<ReactElement>
   featured?: boolean
 }) {
+  const t = useTranslations('marketing')
   const priceElement = useMemo(() => (
 
     <p className="flex flex-row order-first text-5xl font-light tracking-tight text-white gap-x-2 place-items-center font-display animate-fade-left ">
@@ -125,7 +132,7 @@ function Plan({
         className="mt-8"
         aria-label={`Get started with the ${name} plan for ${price}`}
       >
-        Get started
+        {t('Start free trial')}
       </Button>
     </section>
   )
@@ -139,6 +146,7 @@ const frequencies = [
 
 export function Pricing() {
   const triggerCounts = triggerAmount
+  const t = useTranslations('marketing')
   const [frequency, setFrequency] = useState(frequencies[0])
   const [seats, setSeats] = useState(1)
   const [triggerIndex, setTriggerIndex] = useState(0)
@@ -171,7 +179,7 @@ export function Pricing() {
         <div className="md:text-center">
           <h2 className="text-3xl tracking-tight text-white font-display sm:text-4xl">
             <span className="relative whitespace-nowrap">
-              <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-blue-400" />
+              {/* <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-violet-700" /> */}
               <span className="relative">Simple pricing,</span>
             </span>{' '}
             for everyone.
@@ -180,7 +188,7 @@ export function Pricing() {
             It doesn’t matter what size your business is, our software won’t
             work well for you.
           </p> */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-8">
             <RadioGroup
               value={frequency}
               onChange={setFrequency}
@@ -195,61 +203,84 @@ export function Pricing() {
                     cn(checked ? 'bg-gradient-to-tr from-violet-500 to-orange-300 animate-rotate-x' : '', 'cursor-pointer rounded-full px-2.5 py-1')
                   }
                 >
-                  <span>{option.label}</span>
+                  <span>{option.label}{option.value === 'annually' && <span className='ml-4 text-xs border-0 badge info bg-gradient-to-r from-fuchsia-600 to-pink-600'>{t('Save 20%')}</span>}</span>
                 </RadioGroup.Option>
               ))}
             </RadioGroup>
           </div>
-          <div className='flex flex-col justify-center md:flex-row gap-x-4'>
-
-            <h2 className="inline-flex p-2 px-4 mt-10 text-sm tracking-tight text-white rounded-md shadow-2xl bg-gradient-to-tr from-violet-500/25 to-orange-300/75 md:text-base place-items-center gap-x-2 font-display sm:text-xl ">
-              <BsPerson></BsPerson>Seats
-              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={seats === 1} onClick={() => setSeats(seats - 1)}><FiMinus /></button>
-              {seats}
-              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={seats === 5} onClick={() => setSeats(seats + 1)}><FiPlus /></button>
+          <div className='flex flex-col justify-center mt-10 md:flex-row gap-x-4 gap-y-2'>
+            <h2 className="inline-flex justify-between p-2 px-4 text-sm tracking-tight text-white rounded-md shadow-2xl bg-gradient-to-tr from-violet-500/25 to-orange-300/75 md:text-base place-items-center gap-x-2 font-display sm:text-xl ">
+              <div className='flex flex-row place-items-center gap-x-2'>
+                <BsPerson></BsPerson>Seats
+              </div>
+              <div className='justify-end'>
+                <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={seats === 1} onClick={() => setSeats(seats - 1)}><FiMinus /></button>
+                {seats}
+                <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={seats === 5} onClick={() => setSeats(seats + 1)}><FiPlus /></button>
+              </div>
             </h2>
             <div>
 
             </div>
-            <h2 className="inline-flex p-2 px-4 mt-10 text-sm tracking-tight text-white rounded-md shadow-2xl bg-gradient-to-tr from-violet-500/75 to-orange-300/25 place-items-center gap-x-2 md:text-base font-display ">
-              <BsRobot></BsRobot>Triggers
-              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={triggerIndex === 0} onClick={() => setTriggerIndex(triggerIndex - 1)}><FiMinus /></button>
-              {triggerAmount[triggerIndex]}
-              <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={triggerIndex === triggerCounts.length - 1} onClick={() => setTriggerIndex(triggerIndex + 1)}><FiPlus /></button>
+            <h2 className="inline-flex justify-between p-2 px-4 text-sm tracking-tight text-white rounded-md shadow-2xl bg-gradient-to-tr from-violet-500/75 to-orange-300/25 place-items-center gap-x-2 md:text-base font-display ">
+              <div className='flex flex-row place-items-center gap-x-2'>
+                <BsRobot></BsRobot>Triggers
+              </div>
+
+              <div className='justify-end'>
+
+                <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={triggerIndex === 0} onClick={() => setTriggerIndex(triggerIndex - 1)}><FiMinus /></button>
+                {triggerAmount[triggerIndex]}
+                <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={triggerIndex === triggerCounts.length - 1} onClick={() => setTriggerIndex(triggerIndex + 1)}><FiPlus /></button>
+              </div>
             </h2>
             <div>
 
             </div>
           </div>
         </div >
-        <div className="grid max-w-2xl grid-cols-1 mt-16 -mx-4 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-2 xl:mx-0 xl:gap-x-8">
+        <div className="grid max-w-2xl grid-cols-1 mt-10 -mx-4 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-2 xl:mx-0 xl:gap-x-8">
           <Plan
             name="Starter"
             price={starterPrice.toString()}
-            description="Increase website engagement and boost customer satisfaction with website live chat, chatbot, and custom bot creation."
+            description={t("Increase website engagement and boost customer satisfaction with website live chat, chatbot, and custom bot creation")}
             href={starterLink?.url ?? ''}
             features={[
-              'Send 10 quotes and invoices',
-              'Connect up to 2 bank accounts',
-              'Track up to 15 expenses per month',
-              'Manual payroll support',
-              'Export up to 3 reports',
+              <span className='inline-flex place-items-center gap-x-2'><BsInfinity />{t('Unlimited live chats')}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><BsRobot />{t("Multiply your team's productivity with our advanced AI Chatbot")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><AiOutlineNodeIndex />{t("Automate immediately with our chatbot templates")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><MdOutlineDraw />{t("Build your own custom chatbots with our easy to use visual bot builder")}</span>,
+              <span className=' gap-x-2'>
+                <span className='inline-flex place-items-center gap-x-2'>
+                  <MdAutoGraph />{t('Track growth and customer success metrics with our analytics')}
+                </span>
+                <span className=" badge bg-gradient-to-br from-violet-500/50 to-orange-300/50">{t('Coming soon')}</span>
+              </span>,
+              <span className='inline-flex place-items-center gap-x-2'><FaPeopleGroup />{t("Live visitor list")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><BsPersonLinesFill />{t("Live visitor info")}</span>,
             ]}
           />
           <Plan
             featured
-            name="Scale"
+            name="Plus"
             price={plusPrice.toString()}
-            description="Perfect for small / medium sized businesses."
+            description={t("All you need to scale and take your customer service to the next level")}
             href={plusLink?.url ?? ''}
             features={[
-              'Send 25 quotes and invoices',
-              'Connect up to 5 bank accounts',
-              'Track up to 50 expenses per month',
-              'Automated payroll support',
-              'Export up to 12 reports',
-              'Bulk reconcile transactions',
-              'Track in multiple currencies',
+              <span className='inline-flex place-items-center gap-x-2'><BiSolidHelpCircle className="text-2xl" />{t('Help Center and Articles integrated into chat widget')}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><FaMailBulk />{t('Handle tickets with email')}</span>,
+              <span>
+                <span className='inline-flex place-items-center gap-x-2'><FaFacebookMessenger /><FaInstagram /><FaWhatsapp />{t('Facebook, Instagram and Whatsapp Omnichannel Integration')}
+                </span>
+                <span className="border-0 shadow-2xl badge bg-gradient-to-br from-violet-500/100 to-orange-300/100">{t('Coming soon')}</span>
+              </span>,
+              <span>
+                <span className='inline-flex place-items-center gap-x-2'><FaShopify />{t('Drive growth with our native shopify actions')}
+                </span>
+                <br />
+                <span className="border-0 shadow-2xl badge bg-gradient-to-br from-violet-500/100 to-orange-300/100">{t('Coming soon')}</span>
+              </span>,
+              <span className='inline-flex place-items-center gap-x-2'><FaMailBulk />{t("Everything in starter")}</span>,
             ]}
           />
           {/* <Plan

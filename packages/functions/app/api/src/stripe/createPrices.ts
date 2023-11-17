@@ -11,10 +11,10 @@ const stripe = new Stripe(Config.STRIPE_KEY_SECRET, { maxNetworkRetries: 3 });
 
 export const starterSeatPriceMap = {
   1: 0,
-  2: 1000,
-  3: 2000,
-  4: 3000,
-  5: 4000,
+  2: 1400,
+  3: 2800,
+  4: 4200,
+  5: 5600,
 };
 
 export const starterChatbotTriggersPriceMap = {
@@ -29,10 +29,10 @@ export const starterChatbotTriggersPriceMap = {
 
 export const plusSeatsPriceMap = {
   1: 0,
-  2: 2000,
-  3: 4000,
-  4: 6000,
-  5: 8000,
+  2: 2200,
+  3: 4400,
+  4: 6600,
+  5: 8800,
 };
 export const plusChatbotTriggersPriceMap = {
   1000: 0,

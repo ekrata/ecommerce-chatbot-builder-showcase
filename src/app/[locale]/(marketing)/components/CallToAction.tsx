@@ -9,28 +9,22 @@ export function CallToAction() {
   return (
     <section
       id="get-started-today"
-      className="relative py-32 overflow-hidden bg-blue-600"
+      className="relative overflow-hidden md:pb-52 md:py-10 bg-gradient-to-br from-violet-500 to-orange-300"
     >
-      <Image
-        className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-w-none"
-        src={backgroundImage}
-        alt=""
-        width={2347}
-        height={1244}
-        unoptimized
+      <div
+        className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-w-none "
       />
       <Container className="relative">
         <div className="max-w-lg mx-auto text-center">
           <h2 className="text-3xl tracking-tight text-white font-display sm:text-4xl">
-            Get started today
+            Elevate your customer service to new heights with eChat by Ekrata™
           </h2>
           <p className="mt-4 text-lg tracking-tight text-white">
-            It’s time to take control of your books. Buy our software so you can
-            feel like you’re doing something productive.
+            Experience the seamless blend of human and AI-powered customer support that delivers exceptional results every time.
           </p>
-          <Button href={"/register" as Route} color="white" className="mt-10">
+          {/* <Button href={"/register" as Route} color="white" className="mt-10">
             Get 6 months free
-          </Button>
+          </Button> */}
         </div>
       </Container>
     </section>

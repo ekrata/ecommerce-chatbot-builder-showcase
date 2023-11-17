@@ -12,13 +12,16 @@ import { signoutSession, useAuthContext } from '../../(hooks)/AuthProvider';
 import ekrataLogo from '../../../../../public/graphics/ekrataLogo.png';
 import { Button } from './Button';
 import { Container } from './Container';
+import { LoginModal } from './LoginModal';
 import { Logo } from './Logo';
 import { NavLink } from './NavLink';
+import { SignupModal } from './SignupModal';
 
 export function Header() {
   const t = useTranslations('marketing')
   const [user] = useAuthContext()
   const [scrolling, setScrolling] = useState<boolean>()
+  const [sessionUser, setSessionUser] = useAuthContext()
 
   window?.addEventListener('scroll', () => {
     setScrolling(true);
@@ -29,12 +32,13 @@ export function Header() {
     setScrolling(false)
   });
 
-  function MobileNavLink({ href, children, }: {
-    href: string
+  function MobileNavLink({ href, children, hash }: {
+    href: string,
+    hash?: string,
     children: React.ReactNode
   }) {
     return (
-      <Popover.Button as={Link} href={{ pathname: href }} className="block w-full p-2">
+      <Popover.Button as={Link} href={{ pathname: href, hash: hash ?? '' }} shallow className="block w-full p-2">
         {children}
       </Popover.Button>
     )
@@ -101,12 +105,12 @@ export function Header() {
               as="div"
               className="absolute inset-x-0 flex flex-col p-4 mt-4 text-lg tracking-tight origin-top bg-white shadow-xl top-full rounded-2xl text-slate-900 ring-1 ring-slate-900/5"
             >
-              <MobileNavLink href="#features">Features</MobileNavLink>
-              <MobileNavLink href="#testimonials">Testimonials</MobileNavLink>
-              <MobileNavLink href="#pricing">Pricing</MobileNavLink>
+              <MobileNavLink href={`#features`} >Features</MobileNavLink>
+              {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
+              <MobileNavLink href={`#pricing`}>Pricing</MobileNavLink>
               <hr className="m-2 border-slate-300/40" />
-              <MobileNavLink href="/login">
-                {user ? t('Sign out') : t('Sign in')}
+              <MobileNavLink href=''>
+                {user ? t('Sign out') : <LoginModal>{t('Sign in')}</LoginModal>}
               </MobileNavLink>
               <Button href={{ pathname: "/register" }} color="blue">
                 <span>
@@ -124,27 +128,27 @@ export function Header() {
       <Container>
         <nav className="relative flex justify-between animate-fade-down">
           <div className="flex items-center md:gap-x-12">
-            <Link href="#" aria-label="Home">
+            <Link href="#" aria-label="Home" >
               <Image src={ekrataLogo} className="w-auto rounded-md shadow-2xl saturate-200 ring-2 ring-blue-400 mask mask-squircle" width={20} height={20} alt={''}></Image>
             </Link>
             <div className="hidden md:flex md:gap-x-6">
-              <NavLink href="#features">Features</NavLink>
-              <NavLink href="#testimonials">Testimonials</NavLink>
-              <NavLink href="#pricing">Pricing</NavLink>
+              <NavLink hash='features' href=''>Features</NavLink>
+              {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
+              <NavLink hash='pricing' href='' >Pricing</NavLink>
             </div>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block" onClick={() => {
               user && signoutSession()
             }}>
-              <NavLink href="/login">
-                {user ? t('Sign out') : t('Sign in')}
+              <NavLink href="" >
+                {user ? <div onClick={() => setSessionUser(null)}>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
               </NavLink>
             </div>
-            <Link href={{ pathname: user ? '/dash/conversations' : '/register' }}>
+            <Link href={{ pathname: user ? '/dash/conversations' : '' }}>
               <Button color="blue" className='bg-gradient-to-tr from-violet-500 to-orange-300 hover:animate-pulse'>
                 <span>
-                  {user ? t('Go to app') : t('Start free trial')}
+                  {user ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
                 </span>
               </Button>
             </Link>

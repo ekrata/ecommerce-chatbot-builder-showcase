@@ -40,10 +40,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       if (response.status !== 200) {
         setSessionUser(null)
         router.push('/')
-
       }
       setFetching(false)
-      return (await response?.json());
+      const res = (await response?.json());
+      if (res?.message === "Internal Server Error") {
+        setSessionUser(null)
+        router.push('/')
+      }
+      return res
     } catch (error) {
       setSessionUser(null)
       router.push('/')
