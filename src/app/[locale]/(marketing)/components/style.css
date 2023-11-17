@@ -52,3 +52,13 @@ svg {
     stroke: #FFC300;
     }
   }
+
+  @keyframes filterToggle {
+    from {
+      transform: filter(4px);
+    }
+  
+    to {
+      transform: filter(0px);
+    }
+  }

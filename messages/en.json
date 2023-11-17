@@ -205,6 +205,7 @@
     }
   },
   "dash": {
+    "No conversation selected": "No conversation selected",
     "conversations": "{count, plural, \n              =0 {No conversations found}\n              =1 {One conversation}\n              other {# conversations}\n              }",
     "Start chat": "Start chat",
     "All conversations": "All conversations",

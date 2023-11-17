@@ -1,24 +1,20 @@
 'use client'
 
+import './style.css';
+
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import ekrataLogo from '../../../../../public/graphics/ekrataLogo.png';
-import hero from '../../../../../public/graphics/hero.png';
+import hero from '../../../../../public/hero-image/all.png';
 import { Button } from '../components/Button';
 import { Container } from '../components/Container';
-import logoLaravel from '../images/logos/laravel.svg';
-import logoMirage from '../images/logos/mirage.svg';
-import logoStatamic from '../images/logos/statamic.svg';
-import logoStaticKit from '../images/logos/statickit.svg';
-import logoTransistor from '../images/logos/transistor.svg';
-import logoTuple from '../images/logos/tuple.svg';
 
+// const gallery = Object.values(import.meta.glob("../../../../../public/graphics/*.{png,jpg,jpeg,PNG,JPEG}", { eager: true, as: 'url' }))
 export function Hero() {
   const t = useTranslations('marketing')
   return (
     <Container className="h-screen min-h-screen pt-20 pb-16 text-center bg-white md:pt-10 ">
-      <div className='flex flex-col w-full text-center md:flex-row animate-fade place-items-center'>
+      <div className='flex flex-col w-full mt-32 text-center md:flex-row animate-fade place-items-center'>
         <div className="max-w-4xl mx-auto text-lg font-medium tracking-tight md:pr-10 lg:pr-40 md:text-xl text-start font-display text-slate-900 sm:text-7xl">
           {/* <h2 className="inline-flex w-full px-2 py-1 mb-4 text-5xl bg-white rounded-md shadow-md place-items-center text-slate-900 bg-gradient-to-tr from-violet-500 to-orange-300">
             <span className='ml-2 text-sm font-normal tracking-normal md:text-2xl text-slate-100 animate-fade-left bg-clip-text'>
@@ -59,8 +55,14 @@ export function Hero() {
 
           </h2>
         </div>
-        <div className='animate-duration-[10000ms] mt-30 md:mt-20 p-16 md:p-0 animate-infinite animate-wiggle w-full justify-center place-items-center'>
-          <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image>
+        <div className='justify-center w-full rounded-md shadow-xl md:p-0 place-items-center'>
+          {/* <Image src={download1} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
+          <div className="p-4 border rounded-md mockup-window bg-base-300">
+            <Image src={hero} className="filterToggle skeleton  p-4  self-center  animate-duration-[20000ms]   animate-delay-[1000ms]    rounded-xl shadow-lg animate-infinite bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500/10 mix-blend-multiply backdrop-blur-sm to-indigo-700/10     md:w-[900px]  " alt={''}></Image>
+          </div>
+
+          {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
+          {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
         </div>
       </div>
       {/* <p className="max-w-2xl mx-auto mt-12 text-lg tracking-tight text-slate-700">

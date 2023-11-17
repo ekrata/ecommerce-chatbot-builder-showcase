@@ -15,6 +15,11 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       // updatedAt,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       // createdAt,
+      // all these cannot be updated from public routes (such as this). They are set by billing webhooks
+      billingQuota,
+      billingCustomerId,
+      billingRemainingQuota,
+      billingSubscriptionId,
       ...updateOrg
     }: UpdateOrg = useJsonBody();
 

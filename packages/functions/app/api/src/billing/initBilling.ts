@@ -14,14 +14,14 @@ const http = getHttp(`${process.env.NEXT_PUBLIC_APP_API_URL}`);
 //     // console.log(err);
 //   });
 http
-  .post(`/stripe/create-prices`, {}, { timeout: 1000000 })
+  .post(`/billing/create-prices`, {}, { timeout: 1000000 })
   .then((res: any) => {
     if (res?.data) {
       console.log(res.data);
       setTimeout(
         () =>
           http
-            .post(`/stripe/create-payment-links`, res?.data, {
+            .post(`/billing/create-payment-links`, res?.data, {
               timeout: 1000000,
             })
             .then((res: any) => {

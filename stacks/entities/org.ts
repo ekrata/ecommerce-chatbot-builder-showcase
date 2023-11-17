@@ -21,6 +21,41 @@ export const Org = new Entity({
       type: 'string',
       default: '',
     },
+    billingSubscriptionId: {
+      type: 'string',
+      default: '',
+    },
+    billingMonthlyCycleStartTimestamp: {
+      type: 'number',
+      default: 0,
+    },
+    billingQuota: {
+      type: 'map',
+      properties: {
+        seats: {
+          type: 'number',
+          default: 0,
+        },
+        triggers: {
+          type: 'number',
+          default: 0,
+        },
+      },
+      default: {},
+    },
+    billingRemainingQuota: {
+      type: 'map',
+      properties: {
+        seats: {
+          type: 'number',
+          default: 0,
+        },
+        triggers: {
+          type: 'number',
+          default: 0,
+        },
+      },
+    },
     name: {
       type: 'string',
       required: true,
@@ -81,9 +116,6 @@ export const Org = new Entity({
       default: 50,
     },
     billingCustomerId: {
-      type: 'string',
-    },
-    billingSubscriptionId: {
       type: 'string',
     },
     domain: {

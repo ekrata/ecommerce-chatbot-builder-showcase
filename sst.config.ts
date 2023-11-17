@@ -3,6 +3,7 @@ import { dbStack } from 'stacks/dbStack';
 
 import { articleContentsStack } from './packages/functions/app/api/src/article-contents/articleContentsStack';
 import { articlesStack } from './packages/functions/app/api/src/articles/articlesStack';
+import { billingStack } from './packages/functions/app/api/src/billing/billingStack';
 import { botsStack } from './packages/functions/app/api/src/bots/botsStack';
 import { botTemplatesStack } from './packages/functions/app/api/src/botTemplates/botTemplatesStack';
 import { configurationStack } from './packages/functions/app/api/src/configuration/configurationStack';
@@ -13,10 +14,8 @@ import { messagesStack } from './packages/functions/app/api/src/messages/message
 import { metaStack } from './packages/functions/app/api/src/meta/metaStack';
 import { operatorsStack } from './packages/functions/app/api/src/operators/operatorsStack';
 import { orgsStack } from './packages/functions/app/api/src/orgs/orgsStack';
-import { stripeStack } from './packages/functions/app/api/src/stripe/stripeStack';
 import { translationsStack } from './packages/functions/app/api/src/translations/translationsStack';
 import { visitsStack } from './packages/functions/app/api/src/visits/visitsStack';
-import { webhooksStack } from './packages/functions/app/api/src/webhooks/webhooksStack';
 import { baseStack } from './stacks/baseStack';
 import { paramStack } from './stacks/paramStack';
 
@@ -35,6 +34,7 @@ export default {
       .stack(paramStack)
       .stack(dbStack)
       .stack(baseStack)
+      .stack(billingStack)
       .stack(articlesStack)
       .stack(orgsStack)
       .stack(configurationStack)
@@ -45,11 +45,9 @@ export default {
       .stack(customersStack)
       .stack(translationsStack)
       .stack(visitsStack)
-      .stack(webhooksStack)
       .stack(botsStack)
       .stack(botTemplatesStack)
       .stack(interactionsStack)
-      .stack(stripeStack)
       .stack(metaStack);
   },
 } satisfies SSTConfig;

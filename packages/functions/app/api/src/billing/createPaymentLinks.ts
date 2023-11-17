@@ -19,12 +19,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const yearlyPaymentLinks = await createPaymentLinks(body.yearlyPrices);
 
       await writeFile(
-        `data/stripe/${Config.STAGE}-monthly-paymentLinks.json`,
+        `data/billing/${Config.STAGE}-monthly-paymentLinks.json`,
         JSON.stringify(monthlyPaymentLinks),
       );
 
       await writeFile(
-        `data/stripe/${Config.STAGE}-yearly-paymentLinks.json`,
+        `data/billing/${Config.STAGE}-yearly-paymentLinks.json`,
         JSON.stringify(yearlyPaymentLinks),
       );
 

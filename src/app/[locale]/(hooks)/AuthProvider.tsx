@@ -78,9 +78,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         children :
         < div className="justify-center w-screen h-screen gap-2 bg-white ">
           <div className='flex flex-row justify-center h-full gap-2 place-items-center animate-fade-left '>
-            <div className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-bounce animate-delay-300 "></div>
-            <div className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-bounce animate-delay-700"></div>
-            <div className="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-bounce animate-delay-300 "></div>
+            <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-violet-500 to-orange-300 animate-bounce animate-delay-300 "></div>
+            <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-violet-500 to-orange-300 animate-bounce animate-delay-700"></div>
+            <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-violet-500 to-orange-300 animate-bounce animate-delay-300 "></div>
           </div>
         </div>
       }

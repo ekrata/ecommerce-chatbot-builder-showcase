@@ -1,16 +1,29 @@
 import { ApiHandler, useJsonBody, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
-import { CreateOrg } from '../../../../../../stacks/entities/entities';
 import { Config } from 'sst/node/config';
+import { Table } from 'sst/node/table';
+
+import * as Sentry from '@sentry/serverless';
+
+import { CreateOrg } from '../../../../../../stacks/entities/entities';
+import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId } = usePathParams();
-    const body: CreateOrg = useJsonBody();
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // updatedAt,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // createdAt,
+      // all billing items cannot be updated from public routes (such as this).
+      billingQuota,
+      billingCustomerId,
+      billingRemainingQuota,
+      billingSubscriptionId,
+      ...createOrg
+    }: CreateOrg = useJsonBody();
     if (!orgId) {
       return {
         statusCode: 422,
@@ -20,7 +33,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     try {
       const res = await appDb.entities.orgs
         .create({
-          ...body,
+          ...createOrg,
           orgId,
         })
         .go();
@@ -35,5 +48,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

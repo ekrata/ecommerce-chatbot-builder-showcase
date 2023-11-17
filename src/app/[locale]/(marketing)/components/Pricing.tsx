@@ -203,7 +203,7 @@ export function Pricing() {
                     cn(checked ? 'bg-gradient-to-tr from-violet-500 to-orange-300 animate-rotate-x' : '', 'cursor-pointer rounded-full px-2.5 py-1')
                   }
                 >
-                  <span>{option.label}{option.value === 'annually' && <span className='ml-4 text-xs border-0 badge info bg-gradient-to-r from-fuchsia-600 to-pink-600'>{t('Save 20%')}</span>}</span>
+                  <span>{option.label}{option.value === 'annually' && <span className='ml-4 text-xs border-0 badge info bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700'>{t('Save 20%')}</span>}</span>
                 </RadioGroup.Option>
               ))}
             </RadioGroup>

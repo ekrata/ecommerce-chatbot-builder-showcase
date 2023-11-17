@@ -1,7 +1,7 @@
 import { StackContext, use } from 'sst/constructs';
 import { baseStack } from 'stacks/baseStack';
 
-export function stripeStack({ app, stack }: StackContext) {
+export function billingStack({ app, stack }: StackContext) {
   const { api } = use(baseStack);
 
   api.addRoutes(stack, {
@@ -19,21 +19,22 @@ export function stripeStack({ app, stack }: StackContext) {
     //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging',
     // 'POST /stripe/email':
     //   'packages/functions/app/api/src/webhooks/email.handler',
-    'POST /stripe/stripe':
-      'packages/functions/app/api/src/webhooks/stripe/webhook.handler',
+    'POST /billing/webhook':
+      'packages/functions/app/api/src/billing/webhook.handler',
   });
   if (app?.stage !== 'prod') {
     api.addRoutes(stack, {
-      'POST /stripe/create-prices': {
+      'POST /billing/create-prices': {
         function: {
-          handler: 'packages/functions/app/api/src/stripe/createPrices.handler',
+          handler:
+            'packages/functions/app/api/src/billing/createPrices.handler',
           timeout: 200,
         },
       },
-      'POST /stripe/create-payment-links': {
+      'POST /billing/create-payment-links': {
         function: {
           handler:
-            'packages/functions/app/api/src/stripe/createPaymentLinks.handler',
+            'packages/functions/app/api/src/billing/createPaymentLinks.handler',
           timeout: 200,
         },
       },

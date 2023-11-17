@@ -85,7 +85,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         yearlyPrices,
       } as CreatePricesResponse);
 
-      await writeFile(`data/stripe/${Config.STAGE}-prices.json`, body);
+      await writeFile(`data/billing/${Config.STAGE}-prices.json`, body);
 
       console.log('prices saved');
 
