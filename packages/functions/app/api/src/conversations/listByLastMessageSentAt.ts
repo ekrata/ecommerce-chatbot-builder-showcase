@@ -140,15 +140,16 @@ export const listConversations = async (params: ConversationFilterParams) => {
           conversationId,
         })),
       )
-      .go();
+      .go({ preserveBatchOrder: true });
 
     console.log('conversations', conversations);
     if (operatorId) {
-      data = conversations.data.filter(
-        (conversation) =>
-          conversation?.orgId === orgId &&
-          conversation?.operatorId === operatorId,
-      );
+      data =
+        conversations?.data?.filter(
+          (conversation) =>
+            conversation?.orgId === orgId &&
+            conversation?.operatorId === operatorId,
+        ) ?? [];
     } else if (customerId) {
       data = conversations.data.filter(
         (conversation) =>

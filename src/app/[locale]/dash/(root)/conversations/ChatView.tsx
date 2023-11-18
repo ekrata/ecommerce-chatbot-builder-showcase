@@ -72,7 +72,7 @@ export const ChatView: FC = () => {
     return (
       <div className="flex justify-between w-full h-screen max-h-screen bg-white ">
         <div className="flex flex-col w-full h-screen max-h-screen place-items-center ">
-          <div
+          {isMobile && <div
             className={`bg-white border-b-[1px] flex flex-row gap-y-2 h-12 place-items-center animated-flip-down w-full justify-start  text-sm flex-wrap p-3 gap-x-2 `}
           >
             {isMobile &&
@@ -88,14 +88,14 @@ export const ChatView: FC = () => {
                 <div className="w-1/3 h-full py-1 bg-gray-300 rounded-md dark:bg-gray-600" />
               </div>
             }
-            {conversationItem?.customer?.name}
-            {conversationItem?.customer && (
-              <a onClick={() => setConversationState('customerInfo')} className='flex flex-row place-items-center gap-x-2'>
+            {isMobile && conversationItem?.customer?.name}
+            {isMobile && conversationItem?.customer && (
+              <a onClick={() => setConversationState('customerInfo')} className='flex flex-row text-center place-items-center gap-x-2'>
                 <CustomerAvatar customer={conversationItem?.customer} conversationItem={conversationItem} />
                 <p>{`${conversationItem.customer?.name ?? conversationItem?.customer?.email ?? conversationItem?.customer?.customerId}`}</p>
               </a>
             )}
-          </div>
+          </div>}
           <div
             className={`flex flex-col place-items-center  w-full  h-screen  justify-stretch  overflow-y-scroll mx-2 `}
           >

@@ -21,28 +21,27 @@ export const CustomerAvatar: React.FC<Props> = ({ conversationItem, customer, sh
   const [color, setColor] = useState(faker.helpers.arrayElement(avatarGradients))
 
   return (
-    <div className={` w-8 h-8 ${color} rounded-full p-1  ring-info ${message?.sender === 'operator' && customer?.online ? 'online' : 'offline'}`}>
+    <div className={` w-8 h-8 ${color} rounded-full p-1  ring-info  ${customer?.online ? 'online' : 'offline'}`}>
       <div>
-        {message && showTypingState &&
+        {/* {message && showTypingState &&
           <div className="indicator">
             <span
               data-testid="status-badge"
-              className={`indicator-item  badge-success badge-xs text-white dark:text-default rounded-full ${!message?.sentAt
+              className={`indicator-item  badge-xs text-white dark:text-default rounded-full ${!message?.sentAt
                 ? 'mx-0 my-0 indicator-bottom animate-bounce'
                 : 'my-2 mx-2 indicator-top'
                 }`}
             >
               {!message?.sentAt ? '...' : ''}
             </span>
-            <span className='font-semibold overflow text-overflow place-items-center'>
-
+            <span className='font-semibold text-center text-white overflow text-overflow place-items-center'>
               {avatarText}
             </span>
           </div >
-        }
+        } */}
       </div >
 
-      <span className='font-semibold text-black overflow text-overflow place-items-center'>
+      <span className='font-semibold text-center text-white overflow text-overflow place-items-center'>
         {avatarText}
 
       </span>

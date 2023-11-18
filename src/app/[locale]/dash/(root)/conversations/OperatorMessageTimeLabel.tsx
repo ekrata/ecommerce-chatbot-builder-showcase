@@ -1,5 +1,6 @@
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { BsPerson, BsRobot } from 'react-icons/bs';
 
 import { ConversationItem } from '@/entities/conversation';
 
@@ -35,10 +36,18 @@ export const OperatorMessageTimeLabel: React.FC<Props> = ({ conversationItem, up
 
   return (
     <div className='flex place-items-center'>
-      <p className="text-xs text-neutral-400 place-items-center">
+      <p className="inline-flex text-xs text-neutral-400 place-items-center gap-x-1">
         {message?.sender === 'customer' && (conversationItem?.customer?.name ?? conversationItem?.customer?.email)}
-        {message?.sender === 'operator' && (sessionOperator?.operatorId === message.operatorId ? `${t('You')}` : lastMessageOperator?.name ?? lastMessageOperator?.email)}
-        {message?.sender === 'bot' && `${t('Bot')}`}
+        {message?.sender === 'operator' &&
+          <div className='inline-flex place-items-center gap-x-1'>
+            <BsPerson />
+            {sessionOperator?.operatorId === message.operatorId ? `${t('You')}` : lastMessageOperator?.name ?? lastMessageOperator?.email}
+          </div>}
+        {message?.sender === 'bot' &&
+          <div className='inline-flex place-items-center gap-x-1'>
+            <BsRobot />
+            {t('Bot')}
+          </div>}
         {` · ${message?.sentAt && time}.`}
       </p>
     </div>

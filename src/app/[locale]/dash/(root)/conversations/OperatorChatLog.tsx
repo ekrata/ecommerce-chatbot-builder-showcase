@@ -52,27 +52,29 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
           return (
             <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
               {(message?.sender === 'customer') && (
-                <div className="flex flex-col w-full chat chat-start gap-x-2" >
-                  <div className="flex w-30 h-30 gap-x-2">
-                    <CustomerAvatar conversationItem={conversationItem} showTypingState={true} />
+                <div>
+                  <div className="flex flex-row w-3/4 chat chat-start gap-x-2 animate-fade-right" >
+                    <div className="flex text-center w-30 h-30 place-items-center ">
+                      <CustomerAvatar conversationItem={conversationItem} customer={conversationItem?.customer} showTypingState={true} />
+                    </div>
+                    <p className={`justify-start p-2 rounded-md place-items-start  flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
+                      } tooltip-bottom z-10`}
+                      data-testid={`operator-message-content-${message.messageId}`}
+                      data-tip={<OperatorMessageTimeLabel conversationItem={conversationItem} />}
+                    >
+                      {message?.content}
+                    </p>
                   </div>
-                  <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
-                    } tooltip-bottom z-10`}
-                    data-testid={`operator-message-content-${message.messageId}`}
-                    data-tip={<OperatorMessageTimeLabel conversationItem={conversationItem} />}
-                  >
-                    {message?.content}
-                  </p>
                   {i + 1 === conversationItem?.messages?.length && (
-                    <div className="flex justify-start place-items-center ">
+                    <div className="flex justify-start place-items-center animate-fade-right ">
                       <OperatorMessageTimeLabel conversationItem={conversationItem} />
                     </div>
                   )}
                 </div>
               )}
               {(message.sender === 'operator' || message.sender === 'bot') && (
-                <div className="flex flex-col chat chat-end">
-                  <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
+                <div className="flex flex-col ml-32 chat chat-end animate-fade-left">
+                  <div className="min-h-0 p-2 px-4 bg-gray-200 rounded-md " data-testid={`customer-message-content-${message.messageId}`}>
                     {message?.content}
                   </div>
                   {i + 1 === conversationItem?.messages?.length && (
@@ -89,6 +91,6 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
       }
     </div >
 
-  }, [conversationItem?.lastMessageAt, conversationItem?.messages?.length, conversationItem?.messages?.slice(-1)?.[0]?.messageId])
+  }, [conversationItem?.lastMessageAt, createMessageMut.isSuccess, conversationItem?.messages?.length, conversationItem?.messages?.slice(-1)?.[0]?.messageId])
   return renderContent
 }

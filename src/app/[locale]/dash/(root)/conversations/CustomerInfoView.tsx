@@ -93,17 +93,17 @@ export const CustomerInfoView: FC = () => {
         {isMobile &&
           <BiChevronLeft className='text-4xl' onClick={() => setConversationState()}></BiChevronLeft>
         }
-        <div className='flex place-items-center'>
-          <CustomerAvatar conversationItem={conversationItem}></CustomerAvatar>
+        <div className='flex text-center place-items-center'>
+          <CustomerAvatar conversationItem={conversationItem} customer={conversationItem?.customer}></CustomerAvatar>
         </div>
         <div className='flex flex-col'>
           <p>{name ?? ''}</p>
           <p>{email}</p>
-          <p className='flex place-items-center gap-x-2'><FaLanguage className='text-xl' />{LocaleCode.getLanguageName(locale)}</p>
+          <p className='flex text-sm text-neutral-400 place-items-center gap-x-2'><FaLanguage className='text-xl' />{LocaleCode.getLanguageName(locale)}</p>
         </div>
       </div>
       <div>
-        <div className='w-full m-0 tabs justify-items-stretch'>
+        <div className='w-full m-0 tabs justify-items-stretch '>
           <button
             type='button'
             data-testid='profile-button'
@@ -133,9 +133,9 @@ export const CustomerInfoView: FC = () => {
           </button>
         </div>
         {currentTab === 'Profile' && (
-          <div className='my-6 '>
-            <ul className='space-y-4'>
-              <li className='flex justify-start place-items-center gap-x-4'>
+          <div className='my-6 text-sm'>
+            <ul className='space-y-4 animate-fade-left'>
+              <li className='flex justify-start place-items-center gap-x-4 '>
                 <MdEmail className='text-lg text-primary' />
                 <p>{email ?? ''}</p>
               </li>
@@ -144,13 +144,12 @@ export const CustomerInfoView: FC = () => {
                 <p>{phone ?? 'Phone...'}</p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
-                <GoBrowser className='text-6xl text-primary' />
+                <GoBrowser className='w-8 h-8 text-primary' />
                 <p>{userAgent ?? ''}</p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
                 <BsGlobe className='text-lg text-primary' />
-                <p className='flex text-xl'>{flag(country?.name ?? '')}</p>
-                <p>{country?.name}</p>
+                <p className='flex text-xl place-items-center'>{flag(country?.name ?? '')}<p className='ml-2 text-sm'>{country?.name}</p></p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
                 <BiTime className='text-xl text-primary' />
@@ -158,7 +157,7 @@ export const CustomerInfoView: FC = () => {
                   {timezone
                     ? `${new Date().toLocaleString(locale, {
                       timeZone: timezone,
-                    })}${timezone}`
+                    })}, ${timezone}`
                     : ''}
                 </p>
               </li>
@@ -178,15 +177,15 @@ export const CustomerInfoView: FC = () => {
           </div>
         )}
         {currentTab === 'Visited Pages' && (
-          <div className='p-4 my-6 shadow-lg '>
+          <div className='p-4 mt-4 overflow-y-scroll md:h-[650px] animate-fade-left'>
             <ul className='space-y-4'>
               {visitsQuery?.data?.data
                 ?.map((item) => (
-                  <li className='flex gap-x-2'>
-                    <p className='text-subtitle'>
+                  <li className='flex gap-x-2 text-start'>
+                    <p className='text-sm'>
                       {relativeTime(new Date(item.at), new Date())}
                     </p>
-                    <a className='link link-primary'>{item.url}</a>
+                    <a className='text-sm link link-primary text-start'>{item.url}</a>
                   </li>
                 ))}
             </ul>

@@ -63,6 +63,10 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
         .primary({ orgId, customerId })
         .go();
 
+      // await appDb.entities.conversations
+      //   .update({ orgId, conversationId })
+      //   .set({ read: false, readAt: undefined })
+      //   .go();
       console.log('posting to', customer?.data);
       await postToConnection(
         appDb,

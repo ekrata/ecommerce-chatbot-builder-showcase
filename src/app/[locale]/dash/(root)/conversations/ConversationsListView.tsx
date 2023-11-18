@@ -96,7 +96,7 @@ export const ConversationsListView: FC = () => {
     <div className="flex justify-between w-full h-full ">
       <div className="flex flex-col w-full h-full place-items-center ">
         <div
-          className={`bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center  text-xl font-semibold gap-x-2   `}
+          className={`bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center  text-lg font-semibold gap-x-2   `}
         >
           <div className='flex justify-end w-full place-items-center'>
             <div className='flex place-items-center'>

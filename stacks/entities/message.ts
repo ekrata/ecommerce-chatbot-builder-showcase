@@ -117,6 +117,26 @@ export const Message = new Entity({
       required: true,
       readOnly: true,
     },
+    reads: {
+      type: 'list',
+      items: {
+        type: 'map',
+        properties: {
+          readerId: {
+            type: 'string',
+            default: '',
+          },
+          readerType: {
+            type: ['customer', 'operator'] as const,
+            default: '',
+          },
+          readAt: {
+            type: 'number',
+            default: () => Date.now(),
+          },
+        },
+      },
+    },
     sender: {
       type: senderType,
       required: true,
