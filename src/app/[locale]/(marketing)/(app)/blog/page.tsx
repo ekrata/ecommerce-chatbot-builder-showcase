@@ -10,7 +10,7 @@ import styles from './styles.module.css';
 // page.tsx
 export default async function Page() {
   const posts = await getPosts()
-  return <section aria-label={'posts'} className={` h-screen saturate-50 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-700 via-rose-500 to-blue-800`}>
+  return <section aria-label={'posts'} className={` h-screen saturate-100 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-500/50 via-rose-500/50 to-blue-600/50`}>
     <h4 className='justify-center pt-32 text-5xl tracking-wide text-center' >Ekrata Blog</h4>
     <div className='grid grid-cols-1 pt-10 mx-40 md:grid-cols-3 gap-x-4'>
       {posts?.map((post) => {

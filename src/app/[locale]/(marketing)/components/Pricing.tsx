@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { ReactElement, useMemo, useState } from 'react';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
 import { BiSolidHelpCircle } from 'react-icons/bi';
-import { BsInfinity, BsPerson, BsPersonLinesFill, BsRobot } from 'react-icons/bs';
+import { BsGlobe, BsInfinity, BsPerson, BsPersonLinesFill, BsRobot } from 'react-icons/bs';
 import { FaMailBulk, FaShopify } from 'react-icons/fa';
 import { FaFacebookMessenger, FaInstagram, FaPeopleGroup, FaWhatsapp } from 'react-icons/fa6';
 import { FiMinus, FiPlus } from 'react-icons/fi';
@@ -89,7 +89,7 @@ function Plan({
 
     <p className="flex flex-row order-first text-5xl font-light tracking-tight text-white gap-x-2 place-items-center font-display animate-fade-left ">
       {price} <span className='flex flex-col text-xs leading-tight gap-y-0'>
-        <span>$USD</span>
+        <span>USD</span>
         <span>/month</span>
       </span>
     </p>
@@ -123,7 +123,7 @@ function Plan({
       >
         {features.map((feature) => (
           <li key={feature} className="flex">
-            <CheckIcon className={featured ? 'text-white' : 'text-slate-400'} />
+            {/* <CheckIcon className={featured ? 'text-white' : 'text-slate-400'} /> */}
             <span className="ml-4">{feature}</span>
           </li>
         ))}
@@ -257,45 +257,52 @@ export function Pricing() {
         <div className="grid max-w-2xl grid-cols-1 mt-10 -mx-4 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-2 xl:mx-0 xl:gap-x-8">
           <Plan
             name="Starter"
-            price={starterPrice.toString()}
+            price={`$ ${starterPrice.toString()}`}
             description={t("Increase website engagement and boost customer satisfaction with website live chat, chatbot, and custom bot creation")}
             href={starterLink?.url ?? ''}
             features={[
-              <span className='inline-flex place-items-center gap-x-2'><BsInfinity />{t('Unlimited live chats')}</span>,
-              <span className='inline-flex place-items-center gap-x-2'><BsRobot />{t("Multiply your team's productivity with our advanced AI Chatbot")}</span>,
-              <span className='inline-flex place-items-center gap-x-2'><AiOutlineNodeIndex />{t("Automate immediately with our chatbot templates")}</span>,
-              <span className='inline-flex place-items-center gap-x-2'><MdOutlineDraw />{t("Build your own custom chatbots with our easy to use visual bot builder")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><BsInfinity className='text-xl' />{t('Unlimited live chats')}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><BsRobot className='text-xl' />{t("Multiply your team's productivity with our advanced AI Chatbot")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><AiOutlineNodeIndex className='text-xl' />{t("Automate immediately with our chatbot templates")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><MdOutlineDraw className='text-xl' />{t("Build your own custom chatbots with our easy to use visual bot builder")}</span>,
               <span className=' gap-x-2'>
                 <span className='inline-flex place-items-center gap-x-2'>
-                  <MdAutoGraph />{t('Track growth and customer success metrics with our analytics')}
+                  <MdAutoGraph className='text-xl' />{t('Track growth and customer success metrics with our analytics')}
                 </span>
                 <span className=" badge bg-gradient-to-br from-violet-500/50 to-orange-300/50">{t('Coming soon')}</span>
               </span>,
-              <span className='inline-flex place-items-center gap-x-2'><FaPeopleGroup />{t("Live visitor list")}</span>,
-              <span className='inline-flex place-items-center gap-x-2'><BsPersonLinesFill />{t("Live visitor info")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><FaPeopleGroup className='text-xl' />{t("Live visitor list")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><BsPersonLinesFill className='text-xl' />{t("Live visitor info")}</span>,
+              <span className=' gap-x-2'>
+                <span className='inline-flex place-items-center gap-x-2'>
+                  <BsGlobe className='text-xl' />{t("Internationalization")}
+                </span>
+                <br />
+                <span className=" badge bg-gradient-to-br from-violet-500/50 to-orange-300/50">{t('Coming soon')}</span>
+              </span>,
             ]}
           />
           <Plan
             featured
             name="Plus"
-            price={plusPrice.toString()}
+            price={`$ ${plusPrice.toString()}`}
             description={t("All you need to scale and take your customer service to the next level")}
             href={plusLink?.url ?? ''}
             features={[
-              <span className='inline-flex place-items-center gap-x-2'><BiSolidHelpCircle className="text-2xl" />{t('Help Center and Articles integrated into chat widget')}</span>,
-              <span className='inline-flex place-items-center gap-x-2'><FaMailBulk />{t('Handle tickets with email')}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><BiSolidHelpCircle className="text-4xl" />{t('Help Center and Articles integrated into chat widget')}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><FaMailBulk className='text-xl' />{t('Handle tickets with email')}</span>,
               <span>
-                <span className='inline-flex place-items-center gap-x-2'><FaFacebookMessenger /><FaInstagram /><FaWhatsapp />{t('Facebook, Instagram and Whatsapp Omnichannel Integration')}
+                <span className='inline-flex place-items-center gap-x-2'><FaFacebookMessenger className='text-xl' /><FaInstagram className='text-xl' /><FaWhatsapp className='text-xl' />{t('Facebook, Instagram and Whatsapp Omnichannel Integration')}
                 </span>
                 <span className="border-0 shadow-2xl badge bg-gradient-to-br from-violet-500/100 to-orange-300/100">{t('Coming soon')}</span>
               </span>,
               <span>
-                <span className='inline-flex place-items-center gap-x-2'><FaShopify />{t('Drive growth with our native shopify actions')}
+                <span className='inline-flex place-items-center gap-x-2'><FaShopify className='text-xl' />{t('Drive growth with our native shopify actions')}
                 </span>
                 <br />
                 <span className="border-0 shadow-2xl badge bg-gradient-to-br from-violet-500/100 to-orange-300/100">{t('Coming soon')}</span>
               </span>,
-              <span className='inline-flex place-items-center gap-x-2'><FaMailBulk />{t("Everything in starter")}</span>,
+              <span className='inline-flex place-items-center gap-x-2'><FaMailBulk className='text-xl' />{t("Everything in starter")}</span>,
             ]}
           />
           {/* <Plan

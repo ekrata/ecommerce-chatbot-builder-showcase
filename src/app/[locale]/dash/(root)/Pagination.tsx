@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { Dispatch } from 'react';
 
 /**
@@ -16,14 +17,15 @@ interface Props {
 }
 
 export const Pagination: React.FC<Props> = ({ pageState }) => {
+  const t = useTranslations('dash')
   const [page, setPage] = pageState
 
 
   return (
-    <div className="join">
-      <button onClick={() => page > 1 && setPage(page - 1)} className={`join-item btn btn-ghost ${page === 1 && 'disabled'}`}>«</button>
-      <button className="join-item btn btn-ghost">{page}</button>
-      <button onClick={() => setPage(page + 1)} className="join-item btn btn-ghost">»</button>
+    <div className="flex justify-between w-full p-2 ">
+      <button onClick={() => page > 0 && setPage(page - 1)} className={`normal-case rounded-md btn btn-sm  ${page === 1 && 'disabled'}`}>{t('Previous')}</button>
+      <button className="">{page + 1}</button>
+      <button onClick={() => setPage(page + 1)} className="normal-case rounded-md btn btn-sm ">{t('Next')}</button>
     </div >
   )
 }

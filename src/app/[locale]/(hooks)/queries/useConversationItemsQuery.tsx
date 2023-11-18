@@ -20,10 +20,12 @@ export const useConversationItemsByCustomerQuery = (orgId: string, customerId: s
 export const useConversationItemsQuery = (params: ConversationFilterParams) => useInfiniteQuery<{ cursor: string | null, data: ConversationItem[] }>({
   queryKey: [QueryKey.conversationItems, ...Object.values(params)],
   queryFn: async ({ pageParam }) => {
-    // const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
+    // const data = queryClient.getQueryData([QueryKey.conversationItems, ...Object.values(params)])
     // console.log('hi')
     // // get cursor of page index
     console.log('hiiiii')
+    // console.log(data)
     return await getConversationItems(params, pageParam)
   },
   enabled: !!params?.orgId,
@@ -82,6 +84,7 @@ export const getConversationItems = async (
   if (Array.isArray(body)) {
     sortConversationItems(body as ConversationItem[]);
   }
+  console.log(body)
   return body
 };
 

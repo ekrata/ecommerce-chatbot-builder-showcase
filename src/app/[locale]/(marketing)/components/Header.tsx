@@ -105,9 +105,9 @@ export function Header() {
               as="div"
               className="absolute inset-x-0 flex flex-col p-4 mt-4 text-lg tracking-tight origin-top bg-white shadow-xl top-full rounded-2xl text-slate-900 ring-1 ring-slate-900/5"
             >
-              <MobileNavLink href={`#features`} >Features</MobileNavLink>
+              <MobileNavLink hash={'features'} href={`/`} >Features</MobileNavLink>
               {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
-              <MobileNavLink href={`#pricing`}>Pricing</MobileNavLink>
+              <MobileNavLink hash={'pricing'} href={`/`}>Pricing</MobileNavLink>
               <hr className="m-2 border-slate-300/40" />
               <MobileNavLink href=''>
                 {user ? t('Sign out') : <LoginModal>{t('Sign in')}</LoginModal>}
@@ -129,12 +129,12 @@ export function Header() {
         <nav className="relative flex justify-between animate-fade-down">
           <div className="flex items-center md:gap-x-12">
             <Link href="#" aria-label="Home" className='shadow-2xl mask mask-squircle' >
-              <Image src={ekrataLogo} className="object-contain w-auto -my-2 " width={36} height={36} alt={''}></Image>
+              <Image src={ekrataLogo} className="object-contain " width={36} height={36} alt={''}></Image>
             </Link>
             <div className="hidden md:flex md:gap-x-6">
-              <NavLink hash='features' href=''>Features</NavLink>
+              <NavLink hash='features' href='/'>Features</NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
-              <NavLink hash='pricing' href='' >Pricing</NavLink>
+              <NavLink hash='pricing' href='/' >Pricing</NavLink>
               <NavLink href='/blog' >Blog</NavLink>
             </div>
           </div>

@@ -14,6 +14,7 @@ import {
 import { useDashStore } from '../(actions)/useDashStore';
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
 import { useConversationItemsQuery } from '../../../(hooks)/queries/useConversationItemsQuery';
+import { Pagination } from '../Pagination';
 import { ChannelSelect } from './ChannelSelect';
 import { OperatorConversationCard } from './OperatorConversationCard';
 import { OperatorSelect } from './OperatorSelect';
@@ -47,11 +48,12 @@ export const ConversationsListView: FC = () => {
   const conversationListFilter = useDashStore((state) => state.conversationListFilter)
   const conversationId = useSearchParams()?.get('conversationId')
 
+
   const [operatorSession] = useAuthContext();
   console.log(operatorSession?.orgId)
   const locale = useLocale();
-  const [page, setPage] = useState<string | undefined>()
-  const [cursor, setCursor] = useState<string | undefined>(undefined)
+  const [page, setPage] = useState<number | undefined>(0)
+  console.log(page)
 
   const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
 
@@ -59,11 +61,11 @@ export const ConversationsListView: FC = () => {
     if (operatorSession?.orgId) {
       console.log(operatorSession)
       setConversationListFilter({
-        ...conversationListFilter, orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true'
+        ...conversationListFilter, orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: conversationItems?.data?.pages?.[page ?? 0]?.cursor ?? undefined, includeMessages: 'true'
       })
-      conversationItems.refetch()
+      conversationItems.refetch({ refetchPage: (page, index) => index === page })
     }
-  }, [operatorSession?.orgId, cursor])
+  }, [operatorSession?.orgId, page])
 
 
 
@@ -75,22 +77,29 @@ export const ConversationsListView: FC = () => {
   )
 
   const renderContent = useMemo(() => {
-    if (!operatorSession?.operatorId || conversationItems?.isFetching) {
+    console.log('updating')
+    if (!operatorSession?.operatorId || conversationItems?.isLoading) {
       return fetchingArticlesSkeleton
     }
     else {
-      return conversationItems.data?.pages?.[0]?.data?.length ? (
-        <ul className="w-full mb-10 animate-fade-left">
-          {conversationItems?.data?.pages?.[0]?.data?.map((item) => {
+      console.log(page)
+      console.log(conversationItems.data?.pages)
+      return conversationItems.data?.pages?.[page ?? 0]?.data?.length ? (
+        <ul className="w-full h-screen animate-fade-left">
+          {conversationItems?.data?.pages?.[page ?? 0]?.data?.map((item) => {
             if (item?.conversationId) {
               return <li key={item?.conversationId} className={`flex justify-between overflow-clip    -16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
                 <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
               </li>
             }
           })}
-        </ul >) : noData
+          <div className='sticky bottom-0 bg-white'>
+            <Pagination pageState={[page ?? 0, setPage]} />
+          </div>
+        </ul>
+      ) : noData
     }
-  }, [conversationItems?.data?.pages?.[0]?.data, conversationId, conversationItems?.dataUpdatedAt])
+  }, [conversationItems?.data?.pages?.[page ?? 0]?.data, page, setPage, conversationId, conversationItems?.dataUpdatedAt])
 
   return (
     <div className="flex justify-between w-full h-full ">

@@ -27,6 +27,7 @@
     "Everything in starter": "Everything in starter",
     "All you need to scale and take your customer service to the next level": "All you need to scale and take your customer service to the next level.",
     "Increase website engagement and boost customer satisfaction with website live chat, chatbot, and custom bot creation": "Increase website engagement and boost customer satisfaction with website live chat, chatbot, and custom bot creation.",
+    "Internationalization": "Scale globablly with several languages supported",
     "cta": {
       "login": "Log in",
       "trial": "Get started for free"
@@ -215,6 +216,7 @@
     "Name": "Name",
     "Entered": "Entered",
     "Last Visited Page": "Last Visited Page",
+    "Previous": "Previous",
     "tickets": "{count, plural, \n              =0 {No tickets found}\n              =1 {One ticket}\n              other {# tickets}\n              }",
     "Email": "Email",
     "at": "at",
