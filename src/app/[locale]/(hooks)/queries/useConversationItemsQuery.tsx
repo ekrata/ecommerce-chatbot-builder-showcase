@@ -1,10 +1,11 @@
 import { ConversationItem } from '@/entities/conversation';
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import {
-  ConversationFilterParams
+    ConversationFilterParams
 } from '../../../../../packages/functions/app/api/src/conversations/listByCreatedAt';
+import { useDashStore } from '../../dash/(root)/(actions)/useDashStore';
 import { QueryKey } from '../queries';
 
 /**
@@ -17,21 +18,40 @@ import { QueryKey } from '../queries';
  */
 export const useConversationItemsByCustomerQuery = (orgId: string, customerId: string) => useQuery<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], async () => (orgId && customerId) ? await getConversationItemsByCustomer(orgId, customerId) : [], { enabled: !!orgId && !!customerId })
 
-export const useConversationItemsQuery = (params: ConversationFilterParams) => useInfiniteQuery<{ cursor: string | null, data: ConversationItem[] }>({
-  queryKey: [QueryKey.conversationItems, ...Object.values(params)],
-  queryFn: async ({ pageParam }) => {
-    const queryClient = useQueryClient()
-    // const data = queryClient.getQueryData([QueryKey.conversationItems, ...Object.values(params)])
-    // console.log('hi')
-    // // get cursor of page index
-    console.log('hiiiii')
-    // console.log(data)
-    return await getConversationItems(params, pageParam)
-  },
-  enabled: !!params?.orgId,
-  getPreviousPageParam: (firstPage) => firstPage.cursor ?? null,
-  getNextPageParam: (lastPage) => lastPage.cursor ?? null,
-})
+export const useConversationItemsQuery = (params: ConversationFilterParams, cursor: string | undefined | null) => {
+  console.log(cursor)
+  const { conversationListFilter, setConversationListFilter } = useDashStore((state) => state)
+  return useQuery<{ cursor: string | null, data: ConversationItem[] }>({
+    queryKey: [QueryKey.conversationItems, ...Object.values(params), cursor],
+    queryFn: async ({ pageParam, queryKey }) => {
+      // const data = queryClient.getQueryData(queryKey) as { cursor: string | null, data: ConversationItem[] }[]
+      console.log(params?.cursor)
+      const res = await getConversationItems(params, cursor)
+      // setConversationListFilter({ ...conversationListFilter, cursor: res?.cursor ?? undefined })
+      // console.log(data?.pages)
+      return res
+      // return { ...data, pages: [...data?.pages, res] }
+      // queryClient.setQueryData(queryKey, (data: InfiniteData<{
+      //   cursor: string | null;
+      //   data: ConversationItem[];
+      // }> | undefined) => {
+      //   if (data) {
+      //     return {
+      //       pages: [...data.pages, res],
+      //       pageParams: data.pageParams,
+      //     }
+      //   }
+      // },
+    },
+    enabled: !!params?.orgId,
+    keepPreviousData: true,
+    getPreviousPageParam: (firstPage) => firstPage?.cursor ?? null,
+    getNextPageParam: (lastPage) => {
+      // console.log('lastPage', lastPage)
+      return lastPage?.cursor ?? null
+    },
+  })
+}
 
 /**
  * Returns sorted conversations by customerId
@@ -70,14 +90,14 @@ export const getConversationItemsByCustomer = async (
  */
 export const getConversationItems = async (
   params: ConversationFilterParams,
-  cursor: string | null
+  cursor?: string | undefined | null
 
 ): Promise<{ cursor: string | null, data: ConversationItem[] }> => {
-  console.log('x')
+  console.log('hi')
   const res =
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${params?.orgId}/conversations?${cursor ? `cursor=${cursor}&` : ''}${queryParams({ ...params, operatorId: params.operatorId === 'all' || params.operatorId === 'bots' ? '' : params?.operatorId, expansionFields: ['customerId', 'operatorId'] } as ConversationFilterParams)}`
+      }/orgs/${params?.orgId}/conversations?${cursor ? `cursor=${cursor}&` : ''}${toQueryParams({ ...params, operatorId: params.operatorId === 'all' || params.operatorId === 'bots' ? '' : params?.operatorId, expansionFields: ['customerId', 'operatorId'] } as ConversationFilterParams)}`
     )
 
   const body = await res.json()
@@ -90,6 +110,6 @@ export const getConversationItems = async (
 
 
 
-function queryParams(data: any) {
+export function toQueryParams(data: object) {
   return Object.entries(data).filter(([key, value]) => value).map(([key, value]) => value && `${key}=${encodeURIComponent(value as string | number | boolean)}`).join('&')
 }

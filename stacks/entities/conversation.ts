@@ -131,7 +131,7 @@ export const Conversation = new Entity({
       type: rating,
     },
     topic: {
-      type: [...conversationTopic, ''] as const,
+      type: conversationTopic,
       default: '',
     },
     read: {
@@ -185,6 +185,22 @@ export const Conversation = new Entity({
     },
     lastMessageAt: {
       type: 'number',
+      default: undefined,
+    },
+    lastMessageCreatedAt: {
+      type: 'number',
+      default: undefined,
+    },
+    lastMessageSentAt: {
+      type: 'number',
+      default: undefined,
+    },
+    lastMessageUpdatedAt: {
+      type: 'number',
+      default: undefined,
+    },
+    lastMessageId: {
+      type: 'string',
       default: undefined,
     },
     createdAt: {

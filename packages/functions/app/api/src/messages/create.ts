@@ -34,7 +34,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           orgId,
           conversationId,
         })
-        .set({ lastMessageAt: res.data.createdAt })
+        .set({
+          lastMessageAt: res?.data?.createdAt,
+          lastMessageId: res?.data?.messageId,
+          lastMessageCreatedAt: res?.data?.createdAt,
+          lastMessageSentAt: res.data?.sentAt,
+          lastMessageUpdatedAt: res?.data?.updatedAt,
+        })
         .go();
       return {
         statusCode: 200,

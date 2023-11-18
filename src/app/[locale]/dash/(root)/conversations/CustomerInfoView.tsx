@@ -56,7 +56,7 @@ export const CustomerInfoView: FC = () => {
   const conversationId = searchParams?.get('conversationId')
 
   const conversationItemQuery = useConversationItemsQuery(conversationListFilter)
-  const conversationItem = conversationItemQuery?.data?.pages?.flatMap(data => data.data).find(conversation => conversation.conversationId === conversationId)
+  const conversationItem = conversationItemQuery?.data?.pages?.flatMap(data => data.data).find(conversation => conversation?.conversationId === conversationId)
   const visitsQuery = useVisitsQuery(orgId, conversationItem?.customerId)
   const noData = (
     <div className='flex flex-col justify-center w-full h-screen bg-white place-items-center gap-y-1'>

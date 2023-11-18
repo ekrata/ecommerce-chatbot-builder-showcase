@@ -25,7 +25,7 @@ export default function DashNavbar() {
   const conversationItemsQuery = useConversationItemsQuery(conversationListFilter)
 
 
-  const unreadMessages = conversationItemsQuery?.data?.pages?.[0]?.data.reduce((prev, curr) => {
+  const unreadMessages = conversationItemsQuery?.data?.pages?.[0]?.data?.reduce((prev, curr) => {
     const lastMessage = curr?.messages?.slice(-1)[0]
     if (readMessages[`${curr?.conversationId}+${lastMessage?.messageId}`] || (lastMessage.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId)) {
       return prev - 1

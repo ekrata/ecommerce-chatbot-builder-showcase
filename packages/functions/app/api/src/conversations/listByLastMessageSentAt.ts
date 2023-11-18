@@ -1,31 +1,18 @@
 import { EntityItem } from 'electrodb';
-import {
-  ApiHandler,
-  usePathParams,
-  useQueryParam,
-  useQueryParams,
-} from 'sst/node/api';
+import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
 import { useSession } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
 import {
-  Conversation,
-  ConversationChannel,
-  ConversationItem,
-  ConversationStatus,
-  ConversationTopic,
-  ExpandedConversation,
+    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic,
+    ExpandedConversation
 } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
-import {
-  ExpandableField,
-  expandableField,
-  expandObjects,
-} from '../util/expandObjects';
+import { ExpandableField, expandableField, expandObjects } from '../util/expandObjects';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -111,75 +98,61 @@ export const listConversations = async (params: ConversationFilterParams) => {
       data: [],
     };
     console.log('hi');
-    if (operatorId) {
-      messages = await appDb.entities.messages.query
-        .byOrg({ orgId })
-        .where(({ operatorId }, { eq }) => {
-          return `${eq(operatorId, params.operatorId)}`;
-        })
-        .go(
-          // ? { cursor: cursor, limit: 100, order: 'desc' }
-          { limit: 100, order: 'desc' },
-        );
-      console.log('messages', messages);
-    }
-
-    console.log('hiii');
-    const newCursor = messages.cursor;
-    // make distinct per conversationId
-    const uniqueMessages = [
-      ...new Map(
-        messages.data.map((item) => [item.conversationId, item]),
-      ).values(),
-    ];
-
-    const conversations = await appDb.entities.conversations
-      .get(
-        uniqueMessages.map(({ orgId, conversationId }) => ({
-          orgId,
-          conversationId,
-        })),
+    console.log(params);
+    const conversations = await appDb.entities.conversations.query
+      .byOrg({ orgId })
+      .where(({ customerId }, { eq }) =>
+        customerId != null && params?.customerId != null
+          ? eq(customerId, params?.customerId)
+          : '',
       )
-      .go({ preserveBatchOrder: true });
+      .where(({ operatorId }, { eq }) =>
+        operatorId != null && params?.operatorId! + null
+          ? eq(operatorId, params?.operatorId)
+          : '',
+      )
+      .where(({ status }, { eq }) =>
+        params?.status != null && status != null
+          ? eq(status, params?.status)
+          : '',
+      )
+      .where(({ channel }, { eq }) =>
+        params?.channel != null && channel != null
+          ? eq(channel, params?.channel)
+          : '',
+      )
+      .where(({ topic }, { eq }) =>
+        topic != null && params?.topic != null ? eq(topic, params?.topic) : '',
+      )
+      .go(
+        cursor
+          ? { cursor: cursor, limit: 10, order: 'desc' }
+          : { limit: 10, order: 'desc' },
+      );
+    const newCursor = messages.cursor;
+    console.log(conversations);
+    // make distinct per conversationId
+
+    // const conversations = await appDb.entities.conversations
+    //   .get(
+    //     uniqueMessages.map(({ orgId, conversationId }) => ({
+    //       orgId,
+    //       conversationId,
+    //     })),
+    //   )
+    //   .go({ preserveBatchOrder: true });
 
     console.log('conversations', conversations);
-    if (operatorId) {
-      data =
-        conversations?.data?.filter(
-          (conversation) =>
-            conversation?.orgId === orgId &&
-            conversation?.operatorId === operatorId,
-        ) ?? [];
-    } else if (customerId) {
-      data = conversations.data.filter(
-        (conversation) =>
-          conversation?.orgId === orgId &&
-          conversation?.customerId === customerId &&
-          (status ? conversation.status === status : true) &&
-          (channel ? conversation.channel === channel : true),
-      );
-    } else if (orgId) {
-      data = conversations.data.filter(
-        (conversation) =>
-          conversation?.orgId === orgId &&
-          (status ? conversation.status === status : true) &&
-          (channel ? conversation.channel === channel : true) &&
-          (topic ? conversation.topic === topic : true),
-      );
-    }
 
     if (params.includeMessages) {
       data = await Promise.all(
-        data.map(async (conversation) => {
+        conversations?.data?.map(async (conversation) => {
           const messages = await appDb.entities.messages.query
             .byOrgConversation({
               orgId,
               conversationId: conversation.conversationId,
             })
-            .go(
-              // ? { cursor: cursor, limit: 100, order: 'desc' }
-              { limit: 500, order: 'asc' },
-            );
+            .go({ limit: 500, order: 'asc' });
           return { ...conversation, messages: messages.data };
         }),
       );
@@ -201,6 +174,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
         body: JSON.stringify({ cursor: newCursor, data }),
       };
   } catch (err) {
+    console.log(err);
     Sentry.captureException(err);
     return {
       statusCode: 500,

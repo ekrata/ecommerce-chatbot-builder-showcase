@@ -8,7 +8,7 @@ import { BsChat } from 'react-icons/bs';
 import { FcSearch } from 'react-icons/fc';
 
 import {
-  ConversationFilterParams
+    ConversationFilterParams
 } from '@/packages/functions/app/api/src/conversations/listByLastMessageSentAt';
 
 import { useDashStore } from '../(actions)/useDashStore';
@@ -49,24 +49,30 @@ export const ConversationsListView: FC = () => {
   const conversationId = useSearchParams()?.get('conversationId')
 
 
-  const [operatorSession] = useAuthContext();
-  console.log(operatorSession?.orgId)
-  const locale = useLocale();
-  const [page, setPage] = useState<number | undefined>(0)
-  console.log(page)
 
-  const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
+  const [operatorSession] = useAuthContext();
+  // console.log(operatorSession?.orgId)
+  const locale = useLocale();
+  const [page, setPage] = useState<number>()
+  const [pageCursors, setPageCursors] = useState<(string | null | undefined)[]>([])
+
+  const conversationItems = useConversationItemsQuery(conversationListFilter, pageCursors[page ?? 0])
+  // console.log(page)
+
+
+  // console.log(conversationItems)
 
   useEffect(() => {
+    // update last cursor
     if (operatorSession?.orgId) {
-      console.log(operatorSession)
+      // console.log(pageCursors, conversationItems?.data?.cursor)
+      setPageCursors([...new Set([...pageCursors, conversationItems?.data?.cursor])])
+      console.log(pageCursors)
       setConversationListFilter({
         ...conversationListFilter, orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: conversationItems?.data?.pages?.[page ?? 0]?.cursor ?? undefined, includeMessages: 'true'
       })
-      conversationItems.refetch({ refetchPage: (page, index) => index === page })
     }
-  }, [operatorSession?.orgId, page])
-
+  }, [conversationItems?.data?.cursor, conversationItems?.dataUpdatedAt, page])
 
 
   const noData = (
@@ -82,24 +88,26 @@ export const ConversationsListView: FC = () => {
       return fetchingArticlesSkeleton
     }
     else {
-      console.log(page)
-      console.log(conversationItems.data?.pages)
-      return conversationItems.data?.pages?.[page ?? 0]?.data?.length ? (
+      // console.log(page)
+      // console.log(conversationItems.data?.pages)
+      return conversationItems.data?.data?.length ? (
         <ul className="w-full h-screen animate-fade-left">
-          {conversationItems?.data?.pages?.[page ?? 0]?.data?.map((item) => {
+          {conversationItems?.data?.data?.map((item) => {
             if (item?.conversationId) {
               return <li key={item?.conversationId} className={`flex justify-between overflow-clip    -16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
                 <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
               </li>
             }
           })}
-          <div className='sticky bottom-0 bg-white'>
-            <Pagination pageState={[page ?? 0, setPage]} />
+          <div className='absolute bottom-0 w-full bg-white'>
+            <div className='flex justify-between w-full'>
+              <Pagination pageState={[page ?? 0, setPage]} currentCursor={pageCursors[page ?? 0]} />
+            </div>
           </div>
-        </ul>
+        </ul >
       ) : noData
     }
-  }, [conversationItems?.data?.pages?.[page ?? 0]?.data, page, setPage, conversationId, conversationItems?.dataUpdatedAt])
+  }, [conversationItems?.data, page, setPage, conversationId, conversationItems?.dataUpdatedAt])
 
   return (
     <div className="flex justify-between w-full h-full ">

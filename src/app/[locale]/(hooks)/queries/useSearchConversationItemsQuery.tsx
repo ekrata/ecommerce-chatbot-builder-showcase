@@ -1,10 +1,11 @@
 import { ConversationItemSearchRes } from '@/entities/conversation';
 import {
-  ConversationFilterParams
+    ConversationFilterParams
 } from '@/packages/functions/app/api/src/conversations/listByCreatedAt';
 import { useQuery } from '@tanstack/react-query';
 
 import { QueryKey } from '../queries';
+import { toQueryParams } from './useConversationItemsQuery';
 
 export const useSearchConversationItemsQuery = (params: ConversationFilterParams & { phrase: string }) => useQuery<ConversationItemSearchRes[]>(
   {
@@ -29,10 +30,11 @@ export const searchConversationItems = async (
   if (params.operatorId === 'all' || params.operatorId === 'bots') {
     params.operatorId = ''
   }
+  console.log(`/orgs/${params.orgId}/conversations/search?${toQueryParams(params)}`)
   const res = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${params.orgId}/conversations/search?${new URLSearchParams(JSON.stringify(params)).toString()}`
+      }/orgs/${params.orgId}/conversations/search?${toQueryParams(params)}`
     )
   ).json();
   console.log(res)

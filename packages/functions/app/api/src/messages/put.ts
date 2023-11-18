@@ -16,7 +16,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     if (!orgId || !conversationId || !messageId) {
       return {
         statusCode: 422,
-        body: 'Failed to parse an id from the url.',
+        body: 'Failed to par an id from the url.',
       };
     }
     try {
@@ -35,7 +35,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           orgId,
           conversationId,
         })
-        .set({ lastMessageAt: res?.data?.createdAt })
+        .set({
+          lastMessageAt: res?.data?.createdAt,
+          lastMessageId: res?.data?.messageId,
+          lastMessageCreatedAt: res?.data?.createdAt,
+          lastMessageSentAt: res.data?.sentAt,
+          lastMessageUpdatedAt: res?.data?.updatedAt,
+        })
         .go();
       console.log(conversationRes?.data);
       return {

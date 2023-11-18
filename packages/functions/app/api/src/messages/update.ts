@@ -4,10 +4,7 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import {
-  CreateMessage,
-  UpdateMessage,
-} from '../../../../../../stacks/entities/entities';
+import { CreateMessage, UpdateMessage } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
@@ -38,7 +35,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           orgId,
           conversationId,
         })
-        .set({ lastMessageAt: res?.data?.createdAt })
+        .set({
+          lastMessageAt: res?.data?.createdAt,
+          lastMessageId: res?.data?.messageId,
+          lastMessageCreatedAt: res?.data?.createdAt,
+          lastMessageSentAt: res.data?.sentAt,
+          lastMessageUpdatedAt: res?.data?.updatedAt,
+        })
         .go();
       console.log(conversationRes?.data);
       return {

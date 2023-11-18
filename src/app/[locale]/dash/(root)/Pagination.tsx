@@ -13,10 +13,10 @@ export type PageCursor = Record<number, string | undefined>
 
 interface Props {
   pageState: [number, Dispatch<number>]
-
+  currentCursor: string | undefined | null
 }
 
-export const Pagination: React.FC<Props> = ({ pageState }) => {
+export const Pagination: React.FC<Props> = ({ pageState, currentCursor }) => {
   const t = useTranslations('dash')
   const [page, setPage] = pageState
 
@@ -25,7 +25,11 @@ export const Pagination: React.FC<Props> = ({ pageState }) => {
     <div className="flex justify-between w-full p-2 ">
       <button onClick={() => page > 0 && setPage(page - 1)} className={`normal-case rounded-md btn btn-sm  ${page === 1 && 'disabled'}`}>{t('Previous')}</button>
       <button className="">{page + 1}</button>
-      <button onClick={() => setPage(page + 1)} className="normal-case rounded-md btn btn-sm ">{t('Next')}</button>
+      <button onClick={() => {
+        if (currentCursor || page === 0) {
+          setPage(page + 1)
+        }
+      }} disabled={page !== 0 && !currentCursor} className="normal-case rounded-md btn btn-sm ">{t('Next')}</button>
     </div >
   )
 }

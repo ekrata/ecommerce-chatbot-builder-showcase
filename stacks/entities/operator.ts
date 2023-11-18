@@ -13,6 +13,8 @@ export const permissionTier = [
   'operator',
 ] as const;
 
+export type PermissionTier = (typeof permissionTier)[number];
+
 const defaultPermission = 'block_permissions';
 
 export const Operator = new Entity({
