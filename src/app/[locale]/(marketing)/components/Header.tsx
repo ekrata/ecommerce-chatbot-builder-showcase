@@ -124,12 +124,12 @@ export function Header() {
     )
   }
   return (
-    <header className={`fixed z-50 w-full py-2  ${scrolling ? 'bg-white/100 shadow-md animate-fade  ' : 'bg-white/0 border-0 shadow-none'} backdrop-blur-xl`}>
+    <header className={`fixed z-50 w-full py-2  ${scrolling ? 'bg-white  shadow-white shadow-xs  animate-fade  ' : 'bg-white/0 border-0 shadow-none'} backdrop-blur-xl`}>
       <Container>
         <nav className="relative flex justify-between animate-fade-down">
           <div className="flex items-center md:gap-x-12">
-            <Link href="#" aria-label="Home" >
-              <Image src={ekrataLogo} className="w-auto rounded-md shadow-2xl saturate-200 ring-2 ring-blue-400 mask mask-squircle" width={20} height={20} alt={''}></Image>
+            <Link href="#" aria-label="Home" className='shadow-2xl mask mask-squircle' >
+              <Image src={ekrataLogo} className="object-contain w-auto -my-2 " width={36} height={36} alt={''}></Image>
             </Link>
             <div className="hidden md:flex md:gap-x-6">
               <NavLink hash='features' href=''>Features</NavLink>

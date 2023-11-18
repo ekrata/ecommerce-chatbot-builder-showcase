@@ -37,18 +37,18 @@ export const OperatorConversationCard: React.FC<Props> = ({ conversationItem, he
     <Link key={conversationItem?.conversationId} href={{ pathname: '/dash/conversations', query: { conversationId: conversationItem?.conversationId } }} className='flex w-full'>
       <button className={`btn btn-ghost block  rounded-none ${rounded && 'rounded-3xl'} font-light pl-0  h-${height}   flex justify-between normal-case place-items-center  w-full  text-sm px-2`}>
         <div className="flex justify-between w-full place-items-center animate-fade-left">
-          <div className='flex place-items-center'>
+          <div className='flex flex-row justify-between flex-shrink w-[290px] place-items-center'>
             <div className="flex w-12 h-12 p-2 ">
               <CustomerAvatar customer={conversationItem?.customer} conversationItem={conversationItem} />
             </div>
-            <div className="flex flex-col place-items-start gap-y-1">
-              <h5 className='justify-start w-full text-base break-all truncate font-base justify-self-start '>{`${lastMessage?.content}`}</h5>
+            <div className="flex flex-col flex-shrink w-full place-items-start gap-y-1">
+              <h5 className={`justify-start text-start w-full text-sm break-all truncate font-base justify-self-start ${conversationItem.read ? 'font-normal' : 'font-semibold'} `}>{`${lastMessage?.content}`}</h5>
               <div className="flex text-xs text-neutral-400 gap-x-1 ">
                 <OperatorMessageTimeLabel conversationItem={conversationItem} />
               </div>
             </div>
+            {/* <BiSend className="justify-end text-2xl shrink-0 justify-self-end justify-right " /> */}
           </div>
-          <BiSend className="justify-end text-2xl shrink-0 justify-self-end justify-right " />
         </div>
       </button >
     </Link >

@@ -53,6 +53,21 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     try {
       const appDb = getAppDb(Config.REGION, Table.app.tableName);
       const db = appDb;
+      const createOperator: CreateOperator = {
+        online: false,
+        operatorId: '101620729708291176316',
+        createdAt: 1695509852344,
+        email: 'ekrata.gm@gmail.com',
+        name: 'HIGH',
+        language: '',
+        permissionTier: 'operator',
+        profilePicture:
+          'https://lh3.googleusercontent.com/a/ACg8ocKFAXsgjIHXNpur_wJ7BRYEr1eam90tJaE26AV5dot5=s96-c',
+        updatedAt: 1695509859258,
+        orgId: '90680fff-7621-4a9e-8d7f-ccb1a9379c2e',
+        connectionId: '',
+        region: '',
+      };
       const mockArgs: MockArgs = {
         mockLang: 'en',
         mockOrgCount: 1,
@@ -66,6 +81,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockConversationCountPerCustomer: 4,
         mockVisitsPerCustomer: 2,
         mockMessageCountPerConversation: 2,
+        existingOperator: createOperator,
       };
       const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
         [...Array(mockArgs.mockOrgCount)].map((_, i) => seed(db, mockArgs, i)),

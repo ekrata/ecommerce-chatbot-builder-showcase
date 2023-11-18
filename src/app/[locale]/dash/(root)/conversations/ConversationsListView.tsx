@@ -83,7 +83,7 @@ export const ConversationsListView: FC = () => {
         <ul className="w-full mb-10 animate-fade-left">
           {conversationItems?.data?.pages?.[0]?.data?.map((item) => {
             if (item?.conversationId) {
-              return <li key={item?.conversationId} className={`flex justify-between w-full  h-16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
+              return <li key={item?.conversationId} className={`flex justify-between overflow-clip    -16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
                 <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
               </li>
             }

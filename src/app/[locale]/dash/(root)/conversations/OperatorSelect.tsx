@@ -65,6 +65,7 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
   }
 
 
+  console.log(sessionOperator)
   return (
     <details className={`w-full h-full dropdown text-sm ${dropdownPosition ? `dropdown-${dropdownPosition}` : ''}`}>
       <summary className="flex normal-case btn btn-ghost place-items-center gap-x-2">

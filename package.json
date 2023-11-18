@@ -9,6 +9,7 @@
     "dense-seed": "sst bind ts-node densePopulate.ts",
     "stripe-create": "sst bind --stage local ts-node packages/functions/app/api/src/stripe/initStripe.ts",
     "remove-local-db": "sst remove dbStack --stage local",
+    "delete-local-table": "sst bind ts-node deleteTable.ts",
     "build": "sst bind next build",
     "dev-widget": "sst bind next dev './widget'",
     "build-widget": "next build './src/app/[locale]/(chat-widget)'",
