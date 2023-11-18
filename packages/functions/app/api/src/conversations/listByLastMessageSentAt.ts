@@ -110,6 +110,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
       cursor: null,
       data: [],
     };
+    console.log('hi');
     if (operatorId) {
       messages = await appDb.entities.messages.query
         .byOrg({ orgId })
@@ -120,9 +121,10 @@ export const listConversations = async (params: ConversationFilterParams) => {
           // ? { cursor: cursor, limit: 100, order: 'desc' }
           { limit: 500, order: 'desc' },
         );
-      console.log(messages);
+      console.log('messages', messages);
     }
 
+    console.log('hiii');
     const newCursor = messages.cursor;
     // make distinct per conversationId
     const uniqueMessages = [
@@ -140,7 +142,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
       )
       .go();
 
-    console.log(conversations);
+    console.log('conversations', conversations);
     if (operatorId) {
       data = conversations.data.filter(
         (conversation) =>

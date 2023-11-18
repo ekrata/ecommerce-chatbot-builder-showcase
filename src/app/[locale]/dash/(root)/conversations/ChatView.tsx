@@ -29,12 +29,12 @@ const fetchingConversationItemSkeleton = (
       return (
         <div className="flex w-full place-items-center animate-fade-left gap-x-2">
           {leftRight && <div className="w-6 h-6 p-2 bg-gray-200 rounded-full animate-pulse "></div>}
-          <div className={`flex flex-col w-full p-2  bg-gray-100 rounded-md gap-y-2 ${leftRight ? 'mr-40' : 'ml-40'}`}>
-            <div className="h-2.5  left-0 bg-gray-300 justify-end rounded-full dark:bg-gray-600" />
-            <div className="right-0 h-2 mt-2 bg-gray-200 rounded-full dark:bg-gray-700" />
-            <div className="right-0 h-2 bg-gray-300 rounded-full dark:bg-gray-700" />
-            {extraRow && <div className="right-0 h-2 bg-gray-200 rounded-full dark:bg-gray-700" />}
-            {extraRows && <div className="right-0 h-2 mt-4 bg-gray-300 rounded-full dark:bg-gray-700" />}
+          <div className={`flex flex-col w-full p-2   bg-gray-100 rounded-md gap-y-2 ${leftRight ? 'mr-40' : 'ml-40'}`}>
+            <div className="h-2.5  left-0 bg-gray-300 animate-pulse justify-end rounded-full dark:bg-gray-600" />
+            <div className="right-0 h-2 mt-2 bg-gray-200 rounded-full animate-pulse dark:bg-gray-700" />
+            <div className="right-0 h-2 bg-gray-300 rounded-full dark:bg-gray-700 animate-pulse" />
+            {extraRow && <div className="right-0 h-2 bg-gray-200 rounded-full dark:bg-gray-700 animate-pulse" />}
+            {extraRows && <div className="right-0 h-2 mt-4 bg-gray-300 rounded-full dark:bg-gray-700 animate-pulse" />}
           </div>
           {!leftRight && <div className="w-8 h-8 p-2 bg-gray-200 rounded-full animate-pulse "></div>}
         </div>

@@ -13,11 +13,13 @@ import { MdAutoGraph, MdOutlineDraw } from 'react-icons/md';
 
 import { RadioGroup } from '@headlessui/react';
 
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import monthlyPaymentLinks from '../../../../../data/stripe/local-monthly-paymentLinks.json';
 import yearlyPaymentLinks from '../../../../../data/stripe/local-yearly-paymentLinks.json';
 import { TriggerAmount, triggerAmount } from '../../../../../types/stripe';
 import { Button } from '../components/Button';
 import { Container } from '../components/Container';
+import { SignupModal } from './SignupModal';
 
 function SwirlyDoodle(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -82,6 +84,7 @@ function Plan({
   featured?: boolean
 }) {
   const t = useTranslations('marketing')
+  const [sessionUser] = useAuthContext()
   const priceElement = useMemo(() => (
 
     <p className="flex flex-row order-first text-5xl font-light tracking-tight text-white gap-x-2 place-items-center font-display animate-fade-left ">
@@ -125,7 +128,19 @@ function Plan({
           </li>
         ))}
       </ul>
-      <Button
+      {!sessionUser ? (
+        <SignupModal>
+          <Button
+            // href={{ pathname: href }}
+            variant={featured ? 'solid' : 'outline'}
+            color="white"
+            className="w-full mt-8"
+            aria-label={`Get started with the ${name} plan for ${price}`}
+          >
+            {t('Start free trial')}
+          </Button>
+        </SignupModal>
+      ) : <Button
         href={{ pathname: href }}
         variant={featured ? 'solid' : 'outline'}
         color="white"
@@ -133,7 +148,7 @@ function Plan({
         aria-label={`Get started with the ${name} plan for ${price}`}
       >
         {t('Start free trial')}
-      </Button>
+      </Button>}
     </section>
   )
 }

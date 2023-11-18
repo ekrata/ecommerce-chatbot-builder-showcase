@@ -135,6 +135,7 @@ export function Header() {
               <NavLink hash='features' href=''>Features</NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               <NavLink hash='pricing' href='' >Pricing</NavLink>
+              <NavLink href='/blog' >Blog</NavLink>
             </div>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">

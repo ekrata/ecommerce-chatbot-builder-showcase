@@ -1,6 +1,5 @@
 'use client'
 
-import './style.css';
 
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -8,6 +7,7 @@ import Image from 'next/image';
 import hero from '../../../../../public/hero-image/all.png';
 import { Button } from '../components/Button';
 import { Container } from '../components/Container';
+import { SignupModal } from './SignupModal';
 
 // const gallery = Object.values(import.meta.glob("../../../../../public/graphics/*.{png,jpg,jpeg,PNG,JPEG}", { eager: true, as: 'url' }))
 export function Hero() {
@@ -47,18 +47,18 @@ export function Hero() {
               </span>
 
               <br />
-              <div className='flex flex-row mt-4 text-lg md:mt-8 gap-x-4 '>
-                <Button className='normal-case border-0 btn-sm'>Explore pricing</Button>
-                <Button className='normal-case border-0 place-items-center bg-gradient-to-tr btn-sm from-violet-500 to-orange-300 hover:animate-pulse'>Start free trial</Button>
+              <div className='flex flex-row justify-start mt-4 text-lg md:mt-8 gap-x-4 '>
+                <Button href={'#pricing'} className='normal-case border-0 btn-sm flex-nowrap whitespace-nowrap'>Explore pricing</Button>
+                <SignupModal><Button className='normal-case border-0 place-items-center bg-gradient-to-tr btn-sm from-violet-500 to-orange-300 hover:animate-pulse'>Start free trial</Button></SignupModal>
               </div>
             </span>{' '}
 
           </h2>
         </div>
-        <div className='justify-center w-full rounded-md shadow-xl md:p-0 place-items-center'>
+        <div className='justify-center w-full px-0 mt-10 rounded-md shadow-xl animate-fade md:p-0 place-items-center'>
           {/* <Image src={download1} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
-          <div className="p-4 border rounded-md mockup-window bg-base-300">
-            <Image src={hero} className="filterToggle skeleton  p-4  self-center  animate-duration-[20000ms]   animate-delay-[1000ms]    rounded-xl shadow-lg animate-infinite bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500/10 mix-blend-multiply backdrop-blur-sm to-indigo-700/10     md:w-[900px]  " alt={''}></Image>
+          <div className="p-4 px-0 pb-0 border rounded-md mockup-window bg-base-300">
+            <Image src={hero} className="filterToggle skeleton   p-4  self-center  animate-flip-up       rounded-t-none rounded-md border-0    bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500/10 mix-blend-multiply backdrop-blur-sm to-indigo-700/10     md:w-[900px]  " alt={''}></Image>
           </div>
 
           {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}

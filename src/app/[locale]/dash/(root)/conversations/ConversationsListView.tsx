@@ -25,15 +25,19 @@ type Inputs = {
 };
 
 const fetchingArticlesSkeleton = (
-  <div className="flex flex-col w-full p-2 my-2 animate-pulse rounded-3xl gap-y-2">
-    {[...Array(10)].map(() => (
-      <div className="flex w-full place-items-center animate-fade-left">
-        <div className='flex flex-col w-full gap-y-2'>
-          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-full" />
-          <div className="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
+  <div className="flex flex-col w-full p-2 my-2 animate-pulse rounded-3xl gap-y-4">
+    {[...Array(20)].map(() => (
+      <div className='flex flex-row gap-x-2 place-items-center gap-y-8'>
+        <div className="w-6 h-6 p-2 bg-gray-200 rounded-full animate-pulse "></div>
+        <div className="flex w-full place-items-center animate-fade-left">
+          <div className='flex flex-col w-full gap-y-2'>
+            <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-full" />
+            <div className="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
+          </div>
+          <BiChevronRight className="text-4xl text-gray-300 dark:text-gray-600 justify-right" />
         </div>
-        <BiChevronRight className="text-4xl text-gray-300 dark:text-gray-600 justify-right" />
-      </div>))}
+      </div>
+    ))}
   </div>
 )
 
@@ -44,6 +48,7 @@ export const ConversationsListView: FC = () => {
   const conversationId = useSearchParams()?.get('conversationId')
 
   const [operatorSession] = useAuthContext();
+  console.log(operatorSession?.orgId)
   const locale = useLocale();
   const [page, setPage] = useState<string | undefined>()
   const [cursor, setCursor] = useState<string | undefined>(undefined)
@@ -52,12 +57,15 @@ export const ConversationsListView: FC = () => {
 
   useEffect(() => {
     if (operatorSession?.orgId) {
+      console.log(operatorSession)
       setConversationListFilter({
         ...conversationListFilter, orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: cursor, includeMessages: 'true'
       })
       conversationItems.refetch()
     }
   }, [operatorSession?.orgId, cursor])
+
+
 
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>

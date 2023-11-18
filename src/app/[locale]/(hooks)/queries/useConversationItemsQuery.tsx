@@ -1,5 +1,5 @@
 import { ConversationItem } from '@/entities/conversation';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { sortConversationItems } from '../../(helpers)/sortConversationItems';
 import {
@@ -19,10 +19,16 @@ export const useConversationItemsByCustomerQuery = (orgId: string, customerId: s
 
 export const useConversationItemsQuery = (params: ConversationFilterParams) => useInfiniteQuery<{ cursor: string | null, data: ConversationItem[] }>({
   queryKey: [QueryKey.conversationItems, ...Object.values(params)],
-  queryFn: async () => {
-    return await getConversationItems(params)
+  queryFn: async ({ pageParam }) => {
+    // const queryClient = useQueryClient()
+    // console.log('hi')
+    // // get cursor of page index
+    console.log('hiiiii')
+    return await getConversationItems(params, pageParam)
   },
-  getNextPageParam: (lastPage, pages) => lastPage.cursor,
+  enabled: !!params?.orgId,
+  getPreviousPageParam: (firstPage) => firstPage.cursor ?? null,
+  getNextPageParam: (lastPage) => lastPage.cursor ?? null,
 })
 
 /**
@@ -62,19 +68,14 @@ export const getConversationItemsByCustomer = async (
  */
 export const getConversationItems = async (
   params: ConversationFilterParams,
-  pageParam = 0,
+  cursor: string | null
+
 ): Promise<{ cursor: string | null, data: ConversationItem[] }> => {
-  params.expansionFields = ['customerId', 'operatorId']
-  if (params.operatorId === 'all' || params.operatorId === 'bots') {
-    params.operatorId = ''
-  }
-  if (!params?.orgId) {
-    return new Promise(() => [])
-  }
+  console.log('x')
   const res =
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${params.orgId}/conversations?cursor=${pageParam}&${queryParams(params)}`
+      }/orgs/${params?.orgId}/conversations?${cursor ? `cursor=${cursor}&` : ''}${queryParams({ ...params, operatorId: params.operatorId === 'all' || params.operatorId === 'bots' ? '' : params?.operatorId, expansionFields: ['customerId', 'operatorId'] } as ConversationFilterParams)}`
     )
 
   const body = await res.json()

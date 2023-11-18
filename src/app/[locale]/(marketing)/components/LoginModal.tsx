@@ -50,7 +50,7 @@ export const LoginModal: FC<PropsWithChildren<Props>> = ({ leftButtonLabel, righ
         {children}
       </div >
       <dialog id="login_modal" className="bg-transparent shadow-none select-none" >
-        <form method="dialog" className="flex  flex-col rounded-md gap-y-4 animate-fade modal-box w-[30rem] place-items-center bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-yellow-500/10 via-purple-500/10 to-blue-500/10 backdrop-blur-2xl" ref={dialogRef} >
+        <form method="dialog" className="flex  flex-col rounded-md gap-y-4  modal-box w-[30rem] place-items-center bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-yellow-500/10 via-purple-500/10 to-blue-500/10 backdrop-blur-2xl" ref={dialogRef} >
           <h5 className='text-2xl font-semibold'>{t('Sign in')}</h5>
           <Button className='gap-x-2' href={`${process.env.NEXT_PUBLIC_APP_API_URL}/auth/google/authorize`} rel="noreferrer">
             <FaGoogle />

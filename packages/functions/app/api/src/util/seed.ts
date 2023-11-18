@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
 import fs from 'fs';
+import pLimit from 'p-limit';
 import { ApiHandler } from 'sst/node/api';
 import { Bucket } from 'sst/node/bucket';
 import { Config } from 'sst/node/config';
@@ -30,6 +31,8 @@ export interface SeedResponse {
   mockOrgIds: MockOrgIds[];
 }
 
+const limit = pLimit(1);
+
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
@@ -37,17 +40,17 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const db = appDb;
       const mockArgs: MockArgs = {
         mockLang: 'en',
-        mockOrgCount: 3,
-        mockCustomerCount: 5,
-        mockOperatorCount: 2,
-        mockBotCount: 2,
-        mockArticleCount: 15,
+        mockOrgCount: 1,
+        mockCustomerCount: 120,
+        mockOperatorCount: 4,
+        mockBotCount: 4,
+        mockArticleCount: 25,
         mockArticleSearchPhraseFreq: 4,
         mockSearchPhrase: `30-Day returns`,
         mockArticleHighlightCount: 5,
-        mockConversationCountPerCustomer: 3,
+        mockConversationCountPerCustomer: 4,
         mockVisitsPerCustomer: 5,
-        mockMessageCountPerConversation: 1,
+        mockMessageCountPerConversation: 10,
       };
       const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
         [...Array(mockArgs.mockOrgCount)].map((_, i) => seed(db, mockArgs, i)),
@@ -57,6 +60,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify({ mockArgs, mockOrgs: mockOrgIds }),
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(JSON.stringify(err));
       return {
         statusCode: 500,
@@ -386,6 +390,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
                   dismissed: false,
                 })
                 .go();
+
               const moderatorConversation = await db.entities.conversations
                 .create({
                   orgId,
@@ -414,7 +419,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
               const operatorConversation = await db.entities.conversations
                 .create({
                   orgId,
-                  operatorId: existingOperator?.operatorId,
+                  operatorId: existingOperator?.operatorId ?? '',
                   channel: faker.helpers.arrayElement(conversationChannel),
                   topic: faker.helpers.arrayElement(conversationTopic),
                   status,

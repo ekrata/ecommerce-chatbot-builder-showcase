@@ -158,6 +158,8 @@ export function baseStack({ stack, app }: StackContext) {
           'packages/functions/app/api/src/util/seed.handler',
         'POST /util/small-seed-test-db':
           'packages/functions/app/api/src/util/smallSeed.handler',
+        'POST /util/dense-seed-test-db':
+          'packages/functions/app/api/src/util/denseSeed.handler',
         'POST /util/wipe-test-db':
           'packages/functions/app/api/src/util/wipe.handler',
       }

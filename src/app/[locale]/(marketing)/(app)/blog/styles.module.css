@@ -1,0 +1,27 @@
+ /* Create the animation... */
+
+
+/* ...and then apply it: */
+
+
+
+.morph {
+  background-size: 1% 1%;
+  background: linear-gradient(17deg, #D422B1, #FFCE00, cyan);
+  animation: GradientBackground 4s ease infinite;
+}
+
+
+@keyframes GradientBackground {
+  0% {
+    background-position: 5% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+};

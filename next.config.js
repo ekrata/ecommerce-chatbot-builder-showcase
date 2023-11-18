@@ -3,7 +3,9 @@ const withNextIntl = require('next-intl/plugin')(
   // This is the default (also the `src` folder is supported out of the box)
   'src/i18n.ts',
 );
-
+const withMDX = require('@next/mdx')()
+ 
+ 
 const withPWA = require('next-pwa')({
   dest: 'public',
   scope: '/dash',
@@ -12,9 +14,11 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
 });
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   // Other Next.js configuration ...
   reactStrictMode: true,
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   experimental: {
     typedRoutes: true,
   },
@@ -25,7 +29,7 @@ const nextConfig = {
 };
 
 
-module.exports = withPWA(withNextIntl(nextConfig))
+module.exports = withMDX(withPWA(withNextIntl(nextConfig)))
 
 // Inected Content via Sentry Wizard Below
 

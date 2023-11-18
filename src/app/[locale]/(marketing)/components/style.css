@@ -33,32 +33,3 @@ svg {
   animation-direction: alternate;
   }
   
-  @keyframes monkey {
-    0% {
-      stroke-dashoffset: -2000;
-      stroke: #FFC300;
-    }
-    30% {
-      stroke: #FF5733;
-    }
-    50% {
-      stroke: #FFC300;
-    }
-    70% {
-      stroke: #FF5733;
-    }
-    100% {
-    stroke-dashoffset:0;  
-    stroke: #FFC300;
-    }
-  }
-
-  @keyframes filterToggle {
-    from {
-      transform: filter(4px);
-    }
-  
-    to {
-      transform: filter(0px);
-    }
-  }
