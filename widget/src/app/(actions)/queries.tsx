@@ -33,5 +33,6 @@ export enum QueryKey {
   articles = 'articles',
   articleWithContent = 'articleWithContent',
   articlesSearch = 'articlesSearch',
-  operators = "operators"
+  operators = "operators",
+  operatorPictureUploadUrl = 'operatorPictureUploadUrl',
 }

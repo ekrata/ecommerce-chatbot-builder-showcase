@@ -44,6 +44,9 @@ export const useUpdateOperatorMut = (orgId: string, operatorId: string) => {
     mutationFn: async (params: Parameters<typeof updateOperator>) => await updateOperator(...params),
     onSuccess: (updatedOperator) => {
       if (user) {
+        if (user?.operatorId === updatedOperator?.operatorId) {
+          setAuthContext({ ...user, ...updateOperator })
+        }
         updateOperatorReducer(user, updatedOperator)
       }
     }

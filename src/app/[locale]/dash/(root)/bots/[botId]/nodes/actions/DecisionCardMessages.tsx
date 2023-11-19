@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-  SuggestionMode, Theme
+    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+    SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -12,9 +12,9 @@ import { FieldErrors, Resolver, SubmitHandler, useFieldArray, useForm } from 're
 import { BsPlus, BsX } from 'react-icons/bs';
 import { FcFile, FcInfo, FcPicture } from 'react-icons/fc';
 import {
-  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
-  useEdges, useNodeId, useNodes, useUpdateNodeInternals
+    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+    useEdges, useNodeId, useNodes, useUpdateNodeInternals
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';

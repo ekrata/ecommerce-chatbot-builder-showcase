@@ -31,26 +31,26 @@ export const SettingsMenu: React.FC = () => {
   return (
     < ul className="bg-white menu " >
       <li className='text-gray-600 border-b-2'>{t('Channels')}</li>
-      <details onClick={() => setLiveChatClosed(!liveChatClosed)}>
+      <details onClick={() => setLiveChatClosed(!liveChatClosed)} open={true}>
         <summary className='flex justify-between py-2 pl-4 border-b-2 gap-x-2 place-items-center'>
           <>
             <BsChatSquare />{t('Live Chat')}
           </>
-          {liveChatClosed ? <BiChevronDown /> : <BiChevronUp />}</summary>
+          {!liveChatClosed ? <BiChevronDown /> : <BiChevronUp />}</summary>
         <ul className='pl-2 border-b-2'>
           <li><Link className={`${path?.includes(appearanceLink) && 'active'}`} href={{ pathname: appearanceLink }}><GiPaintBrush />{t('appearance.Appearance')}</Link></li>
           <li><Link className={`${path?.includes(installationLink) && 'active'}`} href={{ pathname: installationLink }} > <BsReverseLayoutSidebarInsetReverse />{t('installation.Installation')}</Link></li>
-          <li><Link className={`${path?.includes(translationsLink) && 'active'}`} href={{ pathname: translationsLink }}><BsTranslate />{t('Translations')}</Link></li>
+          {/* <li><Link className={`${path?.includes(translationsLink) && 'active'}`} href={{ pathname: translationsLink }}><BsTranslate />{t('Translations')}</Link></li> */}
         </ul>
       </details>
-      <li><Link className={`${path?.includes(ticketingLink) && 'active'}`} href={{ pathname: ticketingLink }}><BiMailSend />{t('Ticketing.Ticketing')}</Link></li>
-      <li><Link className={`${path?.includes(facebookMessengerLink) && 'active'}`} href={{ pathname: facebookMessengerLink }}><BiMailSend />Facebook Messenger</Link></li>
-      <li><Link className={`${path?.includes(instagramLink) && 'active'}`} href={{ pathname: instagramLink }}><BiMailSend />Instagram</Link></li>
+      {/* <li><Link className={`${path?.includes(ticketingLink) && 'active'}`} href={{ pathname: ticketingLink }}><BiMailSend />{t('Ticketing.Ticketing')}</Link></li> */}
+      {/* <li><Link className={`${path?.includes(facebookMessengerLink) && 'active'}`} href={{ pathname: facebookMessengerLink }}><BiMailSend />Facebook Messenger</Link></li> */}
+      {/* <li><Link className={`${path?.includes(instagramLink) && 'active'}`} href={{ pathname: instagramLink }}><BiMailSend />Instagram</Link></li> */}
       <li className='text-gray-600 border-b-2'>{t('Personal')}</li>
       <li><Link className={`${path?.includes(accountLink) && 'active'}`} href={{ pathname: accountLink }}><BsPerson />{t('Account.Account')}</Link></li>
-      <li><Link className={`${path?.includes(operatingHoursLink) && 'active'}`} href={{ pathname: operatingHoursLink }}><BsClock />{t('operatingHours.Operating Hours')}</Link></li>
+      {/* <li><Link className={`${path?.includes(operatingHoursLink) && 'active'}`} href={{ pathname: operatingHoursLink }}><BsClock />{t('operatingHours.Operating Hours')}</Link></li> */}
       <li className='text-gray-600 border-b-2'>{t('General')}</li>
-      <li><Link className={`${path?.includes(customerSatisfactionLink) && 'active'}`} href={{ pathname: customerSatisfactionLink }}><BsEmojiSmile />{t('customerSatisfaction.Customer satisfaction')}</Link></li>
+      {/* <li><Link className={`${path?.includes(customerSatisfactionLink) && 'active'}`} href={{ pathname: customerSatisfactionLink }}><BsEmojiSmile />{t('customerSatisfaction.Customer satisfaction')}</Link></li> */}
       <li><Link className={`${path?.includes(projectBillingLink) && 'active'}`} href={{ pathname: projectBillingLink }}><FaMoneyBill />{t('Project & Billing')}</Link></li>
     </ul >
   )

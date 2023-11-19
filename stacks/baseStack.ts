@@ -5,25 +5,9 @@ import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { IQueue, QueueProps } from 'aws-cdk-lib/aws-sqs';
 import { Duration } from 'aws-cdk-lib/core';
 import {
-  Api,
-  ApiRouteProps,
-  Auth,
-  Bucket,
-  Config,
-  EventBus,
-  EventBusRuleProps,
-  FunctionInlineDefinition,
-  NextjsSite,
-  Queue,
-  StackContext,
-  StaticSite,
-  Table,
-  Topic,
-  TopicFunctionSubscriberProps,
-  TopicQueueSubscriberProps,
-  use,
-  WebSocketApi,
-  WebSocketApiFunctionRouteProps,
+    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
+    NextjsSite, Queue, StackContext, StaticSite, Table, Topic, TopicFunctionSubscriberProps,
+    TopicQueueSubscriberProps, use, WebSocketApi, WebSocketApiFunctionRouteProps
 } from 'sst/constructs';
 
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
@@ -305,8 +289,10 @@ export function baseStack({ stack, app }: StackContext) {
         'Accept',
       ],
       allowMethods: ['ANY'],
+
       allowOrigins: getAllowedOrigins(stack.stage, domain),
     },
+
     defaults: {
       throttle: {
         rate: 2000,

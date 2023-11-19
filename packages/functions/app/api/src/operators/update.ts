@@ -7,6 +7,7 @@ import * as Sentry from '@sentry/serverless';
 import { UpdateOperator } from '../../../../../../stacks/entities/entities';
 import { getAppDb } from '../db';
 
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     const { orgId, operatorId } = usePathParams();
@@ -18,6 +19,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       ...updateOperator
     }: UpdateOperator = useJsonBody();
 
+    console.log(updateOperator);
+
     if (!orgId || !operatorId) {
       return {
         statusCode: 422,
@@ -26,15 +29,15 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     }
 
     try {
-      const appDb = getAppDb(Config.REGION, Table.app.tableName);
-
       const res = await appDb.entities.operators
         .patch({
           orgId,
           operatorId,
         })
         .set({ ...updateOperator })
-        .go();
+        .go({ response: 'all_new' });
+
+      console.log(res);
 
       return {
         statusCode: 200,

@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Operator } from '../../../../stacks/entities/operator';
 
-export const AuthContext = createContext<ReturnType<typeof useLocalStorage < EntityItem<typeof Operator> | null>>>([null, () => null])
+export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < EntityItem<typeof Operator> | null>>, () => Promise<any>]>([null, () => null, async () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
 export const signoutSession = () => {
@@ -65,15 +65,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   }, [searchParams?.get('token')])
 
 
+  const getSessionUser = async () => {
+    const data = await getSession()
+    setSessionUser(data)
+  }
   useEffect(() => {
-    (async () => {
-      const data = await getSession()
-      setSessionUser(data)
-    })()
+    getSessionUser()
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={[sessionUser, setSessionUser]}>
+    <AuthContext.Provider value={[sessionUser, setSessionUser, getSessionUser]}>
       {!pathname?.includes('/dash') || !fetching ?
         children :
         < div className="justify-center w-screen h-screen gap-2 bg-white ">
