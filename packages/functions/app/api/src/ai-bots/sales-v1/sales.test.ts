@@ -23,15 +23,16 @@ beforeAll(async () => {
 });
 
 describe.concurrent(
-  'salesV1',
+  'sales',
   async () => {
-    it('replies to a message', async () => {
+    it('replies to a  sales', async () => {
       const { orgId, customers } = mockOrgIds[0];
       // const messageId = faker.helpers.arrayElement(messageIds);
       const res = await http.get(`/orgs/${orgId}/ai-bots/sales-v1/reply`);
+      console.log(res);
       expect(res).toBeTruthy();
       expect(res.status).toBe(200);
     });
   },
-  { timeout: 100000 },
+  { timeout: 1000000 },
 );

@@ -11,6 +11,7 @@ import { customersStack } from './packages/functions/app/api/src/customers/custo
 import { interactionsStack } from './packages/functions/app/api/src/interactions/interactionsStack';
 import { messagesStack } from './packages/functions/app/api/src/messages/messagesStack';
 import { metaStack } from './packages/functions/app/api/src/meta/metaStack';
+import { botNodesStack } from './packages/functions/app/api/src/nodes/botNodesStack';
 import { operatorsStack } from './packages/functions/app/api/src/operators/operatorsStack';
 import { orgsStack } from './packages/functions/app/api/src/orgs/orgsStack';
 import { stripeStack } from './packages/functions/app/api/src/stripe/stripeStack';
@@ -34,6 +35,7 @@ export default {
       .stack(paramStack)
       .stack(dbStack)
       .stack(baseStack)
+      .stack(botNodesStack)
       .stack(articlesStack)
       .stack(orgsStack)
       .stack(configurationStack)

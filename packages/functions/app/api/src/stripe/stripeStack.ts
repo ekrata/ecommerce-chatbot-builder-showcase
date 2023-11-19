@@ -23,22 +23,22 @@ export function stripeStack({ app, stack }: StackContext) {
   //     'packages/functions/app/api/src/billing/webhook.handler',
 
   // });
-  // if (app?.stage !== 'prod') {
-  //   api.addRoutes(stack, {
-  //     'POST /billing/create-prices': {
-  //       function: {
-  //         handler:
-  //           'packages/functions/app/api/src/billing/createPrices.handler',
-  //         timeout: 200,
-  //       },
-  //     },
-  //     'POST /billing/create-payment-links': {
-  //       function: {
-  //         handler:
-  //           'packages/functions/app/api/src/billing/createPaymentLinks.handler',
-  //         timeout: 200,
-  //       },
-  //     },
-  //   });
-  // }
+  if (app?.stage !== 'prod') {
+    api.addRoutes(stack, {
+      'POST /billing/create-prices': {
+        function: {
+          handler:
+            'packages/functions/app/api/src/billing/createPrices.handler',
+          timeout: 200,
+        },
+      },
+      'POST /billing/create-payment-links': {
+        function: {
+          handler:
+            'packages/functions/app/api/src/billing/createPaymentLinks.handler',
+          timeout: 200,
+        },
+      },
+    });
+  }
 }

@@ -22,8 +22,10 @@ import { Table } from 'sst/node/table';
 
 import * as Sentry from '@sentry/serverless';
 
-import { getAppDb } from '../db';
+import { getAppDb } from '../../../db';
 import { SalesGPT } from './salesGPT';
+
+// const client = new BedrockRuntime();
 
 // Chain to analyze which conversation stage should the conversation move into.
 export function loadStageAnalyzerChain(
@@ -128,21 +130,20 @@ export const CONVERSATION_STAGES = {
 // test the intermediate chains
 const verbose = true;
 
-const llm = new Bedrock({
-  model: 'meta.llama2-13b-chat-v1:0:4k', // You can also do e.g. "anthropic.claude-v2"
-  region: 'ap-southeast-1',
-  // endpointUrl: "custom.amazonaws.com",
-  credentials: {
-    accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
-  },
-  modelKwargs: {},
-});
+// const llm = new Bedrock({
+//   model: 'meta.llama2-13b-chat-v1:0:4k', // You can also do e.g. "anthropic.claude-v2"
+//   region: 'ap-southeast-1',
+//   // endpointUrl: "custom.amazonaws.com",
+//   credentials: {
+//     accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+//     secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+//   },
+//   modelKwargs: {},
+// });
 
 // const res = await llm.invoke('Tell me a joke');
 // console.log(res);
-
-// const llm = new llm({ temperature: 0.9 });
+const llm = new ChatOpenAI({ temperature: 0.9 });
 
 const stage_analyzer_chain = loadStageAnalyzerChain(llm, verbose);
 
@@ -176,33 +177,44 @@ const config = {
 };
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
+// const client = new BedrockRuntime();
+
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async () => {
-    const sales_agent = await SalesGPT.from_llm(llm, false, config);
+  ApiHandler(async (evt) => {
+    try {
+      const sales_agent = await SalesGPT.from_llm(llm, false, config);
 
-    // init sales agent
-    await sales_agent.seed_agent();
+      // init sales agent
+      await sales_agent.seed_agent();
 
-    let stageResponse = await sales_agent.determine_conversation_stage();
-    console.log(stageResponse);
+      let stageResponse = await sales_agent.determine_conversation_stage();
+      console.log(stageResponse);
 
-    let stepResponse = await sales_agent.step();
-    console.log(stepResponse);
+      let stepResponse = await sales_agent.step();
+      console.log(stepResponse);
 
-    await sales_agent.human_step(
-      'I am well, how are you? I would like to learn more about your mattresses.',
-    );
+      await sales_agent.human_step(
+        'I am well, how are you? I would like to learn more about your mattresses.',
+      );
 
-    stepResponse = await sales_agent.step();
-    console.log(stepResponse);
+      stepResponse = await sales_agent.step();
+      console.log(stepResponse);
 
-    await sales_agent.human_step(
-      'Yes, what materials are you mattresses made from?',
-    );
+      await sales_agent.human_step(
+        'Yes, what materials are you mattresses made from?',
+      );
 
-    stageResponse = await sales_agent.determine_conversation_stage();
-    console.log(stageResponse);
-    stepResponse = await sales_agent.step();
-    console.log(stepResponse);
+      stageResponse = await sales_agent.determine_conversation_stage();
+      console.log(stageResponse);
+      stepResponse = await sales_agent.step();
+      console.log(stepResponse);
+    } catch (err) {
+      console.log(err);
+      Sentry.captureException(err);
+      return {
+        statusCode: 500,
+        body: err,
+      };
+    }
   }),
 );

@@ -5,9 +5,25 @@ import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { IQueue, QueueProps } from 'aws-cdk-lib/aws-sqs';
 import { Duration } from 'aws-cdk-lib/core';
 import {
-    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
-    NextjsSite, Queue, StackContext, StaticSite, Table, Topic, TopicFunctionSubscriberProps,
-    TopicQueueSubscriberProps, use, WebSocketApi, WebSocketApiFunctionRouteProps
+  Api,
+  ApiRouteProps,
+  Auth,
+  Bucket,
+  Config,
+  EventBus,
+  EventBusRuleProps,
+  FunctionInlineDefinition,
+  NextjsSite,
+  Queue,
+  StackContext,
+  StaticSite,
+  Table,
+  Topic,
+  TopicFunctionSubscriberProps,
+  TopicQueueSubscriberProps,
+  use,
+  WebSocketApi,
+  WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
@@ -668,6 +684,36 @@ export function baseStack({ stack, app }: StackContext) {
             type: FilterOrPolicy.filter(
               SubscriptionFilter.stringFilter({
                 allowlist: [botNodeEvent.DecisionQuickReplies],
+              }),
+            ),
+          },
+        },
+      },
+    },
+    [botNodeEvent.SalesBot]: {
+      type: 'queue',
+      queue: new Queue(stack, `bot_node_chatbots_salesBot_queue`, {
+        cdk: defaultQueueConfig,
+        consumer: {
+          function: {
+            handler:
+              'packages/functions/app/api/src/nodes/chatbots/sales/index.handler',
+            bind: [wsApi, api, REGION, table],
+            permissions: [
+              table,
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
+          },
+        },
+      }),
+      cdk: {
+        subscription: {
+          filterPolicyWithMessageBody: {
+            type: FilterOrPolicy.filter(
+              SubscriptionFilter.stringFilter({
+                allowlist: [botNodeEvent.AskAQuestion],
               }),
             ),
           },
