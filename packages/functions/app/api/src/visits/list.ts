@@ -10,6 +10,7 @@ import { getAppDb } from '../db';
 import { expandObjects } from '../util/expandObjects';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
+const limit = 10;
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -35,16 +36,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           .byCustomerId({ orgId, customerId })
           .go(
             cursor
-              ? { cursor, limit: 25, order: 'desc' }
-              : { limit: 25, order: 'desc' },
+              ? { cursor, limit, order: 'desc' }
+              : { limit, order: 'desc' },
           );
       }
       res = await appDb.entities.visits.query
         .byOrg({ orgId })
         .go(
-          cursor
-            ? { cursor, limit: 25, order: 'desc' }
-            : { limit: 25, order: 'desc' },
+          cursor ? { cursor, limit, order: 'desc' } : { limit, order: 'desc' },
         );
 
       if (expansionFields) {
@@ -52,7 +51,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           data: (await expandObjects(appDb, res.data ?? {}, [
             'customerId',
           ])) as unknown as ExpandedVisit[],
-          cursor: cursor ?? null,
+          cursor: res?.cursor ?? null,
         };
         return {
           statusCode: 200,

@@ -2,6 +2,7 @@ import { ExpandedVisit } from '@/entities/visit';
 import { useQuery } from '@tanstack/react-query';
 
 import { QueryKey } from '../queries';
+import { toQueryParams } from './useConversationItemsQuery';
 
 export interface PaginateQueryParams {
   cursor: string | undefined
@@ -15,11 +16,9 @@ export interface PaginateQueryParams {
  * @param {string} orgId
  * @returns {unknown}
  */
-export const getVisits = async (orgId: string, customerId?: string) => {
+export const getVisits = async (orgId: string, cursor: string | null | undefined, customerId?: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/visits?${customerId && 'customerId=' + customerId}&expansionFields=${encodeURIComponent(
-      JSON.stringify(['customerId']),
-    )}`,
+    `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/visits?${toQueryParams({ cursor, customerId })}`,
   );
 
   if (!res.ok) {
@@ -37,12 +36,12 @@ export const getVisits = async (orgId: string, customerId?: string) => {
  * @param {string} orgId
  * @returns {*}
  */
-export const useVisitsQuery = (orgId: string, customerId?: string) => {
+export const useVisitsQuery = (orgId: string, pageCursor: string | null | undefined, customerId?: string) => {
   return useQuery<{
     data: ExpandedVisit[], cursor: string | undefined
   }>({
-    queryKey: [orgId, QueryKey.visits],
-    queryFn: async () => getVisits(orgId, customerId)
+    queryKey: [QueryKey.visits, orgId, , pageCursor, customerId],
+    queryFn: async () => await getVisits(orgId, pageCursor, customerId)
   })
 }
 

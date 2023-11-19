@@ -74,11 +74,11 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
         {/* <FaChevronDown className='text-gray-400'></FaChevronDown> */}
       </summary>
       <ul className="p-2 shadow menu dropdown-content max-h-screen-2/3 overflow-y-scroll z-[1] bg-base-100 rounded-box w-80">
-        <li key={'operator'}>
+        <li key={'operator'} onClick={() => {
+          setConversationListFilter({ ...conversationListFilter, operatorId })
+        }}>
           <a>
-            <input type="radio" name={`radio-${sessionOperator?.operatorId}`} className="form-control radio-primary radio-xs" checked={operatorId === sessionOperator?.operatorId} defaultChecked={operatorId === sessionOperator?.operatorId} onClick={() => {
-              setConversationListFilter({ ...conversationListFilter, operatorId })
-            }} />
+            <input type="radio" name={`radio-${sessionOperator?.operatorId}`} className="form-control radio-primary radio-xs" checked={operatorId === sessionOperator?.operatorId} defaultChecked={operatorId === sessionOperator?.operatorId} />
             <div className={`avatar ${sessionOperator?.online ? 'online' : 'offline'}`}>
               <div className="w-8 rounded-full ">
                 <img src={sessionOperator?.profilePicture} />
@@ -88,11 +88,11 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
           </a>
         </li>
         {sessionOperator?.permissionTier !== 'operator' &&
-          <li key={'all'}>
+          <li key={'all'} onClick={() => {
+            setConversationListFilter({ ...conversationListFilter, operatorId: 'all' })
+          }}>
             <a className='text-sm font-normal place-items-center'>
-              <input type="radio" name={`radio-${'all'}`} className="form-control radio-primary radio-xs" defaultChecked={operatorId === 'all'} onClick={() => {
-                setConversationListFilter({ ...conversationListFilter, operatorId: 'all' })
-              }} />
+              <input type="radio" name={`radio-${'all'}`} className="form-control radio-primary radio-xs" defaultChecked={operatorId === 'all'} />
               <div className={`avatar`}>
                 <div className="w-8 text-2xl rounded-full">
                   <BsPeopleFill />
@@ -118,11 +118,11 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
         {sessionOperator?.permissionTier !== 'operator' &&
           operators?.data?.map((operator) => (
             operator.operatorId !== sessionOperator?.operatorId &&
-            <li key={'all'} className='flex'>
+            <li key={'all'} className='flex' onClick={() => {
+              setConversationListFilter({ ...conversationListFilter, operatorId: operator?.operatorId })
+            }}>
               <a className='flex flex-row justify-start w-full normal-case place-items-center'>
-                <input type="radio" name={`radio-${operator?.operatorId}`} className="form-control radio-primary radio-xs" defaultChecked={operatorId === 'all'} onClick={() => {
-                  setConversationListFilter({ ...conversationListFilter, operatorId: operator?.operatorId })
-                }} />
+                <input type="radio" name={`radio-${operator?.operatorId}`} className="form-control radio-primary radio-xs" defaultChecked={operatorId === 'all'} />
                 <div className={`avatar ${operator?.online ? 'online' : 'offline'}`}>
                   <div className="w-8 rounded-full ">
                     {operator?.profilePicture ? <img src={operator?.profilePicture} /> : <BsPerson className="text-xl" />}

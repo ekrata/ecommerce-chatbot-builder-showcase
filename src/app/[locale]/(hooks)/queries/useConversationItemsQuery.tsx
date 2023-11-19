@@ -18,15 +18,13 @@ import { QueryKey } from '../queries';
  */
 export const useConversationItemsByCustomerQuery = (orgId: string, customerId: string) => useQuery<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], async () => (orgId && customerId) ? await getConversationItemsByCustomer(orgId, customerId) : [], { enabled: !!orgId && !!customerId })
 
-export const useConversationItemsQuery = (params: ConversationFilterParams, cursor: string | undefined | null) => {
-  console.log(cursor)
+export const useConversationItemsQuery = (params: ConversationFilterParams) => {
   const { conversationListFilter, setConversationListFilter } = useDashStore((state) => state)
   return useQuery<{ cursor: string | null, data: ConversationItem[] }>({
-    queryKey: [QueryKey.conversationItems, ...Object.values(params), cursor],
+    queryKey: [QueryKey.conversationItems, ...Object.values(params)],
     queryFn: async ({ pageParam, queryKey }) => {
       // const data = queryClient.getQueryData(queryKey) as { cursor: string | null, data: ConversationItem[] }[]
-      console.log(params?.cursor)
-      const res = await getConversationItems(params, cursor)
+      const res = await getConversationItems(params)
       // setConversationListFilter({ ...conversationListFilter, cursor: res?.cursor ?? undefined })
       // console.log(data?.pages)
       return res
@@ -97,7 +95,7 @@ export const getConversationItems = async (
   const res =
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${params?.orgId}/conversations?${cursor ? `cursor=${cursor}&` : ''}${toQueryParams({ ...params, operatorId: params.operatorId === 'all' || params.operatorId === 'bots' ? '' : params?.operatorId, expansionFields: ['customerId', 'operatorId'] } as ConversationFilterParams)}`
+      }/orgs/${params?.orgId}/conversations?${params?.cursor ? `cursor=${params?.cursor}&` : ''}${toQueryParams({ ...params, operatorId: params.operatorId === 'all' || params.operatorId === 'bots' ? '' : params?.operatorId, expansionFields: ['customerId', 'operatorId'] } as ConversationFilterParams)}`
     )
 
   const body = await res.json()

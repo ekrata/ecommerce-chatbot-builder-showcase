@@ -18,10 +18,10 @@ export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQuery
   // Create a client
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
-      queries: {
-        cacheTime: Infinity,
-        staleTime: Infinity,
-      }
+      // queries: {
+      //   cacheTime: cacheTime,
+      //   staleTime: ,
+      // }
     }
   }))
 

@@ -54,8 +54,9 @@ export const ChatView: FC = () => {
 
   const conversationItemsQuery = useConversationItemsQuery({ ...conversationListFilter })
   useEffect(() => {
+    console.log()
     if (conversationId) {
-      setConversationItem(conversationItemsQuery?.data?.pages?.flatMap(data => data.data).find(conversation => conversation?.conversationId === conversationId))
+      setConversationItem(conversationItemsQuery?.data?.data?.find(conversation => conversation.conversationId === conversationId))
     } else {
       setConversationItem(undefined)
     }

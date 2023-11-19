@@ -64,23 +64,24 @@ const fetchingSkeleton = (
 
 export const VisitorView: FC = () => {
   const t = useTranslations('dash');
-  const { conversationState, setConversationState } = useDashStore();
-  const [page, setPage] = useState<number>(1);
-  const [pageCursor, setPageCursor] = useState<PageCursor>({ 1: undefined });
+  const { conversationListFilter } = useDashStore();
+  const [page, setPage] = useState<number>(0)
+  const [pageCursors, setPageCursors] = useState<(string | null | undefined)[]>([])
   const router = useRouter()
 
   const { relativeTime } = useFormatter();
   const [operatorSession] = useAuthContext();
   const orgId = operatorSession?.orgId ?? ''
-  const visitsQuery = useVisitsQuery(orgId);
+
+  const visitsQuery = useVisitsQuery(orgId, pageCursors[page]);
   const searchParams = useSearchParams();
   const createConversationMut = useCreateConversationMut(orgId)
 
   useEffect(() => {
-    const tempPageCursor = { ...pageCursor }
-    tempPageCursor[page] = visitsQuery.data?.cursor
-    setPageCursor(tempPageCursor)
-  }, [visitsQuery.data?.cursor])
+    console.log(visitsQuery?.data)
+    setPageCursors([...new Set([...pageCursors, visitsQuery.data?.cursor])])
+    console.log(pageCursors)
+  }, [visitsQuery.data?.cursor, page])
 
   const handleStartChat = async (customerId: string) => {
     const conversationId = uuidv4()
@@ -154,8 +155,8 @@ export const VisitorView: FC = () => {
 
           </div>
         </div>
-        <div className='fixed bottom-0'>
-          <Pagination pageState={[page, setPage]} />
+        <div className='absolute bottom-0 flex w-1/4 bg-white gap-x-2'>
+          <Pagination pageState={[page, setPage]} limitPerPage={10} currentCursor={pageCursors[page]} pageItemCount={visitsQuery?.data?.data?.length ?? 0} />
         </div>
 
       </div >

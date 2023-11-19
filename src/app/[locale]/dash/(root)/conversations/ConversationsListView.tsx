@@ -5,7 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
 import { BsChat } from 'react-icons/bs';
+import { FaFilterCircleXmark } from 'react-icons/fa6';
 import { FcSearch } from 'react-icons/fc';
+import { MdFilterAltOff } from 'react-icons/md';
+import { RiFilterOffFill } from 'react-icons/ri';
 
 import {
     ConversationFilterParams
@@ -53,23 +56,18 @@ export const ConversationsListView: FC = () => {
   const [operatorSession] = useAuthContext();
   // console.log(operatorSession?.orgId)
   const locale = useLocale();
-  const [page, setPage] = useState<number>()
+  const [page, setPage] = useState<number>(0)
   const [pageCursors, setPageCursors] = useState<(string | null | undefined)[]>([])
 
-  const conversationItems = useConversationItemsQuery(conversationListFilter, pageCursors[page ?? 0])
-  // console.log(page)
-
-
-  // console.log(conversationItems)
+  const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
 
   useEffect(() => {
     // update last cursor
     if (operatorSession?.orgId) {
       // console.log(pageCursors, conversationItems?.data?.cursor)
       setPageCursors([...new Set([...pageCursors, conversationItems?.data?.cursor])])
-      console.log(pageCursors)
       setConversationListFilter({
-        ...conversationListFilter, orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: conversationItems?.data?.pages?.[page ?? 0]?.cursor ?? undefined, includeMessages: 'true'
+        ...conversationListFilter, cursor: pageCursors[page], orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: conversationItems?.data?.pages?.[page ?? 0]?.cursor ?? undefined, includeMessages: 'true'
       })
     }
   }, [conversationItems?.data?.cursor, conversationItems?.dataUpdatedAt, page])
@@ -101,7 +99,7 @@ export const ConversationsListView: FC = () => {
           })}
           <div className='absolute bottom-0 w-full bg-white'>
             <div className='flex justify-between w-full'>
-              <Pagination pageState={[page ?? 0, setPage]} currentCursor={pageCursors[page ?? 0]} />
+              <Pagination pageState={[page ?? 0, setPage]} currentCursor={pageCursors[page ?? 0]} limitPerPage={10} pageItemCount={conversationItems?.data?.data?.length} />
             </div>
           </div>
         </ul >
@@ -115,8 +113,15 @@ export const ConversationsListView: FC = () => {
         <div
           className={`bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center  text-lg font-semibold gap-x-2   `}
         >
-          <div className='flex justify-end w-full place-items-center'>
-            <div className='flex place-items-center'>
+          <div className='z-10 flex justify-end w-full place-items-center animate-fade-down'>
+            <div className='flex place-items-center gap-x-0'>
+              <button className=' btn btn-ghost disabled:bg-transparent place-items-center' disabled={conversationListFilter?.topic == undefined && conversationListFilter?.status == undefined && conversationListFilter?.channel == undefined} onClick={() =>
+                setConversationListFilter({
+                  ...conversationListFilter, operatorId: operatorSession?.operatorId, expansionFields: ['customerId', 'operatorId'], topic: undefined, status: undefined, channel: undefined
+                })
+              }>
+                <RiFilterOffFill className="text-xl " />
+              </button>
               <StatusSelect />
               <ChannelSelect />
               <TopicSelect dropdownPosition='end' />
