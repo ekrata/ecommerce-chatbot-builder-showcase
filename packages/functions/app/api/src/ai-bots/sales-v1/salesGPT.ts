@@ -5,11 +5,14 @@ import { BaseChain, LLMChain } from 'langchain/chains';
 import { ChainValues } from 'langchain/schema';
 
 import {
-    CONVERSATION_STAGES, loadSalesConversationChain, loadStageAnalyzerChain, SalesConvoOutputParser
+  CONVERSATION_STAGES,
+  loadSalesConversationChain,
+  loadStageAnalyzerChain,
 } from './';
-import { CustomPromptTemplateForTools } from './CustomPromptTemplateTools';
+import { CustomPromptTemplateForTools } from './customPromptTemplateTools';
 import { get_tools } from './knowledgeBase';
 import { SALES_AGENT_TOOLS_PROMPT } from './prompt';
+import { SalesConvoOutputParser } from './salesOutputParser';
 
 export class SalesGPT extends BaseChain {
   conversation_stage_id: string;

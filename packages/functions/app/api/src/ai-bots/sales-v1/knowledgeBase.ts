@@ -1,4 +1,6 @@
+import { BaseLanguageModel } from 'langchain/base_language';
 import { RetrievalQAChain } from 'langchain/chains';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { CharacterTextSplitter } from 'langchain/text_splitter';
@@ -58,7 +60,7 @@ export async function get_tools(product_catalog: string) {
 export async function setup_knowledge_base_test(query: string) {
   const knowledge_base = await setup_knowledge_base(
     'sample_product_catalog.txt',
-    llm,
+    retrievalLlm,
   );
   const response = await knowledge_base.call({ query });
   console.log(response);

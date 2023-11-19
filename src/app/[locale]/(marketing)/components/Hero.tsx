@@ -28,9 +28,9 @@ export function Hero() {
             {/* {t('Ecommerce')} */
             }
             <span className="relative text-transparent text-blue-600 bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 ">
-              Excellent Human and AI Customer Service
+              Human and AI-Based Customer Service
             </span>
-            {' has never been this easy.'}
+            {' like never before.'}
 
             <div className='divider divider-vertical'></div>
             <span className="relative text-center ">

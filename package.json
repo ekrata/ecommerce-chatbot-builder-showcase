@@ -36,6 +36,7 @@
     "test-app-api-{ddb-stream}": "sst bind 'vitest run --threads=false -c vitest/appApi.config.ts ddb-stream'",
     "test-app-api-{bots}": "sst bind 'vitest run --threads=false -c vitest/appApi.config.ts bots'",
     "test-app-api-{bot-executions}": "sst bind 'vitest run --threads=false -c vitest/appApi.config.ts botExecutions'",
+    "test-app-api-{sales}": "sst bind 'vitest run --threads=false -c vitest/appApi.config.ts sales'",
     "test-app-api-{interactions}": "sst bind 'vitest run --threads=false -c vitest/appApi.config.ts interactions'",
     "test-app-ws-{messages}": "sst bind 'vitest run --threads=false -c vitest/appWs.config.ts messages'",
     "test-app-ws-{conversations}": "sst bind 'vitest run --threads=false -c vitest/appWs.config.ts conversations'",

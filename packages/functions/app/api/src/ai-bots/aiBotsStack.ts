@@ -4,22 +4,22 @@ import { baseStack } from 'stacks/baseStack';
 export function aiBotsStack({ app, stack }: StackContext) {
   const { api } = use(baseStack);
 
-  // api.addRoutes(stack, {
-  //   // 'POST /webhooks/meta/messaging':
-  //   //   'packages/functions/app/api/src/webhooks/meta/messaging.handler',
-  //   // 'GET /webhooks/meta/verify':
-  //   //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging.handler',
-  //   // 'POST /webhooks/meta/messaging':
-  //   //   'packages/functions/app/api/src/webhooks/meta/messaging',
-  //   // 'GET /webhooks/meta/messaging':
-  //   //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging',
-  //   // 'POST /webhooks/meta/messaging':
-  //   //   'packages/functions/app/api/src/webhooks/meta/messaging',
-  //   // 'GET /webhooks/meta/messaging':
-  //   //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging',
-  //   // 'POST /stripe/email':
-  //   //   'packages/functions/app/api/src/webhooks/email.handler',
-    'POST /billing/webhook': 'packages/functions/app/api/src/billing/webhook.handler',
+  api.addRoutes(stack, {
+    //   // 'POST /webhooks/meta/messaging':
+    //   //   'packages/functions/app/api/src/webhooks/meta/messaging.handler',
+    //   // 'GET /webhooks/meta/verify':
+    //   //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging.handler',
+    //   // 'POST /webhooks/meta/messaging':
+    //   //   'packages/functions/app/api/src/webhooks/meta/messaging',
+    //   // 'GET /webhooks/meta/messaging':
+    //   //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging',
+    //   // 'POST /webhooks/meta/messaging':
+    //   //   'packages/functions/app/api/src/webhooks/meta/messaging',
+    //   // 'GET /webhooks/meta/messaging':
+    //   //   'packages/functions/app/api/src/webhooks/meta/verifyMessaging',
+    'POST /ai-bots/sales-v1/reply': 'packages/functions/app/api/',
+  });
+  // 'POST /billing/webhook': 'packages/functions/app/api/src/billing/webhook.handler',
 
   // });
   // if (app?.stage !== 'prod') {

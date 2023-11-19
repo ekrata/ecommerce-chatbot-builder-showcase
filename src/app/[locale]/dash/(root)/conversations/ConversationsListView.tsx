@@ -11,7 +11,7 @@ import { MdFilterAltOff } from 'react-icons/md';
 import { RiFilterOffFill } from 'react-icons/ri';
 
 import {
-    ConversationFilterParams
+  ConversationFilterParams
 } from '@/packages/functions/app/api/src/conversations/listByLastMessageSentAt';
 
 import { useDashStore } from '../(actions)/useDashStore';
@@ -113,7 +113,7 @@ export const ConversationsListView: FC = () => {
         <div
           className={`bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center  text-lg font-semibold gap-x-2   `}
         >
-          <div className='z-10 flex justify-end w-full place-items-center animate-fade-down'>
+          <div className='z-10 flex justify-end w-full shadow-lg place-items-center animate-fade-down'>
             <div className='flex place-items-center gap-x-0'>
               <button className=' btn btn-ghost disabled:bg-transparent place-items-center' disabled={conversationListFilter?.topic == undefined && conversationListFilter?.status == undefined && conversationListFilter?.channel == undefined} onClick={() =>
                 setConversationListFilter({

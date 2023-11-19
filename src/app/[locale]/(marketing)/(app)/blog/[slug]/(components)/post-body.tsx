@@ -14,7 +14,7 @@ import { mdxComponents } from './markdown-components';
 
 export async function PostBody({ children }: { children: string }) {
   return (
-    <>
+    <div className='justify-center shadow-md px-4 py-10 animate-fade-left md:mx-auto md:my-20 prose bg-white border-t-[1px] text-start max-w-screen'>
       {/* @ts-expect-error Server Component */}
       < MDXRemote
         source={children}
@@ -33,6 +33,6 @@ export async function PostBody({ children }: { children: string }) {
         }
         components={mdxComponents as MDXComponents}
       />
-    </>
+    </div>
   )
 }

@@ -22,15 +22,11 @@ export default async function PostPage({
   return (
     <Suspense fallback={<div>Loading...</div>}>
       {/* @ts-expect-error Server Component */}
-      <PostBody>{post?.body}</PostBody>
+      <PostBody>
+        {post?.body}
+      </PostBody>
     </Suspense>
   )
 }
 
 
-export async function generateStaticParams() {
-  const posts = await getPosts()
-  // The params to pre-render the page with.
-  // Without this, the page will be rendered at runtime
-  return posts.map((post: Post | null) => ({ slug: post?.slug }))
-}

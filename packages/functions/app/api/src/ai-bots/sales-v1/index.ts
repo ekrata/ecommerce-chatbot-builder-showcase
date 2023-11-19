@@ -9,8 +9,12 @@ import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Bedrock } from 'langchain/llms/bedrock';
 import {
-    BasePromptTemplate, BaseStringPromptTemplate, PromptTemplate, renderTemplate,
-    SerializedBasePromptTemplate, StringPromptValue
+  BasePromptTemplate,
+  BaseStringPromptTemplate,
+  PromptTemplate,
+  renderTemplate,
+  SerializedBasePromptTemplate,
+  StringPromptValue,
 } from 'langchain/prompts';
 import { ApiHandler } from 'sst/node/api';
 import { Config } from 'sst/node/config';
