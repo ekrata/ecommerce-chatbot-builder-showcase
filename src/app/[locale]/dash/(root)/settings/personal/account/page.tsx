@@ -99,6 +99,7 @@ export default function Page() {
 
 
     const res = await updateOperatorMut.mutateAsync([orgId, operatorId, body])
+    console.log(res)
 
     if (updateOperatorMut.isSuccess) {
       toast.success('Updated your account!')

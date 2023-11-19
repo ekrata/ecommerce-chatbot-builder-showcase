@@ -1,18 +1,31 @@
 import { EntityItem } from 'electrodb';
-import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import {
+  ApiHandler,
+  usePathParams,
+  useQueryParam,
+  useQueryParams,
+} from 'sst/node/api';
 import { useSession } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
 import {
-    Conversation, ConversationChannel, ConversationItem, ConversationStatus, ConversationTopic,
-    ExpandedConversation
+  Conversation,
+  ConversationChannel,
+  ConversationItem,
+  ConversationStatus,
+  ConversationTopic,
+  ExpandedConversation,
 } from '@/entities/conversation';
 import { Message } from '@/entities/message';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
-import { ExpandableField, expandableField, expandObjects } from '../util/expandObjects';
+import {
+  ExpandableField,
+  expandableField,
+  expandObjects,
+} from '../util/expandObjects';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -59,7 +72,7 @@ export interface ConversationFilterParams {
   orgId: string;
   expansionFields: ExpandableField[];
   cursor: string | undefined;
-  includeMessages?: string;
+  includeMessages?: boolean;
   operatorId?: string;
   customerId?: string;
   updatedAt?: string;
@@ -74,7 +87,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
     orgId,
     expansionFields,
     cursor,
-    includeMessages,
+    // includeMessages,
     operatorId,
     customerId,
     updatedAt,

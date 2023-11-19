@@ -1,18 +1,29 @@
 import { EntityItem } from 'electrodb';
 import Fuse from 'fuse.js';
 import { TupleToObject } from 'helpers/typeUtilities';
-import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import {
+  ApiHandler,
+  usePathParams,
+  useQueryParam,
+  useQueryParams,
+} from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
 import { Article } from '@/entities/article';
 import { ArticleContent } from '@/entities/articleContent';
-import { ConversationItem, conversationItemSearchKey } from '@/entities/conversation';
+import {
+  ConversationItem,
+  conversationItemSearchKey,
+} from '@/entities/conversation';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
 import { ExpandableField } from '../util/expandObjects';
-import { ConversationFilterParams, listConversations } from './listByCreatedAt';
+import {
+  ConversationFilterParams,
+  listConversations,
+} from './listByLastMessageSentAt';
 
 export type ConversationSearchParams = {
   phrase: string;
@@ -53,7 +64,7 @@ async function buildIndex(params: ConversationSearchParams) {
     verbose: true,
     isCaseSensitive: false,
     shouldSort: true,
-    threshold: 0.6,
+    threshold: 0.1,
     includeScore: true,
     distance: 100000,
     minMatchCharLength: 3,
@@ -85,10 +96,10 @@ async function scanAll(params: ConversationSearchParams) {
     if (lastCursor !== 'init') {
       params.cursor = lastCursor;
     }
-    const res = await listConversations(params);
+    console.log(params);
+    const res = await listConversations({ ...params, includeMessages: true });
     if (res?.statusCode === 200) {
       const body = JSON.parse(res?.body ?? '');
-      console.log(body);
       lastCursor = body.cursor;
       result = [...result, ...body.data];
     }
@@ -115,9 +126,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       ...useQueryParams(),
       orgId,
     } as unknown as ConversationSearchParams;
-    params.expansionFields = JSON.parse(
-      useQueryParam('expansionFields') ?? '[]',
-    );
+    const expansionFields = useQueryParam('expansionFields')?.split(',') as (
+      | 'customerId'
+      | 'operatorId'
+    )[];
     const {
       phrase,
       operatorId,
@@ -128,6 +140,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       status,
       channel,
     } = params;
+
+    console.log(params);
 
     if (!orgId || !phrase) {
       return {
@@ -144,17 +158,19 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         scanResult === undefined ||
         lastScanDate + 900000 < new Date().getTime()
       ) {
-        await buildIndex(params);
+        await buildIndex({ ...params, expansionFields, includeMessages });
       }
 
       console.log(scanResult);
-      const searchResult = scanResult.search(`=${phrase}`);
-      console.log(scanResult, searchResult);
+      const searchResult = scanResult.search(`${phrase}`);
+
+      // console.log(scanResult, searchResult);
       return {
         statusCode: 200,
         body: JSON.stringify(searchResult),
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,

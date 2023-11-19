@@ -3,7 +3,6 @@ import { AuthHandler, GoogleAdapter, Session } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
-import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from './db';
@@ -11,8 +10,12 @@ import { getAppDb } from './db';
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 declare module 'sst/node/auth' {
+  // composite key for operator
   export interface SessionTypes {
-    operator: EntityItem<typeof Operator>;
+    operator: {
+      operatorId: string;
+      orgId: string;
+    };
   }
 }
 
@@ -57,7 +60,10 @@ export const handler = AuthHandler({
             return Session.parameter({
               redirect: Config.FRONTEND_URL,
               type: 'operator',
-              properties: operatorUpsertRes?.data,
+              properties: {
+                orgId: operatorRes?.data?.[0]?.orgId,
+                operatorId: operatorRes.data?.[0]?.operatorId,
+              },
             });
           } else {
             // login
@@ -71,7 +77,10 @@ export const handler = AuthHandler({
             return Session.parameter({
               redirect: Config.FRONTEND_URL,
               type: 'operator',
-              properties: operatorRes.data?.[0],
+              properties: {
+                orgId: operatorRes?.data?.[0]?.orgId,
+                operatorId: operatorRes.data?.[0]?.operatorId,
+              },
             });
           }
         } catch (err) {

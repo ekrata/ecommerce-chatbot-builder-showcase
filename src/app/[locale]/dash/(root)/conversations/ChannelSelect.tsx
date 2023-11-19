@@ -37,7 +37,7 @@ export const ChannelSelect: React.FC<Props> = ({ dropdownPosition }) => {
           <>
             {channelIconMap?.[channel]}
           </>
-        </div> : <GrMultiple className='text-2xl' />}
+        </div> : <GrMultiple className='text-xl' />}
         <FaChevronDown className='' />
       </summary>
       <ul className="font-sans shadow menu font-normal dropdown-content z-[1] bg-base-100 text-sm rounded-box w-52 overflow-y-clip max-w-screen animate-fade-left">

@@ -38,14 +38,15 @@ const updateOperatorReducer = (oldOperator: EntityItem<typeof Operator>, updated
  */
 export const useUpdateOperatorMut = (orgId: string, operatorId: string) => {
   const queryClient = useQueryClient()
-  const [user, setAuthContext] = useAuthContext()
+  const [user, setAuthContext, refetch] = useAuthContext()
   return useMutation({
     mutationKey: [orgId, operatorId, MutationKey.updateOperator],
     mutationFn: async (params: Parameters<typeof updateOperator>) => await updateOperator(...params),
-    onSuccess: (updatedOperator) => {
+    onSuccess: async (updatedOperator) => {
       if (user) {
+        console.log(user, updatedOperator)
         if (user?.operatorId === updatedOperator?.operatorId) {
-          setAuthContext({ ...user, ...updateOperator })
+          await refetch()
         }
         updateOperatorReducer(user, updatedOperator)
       }

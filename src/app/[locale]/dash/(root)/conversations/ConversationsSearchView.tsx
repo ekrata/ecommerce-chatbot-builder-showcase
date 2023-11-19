@@ -8,24 +8,29 @@ import { BsX } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 import { FcSearch } from 'react-icons/fc';
 import { useDebounce } from 'usehooks-ts';
+import { z } from 'zod';
 
 import { useDashStore } from '../(actions)/useDashStore';
 import { highlightMatches } from '../../../(helpers)/highlightMatches';
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
 import {
-    useSearchConversationItemsQuery
+  useSearchConversationItemsQuery
 } from '../../../(hooks)/queries/useSearchConversationItemsQuery';
 import {
-    ConversationItemSearchKey, conversationItemSearchKey, ConversationItemSearchRes
+  ConversationItemSearchKey, conversationItemSearchKey, ConversationItemSearchRes
 } from '../../../../../../stacks/entities/conversation';
 import { ChannelSelect } from './ChannelSelect';
+import { CustomerAvatar } from './CustomerAvatar';
+import { OperatorConversationCard } from './OperatorConversationCard';
 import { OperatorSelect } from './OperatorSelect';
 import { StatusSelect } from './StatusSelect';
 import { TopicSelect } from './TopicSelect';
 
-type Inputs = {
-  phrase: string;
-};
+const schema = z.object({
+  phrase: z.string().email().min(3, { message: 'Atleast 3 characters required.' }),
+})
+
+type FormValues = z.infer<typeof schema>
 
 const fetchingSkeleton = (
   <div className="flex flex-col w-full p-2 my-2 animate-pulse rounded-3xl gap-y-2">
@@ -40,20 +45,24 @@ const fetchingSkeleton = (
   </div>
 )
 
+
+
 export const ConversationsSearchView: FC = () => {
   const tCw = useTranslations('chat-widget');
   const t = useTranslations('dash');
   const { conversationListFilter: { topic, status, operatorId, channel }, setConversationState } = useDashStore();
   const [operatorSession] = useAuthContext();
   const [phrase, setPhrase] = useState('');
-  const debouncedSearchPhrase = useDebounce(phrase, 150);
+  const debouncedSearchPhrase = useDebounce(phrase, 2000);
   const searchConversationItemsQuery = useSearchConversationItemsQuery({ expansionFields: ['customerId', 'operatorId'], cursor: undefined, orgId: operatorSession?.orgId ?? '', operatorId: operatorId, channel: channel, topic: topic, phrase: debouncedSearchPhrase })
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => setPhrase(data.phrase);
+  } = useForm<FormValues>({
+    mode: 'onBlur'
+  });
+  const onSubmit: SubmitHandler<FormValues> = (data) => setPhrase(data.phrase);
   const handleChange: ChangeHandler = async (event) => {
     setPhrase(event?.target?.value as string);
   }
@@ -66,36 +75,52 @@ export const ConversationsSearchView: FC = () => {
           }
           const matchKeys = response?.matches?.map((match => match.key))
           const matches: Record<ConversationItemSearchKey, { indices: [number, number][], key: string, value: string, refIndex?: number } | undefined> = {}
-          const highlightedField: Record<ConversationItemSearchKey, ReactNode[] | undefined> = {}
+          console.log(matches)
+          const highlightedFields: Record<ConversationItemSearchKey, ReactNode[] | undefined> = {}
 
           conversationItemSearchKey.map((key) => {
             matches[key] = response?.matches?.find((matchedField => matchedField.key === key))
           })
 
           Object.entries(matches)?.map(([key, value]) => {
-            highlightedField[key] = matchKeys.includes(key) && matches[key]?.indices.length ? highlightMatches(matches[key]?.value ?? '', matches[key]?.indices) : undefined
+            highlightedFields[key] = matchKeys.includes(key) && matches[key]?.indices.length ? highlightMatches(matches[key]?.value ?? '', matches[key]?.indices) : undefined
+            // console.log(highlightedField[key])
           })
+
+
           // const category = matchKeys.includes('category') && categoryIndicies?.length ? highlightMatches(response.item.category, categoryIndicies ) : ''
           // const subtitle = response.item?.subtitle && contentIndicies && matchKeys.includes('subtitle') ? highlightMatches(response.item?.subtitle, subtitleIndicies) : ''
           // const content = matchKeys.includes('content') && highlightMatches(response.item.content, contentIndicies)
-          console.log(highlightedField)
-          console.log(matches)
+          console.log(highlightedFields['customer.email'])
           return (
-            <Link
-              href={{
-                pathname: '/dash/conversations',
-                query: { conversationId: response.item.conversationId },
-              }}
-              passHref>
-              <li key={response.refIndex} className={`flex  justify-between w-full ${highlightedField['conversation.messages']?.length ? 'h-28' : 'h-20'} font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal`}>
-                <div className='flex flex-col justify-start w-5/6 overflow-y-clip basis-3/4 place-items-start gap-y-1'>
-                  <h5 className='justify-start text-base text-start'>{highlightedField['conversation.customer.name'] ? highlightedField['conversation.customer.name'].map(child => (<>{child}</>)) : response.item.customer?.name}</h5>
-                  <h5 className='text-sm'>{highlightedField['conversation.customer.email'] ? highlightedField['conversation.customer.email'].map(child => (<>{child}</>)) : response.item.customer?.email}</h5>
-                  {highlightedField['messages.content'] && <p className='justify-start text-xs text-start text-neutral-400'>{highlightedField['messages.content'] ? highlightedField['messages.content'].map(child => (<>{child}</>)) : response.item.messages?.slice(-1)[0].content}</p>}
-                </div>
-                <BiChevronRight className="flex text-3xl basis-1/6 shrink-0 justify-right" />
-              </li>
-            </Link>
+            <OperatorConversationCard height='16' conversationItem={response?.item} highlightedFields={highlightedFields} />
+            // <Link
+            //   href={{
+            //     pathname: '/dash/conversations',
+            //     query: { conversationId: response.item.conversationId },
+            //   }}
+            //   passHref>
+            //   <li key={response.refIndex} className={`flex  justify-between w-full ${highlightedField['conversation.messages']?.length ? 'h-28' : 'h-20'} font-light normal-case border-0 border-b-[1px] border-gray-300 rounded-none btn btn-ghost text-normal`}>
+            //     <div className='flex flex-row justify-start w-5/6 gap-x-2 overflow-y-clip basis-3/4 place-items-start gap-y-1'>
+            //       <CustomerAvatar conversationItem={response?.item} customer={response?.item?.customer}></CustomerAvatar>
+            //       <h5 className={`justify-stretch text-start w-full  text-sm break-all truncate  justify-self-start `}>{highlightedField['messages.content'] ? highlightedField['messages.content'].map(child => (<>{child}</>)) : response.item.messages?.slice(-1)[0]?.content}</h5>
+            //     </div>
+            //     <div className="flex flex-col w-full place-items-start gap-y-1">
+            //       <h5 className={`justify-stretch text-start w-full  text-sm break-all truncate  justify-self-start ${readMessages?.[readMessageId] || (lastMessage.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId) ? 'font-normal text-neutral-700' : 'font-semibold'} `}>{`${lastMessage?.content}`}</h5>
+            //       <div className="flex flex-grow w-full text-xs justify-stretch text-neutral-400 gap-x-1">
+            //         <OperatorMessageTimeLabel conversationItem={conversationItem} />
+            //         {/* {conversationItem?.topic && <div className='justify-end text-xs badge badge-sm'>{startCase(conversationItem?.topic)}</div>} */}
+            //       </div>
+            //     </div>
+            //     <div className='flex flex-row justify-start w-5/6 gap-x-2 overflow-y-clip basis-3/4 place-items-start gap-y-1'>
+            //       <h5 className='justify-start text-base text-start'>{highlightedField['customer.name'] ? highlightedField['customer.name'].map(child => (<>{child}</>)) : response.item.customer?.name}</h5>
+            //       <h5 className='text-sm'>{highlightedField['customer.email'] ? highlightedField['customer.email'].map(child => (<>{child}</>)) : response.item.customer?.email}</h5>
+            //     </div>
+
+            //     {/* {highlightedField['messages.content'] && <p className='justify-start text-xs text-start text-neutral-400'>{highlightedField['messages.content'] ? highlightedField['messages.content'].map(child => (<>{child}</>)) : response.item.messages?.slice(-1)[0].content}</p>} */}
+            //     {/* <BiChevronRight className="flex text-3xl basis-1/6 shrink-0 justify-right" /> */}
+            //   </li>
+            // </Link>
           )
         })
         }

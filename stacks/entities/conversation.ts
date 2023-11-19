@@ -50,8 +50,8 @@ export type ConversationItemSearchRes = {
 };
 
 export const conversationItemSearchKey = [
-  'conversation.customer.name',
-  'conversation.customer.email',
+  'customer.name',
+  'customer.email',
   'messages.content',
 ];
 

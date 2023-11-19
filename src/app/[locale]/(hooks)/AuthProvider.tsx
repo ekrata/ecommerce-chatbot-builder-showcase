@@ -9,8 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useQuery } from '@tanstack/react-query';
 
 import { Operator } from '../../../../stacks/entities/operator';
+import { useOperatorQuery } from './queries/useOperatorQuery';
 
-export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < EntityItem<typeof Operator> | null>>, () => Promise<any>]>([null, () => null, async () => null])
+export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string }>>, () => Promise<any>]>([null, () => null, async () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
 export const signoutSession = () => {
@@ -24,11 +25,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const pathname = usePathname()
   const [fetching, setFetching] = useState<boolean>(false);
   const [authToken, setAuthToken] = useLocalStorage<string>('authToken', '');
-  const [sessionUser, setSessionUser] = useLocalStorage<EntityItem<typeof Operator> | null>('sessionUser', null);
+  const [sessionUserIds, setSessionUserIds] = useLocalStorage<{ orgId: string, operatorId: string }>('sessionUserIds', { orgId: '', operatorId: '' });
+  const operatorQuery = useOperatorQuery(sessionUserIds?.orgId, sessionUserIds?.operatorId);
+  console.log(operatorQuery?.data)
 
   const getSession = async () => {
     try {
       setFetching(true)
+      // get's the operatorId
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_API_URL}/session?nonce=${uuidv4()}`,
         {
@@ -36,20 +40,20 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             Authorization: `Bearer ${authToken}`
           }
         });
+      const resData = await response?.json()
       console.log(response)
-      if (response.status !== 200) {
-        setSessionUser(null)
-        router.push('/')
+      if (response.status === 200) {
+        setSessionUserIds({ orgId: resData?.orgId, operatorId: resData?.operatorId })
+        // router.push('/')
       }
       setFetching(false)
-      const res = (await response?.json());
-      if (res?.message === "Internal Server Error") {
-        setSessionUser(null)
+      if (resData?.message === "Internal Server Error") {
+        setSessionUserIds({ orgId: '', operatorId: '' })
         router.push('/')
       }
-      return res
+      return resData
     } catch (error) {
-      setSessionUser(null)
+      setSessionUserIds({ orgId: '', operatorId: '' })
       router.push('/')
       setFetching(false)
     }
@@ -65,16 +69,20 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   }, [searchParams?.get('token')])
 
 
-  const getSessionUser = async () => {
-    const data = await getSession()
-    setSessionUser(data)
-  }
   useEffect(() => {
-    getSessionUser()
+    (async () => {
+      await getSession()
+    })()
+    console.log(sessionUserIds)
   }, [authToken]);
 
+  useEffect(() => {
+    console.log('refetching')
+    operatorQuery?.refetch()
+  }, [sessionUserIds?.orgId, sessionUserIds?.operatorId])
+
   return (
-    <AuthContext.Provider value={[sessionUser, setSessionUser, getSessionUser]}>
+    <AuthContext.Provider value={[operatorQuery?.data as unknown as EntityItem<typeof Operator>, setSessionUserIds, operatorQuery.refetch]}>
       {!pathname?.includes('/dash') || !fetching ?
         children :
         < div className="justify-center w-screen h-screen gap-2 bg-white ">

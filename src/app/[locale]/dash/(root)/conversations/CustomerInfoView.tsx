@@ -57,7 +57,7 @@ export const CustomerInfoView: FC = () => {
 
   const conversationItemQuery = useConversationItemsQuery(conversationListFilter)
   const conversationItem = conversationItemQuery?.data?.data?.find(conversation => conversation?.conversationId === conversationId)
-  const visitsQuery = useVisitsQuery(orgId, conversationItem?.customerId)
+  const visitsQuery = useVisitsQuery(orgId, '', conversationItem?.customerId)
   const noData = (
     <div className='flex flex-col justify-center w-full h-screen bg-white place-items-center gap-y-1'>
       <h5 className='flex font-semibold'><BsChat />{tDash('conversations', { count: 0 })}</h5>
