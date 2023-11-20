@@ -47,38 +47,38 @@ export const CONVERSATION_STAGES = {
 // test the intermediate chains
 const verbose = true;
 
-const llm = new Bedrock({
-  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
-  region: 'us-east-1',
-  // endpointUrl: "custom.amazonaws.com",
-  // credentials: {
-  //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
-  //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
-  // },
-  modelKwargs: {},
-});
+// const llm = new Bedrock({
+//   model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
+//   region: 'us-east-1',
+//   // endpointUrl: "custom.amazonaws.com",
+//   // credentials: {
+//   //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+//   //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+//   // },
+//   modelKwargs: {},
+// });
 
-const llmChoice = new Bedrock({
-  model: 'cohere.command-light-text-v14', // You can also do e.g. "anthropic.claude-v2"
-  region: 'us-east-1',
-  // endpointUrl: "custom.amazonaws.com",
-  // credentials: {
-  //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
-  //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
-  // },
-  modelKwargs: {},
-});
+// const llmChoice = new Bedrock({
+//   model: 'cohere.command-light-text-v14', // You can also do e.g. "anthropic.claude-v2"
+//   region: 'us-east-1',
+//   // endpointUrl: "custom.amazonaws.com",
+//   // credentials: {
+//   //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+//   //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+//   // },
+//   modelKwargs: {},
+// });
 
-const llmChat = new Bedrock({
-  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
-  region: 'us-east-1',
-  // endpointUrl: "custom.amazonaws.com",
-  // credentials: {
-  //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
-  //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
-  // },
-  modelKwargs: {},
-});
+// const llmChat = new Bedrock({
+//   model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
+//   region: 'us-east-1',
+//   // endpointUrl: "custom.amazonaws.com",
+//   // credentials: {
+//   //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+//   //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+//   // },
+//   modelKwargs: {},
+// });
 
 // const res = await llm.invoke('Tell me a joke');
 // console.log(res);
@@ -123,7 +123,7 @@ export function loadSalesConversationChain(
 ) {
   const prompt = new PromptTemplate({
     template: `
-            [INST] Never forget your name is {salesperson_name}. 
+            Never forget your name is {salesperson_name}. 
              You work as a {salesperson_role}.
              You work at company named {company_name}. {company_name}'s business is the following: {company_business}.
              Company values are the following. {company_values}
@@ -160,8 +160,7 @@ export function loadSalesConversationChain(
              You must respond according to the previous conversation history and the stage of the conversation you are at.
              Only generate one response at a time and act as {salesperson_name} only! When you are done generating, end with '<END_OF_TURN>' to give the user a chance to respond.
 
-              [/INST]
-              Begin! 
+            Begin! 
              Conversation history:
              {conversation_history}
              {salesperson_name}:   
@@ -212,7 +211,7 @@ const config = {
 };
 
 const botData: SalesGPTData = {
-  salesperson_name: 'James',
+  salesperson_name: 'Bot',
   salesperson_role: 'Business Development Representative',
   company_name: 'Sleep Haven',
   company_business:
@@ -245,34 +244,27 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           conversation;
         const { id, position, data } = currentNode as BotNodeType;
 
-        const salesAgent = await SalesGPT.from_llm(
-          llm,
-          llmChat,
-          llmChoice,
-          false,
-          config,
-          botData,
-        );
-        const userMessage = conversation?.messages?.slice(-1)[0]?.content ?? '';
+        // const salesAgent = await SalesGPT.from_llm(llm, false, config, botData);
+        // const userMessage = conversation?.messages?.slice(-1)[0]?.content ?? '';
 
-        if (salesAgent) {
-          await salesAgent.seed_agent();
-          // set conversation history
-          salesAgent.conversation_history = [
-            ...conversation?.messages
-              .slice(0, -1)
-              ?.map(({ content }) => content ?? ''),
-          ];
+        // if (salesAgent) {
+        //   await salesAgent.seed_agent();
+        //   // set conversation history
+        //   salesAgent.conversation_history = [
+        //     ...conversation?.messages
+        //       .slice(0, -1)
+        //       ?.map(({ content }) => content ?? ''),
+        //   ];
 
-          const { conversationStage, response } = await getReply(
-            salesAgent,
-            userMessage,
-          );
-          return {
-            statusCode: 200,
-            body: JSON.stringify({ conversationStage, response }),
-          };
-        }
+        //   const { conversationStage, response } = await getReply(
+        //     salesAgent,
+        //     userMessage,
+        //   );
+        //   return {
+        //     statusCode: 200,
+        //     body: JSON.stringify({ conversationStage, response }),
+        //   };
+        // }
       }
     } catch (err) {
       console.log(err);
@@ -305,14 +297,30 @@ const getReply = async (salesAgent: SalesGPT, userMessage: string) => {
 export const testHandler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
-      console.log('hihihiihihiihi');
+      console.log('hihihii');
+      // console.log('key', Config?.OPENAI_API_KEY);
+      // console.log(Config?.OPENAI_API_KEY);
+
+      const llm = new ChatOpenAI({
+        temperature: 0.9,
+        openAIApiKey: '',
+      });
+
+      const retrievalLlm = new ChatOpenAI({
+        temperature: 0,
+        openAIApiKey: '',
+      });
+      const embeddings = new OpenAIEmbeddings({
+        openAIApiKey: '',
+      });
       const body = useJsonBody();
       const humanMessages = body['messages'] as string[];
+      console.log(humanMessages);
       const conversationHistory = body['conversationHistory'];
       const salesAgent = await SalesGPT.from_llm(
         llm,
-        llmChat,
-        llmChoice,
+        retrievalLlm,
+        embeddings,
         false,
         config,
         botData,
@@ -324,12 +332,14 @@ export const testHandler = Sentry.AWSLambda.wrapHandler(
         // console.log(salesAgent.conversation_history);
         const stageResponse = await salesAgent.determine_conversation_stage();
         const response = await salesAgent.step();
+
         const responses = await Promise.all(
           humanMessages?.map(async (humanMessage) => {
             salesAgent.human_step(humanMessage);
             const stageResponse =
               await salesAgent.determine_conversation_stage();
             const response = await salesAgent.step();
+
             return {
               conversationStage: salesAgent.current_conversation_stage,
               response,
