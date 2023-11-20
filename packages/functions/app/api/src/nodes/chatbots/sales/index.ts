@@ -305,6 +305,7 @@ const getReply = async (salesAgent: SalesGPT, userMessage: string) => {
 export const testHandler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
+      console.log('hihihiihihiihi');
       const body = useJsonBody();
       const humanMessages = body['messages'] as string[];
       const conversationHistory = body['conversationHistory'];
