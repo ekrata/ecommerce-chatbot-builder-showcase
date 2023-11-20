@@ -35,6 +35,20 @@ export function nodesStack({ stack, app }: StackContext) {
     // 'DELETE /orgs/{orgId}/nodes/{botId}':
     //   'packages/functions/app/api/src/nodes/delete.handler',
     // 'POST /orgs/{orgId}/bots/{botId}': //   'packages/functions/app/api/src/nodes/create.handler',
+    'POST /orgs/{orgId}/nodes/chatbots/chat/test': {
+      function: {
+        handler:
+          'packages/functions/app/api/src/nodes/chatbots/chat/index.testHandler',
+        ...getLambda,
+      },
+    },
+    'POST /orgs/{orgId}/nodes/chatbots/chat/run': {
+      function: {
+        handler:
+          'packages/functions/app/api/src/nodes/chatbots/sales/index.testHandler',
+        ...getLambda,
+      },
+    },
     'POST /orgs/{orgId}/nodes/chatbots/sales': {
       function: {
         handler:

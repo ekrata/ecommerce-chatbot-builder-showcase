@@ -17,9 +17,9 @@ export class SalesConvoOutputParser extends AgentActionOutputParser {
 
   async parse(text: string): Promise<AgentAction | AgentFinish> {
     if (this.verbose) {
-      // console.log('TEXT');
-      // console.log(text);
-      // console.log('-------');
+      console.log('TEXT');
+      console.log(text);
+      console.log('-------');
     }
     const regexOut = /<END_OF_CALL>|<END_OF_TURN>/g;
     if (text.includes(this.ai_prefix + ':')) {

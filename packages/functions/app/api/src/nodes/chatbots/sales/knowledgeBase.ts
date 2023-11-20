@@ -16,7 +16,7 @@ import * as url from 'url';
 // const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const retrievalLlm = new Bedrock({
-  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
+  model: 'cohere.command-light-text-v14', // You can also do e.g. "anthropic.claude-v2"
   region: 'us-east-1',
   modelKwargs: {},
 });
@@ -94,4 +94,5 @@ export async function setup_knowledge_base_test(query: string) {
   //   console.log('res', response);
   // }
 }
+
 setup_knowledge_base_test('What products do you have available?');

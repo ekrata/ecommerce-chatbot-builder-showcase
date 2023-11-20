@@ -30,7 +30,6 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../../db';
 import { BotStateContext } from '../../botStateContext';
-import { loadSalesConversationChain, loadStageAnalyzerChain } from './helpers';
 import { SalesGPT, SalesGPTData } from './salesGPT';
 
 // const client = new BedrockRuntime();
@@ -49,7 +48,7 @@ export const CONVERSATION_STAGES = {
 const verbose = true;
 
 const llm = new Bedrock({
-  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
+  model: 'cohere.command-light-text-v14', // You can also do e.g. "anthropic.claude-v2"
   region: 'us-east-1',
   // endpointUrl: "custom.amazonaws.com",
   // credentials: {
@@ -78,11 +77,11 @@ export function loadStageAnalyzerChain(
              ===
              Now determine what should be the next immediate conversation stage for the agent in the sales conversation by selecting only from the following options:
              1. Introduction: Start the conversation by introducing yourself and your company. Be polite and respectful while keeping the tone of the conversation professional.
-             2. Qualification: Qualify the prospect by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.
-             3. Value proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
-             4. Needs analysis: Ask open-ended questions to uncover the prospect's needs and pain points. Listen carefully to their responses and take notes.
-             5. Solution presentation: Based on the prospect's needs, present your product/service as the solution that can address their pain points.
-             6. Objection handling: Address any objections that the prospect may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.
+             2. Qualification: Qualify the user by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.
+             3. Value proposition: Briefly explain how your product/service can benefit the user. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
+             4. Needs analysis: Ask open-ended questions to uncover the user's needs and pain points. Listen carefully to their responses and take notes.
+             5. Solution presentation: Based on the user's needs, present your product/service as the solution that can address their pain points.
+             6. Objection handling: Address any objections that the user may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.
              7. Close: Ask for the sale by proposing a next step. This could be a demo, a trial or a meeting with decision-makers. Ensure to summarize what has been discussed and reiterate the benefits.
              8. End conversation: It's time to end the call as there is nothing else to be said.
 
@@ -92,6 +91,8 @@ export function loadStageAnalyzerChain(
              Do not answer anything else nor add anything to you answer.`,
     inputVariables: ['conversation_history'],
   });
+
+  console.log(prompt.format);
   return new LLMChain({ llm, prompt, verbose });
 }
 
@@ -101,26 +102,28 @@ export function loadSalesConversationChain(
   verbose: boolean = false,
 ) {
   const prompt = new PromptTemplate({
-    template: `Never forget your name is {salesperson_name}. You work as a {salesperson_role}.
+    template: `Never forget your name is {salesperson_name}. 
+             Never produce lists, just answers.
+             You work as a {salesperson_role}.
              You work at company named {company_name}. {company_name}'s business is the following: {company_business}.
              Company values are the following. {company_values}
-             You are contacting a potential prospect in order to {conversation_purpose}
-             Your means of contacting the prospect is {conversation_type}
+             You are contacting a potential user in order to {conversation_purpose}
+             Your means of contacting the user is {conversation_type}
 
              If you're asked about where you got the user's contact information, say that you got it from public records.
              Keep your responses in short length to retain the user's attention. Never produce lists, just answers.
-             Start the conversation by just a greeting and how is the prospect doing without pitching in your first turn.
-             When the conversation is over, output <END_OF_CALL>
+             Start the conversation by just a greeting and how is the user doing without pitching in your first turn.
+             
              Always think about at which conversation stage you are at before answering:
 
               1. Introduction: Start the conversation by introducing yourself and your company. Be polite and respectful while keeping the tone of the conversation professional.
-              2. Qualification: Qualify the prospect by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.
-              3. Value proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
-              4. Needs analysis: Ask open-ended questions to uncover the prospect's needs and pain points. Listen carefully to their responses and take notes.
-              5. Solution presentation: Based on the prospect's needs, present your product/service as the solution that can address their pain points.
-              6. Objection handling: Address any objections that the prospect may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.
+              2. Qualification: Qualify the user by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.
+              3. Value proposition: Briefly explain how your product/service can benefit the user. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
+              4. Needs analysis: Ask open-ended questions to uncover the user's needs and pain points. Listen carefully to their responses and take notes.
+              5. Solution presentation: Based on the user's needs, present your product/service as the solution that can address their pain points.
+              6. Objection handling: Address any objections that the user may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.
               7. Close: Ask for the sale by proposing a next step. This could be a demo, a trial or a meeting with decision-makers. Ensure to summarize what has been discussed and reiterate the benefits.
-              8. End conversation: It's time to end the call as there is nothing else to be said.
+              8. End conversation: It's time to end the call as there is nothing else to be said. Output <END_OF_CALL> to let us know that the conversation is finished.
 
              Example 1:
              Conversation history:
@@ -154,30 +157,29 @@ export function loadSalesConversationChain(
   return new LLMChain({ llm, prompt, verbose });
 }
 
-const stage_analyzer_chain = loadStageAnalyzerChain(llm, verbose);
+// const stage_analyzer_chain = loadStageAnalyzerChain(llm, verbose);
+// stage_analyzer_chain.call({ conversation_history: '' });
 
-const sales_conversation_utterance_chain = loadSalesConversationChain(
-  llm,
-  verbose,
-);
+// const sales_conversation_utterance_chain = loadSalesConversationChain(
+//   llm,
+//   verbose,
+// );
 
-stage_analyzer_chain.call({ conversation_history: '' });
-
-sales_conversation_utterance_chain.call({
-  salesperson_name: 'Ted Lasso',
-  salesperson_role: 'Business Development Representative',
-  company_name: 'Sleep Haven',
-  company_business:
-    'Sleep Haven is a premium mattress company that provides customers with the most comfortable and supportive sleeping experience possible. We offer a range of high-quality mattresses, pillows, and bedding accessories that are designed to meet the unique needs of our customers.',
-  company_values:
-    "Our mission at Sleep Haven is to help people achieve a better night's sleep by providing them with the best possible sleep solutions. We believe that quality sleep is essential to overall health and well-being, and we are committed to helping our customers achieve optimal sleep by offering exceptional products and customer service.",
-  conversation_purpose:
-    'find out whether they are looking to achieve better sleep via buying a premier mattress.',
-  conversation_history:
-    'Hello, this is Ted Lasso from Sleep Haven. How are you doing today? <END_OF_TURN>\nUser: I am well, howe are you?<END_OF_TURN>',
-  conversation_type: 'call',
-  conversation_stage: CONVERSATION_STAGES['1'],
-});
+// sales_conversation_utterance_chain.call({
+//   salesperson_name: 'Ted Lasso',
+//   salesperson_role: 'Business Development Representative',
+//   company_name: 'Sleep Haven',
+//   company_business:
+//     'Sleep Haven is a premium mattress company that provides customers with the most comfortable and supportive sleeping experience possible. We offer a range of high-quality mattresses, pillows, and bedding accessories that are designed to meet the unique needs of our customers.',
+//   company_values:
+//     "Our mission at Sleep Haven is to help people achieve a better night's sleep by providing them with the best possible sleep solutions. We believe that quality sleep is essential to overall health and well-being, and we are committed to helping our customers achieve optimal sleep by offering exceptional products and customer service.",
+//   conversation_purpose:
+//     'find out whether they are looking to achieve better sleep via buying a premier mattress.',
+//   conversation_history:
+//     'Hello, this is Ted Lasso from Sleep Haven. How are you doing today? <END_OF_TURN>\nUser: I am well, howe are you?<END_OF_TURN>',
+//   conversation_type: 'call',
+//   conversation_stage: CONVERSATION_STAGES['1'],
+// });
 
 const config = {
   salesperson_name: 'Bot',
@@ -282,14 +284,21 @@ export const testHandler = Sentry.AWSLambda.wrapHandler(
         salesAgent.conversation_history = [...(conversationHistory ?? [])];
         // console.log(salesAgent.conversation_history);
         const stageResponse = await salesAgent.determine_conversation_stage();
-        const humanMessage = await salesAgent.human_step(humanMessages?.[0]);
-
         const response = await salesAgent.step();
-        const responses = {
-          conversationStage: salesAgent.current_conversation_stage,
-          response,
-          conversationHistory: salesAgent?.conversation_history,
-        };
+        const responses = await Promise.all(
+          humanMessages?.map(async (humanMessage) => {
+            salesAgent.human_step(humanMessage);
+            const stageResponse =
+              await salesAgent.determine_conversation_stage();
+            const response = await salesAgent.step();
+            return {
+              conversationStage: salesAgent.current_conversation_stage,
+              response,
+              conversationHistory: salesAgent?.conversation_history,
+            };
+          }),
+        );
+
         // await Promise.all(
         //   humanMessages?.map(async (humanMessage: string) => {
         //     console.log(salesAgent?.conversation_history);

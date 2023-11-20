@@ -58,28 +58,32 @@ export class SalesGPT extends BaseChain {
       args.sales_conversation_utterance_chain;
     this.sales_agent_executor = args.sales_agent_executor;
     this.use_tools = args.use_tools;
+    this.conversation_history = [];
+    this.conversation_stage_id = '1';
   }
 
-  retrieve_conversation_stage(key = '0') {
+  retrieve_conversation_stage(key = '1') {
     return this.conversation_stage_dict?.[key] || '1';
   }
 
   seed_agent() {
     // Step 1: seed the conversation
     this.current_conversation_stage = this.retrieve_conversation_stage('1');
-    this.conversation_stage_id = '0';
+    this.conversation_stage_id = '1';
     this.conversation_history = [];
   }
 
   async determine_conversation_stage() {
-    let { text, ...res } = await this.stage_analyzer_chain.call({
+    console.log('history', this.conversation_history.join('\n'));
+    console.log('current conversation stage', this.current_conversation_stage);
+    console.log('stageid', this.conversation_stage_id);
+    let res = await this.stage_analyzer_chain.call({
       conversation_history: this.conversation_history.join('\n'),
       current_conversation_stage: this.current_conversation_stage,
       conversation_stage_id: this.conversation_stage_id,
     });
-    console.log('res', res);
-
-    console.log('text', text);
+    const { text } = res;
+    console.log('textRes', res);
     this.conversation_stage_id = text;
     this.current_conversation_stage = this.retrieve_conversation_stage(text);
     // console.log(`${text}: ${this.current_conversation_stage}`);
@@ -102,10 +106,8 @@ export class SalesGPT extends BaseChain {
     // Generate agent's utterance
     let ai_message;
     let res;
-    console.log(_values, runManager);
     if (this.use_tools && this.sales_agent_executor) {
-      this.conversation_history.join('\n');
-      console.log(this.conversation_history);
+      // this.conversation_history.join('\n');
       res = await this.sales_agent_executor.call(
         {
           input: '',
@@ -121,6 +123,7 @@ export class SalesGPT extends BaseChain {
         },
         runManager?.getChild('sales_agent_executor'),
       );
+      console.log(res.output);
       ai_message = res.output;
     } else {
       res = await this.sales_conversation_utterance_chain.call(
@@ -189,11 +192,12 @@ export class SalesGPT extends BaseChain {
         const llm_chain = new LLMChain({
           llm,
           prompt,
-          verbose,
+          // verbose: true,
         });
         const tool_names = tools.map((e) => e.name);
         const output_parser = new SalesConvoOutputParser({
           ai_prefix: salesperson_name,
+          verbose: true,
         });
         const sales_agent_with_tools = new LLMSingleActionAgent({
           llmChain: llm_chain,
@@ -203,12 +207,11 @@ export class SalesGPT extends BaseChain {
         sales_agent_executor = AgentExecutor.fromAgentAndTools({
           agent: sales_agent_with_tools,
           tools,
-          verbose,
         });
       }
 
       const bot = new SalesGPT({
-        stage_analyzer_chain: loadStageAnalyzerChain(llm, verbose),
+        stage_analyzer_chain: loadStageAnalyzerChain(llm, false),
         sales_conversation_utterance_chain: loadSalesConversationChain(
           llm,
           verbose,
