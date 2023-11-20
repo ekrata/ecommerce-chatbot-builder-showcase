@@ -32,12 +32,13 @@ export class SalesConvoOutputParser extends AgentActionOutputParser {
     const regex = /Action: (.*?)[\n]*Action Input: (.*)/;
     const match = text.match(regex);
     if (!match) {
-      // console.warn(`Could not parse LLM output: ${text}`);
+      console.warn(`Could not parse LLM output: ${text}`);
       return {
         log: text,
         returnValues: { output: text.replace(regexOut, '') },
       };
     }
+    console.log('TOOL REQUIRED');
     return {
       tool: match[1].trim(),
       toolInput: match[2].trim().replace(/^"+|"+$/g, ''),

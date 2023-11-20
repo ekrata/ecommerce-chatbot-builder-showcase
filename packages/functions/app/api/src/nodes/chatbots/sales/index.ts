@@ -48,7 +48,29 @@ export const CONVERSATION_STAGES = {
 const verbose = true;
 
 const llm = new Bedrock({
+  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
+  region: 'us-east-1',
+  // endpointUrl: "custom.amazonaws.com",
+  // credentials: {
+  //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+  //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+  // },
+  modelKwargs: {},
+});
+
+const llmChoice = new Bedrock({
   model: 'cohere.command-light-text-v14', // You can also do e.g. "anthropic.claude-v2"
+  region: 'us-east-1',
+  // endpointUrl: "custom.amazonaws.com",
+  // credentials: {
+  //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+  //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+  // },
+  modelKwargs: {},
+});
+
+const llmChat = new Bedrock({
+  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
   region: 'us-east-1',
   // endpointUrl: "custom.amazonaws.com",
   // credentials: {
@@ -65,7 +87,7 @@ const llm = new Bedrock({
 // Chain to analyze which conversation stage should the conversation move into.
 export function loadStageAnalyzerChain(
   llm: BaseLanguageModel,
-  verbose: boolean = true,
+  verbose: boolean = false,
 ) {
   const prompt = new PromptTemplate({
     template: `You are a sales assistant helping your sales agent to determine which stage of a sales conversation should the agent stay at or move to when talking to a user.
@@ -91,8 +113,6 @@ export function loadStageAnalyzerChain(
              Do not answer anything else nor add anything to you answer.`,
     inputVariables: ['conversation_history'],
   });
-
-  console.log(prompt.format);
   return new LLMChain({ llm, prompt, verbose });
 }
 
@@ -102,8 +122,8 @@ export function loadSalesConversationChain(
   verbose: boolean = false,
 ) {
   const prompt = new PromptTemplate({
-    template: `Never forget your name is {salesperson_name}. 
-             Never produce lists, just answers.
+    template: `
+            [INST] Never forget your name is {salesperson_name}. 
              You work as a {salesperson_role}.
              You work at company named {company_name}. {company_name}'s business is the following: {company_business}.
              Company values are the following. {company_values}
@@ -111,10 +131,10 @@ export function loadSalesConversationChain(
              Your means of contacting the user is {conversation_type}
 
              If you're asked about where you got the user's contact information, say that you got it from public records.
-             Keep your responses in short length to retain the user's attention. Never produce lists, just answers.
-             Start the conversation by just a greeting and how is the user doing without pitching in your first turn.
-             
-             Always think about at which conversation stage you are at before answering:
+            Keep your responses in short length to retain the user's attention. Never produce lists, just answers.
+            Start the conversation by just a greeting and how is the prospect doing without pitching in your first turn.
+            When the conversation is over, output <END_OF_CALL>
+            Always think about at which conversation stage you are at before answering:
 
               1. Introduction: Start the conversation by introducing yourself and your company. Be polite and respectful while keeping the tone of the conversation professional.
               2. Qualification: Qualify the user by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.
@@ -123,25 +143,29 @@ export function loadSalesConversationChain(
               5. Solution presentation: Based on the user's needs, present your product/service as the solution that can address their pain points.
               6. Objection handling: Address any objections that the user may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.
               7. Close: Ask for the sale by proposing a next step. This could be a demo, a trial or a meeting with decision-makers. Ensure to summarize what has been discussed and reiterate the benefits.
-              8. End conversation: It's time to end the call as there is nothing else to be said. Output <END_OF_CALL> to let us know that the conversation is finished.
+              8. End conversation: It's time to end the call as there is nothing else to be said.
 
-             Example 1:
-             Conversation history:
-             {salesperson_name}: Hey, good morning! <END_OF_TURN>
-             User: Hello, who is this? <END_OF_TURN>
-             {salesperson_name}: This is {salesperson_name} calling from {company_name}. How are you?
-             User: I am well, why are you calling? <END_OF_TURN>
-             {salesperson_name}: I am calling to talk about options for your home insurance. <END_OF_TURN>
-             User: I am not interested, thanks. <END_OF_TURN>
-             {salesperson_name}: Alright, no worries, have a good day! <END_OF_TURN> <END_OF_CALL>
-             End of example 1.
+             
+              Example 1:
+              Conversation history:
+              {salesperson_name}: Hey, good morning! <END_OF_TURN>
+              User: Hello, who is this? <END_OF_TURN>
+              {salesperson_name}: This is {salesperson_name} calling from {company_name}. How are you?
+              User: I am well, why are you calling? <END_OF_TURN>
+              {salesperson_name}: I am calling to talk about options for your home insurance. <END_OF_TURN>
+              User: I am not interested, thanks. <END_OF_TURN>
+              {salesperson_name}: Alright, no worries, have a good day! <END_OF_TURN> <END_OF_CALL>
+              End of example 1.
 
              You must respond according to the previous conversation history and the stage of the conversation you are at.
              Only generate one response at a time and act as {salesperson_name} only! When you are done generating, end with '<END_OF_TURN>' to give the user a chance to respond.
 
+              [/INST]
+              Begin! 
              Conversation history:
              {conversation_history}
-             {salesperson_name}:`,
+             {salesperson_name}:   
+             `,
     inputVariables: [
       'salesperson_name',
       'salesperson_role',
@@ -188,7 +212,7 @@ const config = {
 };
 
 const botData: SalesGPTData = {
-  salesperson_name: 'Bot',
+  salesperson_name: 'James',
   salesperson_role: 'Business Development Representative',
   company_name: 'Sleep Haven',
   company_business:
@@ -221,7 +245,14 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           conversation;
         const { id, position, data } = currentNode as BotNodeType;
 
-        const salesAgent = await SalesGPT.from_llm(llm, false, config, botData);
+        const salesAgent = await SalesGPT.from_llm(
+          llm,
+          llmChat,
+          llmChoice,
+          false,
+          config,
+          botData,
+        );
         const userMessage = conversation?.messages?.slice(-1)[0]?.content ?? '';
 
         if (salesAgent) {
@@ -277,7 +308,14 @@ export const testHandler = Sentry.AWSLambda.wrapHandler(
       const body = useJsonBody();
       const humanMessages = body['messages'] as string[];
       const conversationHistory = body['conversationHistory'];
-      const salesAgent = await SalesGPT.from_llm(llm, false, config, botData);
+      const salesAgent = await SalesGPT.from_llm(
+        llm,
+        llmChat,
+        llmChoice,
+        false,
+        config,
+        botData,
+      );
       salesAgent?.seed_agent();
 
       if (salesAgent && humanMessages?.length) {

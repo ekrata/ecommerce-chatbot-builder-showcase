@@ -89,7 +89,6 @@ export async function setup_knowledge_base_test(query: string) {
   );
 
   const response = await knowledge_base?.call({ query });
-  console.log(response);
   // if (response) {
   //   console.log('res', response);
   // }

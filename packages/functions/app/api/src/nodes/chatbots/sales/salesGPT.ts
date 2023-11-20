@@ -1,7 +1,11 @@
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
-import { BaseLanguageModel } from 'langchain/base_language';
+import {
+  BaseLanguageModel,
+  BaseLanguageModelCallOptions,
+} from 'langchain/base_language';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
 import { BaseChain, LLMChain } from 'langchain/chains';
+import { Bedrock } from 'langchain/llms/bedrock';
 import { ChainValues } from 'langchain/schema';
 
 import {
@@ -62,8 +66,8 @@ export class SalesGPT extends BaseChain {
     this.conversation_stage_id = '1';
   }
 
-  retrieve_conversation_stage(key = '1') {
-    return this.conversation_stage_dict?.[key] || '1';
+  retrieve_conversation_stage(key: string) {
+    return this.conversation_stage_dict?.[key.trim()] || '1';
   }
 
   seed_agent() {
@@ -82,9 +86,9 @@ export class SalesGPT extends BaseChain {
       current_conversation_stage: this.current_conversation_stage,
       conversation_stage_id: this.conversation_stage_id,
     });
-    const { text } = res;
-    console.log('textRes', res);
-    this.conversation_stage_id = text;
+    const text = res?.text?.trim();
+    console.log('textRes', text);
+    this.conversation_stage_id = text.trim();
     this.current_conversation_stage = this.retrieve_conversation_stage(text);
     // console.log(`${text}: ${this.current_conversation_stage}`);
     return text;
@@ -108,6 +112,7 @@ export class SalesGPT extends BaseChain {
     let res;
     if (this.use_tools && this.sales_agent_executor) {
       // this.conversation_history.join('\n');
+      // broken
       res = await this.sales_agent_executor.call(
         {
           input: '',
@@ -123,7 +128,7 @@ export class SalesGPT extends BaseChain {
         },
         runManager?.getChild('sales_agent_executor'),
       );
-      console.log(res.output);
+      console.log('sales agent executor', res);
       ai_message = res.output;
     } else {
       res = await this.sales_conversation_utterance_chain.call(
@@ -141,6 +146,8 @@ export class SalesGPT extends BaseChain {
 
         runManager?.getChild('sales_conversation_utterance'),
       );
+
+      // console.log(res);
       ai_message = res.text;
     }
 
@@ -157,6 +164,8 @@ export class SalesGPT extends BaseChain {
   }
   static async from_llm(
     llm: BaseLanguageModel,
+    llmChat: BaseLanguageModel,
+    llmChoice: BaseLanguageModel<any, BaseLanguageModelCallOptions>,
     verbose: boolean,
     config: {
       use_tools: boolean;
@@ -196,7 +205,7 @@ export class SalesGPT extends BaseChain {
         });
         const tool_names = tools.map((e) => e.name);
         const output_parser = new SalesConvoOutputParser({
-          ai_prefix: salesperson_name,
+          ai_prefix: data.salesperson_name,
           verbose: true,
         });
         const sales_agent_with_tools = new LLMSingleActionAgent({
@@ -206,14 +215,15 @@ export class SalesGPT extends BaseChain {
         });
         sales_agent_executor = AgentExecutor.fromAgentAndTools({
           agent: sales_agent_with_tools,
+          maxIterations: 10,
           tools,
         });
       }
 
       const bot = new SalesGPT({
-        stage_analyzer_chain: loadStageAnalyzerChain(llm, false),
+        stage_analyzer_chain: loadStageAnalyzerChain(llmChoice, false),
         sales_conversation_utterance_chain: loadSalesConversationChain(
-          llm,
+          llmChat,
           verbose,
         ),
         sales_agent_executor,
