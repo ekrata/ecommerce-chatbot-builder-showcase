@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ['@/packages/functions/app/api/**/**/*.{test,spec}.{js,ts}'],
+    include: ['packages/functions/app/api/**/**/*.{test,spec}.{js,ts}'],
     testTimeout: 30000,
     hookTimeout: 30000,
     // globals: true,

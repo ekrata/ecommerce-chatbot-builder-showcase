@@ -3,67 +3,72 @@ import 'reactflow/dist/style.css';
 import { EntityItem } from 'electrodb';
 import { ComponentType, ReactElement } from 'react';
 import {
-    ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
-    Node, NodeTypes
+  ConnectionLineComponent, ConnectionLineComponentProps, ConnectionLineType, Edge, EdgeTypes,
+  Node, NodeTypes
 } from 'reactflow';
 
 import {
-    Actions, BotNodeEvent, BotNodeType, Conditions, nodeSubType, TriggerValues
+  Actions, BotNodeEvent, BotNodeType, Conditions, nodeSubType, TriggerValues
 } from '@/entities/bot';
+import { Gradient } from '@/entities/customer';
 import { Message, NodeFormData } from '@/entities/message';
 import {
-    Action, Condition, NodeTypeKey, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action, Agent, Condition, NodeTypeKey, VisitorBotInteractionTrigger,
+  VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-    AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode, AskAQuestionData
+  AskAQuestionActionEdge, AskAQuestionActionForm, AskAQuestionActionNode, AskAQuestionData
 } from './nodes/actions/AskAQuestion';
 import {
-    CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode, CouponData
+  CouponCodeActionEdge, CouponCodeActionForm, CouponCodeActionNode, CouponData
 } from './nodes/actions/CouponCode';
 import {
-    DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode,
-    DecisionButtonsData
+  DecisionButtonsActionEdge, DecisionButtonsActionForm, DecisionButtonsActionNode,
+  DecisionButtonsData
 } from './nodes/actions/DecisionButtons';
 import {
-    DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode,
-    DecisionCardMessagesData
+  DecisionCardMessagesActionEdge, DecisionCardMessagesActionForm, DecisionCardMessagesActionNode,
+  DecisionCardMessagesData
 } from './nodes/actions/DecisionCardMessages';
 import {
-    DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode,
-    DecisionQuickRepliesData
+  DecisionQuickRepliesActionEdge, DecisionQuickRepliesActionForm, DecisionQuickRepliesActionNode,
+  DecisionQuickRepliesData
 } from './nodes/actions/DecisionQuickReplies';
 import {
-    SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
+  SendAChatMessageActionEdge, SendAChatMessageActionForm, SendAChatMessageActionNode
 } from './nodes/actions/SendAChatMessage';
 import {
-    SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
+  SubscribeForMailingEdge, SubscribeForMailingForm, SubscribeForMailingNode
 } from './nodes/actions/SubscribeForMailing';
 import {
-    TransferToOperatorActionEdge, TransferToOperatorActionForm, TransferToOperatorActionNode
+  TransferToOperatorActionEdge, TransferToOperatorActionForm, TransferToOperatorActionNode
 } from './nodes/actions/TransferToOperator';
 import {
-    BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
-    BasedOnContactPropertyConditionNode
+  SalesBotAgentEdge, SalesBotAgentForm, SalesBotAgentNode
+} from './nodes/agents/SalesBotAgent';
+import {
+  BasedOnContactPropertyConditionEdge, BasedOnContactPropertyConditionForm,
+  BasedOnContactPropertyConditionNode
 } from './nodes/conditions/BasedOnContactProperty';
 import { ChatStatusConditionEdge } from './nodes/conditions/ChatStatus';
 import { GenericConnectionLine } from './nodes/shared/GenericConnectionLine';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 import {
-    FirstVisitOnSiteData, FirstVisitOnSiteTriggerEdge, FirstVisitOnSiteTriggerForm,
-    FirstVisitOnSiteTriggerNode
+  FirstVisitOnSiteData, FirstVisitOnSiteTriggerEdge, FirstVisitOnSiteTriggerForm,
+  FirstVisitOnSiteTriggerNode
 } from './nodes/triggers/FirstVisitOnSite';
 import {
-    VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
+  VisitorClicksBotsButtonForm, VisitorClicksBotsButtonTriggerNode
 } from './nodes/triggers/VisitorClicksBotsButtonTrigger';
 import {
-    VisitorClicksOnChatIconData, VisitorClicksOnChatIconTriggerEdge,
-    VisitorClicksOnChatIconTriggerForm, VisitorClicksOnChatIconTriggerNode
+  VisitorClicksOnChatIconData, VisitorClicksOnChatIconTriggerEdge,
+  VisitorClicksOnChatIconTriggerForm, VisitorClicksOnChatIconTriggerNode
 } from './nodes/triggers/VisitorClicksOnChatIcon';
 import {
-    VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
+  VisitorSaysTriggerEdge, VisitorSaysTriggerForm, VisitorSaysTriggerNode
 } from './nodes/triggers/VisitorSays';
 import { onDragStart } from './onDragStart';
 
@@ -85,6 +90,12 @@ export const actionNode = (value: Actions) => (
   </a>
 )
 
+export const agentNode = (value: Agent, backgroundGradient: Gradient) => (
+  <a className={`flex flex-row w-16 h-16 text-3xl normal-case border-0  ${backgroundGradient} pointer-grab gap-x-2 btn btn-outline mask mask-squircle`} onDragStart={(event) => onDragStart(event, value as NodeTypeKey)} draggable>
+    {nodeSubTypeIcons[value as Agent]}
+  </a>
+)
+
 export const nodeTypes: NodeTypes = {
   [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}` as string]: VisitorClicksBotsButtonTriggerNode,
   [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}` as string]: VisitorClicksOnChatIconTriggerNode,
@@ -101,6 +112,8 @@ export const nodeTypes: NodeTypes = {
   [`${Action.SubscribeForMailing}` as string]: SubscribeForMailingNode,
   [`${Action.SendAChatMessage}` as string]: SendAChatMessageActionNode,
   [`${Action.TransferToOperator}` as string]: TransferToOperatorActionNode,
+  [`${Agent.SalesBotAgent}`]: SalesBotAgentNode,
+  [`${Agent.CustomerServiceAgent}` as string]: SalesBotAgentNode,
 } as const;
 
 export const getNodeFormDataType = (nodeType: BotNodeEvent) => {
@@ -123,6 +136,8 @@ export const getNodeFormDataType = (nodeType: BotNodeEvent) => {
     [`${Action.CouponCode}` as string]: CouponCodeActionNode,
     [`${Action.SubscribeForMailing}` as string]: SubscribeForMailingNode,
     [`${Action.SendAChatMessage}` as string]: SendAChatMessageActionNode,
+    [`${Agent.SalesBotAgent}`]: SalesBotAgentNode,
+    [`${Agent.CustomerServiceAgent}` as string]: SalesBotAgentNode,
   }
 }
 
@@ -152,6 +167,8 @@ export const edgeTypes: EdgeTypes = {
   [`${VisitorBotInteractionTrigger.VisitorClicksChatIcon}`]: VisitorClicksOnChatIconTriggerEdge,
   [`${VisitorBotInteractionTrigger.VisitorSays}`]: VisitorSaysTriggerEdge,
   [`${VisitorPageInteractionTrigger.FirstVisitOnSite}`]: FirstVisitOnSiteTriggerEdge,
+  [`${Agent.SalesBotAgent}`]: SalesBotAgentEdge,
+  [`${Agent.CustomerServiceAgent}` as string]: SalesBotAgentEdge,
 } as const
 
 interface Props {
@@ -162,6 +179,10 @@ interface Props {
 
 export const NodeForm: React.FC<Props> = ({ node }) => {
   switch (node.type) {
+    case Agent.SalesBotAgent:
+    case Agent.CustomerServiceAgent:
+      return <SalesBotAgentForm node={node} />
+
     case Action.DecisionQuickReplies:
       return <DecisionQuickRepliesActionForm node={node} />
     case Action.DecisionCardMessages:

@@ -22,6 +22,7 @@ import { DynamoDBChatMessageHistory } from 'langchain/stores/message/dynamodb';
 import { ApiHandler, useJsonBody, useQueryParams } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
+import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
 import { BotNodeType } from '@/entities/bot';
 import middy from '@middy/core';
@@ -231,7 +232,6 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
     try {
       const appDb = getAppDb(Config.REGION, Table.app.tableName);
       const { Records } = event;
-      console.log('quickreplies', Records);
       for (const record of Records) {
         const snsMessageId = record.messageId;
         const botStateContext: BotStateContext = (
@@ -243,28 +243,111 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
         const { id, position, data } = currentNode as BotNodeType;
+        const llm = new ChatOpenAI({
+          temperature: 0.9,
+          openAIApiKey: await Config?.OPENAI_API_KEY,
+        });
 
-        // const salesAgent = await SalesGPT.from_llm(llm, false, config, botData);
-        // const userMessage = conversation?.messages?.slice(-1)[0]?.content ?? '';
+        const retrievalLlm = new ChatOpenAI({
+          temperature: 0,
+          openAIApiKey: await Config?.OPENAI_API_KEY,
+        });
+        const embeddings = new OpenAIEmbeddings({
+          openAIApiKey: await Config?.OPENAI_API_KEY,
+        });
 
-        // if (salesAgent) {
-        //   await salesAgent.seed_agent();
-        //   // set conversation history
-        //   salesAgent.conversation_history = [
-        //     ...conversation?.messages
-        //       .slice(0, -1)
-        //       ?.map(({ content }) => content ?? ''),
-        //   ];
+        const salesAgent = await SalesGPT.from_llm(
+          llm,
+          retrievalLlm,
+          embeddings,
+          false,
+          config,
+          botData,
+        );
+        salesAgent?.seed_agent();
+        const body = useJsonBody();
 
-        //   const { conversationStage, response } = await getReply(
-        //     salesAgent,
-        //     userMessage,
-        //   );
-        //   return {
-        //     statusCode: 200,
-        //     body: JSON.stringify({ conversationStage, response }),
-        //   };
-        // }
+        // get last message sent by bot
+        const lastBotMessageIdx = conversation?.messages
+          ?.reverse()
+          .findIndex((message) => message?.sender === 'bot');
+
+        // format last 50 messages for bot
+        const conversationHistory = conversation?.messages
+          .slice(-50, lastBotMessageIdx)
+          ?.map((message) => {
+            if (message?.sender === 'bot' || message?.sender === 'operator') {
+              return `Bot: ${message?.content}`;
+            } else if (message?.sender === 'customer') {
+              return `User: ${message?.content}`;
+            }
+          })
+          .join('\n');
+
+        const messagesSinceLastBotMessage =
+          lastBotMessageIdx === 0 || lastBotMessageIdx === -1
+            ? [conversation?.messages.slice(-1)[0]]
+            : conversation?.messages?.slice(-1 * lastBotMessageIdx);
+
+        if (salesAgent) {
+          salesAgent.conversation_history = [...(conversationHistory ?? [])];
+          // console.log(salesAgent.conversation_history);
+          salesAgent.human_step(messagesSinceLastBotMessage?.join('\n'));
+          const stageResponse = await salesAgent.determine_conversation_stage();
+          const response = await salesAgent.step();
+
+          const { data } = currentNode as BotNodeType;
+          const askAQuestionData = JSON.parse(
+            currentNode?.data ?? '{}',
+          ) as AskAQuestionData;
+          console.log(data);
+
+          const initiateAt = Date.now() - 10000;
+
+          const questionMessage = await formatMessage(
+            askAQuestionData?.message ?? '',
+            botStateContext,
+            appDb,
+          );
+
+          await appDb.entities.messages
+            ?.upsert({
+              messageId: uuidv4(),
+              conversationId,
+              orgId,
+              operatorId: operatorId ?? '',
+              customerId: customerId ?? '',
+              sender: 'bot',
+              content: questionMessage,
+              createdAt: initiateAt,
+              sentAt: initiateAt,
+            })
+            .go();
+
+          await appDb.entities?.messages
+            .upsert({
+              messageId: uuidv4(),
+              conversationId,
+              orgId,
+              operatorId: operatorId ?? '',
+              customerId: customerId ?? '',
+              sender: 'bot',
+              content: '',
+              messageFormType: botNodeEvent.AskAQuestion,
+              messageFormData: data,
+              createdAt: initiateAt + 10000,
+              sentAt: initiateAt + 10000,
+              botStateContext: JSON.stringify({
+                ...botStateContext,
+              } as BotStateContext),
+            })
+            .go({});
+
+          return {
+            conversationStage: salesAgent.current_conversation_stage,
+            response,
+          };
+        }
       }
     } catch (err) {
       console.log(err);
@@ -297,25 +380,20 @@ const getReply = async (salesAgent: SalesGPT, userMessage: string) => {
 export const testHandler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
-      console.log('hihihii');
-      // console.log('key', Config?.OPENAI_API_KEY);
-      // console.log(Config?.OPENAI_API_KEY);
-
       const llm = new ChatOpenAI({
         temperature: 0.9,
-        openAIApiKey: '',
+        openAIApiKey: await Config?.OPENAI_API_KEY,
       });
 
       const retrievalLlm = new ChatOpenAI({
         temperature: 0,
-        openAIApiKey: '',
+        openAIApiKey: await Config?.OPENAI_API_KEY,
       });
       const embeddings = new OpenAIEmbeddings({
-        openAIApiKey: '',
+        openAIApiKey: await Config?.OPENAI_API_KEY,
       });
       const body = useJsonBody();
       const humanMessages = body['messages'] as string[];
-      console.log(humanMessages);
       const conversationHistory = body['conversationHistory'];
       const salesAgent = await SalesGPT.from_llm(
         llm,

@@ -71,6 +71,7 @@ export function paramStack({ stack, app }: StackContext) {
   const stripeKeySecret = new Config.Secret(stack, 'STRIPE_KEY_SECRET');
   const metaAppSecret = new Config.Secret(stack, 'META_APP_SECRET');
   const metaVerifySecret = new Config.Secret(stack, 'META_VERIFY_SECRET');
+  const OPENAI_API_KEY = new Config.Secret(stack, 'OPENAI_API_KEY');
 
   const appEventBus = new EventBus(stack, 'appEventBus', {});
   const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
@@ -90,6 +91,7 @@ export function paramStack({ stack, app }: StackContext) {
     BEDROCK_AWS_REGION,
     oauthGoogleClientId,
     oauthGoogleSecret,
+    OPENAI_API_KEY,
     stripeKeySecret,
     defaultFunctionTimeout,
     metaAppSecret,

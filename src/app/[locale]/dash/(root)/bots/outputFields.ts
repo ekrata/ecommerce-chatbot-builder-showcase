@@ -1,5 +1,9 @@
 import {
-    Action, Condition, VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action,
+  Agent,
+  Condition,
+  VisitorBotInteractionTrigger,
+  VisitorPageInteractionTrigger,
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 
 export const OutputFieldsKeys = {
@@ -11,6 +15,8 @@ export const OutputFieldsKeys = {
   [`${Action.DecisionCardMessages}`]: 'choices',
   [`${Action.DecisionButtons}`]: 'choices',
   [`${Action.SubscribeForMailing}`]: 'outputs',
+  [`${Agent.SalesBotAgent}`]: 'outputs',
+  [`${Agent.CustomerServiceAgent}`]: 'outputs',
   [`${Condition.BasedOnContactProperty}`]: 'outputs',
   [`${Condition.ChatStatus}`]: 'outputs',
   [`${VisitorBotInteractionTrigger.VisitorClicksBotsButton}`]: 'outputs',

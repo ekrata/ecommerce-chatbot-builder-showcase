@@ -3,8 +3,8 @@ import { snakeCase } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { FormEventHandler, useEffect, useId, useReducer, useRef, useState } from 'react';
 import {
-    Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
-    UseFormRegister, UseFormSetValue, useWatch
+  Control, Controller, FieldArray, FieldValues, Path, PathValue, UseFieldArrayReturn,
+  UseFormRegister, UseFormSetValue, useWatch
 } from 'react-hook-form';
 import { BiCodeCurly } from 'react-icons/bi';
 import { BsX } from 'react-icons/bs';

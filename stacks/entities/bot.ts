@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   Action,
+  Agent,
   Chatbots,
   Condition,
   OperatorInteractionTrigger,
@@ -42,25 +43,39 @@ export const actions = [
   ...Object.values(ShopifyAction),
 ];
 
+export const agents = [...Object.values(Agent)] as const;
+
 export const botNodeEvent = {
   ...Condition,
   ...ShopifyCondition,
   ...Chatbots,
   ...Action,
   ...ShopifyAction,
+  ...Agent,
 };
 
 export type BotNodeEvent =
   | Condition
   | ShopifyCondition
   | Action
-  | ShopifyAction;
+  | ShopifyAction
+  | Agent;
 
 export type Actions = (typeof actions)[number];
 
-export const nodeSubType = [...triggers, ...conditions, ...actions] as const;
+export const nodeSubType = [
+  ...triggers,
+  ...conditions,
+  ...actions,
+  ...agents,
+] as const;
 
-export const nodeMap = { ...triggers, ...conditions, ...actions } as const;
+export const nodeMap = {
+  ...triggers,
+  ...conditions,
+  ...actions,
+  ...agents,
+} as const;
 export const botCategory = [
   'General',
   'Sales',

@@ -82,6 +82,11 @@ export enum Action {
   SendAForm = 'Send a form',
 }
 
+export enum Agent {
+  SalesBotAgent = 'Sales Agent',
+  CustomerServiceAgent = 'Customer Service Agent',
+}
+
 export enum ShopifyAction {
   CheckOrderStatus = 'Shopify Check Order Status',
   ProductAvailability = 'Shopify Product Availability',

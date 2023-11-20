@@ -35,14 +35,14 @@ export const contactSelector = [
 
 export type ContactProperty = (typeof contactProperties)[number];
 export type ContactSelector = (typeof contactSelector)[number];
-export const avatarGradients = [
+export const gradients = [
   'bg-gradient-to-r from-green-300 via-blue-500 to-purple-600',
   'bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700',
   'bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700',
   'bg-gradient-to-tr from-violet-500 to-orange-300',
   'bg-gradient-to-r from-green-300 to-purple-400',
   'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500',
-  'linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))'
+  'linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))',
   // 'bg-gradient-to-r from-yellow-100 via-yellow-300 to-yellow-500',
   // 'bg-gradient-to-r from-yellow-600 to-red-600',
   // 'bg-gradient-to-r from-blue-400 to-emerald-400',
@@ -52,6 +52,8 @@ export const avatarGradients = [
   // 'bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-yellow-200 via-emerald-200 to-yellow-200',
   // 'bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-fuchsia-300 via-green-400 to-rose-700',
 ] as const;
+
+export type Gradient = (typeof gradients)[number];
 
 export const Customer = new Entity({
   model: {

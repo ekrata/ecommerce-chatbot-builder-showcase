@@ -5,11 +5,6 @@ import { Api } from 'sst/node/api';
 import { v4 as uuidv4 } from 'uuid';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { CreateMessage } from '@/entities/entities';
-import { Message } from '@/entities/message';
-import { toQueryParams } from '@/src/app/[locale]/(hooks)/queries/useConversationItemsQuery';
-import { faker } from '@faker-js/faker';
-
 import { getHttp } from '../../../http';
 import { MockOrgIds } from '../../../util';
 import mockOrgIds from '../../../util/mockOrgIds.json';

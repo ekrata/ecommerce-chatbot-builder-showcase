@@ -398,6 +398,20 @@
       "Triggered": "Triggered",
       "Engagement": "Engagement",
       "Satisfaction": "Satisfaction",
+      "AgentForms": {
+        "SalesBotAgent": {
+          "Agent Name": "Bot",
+          "Company Name": "Company Name",
+          "Company Business": "Company Business",
+          "companyBusinessPlaceholder": "Sleep City is a premium mattress company that provides customers with the most comfortable and supportive sleeping experience possible. We offer a range of high-quality mattresses, pillows, and bedding accessories that are designed to meet the unique needs of our customers.",
+          "Company Values": "Company Values",
+          "companyValuesPlaceholder": "Our mission at Sleep City is to help people achieve a better night's sleep by providing them with the best possible sleep solutions. We believe that quality sleep is essential to overall health and well-being, and we are committed to helping our customers achieve optimal sleep by offering exceptional products and customer service.",
+          "Conversation Purpose": "Conversation Purpose",
+          "conversationPurposePlaceholder": "Our mission at Sleep City is to help people achieve a better night's sleep by providing them with the best possible sleep solutions. We believe that quality sleep is essential to overall health and well-being, and we are committed to helping our customers achieve optimal sleep by offering exceptional products and customer service.",
+          "Business Role": "Business Role",
+          "businessRolePlaceholder": "Business Development Representative"
+        }
+      },
       "ActionForms": {
         "GenericDecision": {
           "facebookCatch": "Please note: Facebook Messenger displays shorter buttons. Replies with text longer than 20 characters will be shortened to 20 characters.",

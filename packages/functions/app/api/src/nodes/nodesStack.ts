@@ -6,7 +6,7 @@ import { paramStack } from 'stacks/paramStack';
 // import { readFile } from '~/.aws/credentials';
 
 export function nodesStack({ stack, app }: StackContext) {
-  const { BEDROCK_AWS_REGION } = use(paramStack);
+  const { BEDROCK_AWS_REGION, OPENAI_API_KEY } = use(paramStack);
   const { api } = use(baseStack);
 
   const getLambda = {
@@ -20,7 +20,7 @@ export function nodesStack({ stack, app }: StackContext) {
       }),
     ],
     permissions: ['bedrock:InvokeModel'],
-    bind: [BEDROCK_AWS_REGION],
+    bind: [BEDROCK_AWS_REGION, OPENAI_API_KEY],
   };
 
   api.addRoutes(stack, {

@@ -5,6 +5,7 @@ import {
 } from 'langchain/base_language';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
 import { BaseChain, LLMChain } from 'langchain/chains';
+import { Embeddings } from 'langchain/dist/embeddings/base';
 import { Bedrock } from 'langchain/llms/bedrock';
 import { ChainValues } from 'langchain/schema';
 
@@ -129,6 +130,7 @@ export class SalesGPT extends BaseChain {
         runManager?.getChild('sales_agent_executor'),
       );
       console.log('sales agent executor', res);
+      console.log('sales agent executor', res?.intermediateSteps?.[0]?.action);
       ai_message = res.output;
     } else {
       res = await this.sales_conversation_utterance_chain.call(
@@ -164,8 +166,8 @@ export class SalesGPT extends BaseChain {
   }
   static async from_llm(
     llm: BaseLanguageModel,
-    llmChat: BaseLanguageModel,
-    llmChoice: BaseLanguageModel<any, BaseLanguageModelCallOptions>,
+    llmRetrieval: BaseLanguageModel,
+    embeddings: Embeddings,
     verbose: boolean,
     config: {
       use_tools: boolean;
@@ -180,7 +182,7 @@ export class SalesGPT extends BaseChain {
     if (use_tools !== undefined && use_tools === false) {
       sales_agent_executor = undefined;
     } else {
-      tools = await get_tools(product_catalog);
+      tools = await get_tools(product_catalog, llmRetrieval, embeddings);
       if (tools) {
         const prompt = new CustomPromptTemplateForTools({
           tools,
@@ -215,15 +217,17 @@ export class SalesGPT extends BaseChain {
         });
         sales_agent_executor = AgentExecutor.fromAgentAndTools({
           agent: sales_agent_with_tools,
-          maxIterations: 10,
+          returnIntermediateSteps: true,
           tools,
+          // maxIterations: 10,
+          // verbose: true,
         });
       }
 
       const bot = new SalesGPT({
-        stage_analyzer_chain: loadStageAnalyzerChain(llmChoice, false),
+        stage_analyzer_chain: loadStageAnalyzerChain(llm, false),
         sales_conversation_utterance_chain: loadSalesConversationChain(
-          llmChat,
+          llm,
           verbose,
         ),
         sales_agent_executor,
