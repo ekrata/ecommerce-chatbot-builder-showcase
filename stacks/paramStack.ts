@@ -25,6 +25,10 @@ export function paramStack({ stack, app }: StackContext) {
     value: app.region,
   });
 
+  const BEDROCK_AWS_REGION = new Config.Parameter(stack, 'BEDROCK_AWS_REGION', {
+    value: 'us-east-1',
+  });
+
   const STAGE = new Config.Parameter(stack, 'STAGE', {
     value: app.stage,
   });
@@ -83,6 +87,7 @@ export function paramStack({ stack, app }: StackContext) {
     tableName,
     frontendUrl,
     allowedOrigins,
+    BEDROCK_AWS_REGION,
     oauthGoogleClientId,
     oauthGoogleSecret,
     stripeKeySecret,

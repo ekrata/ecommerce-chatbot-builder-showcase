@@ -14,6 +14,16 @@ import { get_tools } from './knowledgeBase';
 import { SALES_AGENT_TOOLS_PROMPT } from './prompt';
 import { SalesConvoOutputParser } from './salesOutputParser';
 
+export type SalesGPTData = {
+  salesperson_name: string;
+  salesperson_role: string;
+  company_name: string;
+  company_business: string;
+  company_values: string;
+  conversation_purpose: string;
+  conversation_type: string;
+};
+
 export class SalesGPT extends BaseChain {
   conversation_stage_id: string;
   conversation_history: string[];
@@ -51,7 +61,7 @@ export class SalesGPT extends BaseChain {
   }
 
   retrieve_conversation_stage(key = '0') {
-    return this.conversation_stage_dict[key] || '1';
+    return this.conversation_stage_dict?.[key] || '1';
   }
 
   seed_agent() {
@@ -62,15 +72,17 @@ export class SalesGPT extends BaseChain {
   }
 
   async determine_conversation_stage() {
-    let { text } = await this.stage_analyzer_chain.call({
+    let { text, ...res } = await this.stage_analyzer_chain.call({
       conversation_history: this.conversation_history.join('\n'),
       current_conversation_stage: this.current_conversation_stage,
       conversation_stage_id: this.conversation_stage_id,
     });
+    console.log('res', res);
 
+    console.log('text', text);
     this.conversation_stage_id = text;
     this.current_conversation_stage = this.retrieve_conversation_stage(text);
-    console.log(`${text}: ${this.current_conversation_stage}`);
+    // console.log(`${text}: ${this.current_conversation_stage}`);
     return text;
   }
   human_step(human_input: string) {
@@ -90,7 +102,10 @@ export class SalesGPT extends BaseChain {
     // Generate agent's utterance
     let ai_message;
     let res;
+    console.log(_values, runManager);
     if (this.use_tools && this.sales_agent_executor) {
+      this.conversation_history.join('\n');
+      console.log(this.conversation_history);
       res = await this.sales_agent_executor.call(
         {
           input: '',
@@ -120,13 +135,14 @@ export class SalesGPT extends BaseChain {
           conversation_stage: this.current_conversation_stage,
           conversation_type: this.conversation_type,
         },
+
         runManager?.getChild('sales_conversation_utterance'),
       );
       ai_message = res.text;
     }
 
     // Add agent's response to conversation history
-    console.log(`${this.salesperson_name}: ${ai_message}`);
+    // console.log(`${this.salesperson_name}: ${ai_message}`);
     const out_message = ai_message;
     const agent_name = this.salesperson_name;
     ai_message = agent_name + ': ' + ai_message;
@@ -144,6 +160,7 @@ export class SalesGPT extends BaseChain {
       product_catalog: string;
       salesperson_name: string;
     },
+    data: SalesGPTData,
   ) {
     const { use_tools, product_catalog, salesperson_name } = config;
     let sales_agent_executor;
@@ -152,53 +169,63 @@ export class SalesGPT extends BaseChain {
       sales_agent_executor = undefined;
     } else {
       tools = await get_tools(product_catalog);
+      if (tools) {
+        const prompt = new CustomPromptTemplateForTools({
+          tools,
+          inputVariables: [
+            'input',
+            'intermediate_steps',
+            'salesperson_name',
+            'salesperson_role',
+            'company_name',
+            'company_business',
+            'company_values',
+            'conversation_purpose',
+            'conversation_type',
+            'conversation_history',
+          ],
+          template: SALES_AGENT_TOOLS_PROMPT,
+        });
+        const llm_chain = new LLMChain({
+          llm,
+          prompt,
+          verbose,
+        });
+        const tool_names = tools.map((e) => e.name);
+        const output_parser = new SalesConvoOutputParser({
+          ai_prefix: salesperson_name,
+        });
+        const sales_agent_with_tools = new LLMSingleActionAgent({
+          llmChain: llm_chain,
+          outputParser: output_parser,
+          stop: ['\nObservation:'],
+        });
+        sales_agent_executor = AgentExecutor.fromAgentAndTools({
+          agent: sales_agent_with_tools,
+          tools,
+          verbose,
+        });
+      }
 
-      const prompt = new CustomPromptTemplateForTools({
-        tools,
-        inputVariables: [
-          'input',
-          'intermediate_steps',
-          'salesperson_name',
-          'salesperson_role',
-          'company_name',
-          'company_business',
-          'company_values',
-          'conversation_purpose',
-          'conversation_type',
-          'conversation_history',
-        ],
-        template: SALES_AGENT_TOOLS_PROMPT,
+      const bot = new SalesGPT({
+        stage_analyzer_chain: loadStageAnalyzerChain(llm, verbose),
+        sales_conversation_utterance_chain: loadSalesConversationChain(
+          llm,
+          verbose,
+        ),
+        sales_agent_executor,
+        use_tools,
       });
-      const llm_chain = new LLMChain({
-        llm,
-        prompt,
-        verbose,
-      });
-      const tool_names = tools.map((e) => e.name);
-      const output_parser = new SalesConvoOutputParser({
-        ai_prefix: salesperson_name,
-      });
-      const sales_agent_with_tools = new LLMSingleActionAgent({
-        llmChain: llm_chain,
-        outputParser: output_parser,
-        stop: ['\nObservation:'],
-      });
-      sales_agent_executor = AgentExecutor.fromAgentAndTools({
-        agent: sales_agent_with_tools,
-        tools,
-        verbose,
-      });
+
+      bot.salesperson_name = data.salesperson_name;
+      bot.salesperson_role = data.salesperson_role;
+      bot.company_name = data.company_name;
+      bot.company_business = data.company_business;
+      bot.company_values = data.company_values;
+      bot.conversation_purpose = data.conversation_purpose;
+      bot.conversation_type = data.conversation_type;
+      return bot;
     }
-
-    return new SalesGPT({
-      stage_analyzer_chain: loadStageAnalyzerChain(llm, verbose),
-      sales_conversation_utterance_chain: loadSalesConversationChain(
-        llm,
-        verbose,
-      ),
-      sales_agent_executor,
-      use_tools,
-    });
   }
 
   _chainType(): string {

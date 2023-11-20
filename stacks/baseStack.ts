@@ -45,6 +45,7 @@ export function baseStack({ stack, app }: StackContext) {
     appName,
     STAGE,
     domain,
+    BEDROCK_AWS_REGION,
     REGION,
     tableName,
     frontendUrl,
@@ -321,6 +322,7 @@ export function baseStack({ stack, app }: StackContext) {
           assets,
           REGION,
           STAGE,
+          BEDROCK_AWS_REGION,
           oauthGoogleClientId,
           oauthGoogleSecret,
           metaAppSecret,
@@ -713,7 +715,7 @@ export function baseStack({ stack, app }: StackContext) {
           filterPolicyWithMessageBody: {
             type: FilterOrPolicy.filter(
               SubscriptionFilter.stringFilter({
-                allowlist: [botNodeEvent.AskAQuestion],
+                allowlist: [botNodeEvent.SalesBot],
               }),
             ),
           },

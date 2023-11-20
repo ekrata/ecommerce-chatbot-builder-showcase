@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Operator } from '../../../../stacks/entities/operator';
 import { useOperatorQuery } from './queries/useOperatorQuery';
 
-export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string }>>, () => Promise<any>]>([null, () => null, async () => null])
+export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string } | null>>, () => Promise<any>]>([null, () => null, async () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
 export const signoutSession = () => {
@@ -25,8 +25,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const pathname = usePathname()
   const [fetching, setFetching] = useState<boolean>(false);
   const [authToken, setAuthToken] = useLocalStorage<string>('authToken', '');
-  const [sessionUserIds, setSessionUserIds] = useLocalStorage<{ orgId: string, operatorId: string }>('sessionUserIds', { orgId: '', operatorId: '' });
-  const operatorQuery = useOperatorQuery(sessionUserIds?.orgId, sessionUserIds?.operatorId);
+  const [sessionUserIds, setSessionUserIds] = useLocalStorage<{ orgId: string, operatorId: string } | null>('sessionUserIds', null);
+  const operatorQuery = useOperatorQuery(sessionUserIds?.orgId ?? '', sessionUserIds?.operatorId ?? '');
   console.log(operatorQuery?.data)
 
   const getSession = async () => {

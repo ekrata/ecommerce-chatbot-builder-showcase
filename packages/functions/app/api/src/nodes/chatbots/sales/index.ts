@@ -1,3 +1,4 @@
+import { SNSMessage, SQSEvent } from 'aws-lambda';
 /**
  *  Define a custom Output Parser
  */
@@ -8,6 +9,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Bedrock } from 'langchain/llms/bedrock';
+import { BufferMemory } from 'langchain/memory';
 import {
   BasePromptTemplate,
   BaseStringPromptTemplate,
@@ -16,21 +18,55 @@ import {
   SerializedBasePromptTemplate,
   StringPromptValue,
 } from 'langchain/prompts';
-import { ApiHandler } from 'sst/node/api';
+import { DynamoDBChatMessageHistory } from 'langchain/stores/message/dynamodb';
+import { ApiHandler, useJsonBody, useQueryParams } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
+import { BotNodeType } from '@/entities/bot';
+import middy from '@middy/core';
+import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../../db';
-import { SalesGPT } from './salesGPT';
+import { BotStateContext } from '../../botStateContext';
+import { loadSalesConversationChain, loadStageAnalyzerChain } from './helpers';
+import { SalesGPT, SalesGPTData } from './salesGPT';
 
 // const client = new BedrockRuntime();
+
+export const CONVERSATION_STAGES = {
+  '1': 'Introduction: Start the conversation by introducing yourself and your company. Be polite and respectful while keeping the tone of the conversation professional. Your greeting should be welcoming. Always clarify in your greeting the reason why you are calling.',
+  '2': 'Qualification: Qualify the prospect by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.',
+  '3': 'Value proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.',
+  '4': "Needs analysis: Ask open-ended questions to uncover the prospect's needs and pain points. Listen carefully to their responses and take notes.",
+  '5': "Solution presentation: Based on the prospect's needs, present your product/service as the solution that can address their pain points.",
+  '6': 'Objection handling: Address any objections that the prospect may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.',
+  '7': 'Close: Ask for the sale by proposing a next step. This could be a demo, a trial or a meeting with decision-makers. Ensure to summarize what has been discussed and reiterate the benefits.',
+  '8': "End conversation: It's time to end the call as there is nothing else to be said.",
+};
+// test the intermediate chains
+const verbose = true;
+
+const llm = new Bedrock({
+  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
+  region: 'us-east-1',
+  // endpointUrl: "custom.amazonaws.com",
+  // credentials: {
+  //   accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
+  //   secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
+  // },
+  modelKwargs: {},
+});
+
+// const res = await llm.invoke('Tell me a joke');
+// console.log(res);
+// const llm = new ChatOpenAI({ temperature: 0.9 });
 
 // Chain to analyze which conversation stage should the conversation move into.
 export function loadStageAnalyzerChain(
   llm: BaseLanguageModel,
-  verbose: boolean = false,
+  verbose: boolean = true,
 ) {
   const prompt = new PromptTemplate({
     template: `You are a sales assistant helping your sales agent to determine which stage of a sales conversation should the agent stay at or move to when talking to a user.
@@ -43,7 +79,7 @@ export function loadStageAnalyzerChain(
              Now determine what should be the next immediate conversation stage for the agent in the sales conversation by selecting only from the following options:
              1. Introduction: Start the conversation by introducing yourself and your company. Be polite and respectful while keeping the tone of the conversation professional.
              2. Qualification: Qualify the prospect by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.
-             3. e proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
+             3. Value proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
              4. Needs analysis: Ask open-ended questions to uncover the prospect's needs and pain points. Listen carefully to their responses and take notes.
              5. Solution presentation: Based on the prospect's needs, present your product/service as the solution that can address their pain points.
              6. Objection handling: Address any objections that the prospect may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.
@@ -79,7 +115,7 @@ export function loadSalesConversationChain(
 
               1. Introduction: Start the conversation by introducing yourself and your company. Be polite and respectful while keeping the tone of the conversation professional.
               2. Qualification: Qualify the prospect by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.
-              3. e proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
+              3. Value proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.
               4. Needs analysis: Ask open-ended questions to uncover the prospect's needs and pain points. Listen carefully to their responses and take notes.
               5. Solution presentation: Based on the prospect's needs, present your product/service as the solution that can address their pain points.
               6. Objection handling: Address any objections that the prospect may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.
@@ -117,33 +153,6 @@ export function loadSalesConversationChain(
   });
   return new LLMChain({ llm, prompt, verbose });
 }
-export const CONVERSATION_STAGES = {
-  '1': 'Introduction: Start the conversation by introducing yourself and your company. Be polite and respectful while keeping the tone of the conversation professional. Your greeting should be welcoming. Always clarify in your greeting the reason why you are calling.',
-  '2': 'Qualification: Qualify the prospect by confirming if they are the right person to talk to regarding your product/service. Ensure that they have the authority to make purchasing decisions.',
-  '3': 'Value proposition: Briefly explain how your product/service can benefit the prospect. Focus on the unique selling points and value proposition of your product/service that sets it apart from competitors.',
-  '4': "Needs analysis: Ask open-ended questions to uncover the prospect's needs and pain points. Listen carefully to their responses and take notes.",
-  '5': "Solution presentation: Based on the prospect's needs, present your product/service as the solution that can address their pain points.",
-  '6': 'Objection handling: Address any objections that the prospect may have regarding your product/service. Be prepared to provide evidence or testimonials to support your claims.',
-  '7': 'Close: Ask for the sale by proposing a next step. This could be a demo, a trial or a meeting with decision-makers. Ensure to summarize what has been discussed and reiterate the benefits.',
-  '8': "End conversation: It's time to end the call as there is nothing else to be said.",
-};
-// test the intermediate chains
-const verbose = true;
-
-// const llm = new Bedrock({
-//   model: 'meta.llama2-13b-chat-v1:0:4k', // You can also do e.g. "anthropic.claude-v2"
-//   region: 'ap-southeast-1',
-//   // endpointUrl: "custom.amazonaws.com",
-//   credentials: {
-//     accessKeyId: process.env.BEDROCK_AWS_ACCESS_KEY_ID!,
-//     secretAccessKey: process.env.BEDROCK_AWS_SECRET_ACCESS_KEY!,
-//   },
-//   modelKwargs: {},
-// });
-
-// const res = await llm.invoke('Tell me a joke');
-// console.log(res);
-const llm = new ChatOpenAI({ temperature: 0.9 });
 
 const stage_analyzer_chain = loadStageAnalyzerChain(llm, verbose);
 
@@ -171,43 +180,128 @@ sales_conversation_utterance_chain.call({
 });
 
 const config = {
-  salesperson_name: 'Ted Lasso',
+  salesperson_name: 'Bot',
   use_tools: true,
   product_catalog: 'sample_product_catalog.txt',
 };
-const appDb = getAppDb(Config.REGION, Table.app.tableName);
+
+const botData: SalesGPTData = {
+  salesperson_name: 'Bot',
+  salesperson_role: 'Business Development Representative',
+  company_name: 'Sleep Haven',
+  company_business:
+    'Sleep Haven is a premium mattress company that provides customers with the most comfortable and supportive sleeping experience possible. We offer a range of high-quality mattresses, pillows, and bedding accessories that are designed to meet the unique needs of our customers.',
+  company_values:
+    "Our mission at Sleep Haven is to help people achieve a better night's sleep by providing them with the best possible sleep solutions. We believe that quality sleep is essential to overall health and well-being, and we are committed to helping our customers achieve optimal sleep by offering exceptional products and customer service.",
+  conversation_purpose:
+    'find out whether they are looking to achieve better sleep via buying a premier mattress.',
+  conversation_type: 'chatbot on a website',
+};
+// const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 // const client = new BedrockRuntime();
 
-export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (evt) => {
+export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
+  async (event: SQSEvent) => {
     try {
-      const sales_agent = await SalesGPT.from_llm(llm, false, config);
+      const appDb = getAppDb(Config.REGION, Table.app.tableName);
+      const { Records } = event;
+      console.log('quickreplies', Records);
+      for (const record of Records) {
+        const snsMessageId = record.messageId;
+        const botStateContext: BotStateContext = (
+          record.body as unknown as SNSMessage
+        )?.Message as unknown as BotStateContext;
+        const { type, bot, conversation, nextNode, interaction, currentNode } =
+          botStateContext;
 
-      // init sales agent
-      await sales_agent.seed_agent();
+        const { orgId, conversationId, botId, customerId, operatorId } =
+          conversation;
+        const { id, position, data } = currentNode as BotNodeType;
 
-      let stageResponse = await sales_agent.determine_conversation_stage();
-      console.log(stageResponse);
+        const salesAgent = await SalesGPT.from_llm(llm, false, config, botData);
+        const userMessage = conversation?.messages?.slice(-1)[0]?.content ?? '';
 
-      let stepResponse = await sales_agent.step();
-      console.log(stepResponse);
+        if (salesAgent) {
+          await salesAgent.seed_agent();
+          // set conversation history
+          salesAgent.conversation_history = [
+            ...conversation?.messages
+              .slice(0, -1)
+              ?.map(({ content }) => content ?? ''),
+          ];
 
-      await sales_agent.human_step(
-        'I am well, how are you? I would like to learn more about your mattresses.',
-      );
+          const { conversationStage, response } = await getReply(
+            salesAgent,
+            userMessage,
+          );
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ conversationStage, response }),
+          };
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      Sentry.captureException(err);
+      return {
+        statusCode: 500,
+        body: err,
+      };
+    }
+  },
+);
 
-      stepResponse = await sales_agent.step();
-      console.log(stepResponse);
+export const handler = middy(lambdaHandler).use(eventNormalizer());
 
-      await sales_agent.human_step(
-        'Yes, what materials are you mattresses made from?',
-      );
+const getReply = async (salesAgent: SalesGPT, userMessage: string) => {
+  console.log(userMessage);
+  await salesAgent.determine_conversation_stage();
+  const response = await salesAgent.step();
+  await salesAgent.human_step(userMessage);
 
-      stageResponse = await sales_agent.determine_conversation_stage();
-      console.log(stageResponse);
-      stepResponse = await sales_agent.step();
-      console.log(stepResponse);
+  return { conversationStage: salesAgent.current_conversation_stage, response };
+};
+
+/**
+ * Test internal chatbot logic, i.e output is expected
+ * @date 20/11/2023 - 14:49:30
+ *
+ * @type {*}
+ */
+export const testHandler = Sentry.AWSLambda.wrapHandler(
+  ApiHandler(async () => {
+    try {
+      const body = useJsonBody();
+      const humanMessages = body['messages'] as string[];
+      const conversationHistory = body['conversationHistory'];
+      const salesAgent = await SalesGPT.from_llm(llm, false, config, botData);
+      salesAgent?.seed_agent();
+
+      if (salesAgent && humanMessages?.length) {
+        salesAgent.conversation_history = [...(conversationHistory ?? [])];
+        // console.log(salesAgent.conversation_history);
+        const stageResponse = await salesAgent.determine_conversation_stage();
+        const humanMessage = await salesAgent.human_step(humanMessages?.[0]);
+
+        const response = await salesAgent.step();
+        const responses = {
+          conversationStage: salesAgent.current_conversation_stage,
+          response,
+          conversationHistory: salesAgent?.conversation_history,
+        };
+        // await Promise.all(
+        //   humanMessages?.map(async (humanMessage: string) => {
+        //     console.log(salesAgent?.conversation_history);
+
+        //   }),
+        // );
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify(responses),
+        };
+      }
     } catch (err) {
       console.log(err);
       Sentry.captureException(err);

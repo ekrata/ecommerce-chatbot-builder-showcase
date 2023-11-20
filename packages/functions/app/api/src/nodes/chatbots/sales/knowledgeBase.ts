@@ -2,29 +2,49 @@ import { BaseLanguageModel } from 'langchain/base_language';
 import { RetrievalQAChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { BedrockEmbeddings } from 'langchain/embeddings/bedrock';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { Bedrock } from 'langchain/llms/bedrock';
 import { CharacterTextSplitter } from 'langchain/text_splitter';
 import { ChainTool } from 'langchain/tools';
-import { HNSWLib } from 'langchain/vectorstores/hnswlib';
+import { FaissStore } from 'langchain/vectorstores/faiss';
 import * as path from 'path';
+import { Config } from 'sst/node/config';
 import * as url from 'url';
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+// const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-const retrievalLlm = new ChatOpenAI({ temperature: 0 });
-const embeddings = new OpenAIEmbeddings();
+const retrievalLlm = new Bedrock({
+  model: 'meta.llama2-13b-chat-v1', // You can also do e.g. "anthropic.claude-v2"
+  region: 'us-east-1',
+  modelKwargs: {},
+});
+
+const embeddings = new BedrockEmbeddings({
+  region: 'us-east-1',
+  model: 'amazon.titan-embed-text-v1', // Default value
+});
 
 export async function loadSalesDocVectorStore(FileName: string) {
   // your knowledge path
-  const fullpath = path.resolve(__dirname, `./knowledge/${FileName}`);
+  const fullpath = path.resolve(
+    `packages/functions/app/api/src/nodes/chatbots/sales/knowledge/${FileName}`,
+  );
   const loader = new TextLoader(fullpath);
   const docs = await loader.load();
+  // console.log(docs);
   const splitter = new CharacterTextSplitter({
     chunkSize: 10,
     chunkOverlap: 0,
   });
-  const new_docs = await splitter.splitDocuments(docs);
-  return HNSWLib.fromDocuments(new_docs, embeddings);
+  const newDocs = await splitter.splitDocuments(docs);
+  try {
+    const vectorDb = await FaissStore.fromDocuments(newDocs, embeddings);
+    return vectorDb;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export async function setup_knowledge_base(
@@ -32,11 +52,13 @@ export async function setup_knowledge_base(
   llm: BaseLanguageModel,
 ) {
   const vectorStore = await loadSalesDocVectorStore(FileName);
-  const knowledge_base = RetrievalQAChain.fromLLM(
-    retrievalLlm,
-    vectorStore.asRetriever(),
-  );
-  return knowledge_base;
+  if (vectorStore) {
+    const knowledge_base = RetrievalQAChain.fromLLM(
+      retrievalLlm,
+      vectorStore?.asRetriever(),
+    );
+    return knowledge_base;
+  }
 }
 
 /*
@@ -45,16 +67,19 @@ export async function setup_knowledge_base(
  */
 
 export async function get_tools(product_catalog: string) {
+  console.log('getting tools');
   const chain = await setup_knowledge_base(product_catalog, retrievalLlm);
-  const tools = [
-    new ChainTool({
-      name: 'ProductSearch',
-      description:
-        'useful for when you need to answer questions about product information',
-      chain,
-    }),
-  ];
-  return tools;
+  if (chain) {
+    const tools = [
+      new ChainTool({
+        name: 'ProductSearch',
+        description:
+          'useful for when you need to answer questions about product information',
+        chain,
+      }),
+    ];
+    return tools;
+  }
 }
 
 export async function setup_knowledge_base_test(query: string) {
@@ -62,7 +87,11 @@ export async function setup_knowledge_base_test(query: string) {
     'sample_product_catalog.txt',
     retrievalLlm,
   );
-  const response = await knowledge_base.call({ query });
+
+  const response = await knowledge_base?.call({ query });
   console.log(response);
+  // if (response) {
+  //   console.log('res', response);
+  // }
 }
 setup_knowledge_base_test('What products do you have available?');
