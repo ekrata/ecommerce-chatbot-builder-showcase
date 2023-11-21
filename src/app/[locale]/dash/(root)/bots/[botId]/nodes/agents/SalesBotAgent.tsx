@@ -18,6 +18,7 @@ import { z } from 'zod';
 
 import { validationType } from '@/entities/bot';
 import { Action, Agent } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { toolset, toolsetKey } from '@/packages/functions/app/api/src/nodes/agents/toolsets';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -43,7 +44,7 @@ const schema = z.object({
   companyBusiness: z.string().min(40),
   companyValues: z.string()?.min(40),
   conversationPurpose: z.string()?.min(10),
-  toolset: z.enum([]),
+  toolset: z.object({ active: z.boolean().optional() })?.array(),
   outputs: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
     message: 'Each option must be unique.',
   }),
@@ -69,8 +70,8 @@ export const SalesBotAgentNode: FC<NodeProps> = (node) => {
 
   return (
     <div className={`w-16  `} >
-      <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-hexagon' />
-      <NodeWrapper nodeElement={agentNode(type, 'bg-gradient-to-r from-green-300 via-blue-500 to-purple-600')} nodeName={tNodes(`Agent.SalesBot`)} hasErrors={hasErrors} />
+      <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
+      <NodeWrapper nodeElement={agentNode(type, 'bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700')} nodeName={tNodes(`Agent.SalesBotAgent`)} hasErrors={hasErrors} />
       {createTargetHandles(node, nodeEdges, outputKey)}
     </div >
   );
@@ -124,6 +125,11 @@ export const SalesBotAgentForm: React.FC<Props> = ({ node }) => {
 
   useOnClickOutside(ref, handleClickOutside)
 
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "toolset", // unique name for your Field Array
+  });
+
   // const { fields, append, update, prepend, remove, swap, move, insert } = fieldArray
 
   useEffect(() => {
@@ -142,12 +148,13 @@ export const SalesBotAgentForm: React.FC<Props> = ({ node }) => {
 
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
+    console.log(errors)
     updateNodes(values, node, nodes, setNodes)
   }
 
 
   return (
-    <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-8' onSubmit={handleSubmit(onSubmit)} ref={ref}>
+    <form className='flex flex-col mx-6 mt-6 place-items-center form gap-y-4' onSubmit={handleSubmit(onSubmit)} ref={ref}>
       <div className="w-full max-w-xs form-control">
         <label className="label">
           <span className="label-text">{tForm('Agent Name')}</span>
@@ -166,37 +173,48 @@ export const SalesBotAgentForm: React.FC<Props> = ({ node }) => {
         <label className="label">
           <span className="label-text">{tForm('Business Role')}</span>
         </label>
-        <input type="text" placeholder={tForm('Business Role')} className="w-full max-w-xs bg-gray-200 input-sm input"  {...register('businessRole')} />
+        <input type="text" placeholder={tForm('businessRolePlaceholder')} className="w-full max-w-xs bg-gray-200 input-sm input"  {...register('businessRole')} />
       </div>
       {errors?.companyBusiness && <p className='justify-start text-xs text-error'>{errors?.businessRole?.message}</p>}
       <div className="w-full max-w-xs form-control">
         <label className="label">
           <span className="label-text">{tForm('Company Business')}</span>
         </label>
-        <TextareaField deletable={false} node={node} fieldName={'companyBusiness'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
+        <TextareaField deletable={false} node={node} fieldName={'companyBusiness'} placeholder={tForm('companyBusinessPlaceholder')} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
       </div>
       {errors?.companyBusiness && <p className='justify-start text-xs text-error'>{errors?.companyBusiness?.message}</p>}
       <div className="w-full max-w-xs form-control">
         <label className="label">
           <span className="label-text">{tForm('Company Values')}</span>
         </label>
-        <TextareaField deletable={false} node={node} fieldName={'companyValues'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
+        <TextareaField deletable={false} node={node} fieldName={'companyValues'} placeholder={tForm('companyValuesPlaceholder')} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
       </div>
       {errors?.companyValues && <p className='justify-start text-xs text-error'>{errors?.companyValues?.message}</p>}
       <div className="w-full max-w-xs form-control">
         <label className="label">
           <span className="label-text">{tForm('Conversation Purpose')}</span>
         </label>
-        <TextareaField deletable={false} node={node} fieldName={'conversationPurpose'} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
+        <TextareaField deletable={false} node={node} fieldName={'conversationPurpose'} placeholder={tForm('conversationPurposePlaceholder')} setValue={setValue} handleSubmit={handleSubmit(onSubmit)} register={register} control={control} textareaStyle='text-sm bg-gray-200 w-full resize-none textarea focus:outline-0' />
       </div>
-      {errors?.conversationPurpose && <p className='justify-start text-xs text-error'>{errors?.conversationPurpose?.message}</p>}
-      <div className="form-control">
-        <label className="cursor-pointer label">
-          <span className="label-text">{tForm("Save the answer as a contact property")}</span>
-          <input type="checkbox" className="toggle"  {...register('saveTheAnswerAsAContactProperty')} />
+      <div className="w-full max-w-xs form-control">
+        <label className="label">
+          <span className="label-text">{tForm('Tools')}</span>
         </label>
+        < div className='flex flex-row justify-between place-items-center gap-x-2' >
+          <input type="checkbox" className="checkbox checkbox-info checkbox-sm"  {...register(`toolset.0.active`)} />
+          <label className="label">
+            <span className="text-xs label-text">{tDash(`AgentToolNames.Product Search`) as string}</span>
+            <span className="text-xs label-text">{tDash(`AgentToolDescriptions.Product Search`) as string}</span>
+          </label>
+        </div>
+        < div className='flex flex-row justify-between place-items-center gap-x-2' >
+          <input type="checkbox" className="checkbox checkbox-info checkbox-sm"  {...register(`toolset.1.active`)} />
+          <label className="text-xs label">
+            <span className="text-xs label-text">{tDash(`AgentToolNames.Document Search`) as string}</span>
+            <span className="text-xs label-text">{tDash(`AgentToolDescriptions.Document Search`) as string}</span>
+          </label>
+        </div>
       </div>
-      {errors?.saveTheAnswerAsAContactProperty && <p className='justify-start text-xs text-red-500'>{errors?.saveTheAnswerAsAContactProperty?.message}</p>}
     </form >
   )
 }

@@ -17,6 +17,8 @@ import * as path from 'path';
 import { Config } from 'sst/node/config';
 import * as url from 'url';
 
+import { toolset } from '../toolsets';
+
 // const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 // const retrievalLlm = new O({
@@ -92,6 +94,8 @@ export async function get_tools(
     const tools = [
       new ChainTool({
         chain,
+        name: 'Product Search',
+        description: toolset['Product Search'],
       }),
     ];
     return tools;

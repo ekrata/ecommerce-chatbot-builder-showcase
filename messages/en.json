@@ -394,14 +394,31 @@
       "Trigger": "Trigger",
       "Condition": "Condition",
       "Action": "Action",
+      "Agents": "Agents",
+      "Agent": "Agent",
       "Actions": "Actions",
       "Triggered": "Triggered",
       "Engagement": "Engagement",
       "Satisfaction": "Satisfaction",
+      "AgentToolNames": {
+        "Product Search": "Product Search",
+        "Document Search": "Document Search",
+        "Article Search": "Article Search",
+        "Price Search": "Price Search",
+        "Navigation Search": "Navigation Search"
+      },
+      "AgentToolDescriptions": {
+        "Product Search": "Allow the agent to search for products.",
+        "Document Search": "Allow the agent to search documents uploaded here",
+        "Article Search": "Allow the agent to search your knowledge base and articles",
+        "Price Search": "Allow the agent to search for prices",
+        "Navigation Search": "Allow the agent to search for relevant pages"
+      },
       "AgentForms": {
         "SalesBotAgent": {
           "Agent Name": "Bot",
           "Company Name": "Company Name",
+          "Tools": "Tools",
           "Company Business": "Company Business",
           "companyBusinessPlaceholder": "Sleep City is a premium mattress company that provides customers with the most comfortable and supportive sleeping experience possible. We offer a range of high-quality mattresses, pillows, and bedding accessories that are designed to meet the unique needs of our customers.",
           "Company Values": "Company Values",
@@ -575,6 +592,10 @@
           "CouponCode": "Coupon code",
           "SendAnEventToGoogleAnalytics": "Send an event to google analytics",
           "SendAForm": "Send a form"
+        },
+        "Agent": {
+          "SalesBotAgent": "Sales Agent",
+          "CustomerServiceAgent": "Customer Service Agent"
         },
         "ShopifyAction": {
           "CheckOrderStatus": "Check Order Status",

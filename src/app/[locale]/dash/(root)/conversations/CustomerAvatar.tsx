@@ -2,7 +2,7 @@ import { EntityItem } from 'electrodb';
 import { useMemo, useState } from 'react';
 
 import { ConversationItem } from '@/entities/conversation';
-import { avatarGradients, Customer } from '@/entities/customer';
+import { Customer, gradients } from '@/entities/customer';
 import { Message } from '@/entities/message';
 import { faker } from '@faker-js/faker';
 
@@ -18,7 +18,7 @@ interface Props {
 export const CustomerAvatar: React.FC<Props> = ({ conversationItem, customer, showTypingState }) => {
   const message = conversationItem?.messages?.slice(-1)?.[0]
   const avatarText = customer?.name ?? getInitials(customer?.name ?? '') ?? customer?.email?.slice(0, 2) ?? customer?.customerId?.slice(0, 2)
-  const [color, setColor] = useState(faker.helpers.arrayElement(avatarGradients))
+  const [color, setColor] = useState(faker.helpers.arrayElement(gradients))
 
   return (
     <div className={` w-8 h-8 ${color} rounded-full p-1  ring-info  ${customer?.online ? 'online' : 'offline'}`}>

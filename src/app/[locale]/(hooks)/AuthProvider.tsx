@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           }
         });
       const resData = await response?.json()
-      console.log(response)
+      console.log(resData)
       if (response.status === 200) {
         setSessionUserIds({ orgId: resData?.orgId, operatorId: resData?.operatorId })
         // router.push('/')
@@ -81,6 +81,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     operatorQuery?.refetch()
   }, [sessionUserIds?.orgId, sessionUserIds?.operatorId])
 
+
+
+  console.log(operatorQuery.data)
   return (
     <AuthContext.Provider value={[operatorQuery?.data as unknown as EntityItem<typeof Operator>, setSessionUserIds, operatorQuery.refetch]}>
       {!pathname?.includes('/dash') || !fetching ?

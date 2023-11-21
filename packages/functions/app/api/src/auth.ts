@@ -3,11 +3,10 @@ import { AuthHandler, GoogleAdapter, Session } from 'sst/node/auth';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
+import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from './db';
-
-const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 declare module 'sst/node/auth' {
   // composite key for operator
@@ -26,14 +25,27 @@ export const handler = AuthHandler({
       clientID: Config.OAUTH_GOOGLE_CLIENT_ID,
       onSuccess: async (tokenset) => {
         try {
+          console.log('hihiihihi');
           const claims = tokenset.claims();
 
-          let operatorRes = await appDb.entities.operators.scan
-            .where(({ email }, { eq }) => eq(email, claims.email))
-            .go();
+          console.log(claims.email);
+          let cursor = null;
 
+          const appDb = getAppDb(Config.REGION, Table.app.tableName);
+
+          let operators: EntityItem<typeof Operator>[] = [];
+          do {
+            const results = await appDb.entities?.operators?.scan
+              .where(({ email }, { eq }) => eq(email, claims.email))
+              .go({ cursor });
+            console.log(results);
+            operators = [...operators, ...results.data];
+            cursor = results.cursor;
+          } while (cursor !== null);
+
+          console.log(operators);
           // if multiple operators returned, get the most recently created
-          operatorRes.data.sort((a, b) => {
+          operators?.sort((a, b) => {
             if (a?.createdAt && b?.createdAt) {
               return b?.createdAt - a?.createdAt;
             }
@@ -41,7 +53,8 @@ export const handler = AuthHandler({
           });
           // await appDb.entities.operators.get({operatorId: operatorRes.data});
           // sign up
-          if (!operatorRes?.data?.length) {
+
+          if (!operators?.data?.length) {
             const org = await appDb.entities.orgs
               .upsert({
                 name: `${claims.name}'s Organisation`,
@@ -57,12 +70,13 @@ export const handler = AuthHandler({
               })
               .go({ response: 'all_new' });
 
+            console.log(operators?.[0]?.orgId);
             return Session.parameter({
               redirect: Config.FRONTEND_URL,
               type: 'operator',
               properties: {
-                orgId: operatorRes?.data?.[0]?.orgId,
-                operatorId: operatorRes.data?.[0]?.operatorId,
+                orgId: operators[0]?.orgId,
+                operatorId: operators[0]?.operatorId,
               },
             });
           } else {
@@ -70,7 +84,7 @@ export const handler = AuthHandler({
             const operatorUpdateRes = await appDb.entities.operators
               .update({
                 operatorId: claims.sub,
-                orgId: operatorRes?.data?.[0].orgId,
+                orgId: operators?.[0].orgId,
               })
               .set({ profilePicture: claims.picture, name: claims.given_name })
               .go();
@@ -78,8 +92,8 @@ export const handler = AuthHandler({
               redirect: Config.FRONTEND_URL,
               type: 'operator',
               properties: {
-                orgId: operatorRes?.data?.[0]?.orgId,
-                operatorId: operatorRes.data?.[0]?.operatorId,
+                orgId: operators?.[0]?.orgId,
+                operatorId: operators?.[0]?.operatorId,
               },
             });
           }

@@ -32,7 +32,6 @@ export const contactSelector = [
   'startsWith',
   'endsWith',
 ] as const;
-
 export type ContactProperty = (typeof contactProperties)[number];
 export type ContactSelector = (typeof contactSelector)[number];
 export const gradients = [
@@ -42,7 +41,6 @@ export const gradients = [
   'bg-gradient-to-tr from-violet-500 to-orange-300',
   'bg-gradient-to-r from-green-300 to-purple-400',
   'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500',
-  'linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))',
   // 'bg-gradient-to-r from-yellow-100 via-yellow-300 to-yellow-500',
   // 'bg-gradient-to-r from-yellow-600 to-red-600',
   // 'bg-gradient-to-r from-blue-400 to-emerald-400',
@@ -75,7 +73,7 @@ export const Customer = new Entity({
     },
     avatarBackground: {
       type: 'string',
-      default: () => faker.helpers.arrayElement(avatarGradients),
+      default: () => faker.helpers.arrayElement(gradients),
     },
     // set if customer is interacting with a bot
     botId: {

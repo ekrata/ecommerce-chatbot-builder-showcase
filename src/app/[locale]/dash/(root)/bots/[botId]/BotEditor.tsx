@@ -9,26 +9,27 @@ import { isEqual } from 'lodash';
 import { Link, useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import {
-    createContext, Dispatch, DragEventHandler, SetStateAction, useCallback, useContext, useEffect,
-    useMemo, useRef, useState
+  createContext, Dispatch, DragEventHandler, SetStateAction, useCallback, useContext, useEffect,
+  useMemo, useRef, useState
 } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiLoaderAlt, BiTestTube, BiTrash, BiX } from 'react-icons/bi';
 import { FcCancel, FcCheckmark } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 import ReactFlow, {
-    addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
-    ConnectionLineComponentProps, Controls, Edge, EdgeTypes, Node, OnSelectionChangeParams, Panel,
-    ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
+  addEdge, applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Connection,
+  ConnectionLineComponentProps, Controls, Edge, EdgeTypes, Node, OnSelectionChangeParams, Panel,
+  ReactFlowInstance, ReactFlowProvider, useEdgesState, useNodesState
 } from 'reactflow';
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import { actions, botCategory, BotNodeType, conditions, triggers } from '@/entities/bot';
 import {
-    Action, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
-    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  Action, Agent, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
+  VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { ConfirmationModal } from '@/src/app/[locale]/(components)/ConfirmationModal';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { useDeleteBotMut } from '@/src/app/[locale]/(hooks)/mutations/useDeleteBotMut';
 import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
@@ -37,12 +38,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
 import {
-    actionNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
+  actionNode, agentNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
 import { getNodeForm } from './getNodeForm';
 import { getNextUnusedLabel } from './nodes/shared/getNextUnusedLabel';
 
-export type NodeMenuState = '' | 'trigger' | 'condition' | 'action'
+export type NodeMenuState = '' | 'trigger' | 'condition' | 'action' | 'agent'
 
 let id: number = 0;
 const getId = () => `dndnode_${id++}`;
@@ -105,6 +106,7 @@ export const BotEditor: React.FC = () => {
 
   const onNodesChange = useCallback(
     (changes: any) => {
+      console.log('noded')
       return setNodes((nds) => applyNodeChanges(changes, nds))
     },
     [setNodes])
@@ -160,13 +162,48 @@ export const BotEditor: React.FC = () => {
   const onDragOver = useCallback((event: any) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-  }, []);
+    // const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect() as any;
+    // const position = reactFlowInstance?.project({
+    //   x: event.clientX - reactFlowBounds.left,
+    //   y: event.clientY - reactFlowBounds.top,
+    // }) ?? { x: 0, y: 0 }
+    // // const selectedNodes = nodes.filter((node) => node?.selected);
+    // setNodes([...nodes.map((node) => {
+    //   if (node.selected) {
+    //     return { ...node, position }
+    //   }
+    //   return node
+    // }
+    // )]);
+  }, [nodes, reactFlowInstance]);
 
-  const onPaneClick = () => {
-    setSelectedFormNode(null)
-    setNodes(nodes?.map((node) => {
+  const onSelectionChange = useCallback((params: OnSelectionChangeParams): void => {
+    const selectedNodes = nodes?.filter(({ selected }) => selected)
+    console.log(selectedNodes)
+    if (selectedNodes?.length) {
+      console.log(selectedNodes)
+      // console.log(newNode, selectedFormNode)
+      setSelectedFormNode(selectedNodes?.[0])
+    } else {
+      setSelectedFormNode(null)
+      // setNodes([...nodes.map((node) => ({
+      //   ...node, selected: false
+      // }))])
+    }
+  }, [nodes, reactFlowInstance])
+
+
+
+  const onPaneClick = (event) => {
+    event.preventDefault()
+    console.log('onPaneClick')
+    setNodes([...nodes?.map((node) => {
       return { ...node, selected: false }
-    }))
+    })])
+    setSelectedFormNode(null)
+    nodes
+
+    // console.log(nodes, selectedFormNode)
   };
 
   useEffect(() => {
@@ -221,11 +258,6 @@ export const BotEditor: React.FC = () => {
         return;
       }
 
-
-
-
-
-
       const newNode: Node = {
         id: nextNodeId,
         type,
@@ -238,26 +270,6 @@ export const BotEditor: React.FC = () => {
     },
     [reactFlowInstance, nodes, edges]
   );
-
-  const onSelectionChange = useCallback((params: OnSelectionChangeParams): void => {
-    const newNode = params?.nodes?.[0]
-    if (newNode) {
-      setSelectedFormNode(newNode)
-      // setNodes([...nodes.map((node) => {
-      //   if (node.id === newNode?.id) {
-      //     return { ...node, selected: true }
-      //   } else {
-      //     return { ...node, selected: false }
-      //   }
-      // })])
-
-    } else {
-      setSelectedFormNode(null)
-      // setNodes([...nodes.map((node) => ({
-      //   ...node, selected: false
-      // }))])
-    }
-  }, [nodes])
 
   const onConnect = useCallback((params: Connection | Edge, clonedEdge?: Edge) => setEdges((eds) => {
     const nodeTarget = nodes?.find((node) => node.id === params?.target)
@@ -425,6 +437,7 @@ export const BotEditor: React.FC = () => {
                 onConnect={onConnect}
                 defaultViewport={botQuery?.data?.viewport}
                 elementsSelectable
+                onPaneClick={onPaneClick}
                 onSelectionChange={onSelectionChange}
                 nodesConnectable
                 nodesDraggable
@@ -433,7 +446,6 @@ export const BotEditor: React.FC = () => {
                 edgeTypes={edgeTypesMemo}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
-                onPaneClick={onPaneClick}
                 attributionPosition='bottom-left'
                 connectionLineComponent={onConnectionLine}
                 fitView
@@ -465,8 +477,8 @@ export const BotEditor: React.FC = () => {
                   </Panel> */}
                 <Controls />
                 <Background variant={BackgroundVariant.Cross} className='-z-100' />
-                <Panel position={'top-right'} className='z-10'>
-                  <div className='flex flex-row place-items-center gap-x-4'>
+                <Panel position={'top-right'} className='right-0 z-10 justify-end'>
+                  <div className='right-0 flex flex-row justify-end place-items-center gap-x-4'>
                     <label className="cursor-pointer label gap-x-2">
                       {/* <span className="label-text">{tDash('Active')}</span> */}
                       <input type="text" className="w-full max-w-xs bg-gray-200 input input-sm"   {...register('name')} onChange={() => null} />
@@ -484,26 +496,32 @@ export const BotEditor: React.FC = () => {
                         <input type="checkbox" className="toggle toggle-info" {...register('active')} />
                       </label>
                     </div>
-                    <Link href={{ pathname: "/dash/sandbox" }} rel="noopener noreferrer" target="_blank" className='flex normal-case btn btn-info btn-outline btn-sm'>
-                      <BiTestTube className={`text-xl`} />
+                    <Link href={{ pathname: "/dash/sandbox" }} rel="noopener noreferrer" target="_blank" className='flex normal-case btn btn-info btn-sm gap-x-3'>
+
+                      <BiTestTube className={`text-lg`} />
                       {tDash('Test')}
                     </Link>
-                    <button onClick={onDelete} className="flex normal-case btn btn-error btn-outline btn-sm" >
-                      <BiTrash className={`text-xl`} />
-                      {tDash('Delete')}
-                    </button>
+                    <ConfirmationModal actionLabel={tDash('Are you sure you want to delete this?')} leftButtonAction={async () => await onDelete()} leftButtonLabel={tDash('Delete')} rightButtonLabel={tDash('Cancel')} leftButtonColor={'error'}>
+                      <button className="flex normal-case btn btn-error btn-sm" >
+                        <div className='flex flex-row w-full place-items-center gap-x-3'>
+                          <BiTrash />
+                          {tDash('Delete')}
+                        </div>
+                      </button>
+                    </ConfirmationModal>
                   </div>
                 </Panel>
                 <Panel position={'top-right'}>
-                  <div className='absolute right-0 mb-40 group'>
-                    <div className={` h-screen-3/4  bg-white/75 backdrop-blur-xl shadow-lg   p-4 mb-40 mt-10 ${(nodeMenuState || selectedFormNode) && 'w-[360px] pb-20 h-[650px]'}  ${!nodeMenuState && 'h-[150px] pb-0'} overflow-y-scroll rounded-lg`}>
+                  <div className='absolute right-0 mt-4 mb-40 group'>
+                    <div className={`   bg-white/75  backdrop-blur-xl shadow-lg  mb-40 mt-10 ${(nodeMenuState || selectedFormNode) && 'animate-fade w-[360px] pb-20 h-[650px]'}  ${!nodeMenuState && 'my-8 pb-0'} overflow-y-scroll rounded-lg`}>
                       {selectedFormNode ?
                         renderNodeForm()
                         : (<>
-                          <ul className='flex flex-row justify-between mb-10 place-items-center tabs tabs-boxed'>
+                          <ul className='flex flex-row justify-between text-xs place-items-center tabs tabs-boxed '>
                             <li className={`tab  ${nodeMenuState === 'trigger' && 'tab-active'}`} onClick={() => setNodeMenuState('trigger')}><a >{tBots('Trigger')}</a></li>
                             <li className={`tab  ${nodeMenuState === 'condition' && 'tab-active'}`} onClick={() => setNodeMenuState('condition')}><a >{tBots('Condition')}</a></li>
                             <li className={`tab  ${nodeMenuState === 'action' && 'tab-active'}`} onClick={() => setNodeMenuState('action')}><a >{tBots('Action')}</a></li>
+                            <li className={`tab  ${nodeMenuState === 'agent' && 'tab-active'}`} onClick={() => setNodeMenuState('agent')}><a >{tBots('Agent')}</a></li>
                             {nodeMenuState !== '' && <button className='button btn-ghost'><BiX className='text-3xl' onClick={() => setNodeMenuState('')} /></button>}
                           </ul>
                           {nodeMenuState === 'trigger' &&
@@ -611,6 +629,23 @@ export const BotEditor: React.FC = () => {
                                 ))}
                               </ul>
 
+                            </div>
+                          }
+                          {nodeMenuState === 'agent' &&
+                            <div className=''>
+                              <h5 className='mb-4 text-lg text-center'>
+                                {tBots('Agent')}
+                              </h5>
+                              <ul className='grid justify-around grid-cols-12 mb-8 gap-x-6 gap-y-2'>
+                                {Object.entries(Agent).map(([key, value]) => (
+                                  <li className='flex flex-col flex-wrap justify-center col-span-6 gap-y-2 place-items-center'>
+                                    {agentNode(value, 'bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700')}
+                                    <p className="text-xs font-light">
+                                      {tNodes(`Agent.${key as Agent}` as any)}
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
                           }
                         </>)}

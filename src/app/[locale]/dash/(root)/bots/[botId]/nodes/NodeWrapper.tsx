@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { FieldErrors } from 'react-hook-form';
 import { BiSolidError } from 'react-icons/bi';
+import { BsRobot } from 'react-icons/bs';
 import { Node } from 'reactflow';
 
 import { useNodeContext } from '../BotEditor';
@@ -41,7 +42,9 @@ export const NodeWrapper: React.FC<Props> = ({ node, nodeElement, nodeName, hasE
         <div className={`justify-center mt-2 focus:animate-jump ${selected && 'shadow-blue-500 shadow-2xl'}`}>
           {nodeElement}
         </div>
-        <p className="p-1 mt-2 text-xs font-light text-center bg-white shadow-md select-none -z-10 group-hover:animate-duration-500 group-hover:animate-fade-up group-hover:invisible">
+        <p className="flex p-1 mt-2 text-xs font-light text-center bg-white shadow-md select-none place-items-center gap-x-2 whitespace-nowrap flex-nowrap -z-10 group-hover:animate-duration-500 group-hover:animate-fade-up group-hover:invisible">
+          {nodeName?.toLowerCase().includes('agent') &&
+            <BsRobot />}
           {nodeName}
         </p>
       </div >

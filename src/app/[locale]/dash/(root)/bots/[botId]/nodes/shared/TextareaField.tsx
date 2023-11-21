@@ -26,7 +26,8 @@ interface Props<T extends FieldValues> {
   setValue: UseFormSetValue<T>
   register: UseFormRegister<T>,
   textareaStyle?: string
-  deletable?: boolean
+  deletable?: boolean,
+  placeholder?: string
 }
 
 /**
@@ -45,7 +46,7 @@ interface Props<T extends FieldValues> {
  * @param {Control<T, any>} param0.control
  * @returns {*}
  */
-export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, node, setValue, index, register, handleSubmit, control, textareaStyle, deletable = true }: Props<T>) {
+export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, node, setValue, index, register, handleSubmit, control, textareaStyle, deletable = true, placeholder }: Props<T>) {
   const [edges, setEdges] = useEdgeContext()
   const name = index != null ? `${fieldName}.${index}` as Path<T> : fieldName as Path<T>
   const data = useWatch({
@@ -82,7 +83,7 @@ export function TextareaField<T extends FieldValues>({ fieldArray, fieldName, no
 
   return (
     <div className='flex flex-col w-full bg-gray-200 group form-control textarea textarea-sm'>
-      <textarea key={useId()} className={`${textareaStyle ?? 'flex  text-xs w-full h-6 bg-gray-200 resize-none  textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event as any)} />
+      <textarea key={useId()} placeholder={placeholder} className={`${textareaStyle ?? 'flex  text-xs w-full h-6 bg-gray-200 resize-none  textarea focus:outline-0'}`} {...register(name)} value={data} onBlur={(event) => handleSubmit?.(event as any)} />
       <label className="justify-end text-gray-100 label place-items-center" >
         <span className="relative flex flex-row justify-end label-text-alt">
           <div className="invisible text-xl cursor-pointer dropdown dropdown-bottom dropdown-end group-hover:visible">

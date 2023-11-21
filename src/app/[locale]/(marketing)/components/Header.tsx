@@ -110,13 +110,15 @@ export function Header() {
               <MobileNavLink hash={'pricing'} href={`/`}>Pricing</MobileNavLink>
               <hr className="m-2 border-slate-300/40" />
               <MobileNavLink href=''>
-                {user ? t('Sign out') : <LoginModal>{t('Sign in')}</LoginModal>}
+                {user ? <div onClick={() => setSessionUser(null)}>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
               </MobileNavLink>
-              <Button href={{ pathname: "/register" }} color="blue">
-                <span>
-                  {user ? t('Go to app') : t('Start free trial')}
-                </span>
-              </Button>
+              <MobileNavLink href={user ? '/dash/conversations' : ''}>
+                <Button color="blue" className='bg-gradient-to-tr from-violet-500 to-orange-300 hover:animate-pulse'>
+                  <span>
+                    {user ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
+                  </span>
+                </Button>
+              </MobileNavLink>
             </Popover.Panel>
           </Transition.Child>
         </Transition.Root>

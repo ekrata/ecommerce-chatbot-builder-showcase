@@ -10,6 +10,7 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = ApiHandler(async () => {
   const session = useSession();
+  console.log(session);
 
   // Check user is authenticated
   if (session.type !== 'operator') {

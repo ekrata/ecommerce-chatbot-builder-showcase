@@ -57,8 +57,8 @@ export function Hero() {
         </div>
         <div className='justify-center w-full px-0 mt-10 rounded-md shadow-xl animate-fade md:p-0 place-items-center'>
           {/* <Image src={download1} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
-          <div className="p-4 px-0 pb-0 border rounded-md mockup-window bg-base-300">
-            <Image src={hero} className="filterToggle skeleton   p-4  self-center  animate-flip-up       rounded-t-none rounded-md border-0    bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500/10 mix-blend-multiply backdrop-blur-sm to-indigo-700/10     md:w-[900px]  " alt={''}></Image>
+          <div className="p-4 px-0 pb-0 border rounded-md mockup-window bg-base-300 animate-flip-up">
+            <Image src={hero} className="filterToggle skeleton   p-4  self-center         rounded-t-none rounded-md border-0    bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500/10 mix-blend-multiply backdrop-blur-sm to-indigo-700/10     md:w-[900px]  " alt={''}></Image>
           </div>
 
           {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}

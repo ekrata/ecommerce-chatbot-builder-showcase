@@ -43,7 +43,7 @@ export const LoginModal: FC<PropsWithChildren<Props>> = ({ leftButtonLabel, righ
 
   return (
     <>
-      <div className="w-full h-full " onClick={() => {
+      <div className="" onClick={() => {
         console.log('open modal');
         (document?.getElementById('login_modal') as HTMLDialogElement)?.showModal()
       }}>
