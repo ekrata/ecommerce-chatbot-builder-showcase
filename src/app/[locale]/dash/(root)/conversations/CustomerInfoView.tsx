@@ -23,7 +23,7 @@ import { useConversationItemsQuery } from '../../../(hooks)/queries/useConversat
 import { useVisitsQuery } from '../../../(hooks)/queries/useVisitsQuery';
 import { CustomerAvatar } from './CustomerAvatar';
 
-type InfoTabs = 'Profile' | 'Visited Pages' | 'Notes';
+type InfoTabs = 'Profile' | 'Actions' | 'Visited Pages' | 'Notes';
 
 const visitedPagesTabLabel = 'Visited Pages';
 const profile = 'Profile';
@@ -107,7 +107,7 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='profile-button'
-            className={`tab tab-bordered w-1/3 ${currentTab === profile && tabActive
+            className={`tab tab-bordered tab-xs  ${currentTab === profile && tabActive
               }`}
             onClick={() => setCurrentTab(profile)}
           >
@@ -116,7 +116,16 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='visited-pages-button'
-            className={`tab tab-bordered w-1/3 ${currentTab === 'Visited Pages' && tabActive
+            className={`tab tab-bordered tab-xs  ${currentTab === 'Visited Pages' && tabActive
+              }`}
+            onClick={() => setCurrentTab(visitedPagesTabLabel)}
+          >
+            {tDash('bots.Actions')}
+          </button>
+          <button
+            type='button'
+            data-testid='visited-pages-button'
+            className={`tab tab-bordered tab-xs  ${currentTab === 'Visited Pages' && tabActive
               }`}
             onClick={() => setCurrentTab(visitedPagesTabLabel)}
           >
@@ -125,7 +134,7 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='notes-button'
-            className={`tab tab-bordered w-1/3 ${currentTab === notesTab && tabActive
+            className={`tab tab-bordered tab-xs  ${currentTab === notesTab && tabActive
               }`}
             onClick={() => setCurrentTab(notesTab)}
           >

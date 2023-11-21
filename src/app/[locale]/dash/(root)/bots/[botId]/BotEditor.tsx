@@ -496,13 +496,13 @@ export const BotEditor: React.FC = () => {
                         <input type="checkbox" className="toggle toggle-info" {...register('active')} />
                       </label>
                     </div>
-                    <Link href={{ pathname: "/dash/sandbox" }} rel="noopener noreferrer" target="_blank" className='flex normal-case btn btn-info btn-sm gap-x-3'>
+                    <Link href={{ pathname: "/dash/sandbox" }} rel="noopener noreferrer" target="_blank" className='flex normal-case rounded-md btn btn-info btn-sm gap-x-2'>
 
                       <BiTestTube className={`text-lg`} />
                       {tDash('Test')}
                     </Link>
                     <ConfirmationModal actionLabel={tDash('Are you sure you want to delete this?')} leftButtonAction={async () => await onDelete()} leftButtonLabel={tDash('Delete')} rightButtonLabel={tDash('Cancel')} leftButtonColor={'error'}>
-                      <button className="flex normal-case btn btn-error btn-sm" >
+                      <button className="flex normal-case rounded-md btn btn-error btn-sm" >
                         <div className='flex flex-row w-full place-items-center gap-x-3'>
                           <BiTrash />
                           {tDash('Delete')}
