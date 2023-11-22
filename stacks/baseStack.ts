@@ -54,6 +54,7 @@ export function baseStack({ stack, app }: StackContext) {
     oauthGoogleClientId,
     OPENAI_API_KEY,
     oauthGoogleSecret,
+    faissLambdaConfig,
     stripeKeySecret,
     ddbStreamTopic,
     botNodeTopic,
@@ -700,6 +701,8 @@ export function baseStack({ stack, app }: StackContext) {
         cdk: defaultQueueConfig,
         consumer: {
           function: {
+            ...faissLambdaConfig,
+            memorySize: `4 GB`,
             handler:
               'packages/functions/app/api/src/nodes/agents/sales/sales.handler',
             bind: [wsApi, api, REGION, table, OPENAI_API_KEY],
@@ -1074,5 +1077,6 @@ export function baseStack({ stack, app }: StackContext) {
   return {
     api,
     wsApi,
+    assets,
   };
 }

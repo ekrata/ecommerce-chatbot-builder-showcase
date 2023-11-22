@@ -37,7 +37,7 @@ export default function RootLayout({
       className={clsx(
         'h-full scroll-smooth bg-white antialiased',
         inter.variable,
-        lexend.variable,
+        // lexend.variable,
       )}
     > <body className="flex flex-col h-full bg-white">
         <Header />

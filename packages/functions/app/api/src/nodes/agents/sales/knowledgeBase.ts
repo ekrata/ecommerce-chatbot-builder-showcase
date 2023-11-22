@@ -1,3 +1,5 @@
+import fs from 'fs';
+import fsProm from 'fs/promises';
 import { BaseLanguageModel } from 'langchain/base_language';
 import { RetrievalQAChain } from 'langchain/chains';
 import {
@@ -13,10 +15,13 @@ import { Bedrock } from 'langchain/llms/bedrock';
 import { CharacterTextSplitter } from 'langchain/text_splitter';
 import { ChainTool } from 'langchain/tools';
 import { FaissStore } from 'langchain/vectorstores/faiss';
-import * as path from 'path';
+import { Bucket } from 'sst/node/bucket';
 import { Config } from 'sst/node/config';
-import * as url from 'url';
+import { Table } from 'sst/node/table';
 
+import { GetObjectCommand, S3, S3Client } from '@aws-sdk/client-s3';
+
+import { getAppDb } from '../../../db';
 import { toolset } from '../toolsets';
 
 // const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
@@ -35,36 +40,53 @@ import { toolset } from '../toolsets';
 //   model: 'amazon.titan-embed-text-v1', // Default value
 // });
 
-export async function loadSalesDocVectorStore(
-  FileName: string,
-  embeddings: Embeddings,
-) {
-  // your knowledge path
-  const fullpath = path.resolve(
-    `packages/functions/app/api/src/nodes/chatbots/sales/knowledge/${FileName}`,
-  );
-  const loader = new TextLoader(fullpath);
-  const docs = await loader.load();
-  // console.log(docs);
-  const splitter = new CharacterTextSplitter({
-    chunkSize: 10,
-    chunkOverlap: 0,
-  });
-  const newDocs = await splitter.splitDocuments(docs);
-  try {
-    const vectorDb = await FaissStore.fromDocuments(newDocs, embeddings);
-    return vectorDb;
-  } catch (err) {
-    console.log(err);
-  }
-}
+type ScopeParams = {
+  orgId: string;
+  lang: string;
+};
+const s3 = new S3Client({ region: Config.REGION });
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export async function setup_knowledge_base(
-  FileName: string,
+  params: ScopeParams,
   llmRetrieval: BaseLanguageModel,
   embeddings: Embeddings,
 ) {
-  const vectorStore = await loadSalesDocVectorStore(FileName, embeddings);
+  const { orgId, lang } = params;
+  const pklKey = `${orgId}/${lang}/faiss/index.pkl`;
+  const faissKey = `${orgId}/${lang}/faiss/index.faiss`;
+  if (!fs.existsSync(`/tmp/${pklKey}`)) {
+    const getPkl = new GetObjectCommand({
+      Bucket: Bucket?.['echat-app-assets'].bucketName,
+      Key: pklKey,
+    });
+    const pklObject = await s3.send(getPkl);
+    const pkl = await pklObject.Body?.transformToString();
+    if (pkl) {
+      await fsProm.writeFile(`/tmp/${pklKey}`, pkl);
+    }
+  } else if (!fs.existsSync(`/tmp/${faissKey}`)) {
+    const getFaiss = new GetObjectCommand({
+      Bucket: Bucket?.['echat-app-assets'].bucketName,
+      Key: faissKey,
+    });
+    const faissObject = await s3.send(getFaiss);
+    const faiss = await faissObject.Body?.transformToString();
+    if (faiss) {
+      await fsProm.writeFile(`/tmp/${faissKey}`, faiss);
+    }
+  }
+
+  // const faissFile = await fsProm.readFile(`/tmp/${faissKey}`);
+  // const pklFile = await fsProm.readFile(`/tmp/${pklKey}`);
+
+  const vectorStore = await FaissStore.load(
+    `${orgId}/${lang}/faiss`,
+    embeddings,
+  );
+
+  console.log('got vectorStore');
   if (vectorStore) {
     const knowledge_base = RetrievalQAChain.fromLLM(
       llmRetrieval,
@@ -80,22 +102,19 @@ export async function setup_knowledge_base(
  */
 
 export async function get_tools(
-  product_catalog: string,
+  params: ScopeParams,
   llmRetrieval: BaseLanguageModel,
   embeddings: Embeddings,
 ) {
   console.log('getting tools');
-  const chain = await setup_knowledge_base(
-    product_catalog,
-    llmRetrieval,
-    embeddings,
-  );
+  const chain = await setup_knowledge_base(params, llmRetrieval, embeddings);
+  console.log('got tools');
   if (chain) {
     const tools = [
       new ChainTool({
         chain,
-        name: 'Product Search',
-        description: toolset['Product Search'],
+        name: 'Article Search',
+        description: toolset['Article Search'],
       }),
     ];
     return tools;

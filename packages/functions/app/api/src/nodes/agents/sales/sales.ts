@@ -244,16 +244,6 @@ const embeddings = new OpenAIEmbeddings({
   openAIApiKey: await Config?.OPENAI_API_KEY,
 });
 
-const salesAgent = await SalesGPT.from_llm(
-  llm,
-  retrievalLlm,
-  embeddings,
-  false,
-  config,
-  botData,
-);
-salesAgent?.seed_agent();
-
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent) => {
     try {
@@ -267,11 +257,27 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const { type, bot, conversation, nextNode, interaction, currentNode } =
           botStateContext;
 
-        const { orgId, conversationId, botId, customerId, operatorId } =
-          conversation;
+        const {
+          orgId,
+          conversationId,
+          botId,
+          customer,
+          customerId,
+          operatorId,
+        } = conversation;
         const { id, position, data } = currentNode as BotNodeType;
 
-        const body = useJsonBody();
+        const salesAgent = await SalesGPT.from_llm(
+          llm,
+          retrievalLlm,
+          embeddings,
+          false,
+          config,
+          botData,
+          orgId,
+          customer?.locale ?? 'en',
+        );
+        salesAgent?.seed_agent();
 
         // get last message sent by bot
         const lastBotMessageIdx = conversation?.messages
@@ -412,6 +418,8 @@ export const testHandler = Sentry.AWSLambda.wrapHandler(
         false,
         config,
         botData,
+        '',
+        'en',
       );
       salesAgent?.seed_agent();
 

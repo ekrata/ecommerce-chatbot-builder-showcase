@@ -25,7 +25,7 @@ const navigation = {
   ],
   legal: [
     { name: 'Claim', href: '#' },
-    { name: 'Privacy', href: '#' },
+    { name: 'Privacy', href: '/privacy-policy' },
     { name: 'Terms', href: '#' },
   ],
   social: [
@@ -101,7 +101,7 @@ export default function Footer() {
       </h2>
       <div className="px-6 pt-16 pb-8 mx-auto max-w-7xl sm:pt-24 lg:px-8 lg:pt-32">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          <Image src={ekrataLogo} className="w-auto rounded-md shadow-2xl saturate-200 ring-2 ring-blue-400 mask mask-squircle" width={20} height={20} alt={''}></Image>
+          <Image src={ekrataLogo} className="w-auto rounded-md shadow-2xl ring-2 ring-blue-400 mask mask-squircle" width={20} height={20} alt={''}></Image>
           <div className="grid grid-cols-2 gap-8 mt-16 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>

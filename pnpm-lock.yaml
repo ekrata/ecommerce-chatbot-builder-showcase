@@ -529,8 +529,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(@pollyjs/core@6.0.6)
       sst:
-        specifier: 2.36.1
-        version: 2.36.1(@types/react@18.0.38)
+        specifier: 2.36.2
+        version: 2.36.2(@types/react@18.0.38)
       storybook:
         specifier: ^7.5.1
         version: 7.5.1
@@ -944,8 +944,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(@pollyjs/core@6.0.5)
       sst:
-        specifier: 2.36.1
-        version: 2.36.1(@types/react@18.0.38)
+        specifier: 2.36.2
+        version: 2.36.2(@types/react@18.0.38)
       storybook:
         specifier: ^7.4.0-alpha.2
         version: 7.4.0-alpha.2
@@ -33004,8 +33004,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /sst@2.36.1(@types/react@18.0.38):
-    resolution: {integrity: sha512-sEUeM3y+D2Hr9RYkcgCu/ojlBt5kbOwBldcbgLX6G1Ee0dJQh+a9emPZMG/RiC/3DtnVqERM1mxTKRVueDNbDA==}
+  /sst@2.36.2(@types/react@18.0.38):
+    resolution: {integrity: sha512-6uGJlM7/1mUYTVJxcnmqAjKkELkKtOGewLFeEwdEZRpTnN/mu9Y+K1qr96oDE8FaLKwRfx9lpOl/Ejf3GxC0qg==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0

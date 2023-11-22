@@ -1,3 +1,4 @@
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Config, EventBus, StackContext, Topic } from 'sst/constructs';
 
 export const getAllowedOrigins = (stage: string, domain: string) => {
@@ -77,6 +78,20 @@ export function paramStack({ stack, app }: StackContext) {
   const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
   const botNodeTopic = new Topic(stack, 'BotNodeTopic', {});
 
+  const faissLambdaConfig = {
+    timeout: 30,
+    nodejs: {
+      install: ['faiss-node'],
+    },
+    layers: [
+      new lambda.LayerVersion(stack, 'faiss-node', {
+        code: lambda.Code.fromAsset('layers/faiss-node'),
+      }),
+    ],
+    permissions: ['bedrock:InvokeModel'],
+    bind: [BEDROCK_AWS_REGION, OPENAI_API_KEY],
+  };
+
   return {
     appName,
     domain,
@@ -84,6 +99,7 @@ export function paramStack({ stack, app }: StackContext) {
     ddbStreamTopic,
     botNodeTopic,
     REGION,
+    faissLambdaConfig,
     STAGE,
     tableName,
     frontendUrl,

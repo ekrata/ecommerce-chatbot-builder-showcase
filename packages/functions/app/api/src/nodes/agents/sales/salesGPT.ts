@@ -175,6 +175,8 @@ export class SalesGPT extends BaseChain {
       salesperson_name: string;
     },
     data: SalesGPTData,
+    orgId: string,
+    lang: string,
   ) {
     const { use_tools, product_catalog, salesperson_name } = config;
     let sales_agent_executor;
@@ -182,7 +184,7 @@ export class SalesGPT extends BaseChain {
     if (use_tools !== undefined && use_tools === false) {
       sales_agent_executor = undefined;
     } else {
-      tools = await get_tools(product_catalog, llmRetrieval, embeddings);
+      tools = await get_tools({ orgId, lang }, llmRetrieval, embeddings);
       if (tools) {
         const prompt = new CustomPromptTemplateForTools({
           tools,
