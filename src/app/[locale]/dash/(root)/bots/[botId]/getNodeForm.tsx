@@ -6,8 +6,7 @@ import { nodeSubTypeIcons, SubNodeType } from '../nodeSubTypeIcons';
 import { NodeForm } from './collections';
 
 // render the data form of a node
-export const getNodeForm = (selectedNode: Node, renderForm: boolean = true) => {
-
+export const getNodeForm = (selectedNode: Node, renderForm: boolean = true, gradient?: string) => {
   return (
     <>
       <h5 className='flex flex-row justify-center flex-between place-items-center gap-x-2'>
@@ -22,13 +21,11 @@ export const getNodeForm = (selectedNode: Node, renderForm: boolean = true) => {
           </div>
         </div>}
         {actions.includes(selectedNode.type as any) && <div className="flex flex-row w-1 h-1 text-xl normal-case border-0 bg-info gap-x-2 btn btn-outline mask mask-squircle">
-
           <div className='text-xl'>
             {nodeSubTypeIcons[selectedNode.type as SubNodeType]}
           </div>
         </div>}
-        {selectedNode?.type}
-        {agents.includes(selectedNode.type as any) && <div className="flex flex-row w-1 h-1 text-xl normal-case border-0 bg-info gap-x-2 btn btn-outline mask-hexagon">
+        {agents.includes(selectedNode.type as any) && <div className={`flex flex-row w-1 h-1 text-xl normal-case border-0 ${gradient ? gradient : 'bg-warning'} gap-x-2 btn btn-outline mask mask-hexagon`}>
           <div className='text-xl'>
             {nodeSubTypeIcons[selectedNode.type as SubNodeType]}
           </div>

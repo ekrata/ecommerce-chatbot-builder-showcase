@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { BiChat, BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { BsChat } from 'react-icons/bs';
 import { FcImport } from 'react-icons/fc';
 
@@ -64,7 +64,7 @@ export const ChatView: FC = () => {
 
   const noData = (
     <div className='flex flex-col justify-center w-full h-screen bg-white place-items-center gap-y-1 gap-x-2'>
-      <h5 className='flex font-semibold'><BsChat />{tDash('No conversation selected')}</h5>
+      <h5 className='flex font-semibold gap-x-2 place-items-center'><BiChat className='text-xl' />{tDash('No conversation selected')}</h5>
       {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
     </div>
   )

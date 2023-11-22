@@ -6,12 +6,13 @@ import { FC, ReactNode, useState } from 'react';
 import { Controller, Resolver, useForm } from 'react-hook-form';
 import { BsEye, BsPaintBucket, BsPhone, BsSave } from 'react-icons/bs';
 import { FaDesktop, FaPaintBrush, FaSave } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 import { ConfigLiveChatAppearance, deviceVisibility } from '@/entities/configuration';
 import { Collapse } from '@/src/app/[locale]/(components)/Collapse';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import {
-    useUpdateConfigurationMut
+  useUpdateConfigurationMut
 } from '@/src/app/[locale]/(hooks)/mutations/useUpdateConfigurationMut';
 import { useConfigurationQuery } from '@/src/app/[locale]/(hooks)/queries/useConfigurationQuery';
 
@@ -51,12 +52,19 @@ export default function Page() {
         ...configurationQuery?.data?.channels, liveChat: { ...configurationQuery?.data?.channels?.liveChat, appearance: { ...data, widgetAppearance: { ...data.widgetAppearance, backgroundColor: selectedBackgroundColor }, } }
       }
     } as UpdateConfiguration
-    await updateConfigurationMut.mutateAsync([orgId, updateBody as any])
+    await toast.promise(() => Promise.all([updateConfigurationMut.mutateAsync([orgId, updateBody as any])]),
+      {
+        pending: tDash('Updating'),
+        success: tDash('Updated'),
+        error: tDash('Failed to update')
+      }, { position: 'bottom-right' })
   })
 
 
-
   const selectedButton = `ring-2 outline-1 ring-primary`
+
+
+
 
   return (
     <form className='w-full mr-20 overflow-y-scroll bg-white' onSubmit={onSubmit} >
@@ -98,22 +106,23 @@ export default function Page() {
         </div>
       </div>
       <div className='divider'></div>
-      <div className='grid grid-cols-12'>
+      <div className='grid grid-cols-12 gap-y-4'>
         <h3 className='flex w-full col-span-12 mb-6 text-xl font-semibold place-items-center gap-x-2 gap-y-2'>
           <BsEye />
           {t('appearance.Widget Visibility')}
         </h3>
-        <div className='justify-start col-span-3 place-self- text-start'>
+        {/* <div className='justify-start col-span-3 place-self- text-start'>
           {t('appearance.Widget Position')}
-        </div>
-        <div className='flex col-span-9 place-items-center gap-x-2'>
+        </div> */}
+        {/* <div className='flex col-span-9 place-items-center gap-x-2'>
           <label>{t('appearance.Left')}</label>
-          <input type="radio" className=" radio radio-primary" {...register('widgetAppearance.widgetPosition')} value='left' />
+          <input type="radio" className=" radio radio-primary" {...register('widgetAppearance.widgetPosition')} checked={getValues('widgetAppearance.widgetPosition') === 'left'} />
           <FaDesktop className='text-6xl' />
-          <input type="radio" className="radio radio-primary" {...register('widgetAppearance.widgetPosition')} value='right' />
+          <input type="radio" className="radio radio-primary"  {...register('widgetAppearance.widgetPosition')} checked={getValues('widgetAppearance.widgetPosition') === 'right' || getValues('widgetAppearance.widgetPosition') === null} />
+
           <label>{t('appearance.Right')}</label>
-        </div>
-        <div className='col-span-3'>
+        </div> */}
+        {/* <div className='col-span-3'>
           {t('appearance.Show Button Label')}
         </div>
         <div className='col-span-9'>
@@ -125,6 +134,7 @@ export default function Page() {
         <div className='col-span-9'>
           <input type="checkbox" className="toggle toggle-primary"   {...register('widgetAppearance.enableWidgetSounds')} />
         </div>
+      */}
       </div >
       <div className='grid grid-cols-12 p-1 gap-y-4' >
         <div className='col-span-3'>
@@ -149,16 +159,16 @@ export default function Page() {
         <div className='col-span-9'>
           <input type="checkbox" className="toggle toggle-primary" checked {...register('widgetVisibility.displayTheChatWhenOffline')} />
         </div>
-        <div className='col-span-3'>
+        {/* <div className='col-span-3'>
           {t('appearance.Let visitors create a Ticket when you’re offline')}
         </div>
         <div className='col-span-9'>
           <input type="checkbox" className="toggle toggle-primary" checked />
-        </div>
+        </div> */}
       </div >
       <div className='divider'></div>
       <div className='grid grid-cols-12 p-1 gap-y-4'>
-        <h3 className='flex w-full col-span-12 mb-6 text-xl font-semibold place-items-center gap-x-2 gap-y-2'>
+        {/* <h3 className='flex w-full col-span-12 mb-6 text-xl font-semibold place-items-center gap-x-2 gap-y-2'>
           <BsPhone />
           {t('appearance.Mobile Widget')}
         </h3>
@@ -173,8 +183,8 @@ export default function Page() {
             <input type="radio" className="radio radio-primary radio-sm" {...register('mobileWidget.buttonPosition')} value='right' />
             <label>{t('appearance.Right')}</label>
           </div>
-        </div>
-        <div className='col-span-3'>
+        </div> */}
+        {/* <div className='col-span-3'>
           {t('appearance.Button Size')}
         </div>
         <div className='col-span-9'>
@@ -192,7 +202,7 @@ export default function Page() {
                 </div>
               </>
             )} />
-        </div>
+        </div> */}
 
       </div>
 

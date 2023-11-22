@@ -2,16 +2,16 @@
 
 import { EntityItem } from 'electrodb';
 import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useQuery } from '@tanstack/react-query';
 
 import { Operator } from '../../../../stacks/entities/operator';
-import { useOperatorQuery } from './queries/useOperatorQuery';
+import { getOperator, useOperatorQuery } from './queries/useOperatorQuery';
 
-export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string } | null>>, () => Promise<any>]>([null, () => null, async () => null])
+export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string } | null>>]>([null, () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
 export const signoutSession = () => {
@@ -24,10 +24,20 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const router = useRouter()
   const pathname = usePathname()
   const [fetching, setFetching] = useState<boolean>(false);
+  const [operator, setOperator] = useState<EntityItem<typeof Operator> | null>(null);
   const [authToken, setAuthToken] = useLocalStorage<string>('authToken', '');
   const [sessionUserIds, setSessionUserIds] = useLocalStorage<{ orgId: string, operatorId: string } | null>('sessionUserIds', null);
-  const operatorQuery = useOperatorQuery(sessionUserIds?.orgId ?? '', sessionUserIds?.operatorId ?? '');
-  console.log(operatorQuery?.data)
+  console.log(sessionUserIds)
+
+  useEffect(() => {
+    (async () => {
+      if (sessionUserIds?.operatorId && sessionUserIds.orgId) {
+        const res = await getOperator(sessionUserIds?.orgId ?? '', sessionUserIds?.operatorId ?? '')
+        setOperator(res);
+      }
+    })()
+  }, [sessionUserIds?.orgId, sessionUserIds?.operatorId])
+
 
   const getSession = async () => {
     try {
@@ -72,20 +82,21 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     (async () => {
       await getSession()
+      console.log('refetching')
+      // const res = await operatorQuery?.refetch()
     })()
     console.log(sessionUserIds)
   }, [authToken]);
 
-  useEffect(() => {
-    console.log('refetching')
-    operatorQuery?.refetch()
-  }, [sessionUserIds?.orgId, sessionUserIds?.operatorId])
+  // useEffect(() => {
+  //   if (fetching === false) {
 
+  //   }
+  // }, [sessionUserIds?.orgId, sessionUserIds?.operatorId, fetching])
 
-
-  console.log(operatorQuery.data)
+  // console.log(operatorQuery.data)
   return (
-    <AuthContext.Provider value={[operatorQuery?.data as unknown as EntityItem<typeof Operator>, setSessionUserIds, operatorQuery.refetch]}>
+    <AuthContext.Provider value={[operator as unknown as EntityItem<typeof Operator> ?? sessionUserIds, setSessionUserIds,]}>
       {!pathname?.includes('/dash') || !fetching ?
         children :
         < div className="justify-center w-screen h-screen gap-2 bg-white ">

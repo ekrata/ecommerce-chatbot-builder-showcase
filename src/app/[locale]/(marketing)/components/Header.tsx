@@ -19,9 +19,10 @@ import { SignupModal } from './SignupModal';
 
 export function Header() {
   const t = useTranslations('marketing')
-  const [user] = useAuthContext()
+  const [sessionUser, setSessionUser, _] = useAuthContext()
+  console.log(sessionUser)
   const [scrolling, setScrolling] = useState<boolean>()
-  const [sessionUser, setSessionUser] = useAuthContext()
+  // const [sessionUser, setSessionUser] = useAuthContext()
 
   window?.addEventListener('scroll', () => {
     setScrolling(true);
@@ -110,12 +111,12 @@ export function Header() {
               <MobileNavLink hash={'pricing'} href={`/`}>Pricing</MobileNavLink>
               <hr className="m-2 border-slate-300/40" />
               <MobileNavLink href=''>
-                {user ? <div onClick={() => setSessionUser(null)}>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
+                {sessionUser?.operatorId ? <div onClick={() => setSessionUser(null)}>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
               </MobileNavLink>
-              <MobileNavLink href={user ? '/dash/conversations' : ''}>
+              <MobileNavLink href={sessionUser ? '/dash/conversations' : ''}>
                 <Button color="blue" className='bg-gradient-to-tr from-violet-500 to-orange-300 hover:animate-pulse'>
                   <span>
-                    {user ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
+                    {sessionUser?.operatorId ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
                   </span>
                 </Button>
               </MobileNavLink>
@@ -142,16 +143,16 @@ export function Header() {
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block" onClick={() => {
-              user && signoutSession()
+              sessionUser && signoutSession()
             }}>
               <NavLink href="" >
-                {user ? <div onClick={() => setSessionUser(null)}>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
+                {sessionUser?.operatorId ? <div onClick={() => setSessionUser(null)}>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
               </NavLink>
             </div>
-            <Link href={{ pathname: user ? '/dash/conversations' : '' }}>
+            <Link href={{ pathname: sessionUser ? '/dash/conversations' : '' }}>
               <Button color="blue" className='bg-gradient-to-tr from-violet-500 to-orange-300 hover:animate-pulse'>
                 <span>
-                  {user ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
+                  {sessionUser?.operatorId ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
                 </span>
               </Button>
             </Link>

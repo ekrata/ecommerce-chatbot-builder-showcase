@@ -149,7 +149,7 @@ export const EditorView: React.FC = () => {
       router.push(`/${pathname ?? ''}?articleId=${articleRes?.articleId}`)
     }
     else if (articleId && articleWithContentQuery.data?.articleId && articleWithContentQuery.data?.articleContentId) {
-      await toast.promise(() => Promise.all([updateArticleMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleId, { articleContentId: articleWithContentQuery.data?.articleContentId, category: data.category, title: data.title, subtitle: data.subtitle, status: data.status }]), updateArticleContentMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleContentId, { ...data }])]),
+      await toast.promise(() => Promise.all([updateArticleMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleId, { articleContentId: articleWithContentQuery.data?.articleContentId, category: data.category, title: data.title, subtitle: data.subtitle, status: data.status }]), updateArticleContentMut.mutateAsync([orgId, lang, articleWithContentQuery.data?.articleContentId, { ...data, htmlContent: editorHtml, content: editorHtml?.replace(/(<([^>]+)>)/ig, "") }])]),
         {
           pending: t('Updating article'),
           success: t('Updated article'),
@@ -215,74 +215,71 @@ export const EditorView: React.FC = () => {
     </div>
   )
 
-  const renderContent = useMemo(() => {
-    return (
-      < div className="w-full h-screen p-2 bg-white" >
-        {!articleId && noData}
-        {articleWithContentQuery?.isFetching ? editorSkeleton :
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='flex flex-row justify-between'>
-              <h3 className="justify-start text-2xl font-semibold justify-self-center place-items-center label-text">{t('Article')}</h3>
-              <div className='flex justify-end gap-x-2'>
-                <button type="submit" className='max-w-xs normal-case gap-x-2 btn btn-outline btn-ghost btn-sm '><BiSave className='text-xl' />{t('Save')}</button>
-                {articleId && articleId !== 'new' && <button type='button' className='max-w-sm normal-case gap-x-2 btn btn-outline btn-error btn-sm' onClick={onDelete}>{t('Delete article')}<BiTrash className="text-xl" /></button>}
-              </div>
+  return (
+    < div className="w-full h-screen p-2 bg-white" >
+      {!articleId && noData}
+      {articleWithContentQuery?.isFetching ? editorSkeleton :
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className='flex flex-row justify-between'>
+            <h3 className="justify-start text-2xl font-semibold justify-self-center place-items-center label-text">{t('Article')}</h3>
+            <div className='flex justify-end gap-x-2'>
+              <button type="submit" className='max-w-xs normal-case gap-x-2 btn btn-outline btn-ghost btn-sm '><BiSave className='text-xl' />{t('Save')}</button>
+              {articleId && articleId !== 'new' && <button type='button' className='max-w-sm normal-case gap-x-2 btn btn-outline btn-error btn-sm' onClick={onDelete}>{t('Delete article')}<BiTrash className="text-xl" /></button>}
             </div>
-            <div className="flex flex-col justify-start w-full p-2">
-              <div className="w-full max-w-lg form-cotrol">
-                <label className="label">
-                  <span className="font-semibold label-text">{t('Title')}</span>
-                </label>
-                <input {...register("title", { required: true })} className="justify-between w-full max-w-xl ml-2 font-normal normal-case bg-gray-200 border-0 rounded-lg input-bordered input-sm text-normal" placeholder={t('Title')} />
-                {errors?.title && <p>{errors?.title.message?.toString()}</p>}
-              </div>
-              <div className="w-full max-w-xl form-control">
-                <label className="label">
-                  <span className="font-semibold label-text">{t('Subtitle')}</span>
-                </label>
-                <input {...register("subtitle")} className="justify-between w-full ml-2 font-normal normal-case bg-gray-200 border-0 rounded-lg input-bordered input-sm text-normal" placeholder={t('Subtitle')} />
-              </div>
-              <div className="w-full max-w-xs form-control">
-                <label className="label">
-                  <span className="font-semibold label-text">{t('Category')}</span>
-                </label>
-                <select className="max-w-xs ml-2 select select-bordered select-sm" {...register("category", { required: true })}>
-                  <option disabled selected>{t('Category')}</option>
-                  {articleCategory.map((category) => (
-                    <option>{t(`articleCategory.${category}`)}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="w-full max-w-xs form-control">
-                <label className="label">
-                  <span className="font-semibold label-text">{t('Status')}</span>
-                </label>
-                <select className="w-full max-w-xs ml-2 select select-bordered select-sm" {...register("status", { required: true })}>
-                  <option disabled selected>{t('Status')}</option>
-                  {articleStatus.map((status) => (
-                    <option>{t(`articleStatus.${status}`)}</option>
-                  ))}
-                  <div className="tooltip" data-tip={t('Status Info')}>
-                    <button className="btn"><BsInfo /></button>
-                  </div>
-                </select>
-              </div>
-              <ReactQuill
-                theme={'snow'}
-                onChange={(html: string) => setEditorHtml(html)}
-                value={editorHtml}
-                modules={modules}
-                formats={formats}
-                bounds={'.app'}
-                className='h-[540px] bottom-0 max-h-screen min-h-full mt-5'
-                placeholder={'Write something...'
-                }
-              />
+          </div>
+          <div className="flex flex-col justify-start w-full p-2">
+            <div className="w-full max-w-lg form-cotrol">
+              <label className="label">
+                <span className="font-semibold label-text">{t('Title')}</span>
+              </label>
+              <input {...register("title", { required: true })} className="justify-between w-full max-w-xl ml-2 font-normal normal-case bg-gray-200 border-0 rounded-lg input-bordered input-sm text-normal" placeholder={t('Title')} />
+              {errors?.title && <p>{errors?.title.message?.toString()}</p>}
             </div>
-          </form>}
-      </div >
-    )
-  }, [articleId, articleWithContentQuery?.dataUpdatedAt])
+            <div className="w-full max-w-xl form-control">
+              <label className="label">
+                <span className="font-semibold label-text">{t('Subtitle')}</span>
+              </label>
+              <input {...register("subtitle")} className="justify-between w-full ml-2 font-normal normal-case bg-gray-200 border-0 rounded-lg input-bordered input-sm text-normal" placeholder={t('Subtitle')} />
+            </div>
+            <div className="w-full max-w-xs form-control">
+              <label className="label">
+                <span className="font-semibold label-text">{t('Category')}</span>
+              </label>
+              <select className="max-w-xs ml-2 select select-bordered select-sm" {...register("category", { required: true })}>
+                <option disabled selected>{t('Category')}</option>
+                {articleCategory.map((category) => (
+                  <option>{t(`articleCategory.${category}`)}</option>
+                ))}
+              </select>
+            </div>
+            <div className="w-full max-w-xs form-control">
+              <label className="label">
+                <span className="font-semibold label-text">{t('Status')}</span>
+              </label>
+              <select className="w-full max-w-xs ml-2 select select-bordered select-sm" {...register("status", { required: true })}>
+                <option disabled selected>{t('Status')}</option>
+                {articleStatus.map((status) => (
+                  <option>{t(`articleStatus.${status}`)}</option>
+                ))}
+                <div className="tooltip" data-tip={t('Status Info')}>
+                  <button className="btn"><BsInfo /></button>
+                </div>
+              </select>
+            </div>
+            <ReactQuill
+              theme={'snow'}
+              onChange={(html: string) => setEditorHtml(html)}
+              value={editorHtml}
+              modules={modules}
+              formats={formats}
+              bounds={'.app'}
+              className='h-[540px] bottom-0 max-h-screen min-h-full mt-5'
+              placeholder={'Write something...'
+              }
+            />
+          </div>
+        </form>}
+    </div >
+  )
 
-  return <div>{renderContent}</div>
 }

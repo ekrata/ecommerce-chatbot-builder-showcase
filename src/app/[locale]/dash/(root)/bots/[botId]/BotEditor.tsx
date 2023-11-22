@@ -24,7 +24,9 @@ import ReactFlow, {
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
-import { actions, botCategory, BotNodeType, conditions, triggers } from '@/entities/bot';
+import {
+  actions, botCategory, BotNodeEvent, BotNodeType, conditions, triggers
+} from '@/entities/bot';
 import {
   Action, Agent, Condition, OperatorInteractionTrigger, ShopifyAction, ShopifyCondition,
   VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
@@ -37,6 +39,7 @@ import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { OutputFieldKey, OutputFieldsKeys } from '../outputFields';
+import { agentGradients } from './agentGradients';
 import {
   actionNode, agentNode, conditionNode, edgeTypes, nodeTypes, renderConnectionLine, triggerNode
 } from './collections';
@@ -404,7 +407,7 @@ export const BotEditor: React.FC = () => {
   const renderNodeForm = useCallback(() => {
     if (selectedFormNode) {
       const selectedNode = selectedFormNode
-      return getNodeForm(selectedNode)
+      return getNodeForm(selectedNode, undefined, selectedNode?.type ? agentGradients[selectedNode.type as BotNodeEvent] ?? '' : undefined)
     }
   }, [selectedFormNode])
 
@@ -477,13 +480,13 @@ export const BotEditor: React.FC = () => {
                   </Panel> */}
                 <Controls />
                 <Background variant={BackgroundVariant.Cross} className='-z-100' />
-                <Panel position={'top-right'} className='right-0 z-10 justify-end'>
-                  <div className='right-0 flex flex-row justify-end place-items-center gap-x-4'>
-                    <label className="cursor-pointer label gap-x-2">
+                <Panel position={'top-right'} className='right-0 justify-end z-1'>
+                  <div className='right-0 flex flex-row justify-end w-full place-items-center gap-x-4'>
+                    <label className="w-full cursor-pointer label gap-x-2">
                       {/* <span className="label-text">{tDash('Active')}</span> */}
-                      <input type="text" className="w-full max-w-xs bg-gray-200 input input-sm"   {...register('name')} onChange={() => null} />
+                      <input type="text" className="w-full bg-gray-200 input input-sm"   {...register('name')} onChange={() => null} />
                     </label>
-                    <label className="cursor-pointer label gap-x-2">
+                    <label className="w-full cursor-pointer label gap-x-2">
                       <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm" {...register('category')} >
                         {botCategory?.map((item) =>
                           <option key={item}>{item}</option>
@@ -491,7 +494,7 @@ export const BotEditor: React.FC = () => {
                       </select>
                     </label>
                     <div className="form-control">
-                      <label className="cursor-pointer label gap-x-2">
+                      <label className="w-full cursor-pointer label gap-x-2">
                         <span className="label-text">{getValues()?.active ? tDash('Active') : tDash('Disabled')}</span>
                         <input type="checkbox" className="toggle toggle-info" {...register('active')} />
                       </label>

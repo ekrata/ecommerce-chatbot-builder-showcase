@@ -13,7 +13,8 @@ import { QueryKey } from '../queries';
  * @param {string} orgId
  * @returns {unknown}
  */
-export const getOperator = async (orgId: string, operatorId: string) => {
+export const getOperator = async (orgId?: string, operatorId?: string) => {
+  console.log(orgId, operatorId)
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/operators/${operatorId}`
   );
@@ -33,14 +34,13 @@ export const getOperator = async (orgId: string, operatorId: string) => {
  * @param {string} operatorId 
  * @returns {*}
  */
-export const useOperatorQuery = (orgId: string, operatorId: string) => {
-  return useQuery<EntityItem<typeof Operator>[]>({
-    queryKey: [orgId, QueryKey.operator],
+export const useOperatorQuery = (orgId?: string, operatorId?: string) => {
+  return useQuery<EntityItem<typeof Operator>>({
+    queryKey: [QueryKey.operator, orgId, operatorId],
     queryFn: async () => {
-      const data = await getOperator(orgId, operatorId) ?? []
-      console.log(data)
-      return data
-    },
-    enabled: !!orgId && !!orgId,
+      console.log('hi')
+      return await getOperator(orgId, operatorId)
+    }
+    // enabled: !!orgId && !!operatorId
   })
 }

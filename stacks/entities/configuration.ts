@@ -156,8 +156,8 @@ export const Configuration = new Entity({
                   default: {},
                   properties: {
                     displayWidget: {
-                      type: widgetPosition,
-                      default: 'right',
+                      type: 'boolean',
+                      default: true,
                     },
                     devices: {
                       type: deviceVisibility,

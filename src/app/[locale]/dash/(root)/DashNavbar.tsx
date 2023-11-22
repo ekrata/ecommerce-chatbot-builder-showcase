@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import Image from 'next/image';
 import Link from 'next/link';
 import { BiHelpCircle } from 'react-icons/bi';
 import { BsFillPeopleFill, BsRobot } from 'react-icons/bs';
@@ -14,6 +15,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { useConversationItemsQuery } from '../../(hooks)/queries/useConversationItemsQuery';
+import ekrataLogo from '../../../../../public/graphics/ekrataLogo.png';
 import { useDashStore } from './(actions)/useDashStore';
 
 export default function DashNavbar() {
@@ -25,13 +27,13 @@ export default function DashNavbar() {
   const conversationItemsQuery = useConversationItemsQuery(conversationListFilter)
 
 
-  const unreadMessages = conversationItemsQuery?.data?.pages?.[0]?.data?.reduce((prev, curr) => {
+  const unreadMessages = conversationItemsQuery?.data?.data?.reduce((prev, curr) => {
     const lastMessage = curr?.messages?.slice(-1)[0]
     if (readMessages[`${curr?.conversationId}+${lastMessage?.messageId}`] || (lastMessage.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId)) {
       return prev - 1
     }
     return prev
-  }, conversationItemsQuery?.data?.pages?.[0]?.data?.length ?? 0)
+  }, conversationItemsQuery?.data?.data?.length ?? 0)
 
   return (
     <ul className='z-20 flex flex-col text-gray-400 normal-case bg-black place-items-center hover:bg-opacity-0'>
@@ -42,7 +44,8 @@ export default function DashNavbar() {
           className='flex btn btn-ghost'
         >
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('home')}>
-            <MdOutlineDashboard className='w-6 h-6' />
+            <Image src={ekrataLogo} alt='Ekrata logo' className='max-w-none' width={32} height={40} />
+            {/* <MdOutlineDashboard className='w-6 h-6' /> */}
           </div>
         </Link>
       </li>
@@ -55,7 +58,7 @@ export default function DashNavbar() {
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('conversations')}>
             <div className='indicator'>
 
-              {unreadMessages && unreadMessages > 0 &&
+              {unreadMessages != null && unreadMessages > 0 &&
                 <span className='-m-1 text-xs border-0 rounded-md indicator-item badge bg-gradient-to-tr from-violet-500 to-orange-300 '>
                   {unreadMessages}
                 </span>

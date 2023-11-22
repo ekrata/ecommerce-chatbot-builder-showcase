@@ -91,7 +91,7 @@ export const actionNode = (value: Actions) => (
 )
 
 export const agentNode = (value: Agent, backgroundGradient: Gradient) => (
-  <a className={`flex flex-row w-16 h-16 text-3xl normal-case border-0  ${backgroundGradient} pointer-grab gap-x-2 btn btn-outline mask mask-squircle`} onDragStart={(event) => onDragStart(event, value as NodeTypeKey)} draggable>
+  <a className={`flex flex-row w-16 h-16 text-3xl normal-case border-0  ${backgroundGradient} pointer-grab gap-x-2 btn btn-outline mask mask-hexagon`} onDragStart={(event) => onDragStart(event, value as NodeTypeKey)} draggable>
     {nodeSubTypeIcons[value as Agent]}
   </a>
 )

@@ -2,7 +2,7 @@
 
 
 import { useTranslations } from 'next-intl';
-import { FC, PropsWithChildren, useRef } from 'react';
+import { FC, PropsWithChildren, useRef, useState } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import { useOnClickOutside } from 'usehooks-ts';
 import * as yup from 'yup';
@@ -34,6 +34,7 @@ interface Props {
 export const SignupModal: FC<PropsWithChildren<Props>> = ({ leftButtonLabel, rightButtonLabel, leftButtonAction, rightButtonAction, leftButtonColor, rightButtonColor, children, actionLabel }) => {
   const t = useTranslations('marketing')
   const tDash = useTranslations('dash')
+  const [pseudoLoader, setPseduoLoader] = useState<boolean>(false)
   const dialogRef = useRef(null);
   useOnClickOutside(dialogRef, () => {
     (document?.getElementById('signup_modal') as HTMLDialogElement)?.close();
@@ -53,8 +54,9 @@ export const SignupModal: FC<PropsWithChildren<Props>> = ({ leftButtonLabel, rig
           <div className='flex flex-row normal-case gap-x-4'>
           </div>
           <Button className='gap-x-2' href={`${process.env.NEXT_PUBLIC_APP_API_URL}/auth/google/authorize`} rel="noreferrer">
-            <FaGoogle />
+            <FaGoogle onClick={() => setPseduoLoader(true)} className={`${pseudoLoader && 'animate-spinner'}`} />
             {t('Sign up with google')}
+            <div ></div>
           </Button>
         </form>
         <form method="dialog" className="modal-backdrop">

@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FC, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { BiChevronLeft, BiChevronRight, BiTime } from 'react-icons/bi';
+import { BiChat, BiChevronLeft, BiChevronRight, BiTime } from 'react-icons/bi';
 import { BsChat, BsGlobe, BsPerson, BsTagsFill } from 'react-icons/bs';
 import { FaLanguage } from 'react-icons/fa';
 import { GoBrowser } from 'react-icons/go';
@@ -25,8 +25,9 @@ import { CustomerAvatar } from './CustomerAvatar';
 
 type InfoTabs = 'Profile' | 'Actions' | 'Visited Pages' | 'Notes';
 
-const visitedPagesTabLabel = 'Visited Pages';
 const profile = 'Profile';
+const actionLabel = 'Actions';
+const visitedPagesTabLabel = 'Visited Pages';
 const notesTab = 'Notes';
 
 const fetchingSkeleton = (
@@ -60,7 +61,7 @@ export const CustomerInfoView: FC = () => {
   const visitsQuery = useVisitsQuery(orgId, '', conversationItem?.customerId)
   const noData = (
     <div className='flex flex-col justify-center w-full h-screen bg-white place-items-center gap-y-1'>
-      <h5 className='flex font-semibold'><BsChat />{tDash('conversations', { count: 0 })}</h5>
+      {/* <h5 className='flex font-semibold gap-x-2 place-items-center'><BiChat className='text-xl' />{tDash('No conversation selected')}</h5> */}
       {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
     </div>
   )
@@ -115,17 +116,17 @@ export const CustomerInfoView: FC = () => {
           </button>
           <button
             type='button'
-            data-testid='visited-pages-button'
-            className={`tab tab-bordered tab-xs  ${currentTab === 'Visited Pages' && tabActive
+            data-testid='actios-button'
+            className={`tab tab-bordered tab-xs  ${currentTab === actionLabel && tabActive
               }`}
-            onClick={() => setCurrentTab(visitedPagesTabLabel)}
+            onClick={() => setCurrentTab(actionLabel)}
           >
             {tDash('bots.Actions')}
           </button>
           <button
             type='button'
             data-testid='visited-pages-button'
-            className={`tab tab-bordered tab-xs  ${currentTab === 'Visited Pages' && tabActive
+            className={`tab tab-bordered tab-xs  ${currentTab === visitedPagesTabLabel && tabActive
               }`}
             onClick={() => setCurrentTab(visitedPagesTabLabel)}
           >

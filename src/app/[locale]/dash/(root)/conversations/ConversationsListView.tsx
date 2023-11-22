@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { BiChevronRight } from 'react-icons/bi';
+import { BiChat, BiChevronRight } from 'react-icons/bi';
 import { BsChat } from 'react-icons/bs';
 import { FaFilterCircleXmark } from 'react-icons/fa6';
 import { FcSearch } from 'react-icons/fc';
@@ -52,8 +52,8 @@ export const ConversationsListView: FC = () => {
   const conversationId = useSearchParams()?.get('conversationId')
 
 
-
   const [operatorSession] = useAuthContext();
+  console.log(operatorSession)
   // console.log(operatorSession?.orgId)
   const locale = useLocale();
   const [page, setPage] = useState<number>(0)
@@ -75,7 +75,7 @@ export const ConversationsListView: FC = () => {
 
   const noData = (
     <div className='flex flex-col justify-center h-screen place-items-center gap-y-1'>
-      <h5 className='flex font-semibold'><BsChat />{t('conversations', { count: 0 })}</h5>
+      <h5 className='flex font-semibold gap-x-2 place-items-center'><BiChat className='text-xl' />{t('conversations', { count: 0 })}</h5>
       {/* <p className='flex text-xs text-neutral-400'>{`${t('')} `}<p className='ml-1 text-base-content'>{` '${phrase}'`}</p></p> */}
     </div>
   )
@@ -92,7 +92,7 @@ export const ConversationsListView: FC = () => {
         <ul className="w-full h-screen animate-fade-left">
           {conversationItems?.data?.data?.map((item) => {
             if (item?.conversationId) {
-              return <li key={item?.conversationId} className={`flex justify-between overflow-clip    -16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0 border-b-[1px] hover:border-b-[1px] hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
+              return <li key={item?.conversationId} className={`flex justify-between overflow-clip    -16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0   hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
                 <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
               </li>
             }
@@ -113,7 +113,7 @@ export const ConversationsListView: FC = () => {
         <div
           className={`bg-white flex  normal-case border-b-[1px] flex-col  place-items-center animated-flip-down w-full justify-center  text-lg font-semibold gap-x-2   `}
         >
-          <div className='z-10 flex justify-end w-full shadow-lg place-items-center animate-fade-down'>
+          <div className='z-10 flex justify-end w-full shadow place-items-center animate-fade-down'>
             <div className='flex place-items-center gap-x-0'>
               <button className=' btn btn-ghost disabled:bg-transparent place-items-center' disabled={conversationListFilter?.topic == undefined && conversationListFilter?.status == undefined && conversationListFilter?.channel == undefined} onClick={() =>
                 setConversationListFilter({

@@ -23,6 +23,7 @@ import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { OutputFieldsKeys } from '../../../outputFields';
+import { agentGradients } from '../../agentGradients';
 import { useNodeContext } from '../../BotEditor';
 import { actionNode, agentNode, defaultOutputs, successFailureOutput } from '../../collections';
 import { NodeWrapper } from '../NodeWrapper';
@@ -44,7 +45,7 @@ const schema = z.object({
   companyBusiness: z.string().min(40),
   companyValues: z.string()?.min(40),
   conversationPurpose: z.string()?.min(10),
-  toolset: z.object({ active: z.boolean().optional() })?.array(),
+  toolset: z.object({ name: z.string(), description: z.string(), active: z.boolean().optional() })?.array(),
   outputs: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
     message: 'Each option must be unique.',
   }),
@@ -71,7 +72,7 @@ export const SalesBotAgentNode: FC<NodeProps> = (node) => {
   return (
     <div className={`w-16  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
-      <NodeWrapper nodeElement={agentNode(type, 'bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700')} nodeName={tNodes(`Agent.SalesBotAgent`)} hasErrors={hasErrors} />
+      <NodeWrapper nodeElement={agentNode(type, agentGradients?.['Sales Agent'] ?? '')} nodeName={tNodes(`Agent.SalesBotAgent`)} hasErrors={hasErrors} />
       {createTargetHandles(node, nodeEdges, outputKey)}
     </div >
   );
@@ -134,12 +135,14 @@ export const SalesBotAgentForm: React.FC<Props> = ({ node }) => {
 
   useEffect(() => {
     const apiValues: FormValues = node?.data
+    console.log('apivalues', apiValues)
     setValue('name', apiValues.name)
     setValue('businessRole', apiValues.businessRole)
     setValue('companyName', apiValues.companyName)
     setValue('companyBusiness', apiValues.companyBusiness)
     setValue('companyValues', apiValues.companyValues)
     setValue('conversationPurpose', apiValues.conversationPurpose)
+    setValue('toolset', apiValues.toolset)
   }, [node])
 
   useEffect(() => {
@@ -148,7 +151,6 @@ export const SalesBotAgentForm: React.FC<Props> = ({ node }) => {
 
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
-    console.log(errors)
     updateNodes(values, node, nodes, setNodes)
   }
 
@@ -201,14 +203,14 @@ export const SalesBotAgentForm: React.FC<Props> = ({ node }) => {
           <span className="label-text">{tForm('Tools')}</span>
         </label>
         < div className='flex flex-row justify-between place-items-center gap-x-2' >
-          <input type="checkbox" className="checkbox checkbox-info checkbox-sm"  {...register(`toolset.0.active`)} />
+          <input type="checkbox" onClick={() => onSubmit(getValues())} className="checkbox checkbox-info checkbox-sm"  {...register(`toolset.0.active`)} checked={fields?.[0]?.active} />
           <label className="label">
             <span className="text-xs label-text">{tDash(`AgentToolNames.Product Search`) as string}</span>
             <span className="text-xs label-text">{tDash(`AgentToolDescriptions.Product Search`) as string}</span>
           </label>
         </div>
         < div className='flex flex-row justify-between place-items-center gap-x-2' >
-          <input type="checkbox" className="checkbox checkbox-info checkbox-sm"  {...register(`toolset.1.active`)} />
+          <input type="checkbox" onClick={() => onSubmit(getValues())} className="checkbox checkbox-info checkbox-sm"  {...register(`toolset.1.active`)} checked={fields?.[1]?.active} />
           <label className="text-xs label">
             <span className="text-xs label-text">{tDash(`AgentToolNames.Document Search`) as string}</span>
             <span className="text-xs label-text">{tDash(`AgentToolDescriptions.Document Search`) as string}</span>
