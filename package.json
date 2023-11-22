@@ -6,6 +6,7 @@
     "dev": "sst bind next dev",
     "seed-dev": "sst bind ts-node populate.ts && sst bind next dev",
     "seed": "sst bind ts-node populate.ts",
+    "create-vectors": "sst bind ts-node create-vectors.ts",
     "dense-seed": "sst bind ts-node densePopulate.ts",
     "stripe-create": "sst bind --stage local ts-node packages/functions/app/api/src/stripe/initStripe.ts",
     "remove-local-db": "sst remove dbStack --stage local",
