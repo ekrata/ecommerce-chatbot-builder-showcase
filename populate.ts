@@ -11,10 +11,9 @@ http.post(`/util/small-seed-test-db`).then((data) => {
     'Populated with entities: ',
     data?.data?.[0]?.customers?.[0]?.conversations,
   );
+  // http.post(`nodes/create-article-vector-store`).then((data) => {
+  //   console.log('done');
+  //   return data;
+  // });
   // data.data as MockOrgIds[];
-});
-
-http.post(`nodes/create-article-vector-store`).then((data) => {
-  console.log('done');
-  return data;
 });

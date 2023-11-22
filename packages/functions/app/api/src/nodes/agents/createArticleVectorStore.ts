@@ -37,21 +37,22 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         orgs = [...orgs, ...orgRes?.data];
       } while (cursor != null);
 
+      console.log(orgs);
       const articleContents = await Promise.all(
         orgs.map(async (org) => {
+          console.log(org);
           return await Promise.all(
             await Promise.all(
               languages.map(async ([key, lang]) => {
-                return {[`${lang}`]: await Promise.all([
-                  limit(() =>
-                    appDb.entities.articleContents.query
-                      .byOrg({
-                        orgId: org?.orgId,
-                        lang,
-                      })
-                      .go({ limit: 200 }),
-                  ),
-                ])}
+                const articleContents =
+                  await appDb.entities.articleContents.query
+                    .byOrg({
+                      orgId: org?.orgId,
+                      lang,
+                    })
+                    .go({ limit: 200 });
+                console.log(articleContents);
+                return articleContents;
               }),
             ),
           );
@@ -64,45 +65,75 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       });
       // const newDocs = await splitter.splitDocuments(docs);
       console.log('splitting');
-      const docCollage = articleContents.map((orgArticleContents) => {
-        return docs = await splitter.createDocuments(
-        await articleContents?.map((articleContent) => {
-          .map((articleContent) => articleContent.content),
-        })
-      )
-      }       
-
-
-
+      // iterate over orgs
+      const docs = await Promise.all(
+        articleContents.map((articleContentLangs) => {
+          console.log(articleContentLangs);
+          return Promise.all(
+            articleContentLangs.map(async (articleContentsByLang) => {
+              if (articleContentsByLang?.length) {
+                console.log(articleContentsByLang);
+                return {
+                  [`${articleContentsByLang?.[0]?.lang}`]: {
+                    orgId: articleContentsByLang?.[0].orgId,
+                    lang: articleContentsByLang?.[0].lang,
+                    docs: await splitter.createDocuments(
+                      articleContentsByLang.map((articleContent) => {
+                        return articleContent.content;
+                      }),
+                    ),
+                  },
+                };
+              }
+            }),
+          );
+        }),
+      );
 
       console.log('docs');
-
-      const vectorStore = await FaissStore.fromDocuments(
-        docs,
-        new OpenAIEmbeddings({ openAIApiKey: Config?.OPENAI_API_KEY }),
+      await Promise.all(
+        docs.map(async (orgDocs) => {
+          return await Promise.all(
+            orgDocs.map(async (langDocs) => {
+              await Promise.all(
+                Object.entries(langDocs).map(async ([_, docsByLang]) => {
+                  const { orgId, lang, docs } = docsByLang;
+                  const dir = `/tmp/${orgId}/${lang}/faiss`;
+                  const vectorStore = await FaissStore.fromDocuments(
+                    docs,
+                    new OpenAIEmbeddings({
+                      openAIApiKey: Config?.OPENAI_API_KEY,
+                    }),
+                  );
+                  console.log('got vectorstore');
+                  await vectorStore.save(dir);
+                  const faissIndex = new PutObjectCommand({
+                    ACL: 'public-read',
+                    Bucket: Bucket?.['echat-app-assets'].bucketName,
+                    Key: `${dir}/index.faiss`,
+                    Body: await fs.readFile(`${dir}/index.faiss`),
+                  });
+                  const pklIndex = new PutObjectCommand({
+                    ACL: 'public-read',
+                    Bucket: Bucket?.['echat-app-assets'].bucketName,
+                    Key: `${dir}/index.pkl`,
+                    Body: await fs.readFile(`${dir}/index.pkl`),
+                  });
+                  console.log('uploading');
+                  await s3.send(faissIndex);
+                  await s3.send(pklIndex);
+                  return {
+                    statusCode: 200,
+                    body: `Succesfully updated the article store for ${orgId} ${lang}`,
+                  };
+                }),
+              );
+            }),
+          );
+        }),
       );
-      console.log('got vectorstore');
-      await vectorStore.save('/tmp');
-      const faissIndex = new PutObjectCommand({
-        ACL: 'public-read',
-        Bucket: Bucket?.['echat-app-assets'].bucketName,
-        Key: `${orgId}/${lang}/faiss/index.faiss`,
-        Body: await fs.readFile('/tmp/index.faiss'),
-      });
-      const pklIndex = new PutObjectCommand({
-        ACL: 'public-read',
-        Bucket: Bucket?.['echat-app-assets'].bucketName,
-        Key: `${orgId}/${lang}/faiss/index.pkl`,
-        Body: await fs.readFile('/tmp/index.pkl'),
-      });
-      console.log('uploading');
-      await s3.send(faissIndex);
-      await s3.send(pklIndex);
-      return {
-        statusCode: 200,
-        body: `Succesfully updated the article store for ${orgId} ${lang}`,
-      };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,

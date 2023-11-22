@@ -11,15 +11,32 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
 
-import { ArticleCategory, articleStatus } from '../../../../../../stacks/entities/article';
-import { BotEdgeType, BotNodeType } from '../../../../../../stacks/entities/bot';
 import {
-    conversationChannel, conversationStatus, conversationTopic
+  ArticleCategory,
+  articleStatus,
+} from '../../../../../../stacks/entities/article';
+import {
+  BotEdgeType,
+  BotNodeType,
+} from '../../../../../../stacks/entities/bot';
+import {
+  conversationChannel,
+  conversationStatus,
+  conversationTopic,
 } from '../../../../../../stacks/entities/conversation';
 import {
-    CreateArticle, CreateArticleContent, CreateBot, CreateBotTemplate, CreateConfiguration,
-    CreateConversation, CreateCustomer, CreateMessage, CreateOperator, CreateOrg, CreateTranslation,
-    CreateVisit
+  CreateArticle,
+  CreateArticleContent,
+  CreateBot,
+  CreateBotTemplate,
+  CreateConfiguration,
+  CreateConversation,
+  CreateCustomer,
+  CreateMessage,
+  CreateOperator,
+  CreateOrg,
+  CreateTranslation,
+  CreateVisit,
 } from '../../../../../../stacks/entities/entities';
 import { senderType } from '../../../../../../stacks/entities/message';
 import * as botTemplates from '../botTemplates/templates';
@@ -205,11 +222,9 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     }),
   );
 
-  const res = await fetch(
-    `${Api.appApi.url}/nodes/create-article-vector-store`,
-  );
-
-  console.log(res);
+  // const res = await fetch(
+  //   `${Api.appApi.url}/nodes/create-article-vector-store`,
+  // );
 
   // rearrange to select bots
   const bots = [
