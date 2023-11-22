@@ -47,10 +47,10 @@ export const ChatScreen: FC = ({ }) => {
 
   console.log(conversationItem?.operator?.name)
   return (
-    <div className="flex justify-between w-full h-full rounded-3xl animate-fade-left">
+    <div className="flex justify-between w-full h-full rounded-3xl ">
       <div className="flex flex-col w-full h-full justify-stretch">
         <div
-          className={`background flex place-items-center w-full justify-start rounded-t-lg text-xl font-semibold p-2 gap-x-2    text-white`}
+          className={`background flex place-items-center w-full  justify-start rounded-t-lg text-xl font-semibold p-2 gap-x-2    text-white`}
         >
           <MinimiseMobileButton />
           {configuration.data && <DynamicBackground configuration={configuration.data as any} />}

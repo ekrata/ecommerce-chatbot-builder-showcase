@@ -9,14 +9,14 @@ import { Embeddings } from 'langchain/dist/embeddings/base';
 import { Bedrock } from 'langchain/llms/bedrock';
 import { ChainValues } from 'langchain/schema';
 
+import { CustomPromptTemplateForTools } from './customPromptTemplateTools';
+import { get_tools } from './knowledgeBase';
+import { SALES_AGENT_TOOLS_PROMPT } from './prompt';
 import {
   CONVERSATION_STAGES,
   loadSalesConversationChain,
   loadStageAnalyzerChain,
-} from './';
-import { CustomPromptTemplateForTools } from './customPromptTemplateTools';
-import { get_tools } from './knowledgeBase';
-import { SALES_AGENT_TOOLS_PROMPT } from './prompt';
+} from './sales';
 import { SalesConvoOutputParser } from './salesOutputParser';
 
 export type SalesGPTData = {

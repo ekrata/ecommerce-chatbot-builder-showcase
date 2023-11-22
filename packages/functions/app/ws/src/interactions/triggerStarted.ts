@@ -30,13 +30,10 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent) => {
     try {
-      console.log(event);
       const { Records } = event;
       for (const record of Records) {
-        console.log(record?.body);
         const interactionData = (record?.body as unknown as SNSMessage)
           ?.Message as unknown as EntityItem<typeof Interaction>;
-        console.log(interactionData);
         if (!interactionData) {
           return {
             statusCode: 500,
@@ -53,7 +50,6 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           .get({ orgId, customerId: customerId })
           .go();
 
-        console.log(customer);
         if (customer?.data) {
           await postToConnection(
             appDb,
@@ -71,7 +67,6 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         }
       }
     } catch (err) {
-      console.log('err');
       console.log(err);
       Sentry.captureException(err);
       return { statusCode: 500, body: JSON.stringify(err) };

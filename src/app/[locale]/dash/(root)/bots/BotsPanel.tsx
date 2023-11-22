@@ -79,7 +79,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
   return (
     < div className="flex flex-col justify-between w-full h-full p-2 bg-white " >
       <div className='flex flex-row justify-between'>
-        <h2 className='text-2xl font-semibold'>{title === 'All' ? tDash('All') : tDash(`bots.categories.${title}`)}</h2>
+        <h2 className='text-xl font-semibold'>{title === 'All' ? tDash('All') : tDash(`bots.categories.${title}`)}</h2>
         <div className="flex gap-x-2" >
           <button className="flex normal-case btn btn-sm btn-outline gap-x-2" onClick={onCreate}>
             <BsRobot />

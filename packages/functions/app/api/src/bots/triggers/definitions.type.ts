@@ -18,11 +18,6 @@ export enum VisitorPageInteractionTrigger {
   VisitorOpensSpecificPage = 'Visitor opens a specific page',
 }
 
-export enum Chatbots {
-  SalesBot = 'Sales Bot',
-  QuestionAndAnswerBot = 'Question and Answer Bot',
-}
-
 export enum OperatorInteractionTrigger {
   OperatorDoesNotRespondDuringTheConversation = "Operator doesn't respond during the conversation",
   OperatorStarted = 'Operator starts the chatbot',
@@ -100,6 +95,7 @@ export const nodeType = {
   ...ShopifyAction,
   ...Action,
   ...ShopifyCondition,
+  ...Agent,
 };
 
 export type NodeTypeKey = keyof typeof nodeType;

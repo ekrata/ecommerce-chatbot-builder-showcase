@@ -11,7 +11,6 @@ import { Config } from 'sst/node/config';
 import { useLocalStorage, useReadLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
-import { InteractionHistory } from '@/entities/interaction';
 import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -42,13 +41,15 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   children,
   mockWsUrl,
 }) => {
+  const orgId = useSearchParams().get('orgId') ?? ''
   const tWidget = useTranslations('chat-widget')
   const org = useOrgQuery()
-  // const searchParams = useSearchParams()
-  // const botId = searchParams.get('botId')
+  // const org = useOrgQuery(orgId)
 
+  // if (org?.data?.isWidgetDown) {
 
-  const orgId = org?.data?.orgId ?? ''
+  // }
+
 
   const { chatWidget: { widgetVisibility, setWidgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
@@ -63,6 +64,9 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   const createCustomerMut = useCreateCustomerMut(orgId, customerQuery?.data?.customerId ?? '');
 
 
+
+
+
   useEffect(() => {
     createVisitMut.mutateAsync([orgId, visitId, { customerId: customerQuery?.data?.customerId ?? '', orgId: orgId, visitId: visitId, url: window.location.href, at: Date.now() }])
   }, [window.location.href])
@@ -73,7 +77,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
 
   // if new customer created, create a first site visit interaction 
   useEffect(() => {
-    if (orgId) {
+    if (orgId && ReadyState.OPEN) {
       createInteractionMut.mutateAsync([orgId, { orgId: orgId, visitId: '', operatorId: '', botId: '', customerId: customerQuery?.data?.customerId, channel: 'website', status: 'unassigned', createdAt: Date.now(), type: Triggers.FirstVisitOnSite, lastTriggered: interactionHistory?.FirstVisitOnSite }])
     }
   }, [createCustomerMut.isSuccess && createCustomerMut?.data, orgId])
@@ -136,7 +140,7 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
                 // customerQuery.remove()
                 setInteractionHistory({})
                 queryClient.clear()
-                parent.location.reload()
+                window.location.reload()
               }}>
                 {tWidget('resetVisitor')}</button>
             </div>

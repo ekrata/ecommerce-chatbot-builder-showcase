@@ -26,6 +26,7 @@ export const getNextNodes = (
 };
 
 export const findNextNodes = (botStateContext: BotStateContext) => {
+  console.log(botStateContext);
   const { currentNode, bot, messages, conversation } = botStateContext;
   const { orgId } = conversation;
   const customerId =

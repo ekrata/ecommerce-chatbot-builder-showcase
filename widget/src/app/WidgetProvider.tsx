@@ -57,10 +57,11 @@ export const WidgetProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQue
     //   }
     // }, [buster])
     return (
-      <>
+      <div suppressHydrationWarning>
         <PersistQueryClientProvider
           client={queryClient}
           persistOptions={{ persister }}
+
         >
           {!isRestoring &&
             <WidgetSockerProvider>
@@ -68,7 +69,7 @@ export const WidgetProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQue
             </WidgetSockerProvider>
           }
         </PersistQueryClientProvider>
-      </>
+      </div>
     );
 
 

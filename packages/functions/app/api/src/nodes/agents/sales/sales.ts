@@ -24,7 +24,8 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
-import { BotNodeType } from '@/entities/bot';
+import { botNodeEvent, BotNodeType } from '@/entities/bot';
+import { SalesBotAgentData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/agents/SalesBotAgent';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
@@ -227,6 +228,32 @@ const botData: SalesGPTData = {
 
 // const client = new BedrockRuntime();
 
+// reuse between invokes
+console.log('IN SALES AGENT');
+const llm = new ChatOpenAI({
+  temperature: 0.9,
+  openAIApiKey: await Config?.OPENAI_API_KEY,
+});
+console.log(llm.modelName);
+
+const retrievalLlm = new ChatOpenAI({
+  temperature: 0,
+  openAIApiKey: await Config?.OPENAI_API_KEY,
+});
+const embeddings = new OpenAIEmbeddings({
+  openAIApiKey: await Config?.OPENAI_API_KEY,
+});
+
+const salesAgent = await SalesGPT.from_llm(
+  llm,
+  retrievalLlm,
+  embeddings,
+  false,
+  config,
+  botData,
+);
+salesAgent?.seed_agent();
+
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent) => {
     try {
@@ -243,28 +270,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
         const { id, position, data } = currentNode as BotNodeType;
-        const llm = new ChatOpenAI({
-          temperature: 0.9,
-          openAIApiKey: await Config?.OPENAI_API_KEY,
-        });
 
-        const retrievalLlm = new ChatOpenAI({
-          temperature: 0,
-          openAIApiKey: await Config?.OPENAI_API_KEY,
-        });
-        const embeddings = new OpenAIEmbeddings({
-          openAIApiKey: await Config?.OPENAI_API_KEY,
-        });
-
-        const salesAgent = await SalesGPT.from_llm(
-          llm,
-          retrievalLlm,
-          embeddings,
-          false,
-          config,
-          botData,
-        );
-        salesAgent?.seed_agent();
         const body = useJsonBody();
 
         // get last message sent by bot
@@ -289,26 +295,29 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             ? [conversation?.messages.slice(-1)[0]]
             : conversation?.messages?.slice(-1 * lastBotMessageIdx);
 
+        console.log(conversationHistory);
+        console.log(messagesSinceLastBotMessage);
         if (salesAgent) {
           salesAgent.conversation_history = [...(conversationHistory ?? [])];
           // console.log(salesAgent.conversation_history);
           salesAgent.human_step(messagesSinceLastBotMessage?.join('\n'));
           const stageResponse = await salesAgent.determine_conversation_stage();
           const response = await salesAgent.step();
+          console.log(response);
 
-          const { data } = currentNode as BotNodeType;
-          const askAQuestionData = JSON.parse(
+          // const { data } = currentNode as BotNodeType;
+          const data = JSON.parse(
             currentNode?.data ?? '{}',
-          ) as AskAQuestionData;
+          ) as SalesBotAgentData;
           console.log(data);
 
           const initiateAt = Date.now() - 10000;
 
-          const questionMessage = await formatMessage(
-            askAQuestionData?.message ?? '',
-            botStateContext,
-            appDb,
-          );
+          // const questionMessage = await formatMessage(
+          //   askAQuestionData?.message ?? '',
+          //   botStateContext,
+          //   appDb,
+          // );
 
           await appDb.entities.messages
             ?.upsert({
@@ -318,30 +327,30 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
               operatorId: operatorId ?? '',
               customerId: customerId ?? '',
               sender: 'bot',
-              content: questionMessage,
+              content: '',
               createdAt: initiateAt,
               sentAt: initiateAt,
             })
             .go();
 
-          await appDb.entities?.messages
-            .upsert({
-              messageId: uuidv4(),
-              conversationId,
-              orgId,
-              operatorId: operatorId ?? '',
-              customerId: customerId ?? '',
-              sender: 'bot',
-              content: '',
-              messageFormType: botNodeEvent.AskAQuestion,
-              messageFormData: data,
-              createdAt: initiateAt + 10000,
-              sentAt: initiateAt + 10000,
-              botStateContext: JSON.stringify({
-                ...botStateContext,
-              } as BotStateContext),
-            })
-            .go({});
+          // await appDb.entities?.messages
+          //   .upsert({
+          //     messageId: uuidv4(),
+          //     conversationId,
+          //     orgId,
+          //     operatorId: operatorId ?? '',
+          //     customerId: customerId ?? '',
+          //     sender: 'bot',
+          //     content: '',
+          //     messageFormType: botNodeEvent.AskAQuestion,
+          //     messageFormData: data,
+          //     createdAt: initiateAt + 10000,
+          //     sentAt: initiateAt + 10000,
+          //     botStateContext: JSON.stringify({
+          //       ...botStateContext,
+          //     } as BotStateContext),
+          //   })
+          //   .go({});
 
           return {
             conversationStage: salesAgent.current_conversation_stage,
@@ -367,7 +376,6 @@ const getReply = async (salesAgent: SalesGPT, userMessage: string) => {
   await salesAgent.determine_conversation_stage();
   const response = await salesAgent.step();
   await salesAgent.human_step(userMessage);
-
   return { conversationStage: salesAgent.current_conversation_stage, response };
 };
 
@@ -389,9 +397,11 @@ export const testHandler = Sentry.AWSLambda.wrapHandler(
         temperature: 0,
         openAIApiKey: await Config?.OPENAI_API_KEY,
       });
+
       const embeddings = new OpenAIEmbeddings({
         openAIApiKey: await Config?.OPENAI_API_KEY,
       });
+
       const body = useJsonBody();
       const humanMessages = body['messages'] as string[];
       const conversationHistory = body['conversationHistory'];
@@ -425,13 +435,6 @@ export const testHandler = Sentry.AWSLambda.wrapHandler(
             };
           }),
         );
-
-        // await Promise.all(
-        //   humanMessages?.map(async (humanMessage: string) => {
-        //     console.log(salesAgent?.conversation_history);
-
-        //   }),
-        // );
 
         return {
           statusCode: 200,

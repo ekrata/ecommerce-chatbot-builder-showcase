@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { ReactElement, useMemo, useState } from 'react';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
 import { BiSolidHelpCircle } from 'react-icons/bi';
-import { BsGlobe, BsInfinity, BsPerson, BsPersonLinesFill, BsRobot } from 'react-icons/bs';
+import { BsGlobe, BsInfinity, BsInfo, BsPerson, BsPersonLinesFill, BsRobot } from 'react-icons/bs';
 import { FaMailBulk, FaShopify } from 'react-icons/fa';
 import { FaFacebookMessenger, FaInstagram, FaPeopleGroup, FaWhatsapp } from 'react-icons/fa6';
 import { FiMinus, FiPlus } from 'react-icons/fi';
@@ -248,6 +248,11 @@ export function Pricing() {
                 {triggerAmount[triggerIndex]}
                 <button className='mx-4 rounded-md btn btn-xs hover:animate-pulse' disabled={triggerIndex === triggerCounts.length - 1} onClick={() => setTriggerIndex(triggerIndex + 1)}><FiPlus /></button>
               </div>
+              <div className="tooltip" data-tip={t('')}>
+                <button className="btn btn-xs btn-circle"><BsInfo /></button>
+              </div>
+
+
             </h2>
             <div>
 

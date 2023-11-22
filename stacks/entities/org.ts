@@ -21,6 +21,10 @@ export const Org = new Entity({
       type: 'string',
       default: '',
     },
+    isWidgetDown: {
+      type: 'boolean',
+      default: true,
+    },
     billingSubscriptionId: {
       type: 'string',
       default: '',
@@ -120,7 +124,6 @@ export const Org = new Entity({
     },
     domain: {
       type: 'string',
-      default: '',
     },
     createdAt: {
       type: 'number',

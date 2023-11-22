@@ -15,6 +15,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import { useAuthContext } from '../../(hooks)/AuthProvider';
 import { useConversationItemQuery } from '../../(hooks)/queries/useConversationItemQuery';
 import { useConversationItemsQuery } from '../../(hooks)/queries/useConversationItemsQuery';
+import { useOrgQuery } from '../../(hooks)/queries/useOrgQuery';
 import ekrataLogo from '../../../../../public/graphics/ekrataLogo.png';
 import { useDashStore } from './(actions)/useDashStore';
 
@@ -22,6 +23,7 @@ export default function DashNavbar() {
   const locale = useLocale()
   const { conversationListFilter } = useDashStore()
   const [sessionOperator] = useAuthContext()
+  const orgQuery = useOrgQuery(sessionOperator?.orgId ?? '')
   const t = useTranslations('app.layout');
   const [readMessages] = useLocalStorage<Record<string, boolean>>('readMessages', {});
   const conversationItemsQuery = useConversationItemsQuery(conversationListFilter)
@@ -35,15 +37,30 @@ export default function DashNavbar() {
     return prev
   }, conversationItemsQuery?.data?.data?.length ?? 0)
 
+
+  const getIssues = () => {
+    // type Issue: {
+    //   type: 'org-domain',
+    //     name: 'Set Organisation Domain',
+    //       description: "You haven't set a domain for your organisation. "
+    // }
+    let issues = []
+    if (!orgQuery?.data?.domain) {
+
+    }
+
+    return []
+  }
+
   return (
     <ul className='z-20 flex flex-col text-gray-400 normal-case bg-black place-items-center hover:bg-opacity-0'>
       <li>
         <Link
-          href="/dash"
+          href="/"
           key='home'
-          className='flex btn btn-ghost'
+          className='flex btn btn-ghost hover:bg-opacity-0'
         >
-          <div className='normal-case tooltip lg:tooltip-right' data-tip={t('home')}>
+          <div className='normal-case tooltip lg:tooltip-right hover:bg-opacity-0' data-tip={t('home')}>
             <Image src={ekrataLogo} alt='Ekrata logo' className='max-w-none' width={32} height={40} />
             {/* <MdOutlineDashboard className='w-6 h-6' /> */}
           </div>
@@ -59,7 +76,7 @@ export default function DashNavbar() {
             <div className='indicator'>
 
               {unreadMessages != null && unreadMessages > 0 &&
-                <span className='-m-1 text-xs border-0 rounded-md indicator-item badge bg-gradient-to-tr from-violet-500 to-orange-300 '>
+                <span className='-m-1 text-xs bg-opacity-100 border-0 rounded-md indicator-item badge bg-gradient-to-tr from-violet-500 to-orange-300 '>
                   {unreadMessages}
                 </span>
 
@@ -103,15 +120,13 @@ export default function DashNavbar() {
         <Link
           href={{ pathname: "/dash/sandbox" }}
           key='sandbox'
-          passHref
-          legacyBehavior
+          rel="noopener noreferrer"
+          target="_blank"
           className='flex btn btn-ghost hover:bg-opacity-0'
         >
-          <a target="_blank" rel="noopener noreferrer">
-            <div className='normal-case tooltip lg:tooltip-right' data-tip={t('sandbox')}>
-              <PiBrowsersFill className='w-6 h-6 text-gray-400' />
-            </div>
-          </a>
+          <div className='normal-case tooltip lg:tooltip-right' data-tip={t('sandbox')}>
+            <PiBrowsersFill className='w-6 h-6 text-gray-400' />
+          </div>
         </Link>
       </li>
       <li>
@@ -133,10 +148,20 @@ export default function DashNavbar() {
           className='flex btn btn-ghost hover:bg-opacity-0'
         >
           <div className='normal-case tooltip lg:tooltip-right' data-tip={t('settings')}>
-            <TbSettings className='w-6 h-6 text-gray-400' />
+            <div className='indicator'>
+              {unreadMessages != null && unreadMessages > 0 &&
+                <span className='-m-1 text-xs bg-opacity-100 border-0 rounded-md indicator-item badge badge-error '>
+                  {unreadMessages} Errors
+                </span>
+
+              }
+
+              <TbSettings className='w-6 h-6 text-gray-400' />
+            </div>
           </div>
         </Link>
       </li>
+
 
     </ul >
   );

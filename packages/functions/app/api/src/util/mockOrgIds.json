@@ -1,1 +1,128 @@
-[{"orgId":"fcaf94a6-bc5c-4fd0-ae37-e60f2cbf4f5a","lang":"en","articleIds":[{"articleId":"8380bc82-34a8-4db7-92d3-3bc0c94528e0","articleContentId":"14fb395c-b7fe-44ee-8a2e-9f724ebcf945"},{"articleId":"05e8a5a0-d09e-4f75-8672-1fbe6495e9cf","articleContentId":"4664a5e0-3a30-4e50-83c9-7b4faef84540"},{"articleId":"ae1cdc75-9713-42a4-acd0-6786ac5d9c26","articleContentId":"c382b075-bae4-448d-96ed-041d3513773a"},{"articleId":"68d0970e-eff6-4a98-b408-e17d7b5f0ef6","articleContentId":"bab39d38-0c7a-4fa6-83e6-2da976d8a1fa"},{"articleId":"457aaa51-56da-4402-8f90-6d903a24ec87","articleContentId":"1794b43c-7525-4f41-a5fd-0db651c1b054"},{"articleId":"a8a80991-194f-40f0-8b25-2bd4e5b57ec6","articleContentId":"3904ac90-a71f-47be-95b2-0e2f639bc594"},{"articleId":"0307b774-c019-4a51-be25-85c398e98f0a","articleContentId":"87c34304-eb59-4847-8543-6a1136a00c21"},{"articleId":"8d6d0943-5501-4cba-b579-38ce96cabdec","articleContentId":"6267d16e-14ab-4dbe-ad7f-b53166ba4b9f"},{"articleId":"712deb1f-1b17-45d0-b256-7f14074be415","articleContentId":"8c02aa42-b5e1-4e1f-b17d-0e9f55d7100a"},{"articleId":"b58b84c2-fcc2-4b7a-ada8-29e775bc03ef","articleContentId":"2cd5f927-7a92-49c8-958d-1437f156d136"},{"articleId":"8ce60d58-6694-44a0-bbd7-011d23a67465","articleContentId":"ccefd259-3043-457d-95f9-0df1d31e7854"},{"articleId":"4463c2c1-3c17-4e22-a174-7d9e27b194b9","articleContentId":"3621c2f3-a1ec-4453-a85c-0bbabfbce352"},{"articleId":"08754562-a73c-49b5-b4bd-472627288493","articleContentId":"ffa85355-4c5e-4bf4-aa33-bbcc8eca9cb9"},{"articleId":"83d14320-d752-4baf-9c14-6101b1e27633","articleContentId":"3f19df40-b93d-462e-8341-8897e999ae09"},{"articleId":"1bd62130-cdd6-4eb5-a6a1-5b8dc80802be","articleContentId":"b95e3134-8906-4da2-bee7-85c6fc40de76"},{"articleId":"c525951e-dc8d-447d-a45b-e7c5ec49d9e7","articleContentId":"c4a54ef2-e6c3-4a97-9cd0-abdfa2f6e7e5"}],"botIds":{"Discount for new visitors":"fb782ed3-94f0-4cdb-8326-f9ba27d3ace2"},"botTemplateIds":["617eda7d-db17-442e-bade-c330965e7aa6","0cee4a62-a090-4e3f-bea4-3b1c6c9d7ffd","e390b309-f499-4504-9811-a833f431ed0f"],"operatorIds":["c43b43fb-2421-4d2d-9ea3-4c7d679c8163","5fc9be0f-ac31-499b-b679-13de0dd61eef"],"ownerId":"5035b6bc-17d7-4cb0-9c3c-d9a8b284106f","adminId":"109111481709970940866","moderatorId":"117138631241434182915","mockGoogleAccountUserId":"101620729708291176316","customers":[{"customerId":"a97fdc02-b285-4a47-9112-edd106d0c451","conversations":[{"conversationId":"c0f5bf76-423a-42dc-9892-68f05aa4b46a","messageIds":["c5eeacca-bbb3-4798-a381-398050cb188c"]},{"conversationId":"93c34a82-b2bc-43ce-8799-9438701de1bc","messageIds":["76f9f757-539d-4352-9d21-fd2b1bcb3bbb"]},{"conversationId":"dd50581a-bae6-4d44-9685-1cd1bea5cc19","messageIds":["05a56919-0813-427b-96b4-4e3aecb12df1"]},{"conversationId":"7c652d25-a82b-4682-b372-2be4f25a728e","messageIds":["e0cba6e9-4aeb-4330-bb92-98d217f3abc9"]},{"conversationId":"3f7a1c69-ff79-4744-afc5-37f2493d20e2","messageIds":["359acf2b-a7cb-48ac-bcb0-55b316b67feb"]}],"visitIds":["d4784ccc-f031-4414-8075-3d227f702469"]}]}]
+[
+  {
+    "orgId": "2224acdd-f4a0-4e5b-b1ee-cc351e6aa4a5",
+    "lang": "en",
+    "articleIds": [
+      {
+        "articleId": "1272724c-c331-49d2-8f6d-4c5b32252df0",
+        "articleContentId": "e4cf4c01-a53e-4cd5-a89f-55aab933861b"
+      },
+      {
+        "articleId": "5598d6eb-4041-4c59-b82c-c4356b820087",
+        "articleContentId": "c00bf85d-ad21-465a-a418-941cbe5fea21"
+      },
+      {
+        "articleId": "14f1a69e-6281-4f85-802f-f5e59e5bb9e0",
+        "articleContentId": "f0561b06-3053-4ef8-b81a-57f4775b3b2a"
+      },
+      {
+        "articleId": "5d370bcf-4099-4e3a-973b-518186f33ae3",
+        "articleContentId": "26357d43-7aec-4f53-b043-9a9222a6dda3"
+      },
+      {
+        "articleId": "031d8de5-8126-4430-a41b-34569e4dfbc4",
+        "articleContentId": "a863e082-bad2-48fd-84c4-1af6f9e0cf72"
+      },
+      {
+        "articleId": "64fefece-bde2-4e09-848d-fb8eb221ccdc",
+        "articleContentId": "890e6748-3040-4e65-8090-906ade31c051"
+      },
+      {
+        "articleId": "eb27ff94-bd29-4a86-86f6-ef5cc132f459",
+        "articleContentId": "2f022852-40ab-4aba-bc2f-43ffc5c62b87"
+      },
+      {
+        "articleId": "6a0f1bf3-2c53-4f70-a730-a81e5f5df50f",
+        "articleContentId": "565a51b8-3b4a-4d8b-8ada-d6410e414f5b"
+      },
+      {
+        "articleId": "8669cf89-d343-4b76-90cf-97b811bba899",
+        "articleContentId": "c48a5c43-2e6a-49c9-a09a-91217b81c89f"
+      },
+      {
+        "articleId": "1eeb4953-b8c8-4268-a67c-4bcbe4962e81",
+        "articleContentId": "75d22175-4bbf-48da-80b4-e8f477a07ffc"
+      },
+      {
+        "articleId": "87c6587a-ca58-47ea-9c6c-76f1048e75d2",
+        "articleContentId": "c8f141e6-e461-424c-8c4f-341791d9e42a"
+      },
+      {
+        "articleId": "11735de2-fbab-4209-8bb8-1566eb9a9764",
+        "articleContentId": "75af09ce-2527-4806-8ef4-0ae2ec2374b5"
+      },
+      {
+        "articleId": "465fd821-63d4-4087-b79e-0f65bc0603a9",
+        "articleContentId": "db5e4ba3-2bc6-4d65-9143-62feb7fd96c8"
+      },
+      {
+        "articleId": "1c736e59-f78c-4933-a256-d241a454f433",
+        "articleContentId": "2baf4f02-5dae-48a6-9d85-7c0fafa306d1"
+      },
+      {
+        "articleId": "1c447a8e-0a5d-4791-8070-edc498b8ee77",
+        "articleContentId": "90b8b242-10a2-4dde-ba65-cbbd37496bba"
+      },
+      {
+        "articleId": "bc86206a-d009-409f-82d0-2db8dbf001d7",
+        "articleContentId": "1cd37ded-e082-4655-841b-6838bc09d5a0"
+      }
+    ],
+    "botIds": {
+      "Discount for new visitors": "f7d2128a-5c12-4ee8-9776-6ff7da982166"
+    },
+    "botTemplateIds": [
+      "263917be-2c57-4c5d-b2db-aa53d12c96a2",
+      "05427619-da2d-48a3-9582-468c4513fa5a",
+      "21a3f726-72de-49d8-be04-9fec9d892682"
+    ],
+    "operatorIds": [
+      "429d761b-66eb-4d88-82fb-224d48c31ca8",
+      "007baa24-2a28-479c-8628-17b24d555cc4"
+    ],
+    "ownerId": "c7b6e3e3-b60d-4f60-af06-f8842248a565",
+    "adminId": "109111481709970940866",
+    "moderatorId": "117138631241434182915",
+    "mockGoogleAccountUserId": "101620729708291176316",
+    "customers": [
+      {
+        "customerId": "8766b61b-f706-45a2-abea-7e08da37071e",
+        "conversations": [
+          {
+            "conversationId": "27eb5776-76ca-408d-9fb2-ead36d10cbca",
+            "messageIds": [
+              "4c2ea86d-12df-485b-94da-91abf5554c42"
+            ]
+          },
+          {
+            "conversationId": "13517c6c-a688-45c4-9a3f-9ee3e564290d",
+            "messageIds": [
+              "c5128601-2dd5-4a5b-b39c-be7139f48d19"
+            ]
+          },
+          {
+            "conversationId": "8ce542d3-770b-4d8a-b501-5fd0fddb7efc",
+            "messageIds": [
+              "7b138f39-f0de-4881-9493-93a23e38e4e7"
+            ]
+          },
+          {
+            "conversationId": "4b883fb0-1be4-481f-90e7-a9a1efa5df5e",
+            "messageIds": [
+              "622b51e7-8958-40cb-a7d6-aa11d9a9845c"
+            ]
+          },
+          {
+            "conversationId": "30af800a-6af5-480b-a1f6-0b8e9102523d",
+            "messageIds": [
+              "3864e79f-fe91-4d44-905a-f4dcdcafd16f"
+            ]
+          }
+        ],
+        "visitIds": [
+          "2c464782-85f2-4cd0-b585-48a95acee9cd"
+        ]
+      }
+    ]
+  }
+]

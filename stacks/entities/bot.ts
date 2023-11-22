@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   Action,
   Agent,
-  Chatbots,
   Condition,
   OperatorInteractionTrigger,
   ShopifyAction,
@@ -48,7 +47,6 @@ export const agents = [...Object.values(Agent)] as const;
 export const botNodeEvent = {
   ...Condition,
   ...ShopifyCondition,
-  ...Chatbots,
   ...Action,
   ...ShopifyAction,
   ...Agent,

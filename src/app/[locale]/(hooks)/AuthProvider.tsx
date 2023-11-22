@@ -14,10 +14,11 @@ import { getOperator, useOperatorQuery } from './queries/useOperatorQuery';
 export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string } | null>>]>([null, () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
-export const signoutSession = () => {
-  window?.localStorage?.removeItem('sessionUser')
-  window?.localStorage?.removeItem('session')
-}
+// export const signoutSession = () => {
+//   window?.localStorage?.removeItem('sessionUser')
+//   window?.localStorage?.removeItem('session')
+//   window?.localStorage?.removeItem('authToken')
+// }
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const searchParams = useSearchParams()
@@ -26,17 +27,17 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [fetching, setFetching] = useState<boolean>(false);
   const [operator, setOperator] = useState<EntityItem<typeof Operator> | null>(null);
   const [authToken, setAuthToken] = useLocalStorage<string>('authToken', '');
-  const [sessionUserIds, setSessionUserIds] = useLocalStorage<{ orgId: string, operatorId: string } | null>('sessionUserIds', null);
-  console.log(sessionUserIds)
+  const [sessionUser, setSessionUser] = useLocalStorage<{ orgId: string, operatorId: string } | null>('sessionUser', null);
+  console.log(sessionUser)
 
   useEffect(() => {
     (async () => {
-      if (sessionUserIds?.operatorId && sessionUserIds.orgId) {
-        const res = await getOperator(sessionUserIds?.orgId ?? '', sessionUserIds?.operatorId ?? '')
-        setOperator(res);
+      if (sessionUser?.operatorId && sessionUser.orgId) {
+        const res = await getOperator(sessionUser?.orgId ?? '', sessionUser?.operatorId ?? '')
+        setSessionUser(res);
       }
     })()
-  }, [sessionUserIds?.orgId, sessionUserIds?.operatorId])
+  }, [sessionUser?.orgId, sessionUser?.operatorId])
 
 
   const getSession = async () => {
@@ -53,17 +54,17 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       const resData = await response?.json()
       console.log(resData)
       if (response.status === 200) {
-        setSessionUserIds({ orgId: resData?.orgId, operatorId: resData?.operatorId })
+        setSessionUser({ orgId: resData?.orgId, operatorId: resData?.operatorId })
         // router.push('/')
       }
       setFetching(false)
       if (resData?.message === "Internal Server Error") {
-        setSessionUserIds({ orgId: '', operatorId: '' })
+        setSessionUser({ orgId: '', operatorId: '' })
         router.push('/')
       }
       return resData
     } catch (error) {
-      setSessionUserIds({ orgId: '', operatorId: '' })
+      setSessionUser({ orgId: '', operatorId: '' })
       router.push('/')
       setFetching(false)
     }
@@ -85,18 +86,18 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       console.log('refetching')
       // const res = await operatorQuery?.refetch()
     })()
-    console.log(sessionUserIds)
+    console.log(sessionUser)
   }, [authToken]);
 
   // useEffect(() => {
   //   if (fetching === false) {
 
   //   }
-  // }, [sessionUserIds?.orgId, sessionUserIds?.operatorId, fetching])
+  // }, [sessionUser?.orgId, sessionUser?.operatorId, fetching])
 
   // console.log(operatorQuery.data)
   return (
-    <AuthContext.Provider value={[operator as unknown as EntityItem<typeof Operator> ?? sessionUserIds, setSessionUserIds,]}>
+    <AuthContext.Provider value={[sessionUser, setSessionUser]}>
       {!pathname?.includes('/dash') || !fetching ?
         children :
         < div className="justify-center w-screen h-screen gap-2 bg-white ">

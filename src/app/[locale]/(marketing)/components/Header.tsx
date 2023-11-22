@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useTimeout } from 'usehooks-ts';
 
 import { Popover, Transition } from '@headlessui/react';
@@ -19,10 +19,8 @@ import { SignupModal } from './SignupModal';
 
 export function Header() {
   const t = useTranslations('marketing')
-  const [sessionUser, setSessionUser, _] = useAuthContext()
-  console.log(sessionUser)
+  const [sessionUser, setSessionUser] = useAuthContext()
   const [scrolling, setScrolling] = useState<boolean>()
-  // const [sessionUser, setSessionUser] = useAuthContext()
 
   window?.addEventListener('scroll', () => {
     setScrolling(true);
@@ -126,42 +124,47 @@ export function Header() {
       </Popover >
     )
   }
-  return (
-    <header className={`fixed z-50 w-full py-2  ${scrolling ? 'bg-white  shadow-white shadow-xs  animate-fade  ' : 'bg-white/0 border-0 shadow-none'} backdrop-blur-xl`}>
-      <Container>
-        <nav className="relative flex justify-between animate-fade-down">
-          <div className="flex items-center md:gap-x-12">
-            <Link href="#" aria-label="Home" className='shadow-2xl mask mask-squircle' >
-              <Image src={ekrataLogo} className="object-contain " width={36} height={36} alt={''}></Image>
-            </Link>
-            <div className="hidden md:flex md:gap-x-6">
-              <NavLink hash='features' href='/'>Features</NavLink>
-              {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
-              <NavLink hash='pricing' href='/' >Pricing</NavLink>
-              <NavLink href='/blog' >Blog</NavLink>
+  const render = useMemo(() => {
+    return (
+      <header className={`fixed z-50 w-full py-2  ${scrolling ? 'bg-white  shadow-white shadow-xs    ' : 'bg-white/0 border-0 shadow-none'} backdrop-blur-xl`}>
+        <Container>
+          <nav className="relative flex justify-between animate-fade-down">
+            <div className="flex items-center md:gap-x-12">
+              <Link href="#" aria-label="Home" className='shadow-2xl mask mask-squircle' >
+                <Image src={ekrataLogo} className="object-contain " width={36} height={36} alt={''}></Image>
+              </Link>
+              <div className="hidden md:flex md:gap-x-6">
+                <NavLink hash='features' href='/'>Features</NavLink>
+                {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
+                <NavLink hash='pricing' href='/' >Pricing</NavLink>
+                <NavLink href='/blog' >Blog</NavLink>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-x-5 md:gap-x-8">
-            <div className="hidden md:block" onClick={() => {
-              sessionUser && signoutSession()
-            }}>
-              <NavLink href="" >
-                {sessionUser?.operatorId ? <div onClick={() => setSessionUser(null)}>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
-              </NavLink>
+            <div className="flex items-center gap-x-5 md:gap-x-8">
+              <div className="hidden md:block" onClick={() => {
+                sessionUser && setSessionUser(null)
+              }}>
+                <NavLink href="" >
+                  {sessionUser?.operatorId ? <div onClick={() =>
+                    sessionUser && setSessionUser(null)
+                  }>{t('Sign out')}</div> : <LoginModal>{<span className='animate-fade-down'>{t('Sign in')}</span>}</LoginModal>}
+                </NavLink>
+              </div>
+              <Link href={{ pathname: sessionUser ? '/dash/conversations' : '' }}>
+                <Button color="blue" className='bg-gradient-to-tr from-violet-500 to-orange-300 hover:animate-pulse'>
+                  <span>
+                    {sessionUser?.operatorId ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
+                  </span>
+                </Button>
+              </Link>
+              <div className="-mr-1 md:hidden">
+                <MobileNavigation />
+              </div>
             </div>
-            <Link href={{ pathname: sessionUser ? '/dash/conversations' : '' }}>
-              <Button color="blue" className='bg-gradient-to-tr from-violet-500 to-orange-300 hover:animate-pulse'>
-                <span>
-                  {sessionUser?.operatorId ? t('Go to app') : <SignupModal>{t('Start free trial')}</SignupModal>}
-                </span>
-              </Button>
-            </Link>
-            <div className="-mr-1 md:hidden">
-              <MobileNavigation />
-            </div>
-          </div>
-        </nav>
-      </Container>
-    </header>
-  )
+          </nav>
+        </Container>
+      </header>
+    )
+  }, [sessionUser, scrolling])
+  return render
 }

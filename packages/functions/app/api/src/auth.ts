@@ -25,7 +25,6 @@ export const handler = AuthHandler({
       clientID: Config.OAUTH_GOOGLE_CLIENT_ID,
       onSuccess: async (tokenset) => {
         try {
-          console.log('hihiihihi');
           const claims = tokenset.claims();
 
           console.log(claims.email);
@@ -54,7 +53,8 @@ export const handler = AuthHandler({
           // await appDb.entities.operators.get({operatorId: operatorRes.data});
           // sign up
 
-          if (!operators?.data?.length) {
+          if (!operators?.length) {
+            console.log('creating new org');
             const org = await appDb.entities.orgs
               .upsert({
                 name: `${claims.name}'s Organisation`,

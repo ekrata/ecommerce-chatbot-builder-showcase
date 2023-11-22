@@ -3,9 +3,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Customer } from '@/entities/customer';
-import {
-  invertedTriggers, Triggers
-} from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useCreateCustomerMut } from '../mutations/useCreateCustomerMut';

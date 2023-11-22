@@ -52,6 +52,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           .where(({ active }, { eq }) => `${eq(active, true)}`)
           .go();
         const botTriggers = getBotTriggers(bots?.data);
+        console.log('triggers', botTriggers);
 
         const botStates = await processTrigger(
           interactionData,
@@ -83,6 +84,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         }
 
         botStates?.forEach(async (botState) => {
+          console.log('publishing');
           await sns
             .publish({
               // Get the topic from the environment variable
@@ -142,7 +144,7 @@ export const isTriggerReady = (
       }
     case VisitorPageInteractionTrigger.FirstVisitOnSite:
       // if never triggered, return true
-      return !interaction.lastTriggered;
+      return !interaction?.lastTriggered;
     default:
       return true;
   }
@@ -161,10 +163,13 @@ export const processTrigger = async (
     ([botId, triggers]) =>
       triggers?.find((trigger) => trigger.type === interaction.type),
   );
+  // console.log(triggerMatch);
   const matchedBotId = triggerMatch?.[0];
   const matchedNode = triggerMatch?.[1]?.[0];
   const matchedNodeId = triggerMatch?.[1]?.[0]?.id;
 
+  // console.log('1', matchedBotId, matchedNode?.type, matchedNodeId);
+  // console.log('2', isTriggerReady(matchedNode ?? {}, interaction));
   if (
     matchedBotId &&
     matchedNode?.type &&
@@ -177,12 +182,15 @@ export const processTrigger = async (
         customerId,
       })
       .go();
+    console.log(customerId);
     if (customerId) {
       // start bot
       const bot = bots.find(({ botId }) => botId === matchedBotId);
       // if bot, we then check additional prerequites are fulfilled
       const newConversationId = uuidv4();
+      console.log(matchedNodeId, bot?.nodes, bot?.edges);
       const nextNodes = getNextNodes(matchedNodeId, bot?.nodes, bot?.edges);
+      console.log('nextNodes', nextNodes);
 
       const createConversationRes = await appDb.entities.conversations
         .upsert({

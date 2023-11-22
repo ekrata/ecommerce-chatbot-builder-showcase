@@ -78,6 +78,7 @@ export const conversationTopic = [
   'orderStatus',
   'orderIssues',
   'shippingPolicy',
+  '',
 ] as const;
 
 export type ConversationTopic = (typeof conversationTopic)[number];

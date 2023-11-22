@@ -129,7 +129,7 @@
     "daisyui": "^2.52.0",
     "date-fns": "^2.30.0",
     "echat": "link:",
-    "electrodb": "^2.10.7",
+    "electrodb": "^2.11.0",
     "emoji-picker-react": "^4.5.3",
     "eslint-config-next": "14.0.2",
     "faiss-node": "^0.5.1",

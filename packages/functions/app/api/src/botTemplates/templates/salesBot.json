@@ -1,0 +1,48 @@
+{
+  "startWhenAnotherBotRunning": false,
+  "edges": [
+    {
+      "id": "reactflow__edge-0-110",
+      "source": "0",
+      "target": "1",
+      "sourceHandle": "",
+      "targetHandle": "10",
+      "type": "Visitor clicks on the chat icon",
+      "data": "{\"label\":\"1\"}"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "1",
+      "type": "Visitor clicks on the chat icon",
+      "position": {
+        "x": 755.0699361340992,
+        "y": 118.14142385807776
+      },
+      "data": "{\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"errors\":{}}"
+    },
+    {
+      "id": "0",
+      "type": "Sales Agent",
+      "position": {
+        "x": 653,
+        "y": 337
+      },
+      "data": "{\"companyName\":\"Ekrata\",\"companyBusiness\":\"Ekrata offers a comprehensive chatbot solution to elevate your ecommerce.\",\"companyValues\":\"We love innovation and novelty and soo on.\",\"conversationPurpose\":\"To see if the user wants to try a free trial.\",\"businessRole\":\"Business Development Representative\",\"outputs\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"],\"name\":\"Bot\",\"toolset\":[{\"active\":true},{\"active\":true}],\"errors\":{}}"
+    }
+  ],
+  "createdAt": 1700620735310,
+  "name": "Sales Bot",
+  "botId": "9bab0d40-b2b3-45eb-b261-09515ca64658",
+  "active": true,
+  "startWhileOperatorsAreOffline": false,
+  "updatedAt": 1700637065010,
+  "category": "General",
+  "orgId": "2224acdd-f4a0-4e5b-b1ee-cc351e6aa4a5",
+  "startWhileAnOperatorIsHandlingAnotherConversation": false,
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}

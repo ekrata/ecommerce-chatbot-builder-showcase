@@ -38,7 +38,6 @@ export const useOperatorQuery = (orgId?: string, operatorId?: string) => {
   return useQuery<EntityItem<typeof Operator>>({
     queryKey: [QueryKey.operator, orgId, operatorId],
     queryFn: async () => {
-      console.log('hi')
       return await getOperator(orgId, operatorId)
     }
     // enabled: !!orgId && !!operatorId

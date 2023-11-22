@@ -43,23 +43,6 @@ describe.concurrent(
       expect(res?.data?.conversationHistory?.length).toEqual(2);
 
       conversationHistory = res?.data?.conversationHistory;
-
-      // res = await http.post(`/orgs/${orgId}/nodes/chatbots/sales-test`, {
-      //   messages: [
-      //     // 'I am well, how are you? I would like to learn more about your mattresses.',
-      //     'Yes, what materials are you mattresses made from?',
-      //   ],
-      //   // conversationHistory: res?.data?.conversationHistory,
-
-      //   // 'Yes, I am looking for a queen sized mattress. Do you have any mattresses in queen size?',
-      //   // 'Yea, compare and contrast those two options, please.',
-      //   // "Great, thanks, that's it. I will talk to my wife and call back if she is onboard. Have a good day!",
-      // });
-      // console.log(res?.data);
-
-      // expect(res).toBeTruthy();
-      // expect(res.status).toBe(200);
-      // expect(res?.data?.conversationStage).toEqual('3');
     });
   },
   { timeout: 10000000 },

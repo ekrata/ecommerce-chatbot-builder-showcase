@@ -694,15 +694,15 @@ export function baseStack({ stack, app }: StackContext) {
         },
       },
     },
-    [botNodeEvent.SalesBot]: {
+    [botNodeEvent.SalesBotAgent]: {
       type: 'queue',
       queue: new Queue(stack, `bot_node_chatbots_salesBot_queue`, {
         cdk: defaultQueueConfig,
         consumer: {
           function: {
             handler:
-              'packages/functions/app/api/src/nodes/chatbots/sales/index.handler',
-            bind: [wsApi, api, REGION, table],
+              'packages/functions/app/api/src/nodes/agents/sales/sales.handler',
+            bind: [wsApi, api, REGION, table, OPENAI_API_KEY],
             permissions: [
               table,
               'sqs:ReceiveMessage',
@@ -717,7 +717,7 @@ export function baseStack({ stack, app }: StackContext) {
           filterPolicyWithMessageBody: {
             type: FilterOrPolicy.filter(
               SubscriptionFilter.stringFilter({
-                allowlist: [botNodeEvent.SalesBot],
+                allowlist: [botNodeEvent.SalesBotAgent],
               }),
             ),
           },
