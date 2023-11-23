@@ -21,7 +21,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
   try {
     const { Records } = event;
     for (const record of Records) {
-      console.log('createmessage', record);
       const newImage = getNewImage(record);
       const messageData = Message.parse({ Item: newImage }).data;
       if (!messageData) {
@@ -63,11 +62,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
         .primary({ orgId, customerId })
         .go();
 
-      // await appDb.entities.conversations
-      //   .update({ orgId, conversationId })
-      //   .set({ read: false, readAt: undefined })
-      //   .go();
-      console.log('posting to', customer?.data);
       await postToConnection(
         appDb,
         new ApiGatewayManagementApi({
@@ -82,7 +76,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
       return { statusCode: 200, body: 'Message sent' };
     }
   } catch (err) {
-    console.log('err');
     console.log(err);
     Sentry.captureException(err);
     return { statusCode: 500, body: JSON.stringify(err) };

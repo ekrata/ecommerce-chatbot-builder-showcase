@@ -10,7 +10,7 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
 import { Org } from '@/entities/org';
-import { languageCodeMap, languages } from '@/types/lang';
+import { languageCodeMap, languageCodes, languages } from '@/types/lang';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import * as Sentry from '@sentry/serverless';
 
@@ -42,19 +42,22 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         orgs.map(async (org) => {
           console.log(org);
           return await Promise.all(
-            await Promise.all(
-              languages.map(async ([key, lang]) => {
-                const articleContents =
-                  await appDb.entities.articleContents.query
-                    .byOrg({
-                      orgId: org?.orgId,
-                      lang,
-                    })
-                    .go({ limit: 200 });
-                console.log(articleContents);
-                return articleContents;
-              }),
-            ),
+            (
+              await Promise.all(
+                languageCodes.map(async (lang) => {
+                  console.log(org?.orgId, lang);
+                  const articleContents =
+                    await appDb.entities.articleContents.query
+                      .byOrg({
+                        orgId: org?.orgId,
+                        lang,
+                      })
+                      .go({ limit: 200 });
+                  console.log(articleContents);
+                  return articleContents;
+                }),
+              )
+            ).filter((articleContents) => articleContents.data?.length),
           );
         }),
       );
@@ -71,14 +74,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           console.log(articleContentLangs);
           return Promise.all(
             articleContentLangs.map(async (articleContentsByLang) => {
-              if (articleContentsByLang?.length) {
+              if (articleContentsByLang?.data?.length) {
                 console.log(articleContentsByLang);
                 return {
-                  [`${articleContentsByLang?.[0]?.lang}`]: {
-                    orgId: articleContentsByLang?.[0].orgId,
-                    lang: articleContentsByLang?.[0].lang,
+                  [`${articleContentsByLang?.data?.[0]?.lang}`]: {
+                    orgId: articleContentsByLang?.data?.[0].orgId,
+                    lang: articleContentsByLang?.data?.[0].lang,
                     docs: await splitter.createDocuments(
-                      articleContentsByLang.map((articleContent) => {
+                      articleContentsByLang?.data?.map((articleContent) => {
                         return articleContent.content;
                       }),
                     ),
@@ -93,10 +96,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       console.log('docs');
       await Promise.all(
         docs.map(async (orgDocs) => {
+          console.log(orgDocs);
           return await Promise.all(
-            orgDocs.map(async (langDocs) => {
+            orgDocs.filter(Boolean).map(async (langDocs) => {
               await Promise.all(
                 Object.entries(langDocs).map(async ([_, docsByLang]) => {
+                  console.log('in docsbylang');
                   const { orgId, lang, docs } = docsByLang;
                   const dir = `/tmp/${orgId}/${lang}/faiss`;
                   const vectorStore = await FaissStore.fromDocuments(
@@ -105,19 +110,21 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                       openAIApiKey: Config?.OPENAI_API_KEY,
                     }),
                   );
+
                   console.log('got vectorstore');
                   await vectorStore.save(dir);
+                  // console.log(await fs.readdir(dir));
                   const faissIndex = new PutObjectCommand({
                     ACL: 'public-read',
                     Bucket: Bucket?.['echat-app-assets'].bucketName,
-                    Key: `${dir}/index.faiss`,
-                    Body: await fs.readFile(`${dir}/index.faiss`),
+                    Key: `${orgId}/${lang}/faiss/faiss.index`,
+                    Body: await fs.readFile(`${dir}/faiss.index`),
                   });
                   const pklIndex = new PutObjectCommand({
                     ACL: 'public-read',
                     Bucket: Bucket?.['echat-app-assets'].bucketName,
-                    Key: `${dir}/index.pkl`,
-                    Body: await fs.readFile(`${dir}/index.pkl`),
+                    Key: `${orgId}/${lang}/faiss/docstore.json`,
+                    Body: await fs.readFile(`${dir}/docstore.json`),
                   });
                   console.log('uploading');
                   await s3.send(faissIndex);

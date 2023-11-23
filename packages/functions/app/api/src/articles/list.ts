@@ -10,7 +10,6 @@ const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    console.log('listing articles');
     const { cursor } = useQueryParams();
     const { orgId, lang } = usePathParams();
     if (!orgId || !lang) {

@@ -98,7 +98,7 @@ export const CustomerChatLog: FC = ({ }) => {
             <div className="flex flex-col justify-start w-full gap-x-2 gap-y-1 animate-fade-right" >
               <div className="flex flex-row place-items-center gap-x-2">
                 <Avatar conversationItem={conversationItem} message={message} />
-                <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
+                <p className={`justify-start p-2 rounded-md place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
                   } tooltip-bottom z-10`}
                   data-testid={`operator-message-content-${message.messageId}`}
                   data-tip={<CustomerMessageTimeLabel conversationItem={conversationItem} />}
@@ -115,7 +115,7 @@ export const CustomerChatLog: FC = ({ }) => {
           )}
           {message.sender === 'customer' && (
             <div className="flex flex-col chat chat-end">
-              <div className="min-h-0 p-2 bg-gray-900 rounded-3xl text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
+              <div className="min-h-0 p-2 bg-gray-900 rounded-md text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
                 {message.content}
               </div>
               {i + 1 === conversationItem?.messages?.length && (
@@ -138,7 +138,7 @@ export const CustomerChatLog: FC = ({ }) => {
       {botTyping && <div className="flex flex-col justify-start w-full px-4 animate-fade-left gap-x-2 gap-y-1" >
         <div className="flex flex-row place-items-center gap-x-2">
           <Avatar conversationItem={conversationItem} toggleIndicator={true} />
-          <p className={`justify-start p-2 rounded-xl place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
+          <p className={`justify-start p-2 rounded-md place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
             } tooltip-bottom z-10`}
             data-testid={`operator-message-content-typing`}
           // data-tip={<CustomerMessageTimeLabel conversationItem={conversationItem} />}

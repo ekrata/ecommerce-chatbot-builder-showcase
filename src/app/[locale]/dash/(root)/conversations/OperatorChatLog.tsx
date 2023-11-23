@@ -50,7 +50,7 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
       {conversationItem?.messages
         ?.map((message, i) => {
           return (
-            <div className="px-4" key={message.messageId} data-testid={`message-${message.messageId}`}>
+            <div className="px-4 animate-fade" key={message.messageId} data-testid={`message-${message.messageId}`}>
               {(message?.sender === 'customer') && (
                 <div>
                   <div className="flex flex-row w-3/4 chat chat-start gap-x-2 animate-fade-right" >
@@ -73,7 +73,7 @@ export const OperatorChatLog: FC<Props> = ({ conversationItem }) => {
                 </div>
               )}
               {(message.sender === 'operator' || message.sender === 'bot') && (
-                <div className="flex flex-col ml-32 chat chat-end animate-fade-left">
+                <div className="flex flex-col ml-32 chat chat-end animate-fade-right">
                   <div className="min-h-0 p-2 px-4 bg-gray-200 rounded-md " data-testid={`customer-message-content-${message.messageId}`}>
                     {message?.content}
                   </div>

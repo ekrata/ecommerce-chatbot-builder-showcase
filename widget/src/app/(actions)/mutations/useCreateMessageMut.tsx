@@ -47,9 +47,12 @@ export const useCreateMessageMut = (orgId: string, customerId: string, conversat
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: [orgId, MutationKey.createMessage],
-    mutationFn: async (params: Parameters<typeof createMessage>) => await createMessage(...params),
+    mutationFn: async (params: Parameters<typeof createMessage>) => await createMessage(...params)
+
     // onSuccess: (newMessage) => {
     //   queryClient.setQueryData<ConversationItem[]>([orgId, customerId, QueryKey.conversationItems], (oldData) => newMessageReducer(newMessage, oldData ?? []))
     // }
   })
 }
+
+

@@ -1,8 +1,5 @@
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
-import {
-  BaseLanguageModel,
-  BaseLanguageModelCallOptions,
-} from 'langchain/base_language';
+import { BaseLanguageModel, BaseLanguageModelCallOptions } from 'langchain/base_language';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
 import { BaseChain, LLMChain } from 'langchain/chains';
 import { Embeddings } from 'langchain/dist/embeddings/base';
@@ -12,11 +9,7 @@ import { ChainValues } from 'langchain/schema';
 import { CustomPromptTemplateForTools } from './customPromptTemplateTools';
 import { get_tools } from './knowledgeBase';
 import { SALES_AGENT_TOOLS_PROMPT } from './prompt';
-import {
-  CONVERSATION_STAGES,
-  loadSalesConversationChain,
-  loadStageAnalyzerChain,
-} from './sales';
+import { CONVERSATION_STAGES, loadSalesConversationChain, loadStageAnalyzerChain } from './sales';
 import { SalesConvoOutputParser } from './salesOutputParser';
 
 export type SalesGPTData = {
@@ -79,11 +72,18 @@ export class SalesGPT extends BaseChain {
   }
 
   async determine_conversation_stage() {
-    console.log('history', this.conversation_history.join('\n'));
+    console.log('history', this.conversation_history);
     console.log('current conversation stage', this.current_conversation_stage);
     console.log('stageid', this.conversation_stage_id);
+    console.log(
+      this.conversation_history.filter(
+        (message): message is string => message != null,
+      ),
+    );
     let res = await this.stage_analyzer_chain.call({
-      conversation_history: this.conversation_history.join('\n'),
+      conversation_history: this.conversation_history
+        .filter((message): message is string => message != null)
+        .join('\n'),
       current_conversation_stage: this.current_conversation_stage,
       conversation_stage_id: this.conversation_stage_id,
     });
@@ -95,7 +95,7 @@ export class SalesGPT extends BaseChain {
     return text;
   }
   human_step(human_input: string) {
-    this.conversation_history.push(`User: ${human_input} <END_OF_TURN>`);
+    this.conversation_history.push(`User: ${human_input ?? ''} <END_OF_TURN>`);
   }
 
   async step() {

@@ -11,12 +11,8 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Bedrock } from 'langchain/llms/bedrock';
 import { BufferMemory } from 'langchain/memory';
 import {
-  BasePromptTemplate,
-  BaseStringPromptTemplate,
-  PromptTemplate,
-  renderTemplate,
-  SerializedBasePromptTemplate,
-  StringPromptValue,
+    BasePromptTemplate, BaseStringPromptTemplate, PromptTemplate, renderTemplate,
+    SerializedBasePromptTemplate, StringPromptValue
 } from 'langchain/prompts';
 import { DynamoDBChatMessageHistory } from 'langchain/stores/message/dynamodb';
 import { ApiHandler, useJsonBody, useQueryParams } from 'sst/node/api';
@@ -25,7 +21,9 @@ import { Table } from 'sst/node/table';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
 import { botNodeEvent, BotNodeType } from '@/entities/bot';
-import { SalesBotAgentData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/agents/SalesBotAgent';
+import {
+    SalesBotAgentData
+} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/agents/SalesBotAgent';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
@@ -212,18 +210,6 @@ const config = {
   product_catalog: 'sample_product_catalog.txt',
 };
 
-const botData: SalesGPTData = {
-  salesperson_name: 'Bot',
-  salesperson_role: 'Business Development Representative',
-  company_name: 'Sleep Haven',
-  company_business:
-    'Sleep Haven is a premium mattress company that provides customers with the most comfortable and supportive sleeping experience possible. We offer a range of high-quality mattresses, pillows, and bedding accessories that are designed to meet the unique needs of our customers.',
-  company_values:
-    "Our mission at Sleep Haven is to help people achieve a better night's sleep by providing them with the best possible sleep solutions. We believe that quality sleep is essential to overall health and well-being, and we are committed to helping our customers achieve optimal sleep by offering exceptional products and customer service.",
-  conversation_purpose:
-    'find out whether they are looking to achieve better sleep via buying a premier mattress.',
-  conversation_type: 'chatbot on a website',
-};
 // const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 // const client = new BedrockRuntime();
@@ -233,6 +219,7 @@ console.log('IN SALES AGENT');
 const llm = new ChatOpenAI({
   temperature: 0.9,
   openAIApiKey: await Config?.OPENAI_API_KEY,
+  modelName: 'gpt-3.5-turbo-1106',
 });
 console.log(llm.modelName);
 
@@ -254,9 +241,17 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const botStateContext: BotStateContext = (
           record.body as unknown as SNSMessage
         )?.Message as unknown as BotStateContext;
-        const { type, bot, conversation, nextNode, interaction, currentNode } =
-          botStateContext;
+        const {
+          type,
+          bot,
+          conversation,
+          messages,
+          nextNode,
+          interaction,
+          currentNode,
+        } = botStateContext;
 
+        console.log('c', messages?.map((message) => message.content));
         const {
           orgId,
           conversationId,
@@ -265,7 +260,21 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           customerId,
           operatorId,
         } = conversation;
-        const { id, position, data } = currentNode as BotNodeType;
+        // const { id, position, data } = currentNode as BotNodeType;
+
+        const botFormData = JSON.parse(
+          currentNode?.data ?? '{}',
+        ) as SalesBotAgentData;
+
+        const botData: SalesGPTData = {
+          salesperson_name: botFormData.name,
+          salesperson_role: botFormData.businessRole,
+          company_name: botFormData.companyName,
+          company_business: botFormData.companyBusiness,
+          company_values: botFormData.companyValues,
+          conversation_purpose: botFormData.conversationPurpose,
+          conversation_type: 'chatbot on a website',
+        };
 
         const salesAgent = await SalesGPT.from_llm(
           llm,
@@ -280,43 +289,54 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         salesAgent?.seed_agent();
 
         // get last message sent by bot
-        const lastBotMessageIdx = conversation?.messages
+        const lastBotMessageIdx = messages
           ?.reverse()
           .findIndex((message) => message?.sender === 'bot');
 
-        // format last 50 messages for bot
-        const conversationHistory = conversation?.messages
-          .slice(-50, lastBotMessageIdx)
+        console.log('lastBotMessageIdx', lastBotMessageIdx);
+
+        // format last 50 messages for conversationHistory prompt
+        const conversationHistory = messages
+          ?.slice(-50, (lastBotMessageIdx ?? -2) + 1)
           ?.map((message) => {
+            console.log(message);
             if (message?.sender === 'bot' || message?.sender === 'operator') {
-              return `Bot: ${message?.content}`;
+              return `${botFormData.name}: ${message?.content}`;
             } else if (message?.sender === 'customer') {
               return `User: ${message?.content}`;
             }
           })
-          .join('\n');
+          .reverse();
 
         const messagesSinceLastBotMessage =
-          lastBotMessageIdx === 0 || lastBotMessageIdx === -1
-            ? [conversation?.messages.slice(-1)[0]]
-            : conversation?.messages?.slice(-1 * lastBotMessageIdx);
+          lastBotMessageIdx === 0 ||
+          lastBotMessageIdx === -1 ||
+          lastBotMessageIdx == null
+            ? [messages?.slice(-1)?.[0]]
+            : messages?.slice(-1 * lastBotMessageIdx);
 
-        console.log(conversationHistory);
-        console.log(messagesSinceLastBotMessage);
+        console.log('lam history', conversationHistory);
+        console.log('message', messagesSinceLastBotMessage);
         if (salesAgent) {
-          salesAgent.conversation_history = [...(conversationHistory ?? [])];
+          salesAgent.conversation_history = [
+            ...(conversationHistory
+              ?.filter((el): el is string => el != null)
+              .reverse() ?? []),
+          ];
+          console.log(salesAgent.conversation_history);
           // console.log(salesAgent.conversation_history);
-          salesAgent.human_step(messagesSinceLastBotMessage?.join('\n'));
+          if (messagesSinceLastBotMessage?.length) {
+            salesAgent.human_step(
+              messagesSinceLastBotMessage
+                .map((message) => message?.content)
+                ?.join('\n'),
+            );
+          }
           const stageResponse = await salesAgent.determine_conversation_stage();
           const response = await salesAgent.step();
-          console.log(response);
+          console.log('res', response);
 
           // const { data } = currentNode as BotNodeType;
-          const data = JSON.parse(
-            currentNode?.data ?? '{}',
-          ) as SalesBotAgentData;
-          console.log(data);
-
           const initiateAt = Date.now() - 10000;
 
           // const questionMessage = await formatMessage(
@@ -327,13 +347,14 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
           await appDb.entities.messages
             ?.upsert({
-              messageId: uuidv4(),
+              messageId: snsMessageId,
               conversationId,
               orgId,
               operatorId: operatorId ?? '',
               customerId: customerId ?? '',
+              botStateContext: JSON.stringify(botStateContext),
               sender: 'bot',
-              content: '',
+              content: response as unknown as string,
               createdAt: initiateAt,
               sentAt: initiateAt,
             })
@@ -411,6 +432,21 @@ export const testHandler = Sentry.AWSLambda.wrapHandler(
       const body = useJsonBody();
       const humanMessages = body['messages'] as string[];
       const conversationHistory = body['conversationHistory'];
+      const botData = {
+        salesperson_name: 'Ted Lasso',
+        salesperson_role: 'Business Development Representative',
+        company_name: 'Sleep Haven',
+        company_business:
+          'Sleep Haven is a premium mattress company that provides customers with the most comfortable and supportive sleeping experience possible. We offer a range of high-quality mattresses, pillows, and bedding accessories that are designed to meet the unique needs of our customers.',
+        company_values:
+          "Our mission at Sleep Haven is to help people achieve a better night's sleep by providing them with the best possible sleep solutions. We believe that quality sleep is essential to overall health and well-being, and we are committed to helping our customers achieve optimal sleep by offering exceptional products and customer service.",
+        conversation_purpose:
+          'find out whether they are looking to achieve better sleep via buying a premier mattress.',
+        conversation_history:
+          'Hello, this is Ted Lasso from Sleep Haven. How are you doing today? <END_OF_TURN>\nUser: I am well, howe are you?<END_OF_TURN>',
+        conversation_type: 'call',
+        conversation_stage: CONVERSATION_STAGES['1'],
+      };
       const salesAgent = await SalesGPT.from_llm(
         llm,
         retrievalLlm,

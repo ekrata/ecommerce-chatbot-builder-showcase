@@ -1,6 +1,7 @@
 import { EntityItem } from 'electrodb';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { BsPerson, BsRobot } from 'react-icons/bs';
 
 import { ConversationItem } from '@/entities/conversation';
 
@@ -27,10 +28,18 @@ export const CustomerMessageTimeLabel: React.FC<Props> = ({ conversationItem, up
 
   return (
     <div className='flex place-items-center'>
-      <p className="text-xs text-neutral-400 place-items-center">
-        {message?.sender === 'operator' && conversationItem?.operator?.name}
-        {message?.sender === 'customer' && `${t('You')}`}
-        {message?.sender === 'bot' && `${t('Bot')}`}
+      <p className="inline-flex text-xs text-neutral-400 place-items-center ">
+        {((message?.sender === 'customer' && `${t('You')}`) ?? conversationItem?.customer?.name ?? conversationItem?.customer.email)}
+        {message?.sender === 'operator' &&
+          <div className='inline-flex place-items-center gap-x-1'>
+            <BsPerson />
+            {conversationItem?.operator?.name ?? conversationItem?.operator?.email}
+          </div>}
+        {message?.sender === 'bot' &&
+          <div className='inline-flex place-items-center gap-x-1'>
+            <BsRobot />
+            {t('Bot')}
+          </div>}
         {` · ${message?.sentAt && time}.`}
       </p>
     </div>

@@ -1,10 +1,4 @@
-import {
-  SNSEvent,
-  SNSEventRecord,
-  SNSMessage,
-  SQSEvent,
-  StreamRecord,
-} from 'aws-lambda';
+import { SNSEvent, SNSEventRecord, SNSMessage, SQSEvent, StreamRecord } from 'aws-lambda';
 import { ApiGatewayManagementApi, AWSError, DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
 import { ApiHandler, useJsonBody } from 'sst/node/api';

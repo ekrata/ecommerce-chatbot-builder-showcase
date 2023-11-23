@@ -687,7 +687,7 @@ export function baseStack({ stack, app }: StackContext) {
         consumer: {
           function: {
             ...faissLambdaConfig,
-            memorySize: `4 GB`,
+            memorySize: `1 GB`,
             handler:
               'packages/functions/app/api/src/nodes/agents/sales/sales.handler',
             bind: [wsApi, api, REGION, table, OPENAI_API_KEY],

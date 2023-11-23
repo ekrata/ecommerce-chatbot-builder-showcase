@@ -6,7 +6,7 @@ import { CgSpinner } from 'react-icons/cg';
 import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
-  useConversationItemsByCustomerQuery
+    useConversationItemsByCustomerQuery
 } from 'src/app/(actions)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
@@ -42,12 +42,15 @@ export const ChatInput: FC = () => {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async ({ msg }) => {
     const messageId = uuidv4()
+    // if last operator message was sent by a bot, create a message with the previous message's botStateContext
+    const lastMessage = conversationItem?.messages.findLast((item) => item.sender === 'bot' || item.sender === 'operator')
     const createMessage: CreateMessage = {
       messageId: messageId,
       conversationId: selectedConversationId ?? '',
       orgId,
       customerId: customer.data?.customerId ?? '',
       operatorId: conversationItem?.operator?.operatorId ?? '',
+      botStateContext: lastMessage?.sender === 'bot' ? lastMessage.botStateContext : undefined,
       content: msg,
       sentAt: Date.now(),
       sender: 'customer'

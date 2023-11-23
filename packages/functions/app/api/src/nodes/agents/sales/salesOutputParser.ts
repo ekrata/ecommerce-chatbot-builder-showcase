@@ -22,9 +22,13 @@ export class SalesConvoOutputParser extends AgentActionOutputParser {
       console.log('-------');
     }
     const regexOut = /<END_OF_CALL>|<END_OF_TURN>/g;
+    const regexRemoveScratchPad = /<<<|>>>/g;
     if (text.includes(this.ai_prefix + ':')) {
       const parts = text.split(this.ai_prefix + ':');
-      const input = parts[parts.length - 1].trim().replace(regexOut, '');
+      const input = parts[parts.length - 1]
+        .trim()
+        .replace(regexOut, '')
+        .replaceAll(regexRemoveScratchPad, '');
       const finalAnswers = { output: input };
       // finalAnswers
       return { log: text, returnValues: finalAnswers };
@@ -35,14 +39,18 @@ export class SalesConvoOutputParser extends AgentActionOutputParser {
       console.warn(`Could not parse LLM output: ${text}`);
       return {
         log: text,
-        returnValues: { output: text.replace(regexOut, '') },
+        returnValues: {
+          output: text
+            .replace(regexOut, '')
+            .replaceAll(regexRemoveScratchPad, ''),
+        },
       };
     }
     console.log('TOOL REQUIRED');
     return {
       tool: match[1].trim(),
       toolInput: match[2].trim().replace(/^"+|"+$/g, ''),
-      log: text,
+      log: text.replaceAll(regexRemoveScratchPad, ''),
     };
   }
 

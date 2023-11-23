@@ -1,4 +1,5 @@
 import AWS, { DynamoDB } from 'aws-sdk';
+import { EntityItem } from 'electrodb';
 import { ApiHandler, usePathParams } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
@@ -11,8 +12,8 @@ import * as Sentry from '@sentry/serverless';
 import { getAppDb } from '../db';
 import { BotStateContext } from '../nodes/botStateContext';
 import { findNextNodes } from '../nodes/getNextNodes';
-import { handleMessageResponse } from '../nodes/handleMessageResponse';
 import { publishToNextNodes } from '../nodes/publishToNextNodes';
+import { handleMessageAction } from './handleMessageAction';
 
 const sns = new AWS.SNS();
 
@@ -50,7 +51,18 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             record.dynamodb.NewImage.context?.S === 'message' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'message'
           ) {
+            const newImage = DynamoDB.Converter.unmarshall(
+              record.dynamodb.NewImage,
+            );
+            const messageParsed = Message.parse({
+              Item: newImage,
+            });
+            const messageData = messageParsed?.data;
             console.log('publishing');
+            await handleMessageAction(
+              messageData as EntityItem<typeof Message>,
+              appDb,
+            );
             await sns
               .publish({
                 TopicArn: Topic.DdbStreamTopic.topicArn,
@@ -156,41 +168,14 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               Item: newImage,
             });
             const messageData = messageParsed?.data;
+            handleMessageAction(
+              messageData as EntityItem<typeof Message>,
+              appDb,
+            );
 
             // console.log('updateMessage', messageData);
 
             // route responses to bot actions/conditions to the appropriate next node
-            if (
-              messageData?.messageFormType !== '' &&
-              messageData?.sender === 'bot'
-            ) {
-              const botStateContext = JSON.parse(
-                messageData?.botStateContext ?? '{}',
-              ) as BotStateContext;
-              // console.log(botStateContext);
-              if (
-                botStateContext?.currentNode?.id &&
-                botStateContext?.bot?.nodes &&
-                botStateContext?.bot?.edges
-              ) {
-                // console.log(botStateContext);
-                // current/next node incrementation for inputAction's updating message occurs here rather than in the lambda
-                const newBotStateContext = {
-                  ...botStateContext,
-                  messages: [...(botStateContext?.messages ?? []), messageData],
-                };
-                await handleMessageResponse(
-                  messageData,
-                  botStateContext,
-                  appDb,
-                );
-                const nextNodes = await publishToNextNodes(
-                  newBotStateContext,
-                  appDb,
-                );
-              }
-            }
-
             await sns
               .publish({
                 TopicArn: Topic.DdbStreamTopic.topicArn,

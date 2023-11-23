@@ -8,7 +8,9 @@ import { Table } from 'sst/node/table';
 import { Topic } from 'sst/node/topic';
 import { v4 as uuidv4 } from 'uuid';
 
-import { VisitorClicksOnChatIconData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/triggers/VisitorClicksOnChatIcon';
+import {
+    VisitorClicksOnChatIconData
+} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/triggers/VisitorClicksOnChatIcon';
 import { WsAppDetailType } from '@/types/snsTypes';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
@@ -20,8 +22,7 @@ import { Interaction } from '../../../../../../stacks/entities/interaction';
 import { getAppDb } from '../../../api/src/db';
 import { getNewImage } from '../../../ws/src/helpers';
 import {
-  VisitorBotInteractionTrigger,
-  VisitorPageInteractionTrigger,
+    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
 } from '../bots/triggers/definitions.type';
 import { BotStateContext } from './botStateContext';
 import { getBotTriggers } from './getBotTriggers';
@@ -85,6 +86,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         botStates?.forEach(async (botState) => {
           console.log('publishing');
+          console.log(botState);
           await sns
             .publish({
               // Get the topic from the environment variable
@@ -163,13 +165,10 @@ export const processTrigger = async (
     ([botId, triggers]) =>
       triggers?.find((trigger) => trigger.type === interaction.type),
   );
-  // console.log(triggerMatch);
   const matchedBotId = triggerMatch?.[0];
   const matchedNode = triggerMatch?.[1]?.[0];
   const matchedNodeId = triggerMatch?.[1]?.[0]?.id;
 
-  // console.log('1', matchedBotId, matchedNode?.type, matchedNodeId);
-  // console.log('2', isTriggerReady(matchedNode ?? {}, interaction));
   if (
     matchedBotId &&
     matchedNode?.type &&
@@ -182,13 +181,10 @@ export const processTrigger = async (
         customerId,
       })
       .go();
-    console.log(customerId);
     if (customerId) {
       // start bot
       const bot = bots.find(({ botId }) => botId === matchedBotId);
-      // if bot, we then check additional prerequites are fulfilled
       const newConversationId = uuidv4();
-      console.log(matchedNodeId, bot?.nodes, bot?.edges);
       const nextNodes = getNextNodes(matchedNodeId, bot?.nodes, bot?.edges);
       console.log('nextNodes', nextNodes);
 

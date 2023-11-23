@@ -2,10 +2,7 @@ import fs from 'fs';
 import fsProm from 'fs/promises';
 import { BaseLanguageModel } from 'langchain/base_language';
 import { RetrievalQAChain } from 'langchain/chains';
-import {
-  ChatOpenAI,
-  ChatOpenAICallOptions,
-} from 'langchain/chat_models/openai';
+import { ChatOpenAI, ChatOpenAICallOptions } from 'langchain/chat_models/openai';
 import { Embeddings } from 'langchain/dist/embeddings/base';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -54,8 +51,8 @@ export async function setup_knowledge_base(
   embeddings: Embeddings,
 ) {
   const { orgId, lang } = params;
-  const pklKey = `${orgId}/${lang}/faiss/index.pkl`;
-  const faissKey = `${orgId}/${lang}/faiss/index.faiss`;
+  const pklKey = `${orgId}/${lang}/faiss/docstore.json`;
+  const faissKey = `${orgId}/${lang}/faiss/faiss.index`;
   if (!fs.existsSync(`/tmp/${pklKey}`)) {
     const getPkl = new GetObjectCommand({
       Bucket: Bucket?.['echat-app-assets'].bucketName,
@@ -82,7 +79,7 @@ export async function setup_knowledge_base(
   // const pklFile = await fsProm.readFile(`/tmp/${pklKey}`);
 
   const vectorStore = await FaissStore.load(
-    `${orgId}/${lang}/faiss`,
+    `/tmp/${orgId}/${lang}/faiss`,
     embeddings,
   );
 
