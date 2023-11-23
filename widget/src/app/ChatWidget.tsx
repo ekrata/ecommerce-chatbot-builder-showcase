@@ -136,11 +136,10 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
             <div className='top-0 right-0 flex flex-col mt-4 gap-x-2'>
               <button className='z-10 btn btn-sm w-30 rounded-xl' onClick={() => {
                 console.log('clicked')
-                setBuster(uuidv4())
-                // customerQuery.remove()
                 setInteractionHistory({})
-                queryClient.clear()
-                window.location.reload()
+                queryClient.removeQueries();
+                window.localStorage.removeItem('REACT_QUERY_OFFLINE_CACHE');
+                // window.location.reload()
               }}>
                 {tWidget('resetVisitor')}</button>
             </div>

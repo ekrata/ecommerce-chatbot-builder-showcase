@@ -76,7 +76,17 @@ export function paramStack({ stack, app }: StackContext) {
 
   const appEventBus = new EventBus(stack, 'appEventBus', {});
   const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
-  const botNodeTopic = new Topic(stack, 'BotNodeTopic', {});
+  const botNodeTopic = new Topic(stack, 'BotNodeTopic', {
+    defaults: {
+      function: {
+        permissions: [
+          'sqs:ReceiveMessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes',
+        ],
+      },
+    },
+  });
 
   const faissLambdaConfig = {
     timeout: 30,

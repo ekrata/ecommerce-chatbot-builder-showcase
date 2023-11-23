@@ -7,7 +7,7 @@ import { BsPersonCircle, BsX } from 'react-icons/bs';
 import { useCreateConversationMut } from 'src/app/(actions)/mutations/useCreateConversationMut';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
-    useConversationItemsByCustomerQuery
+  useConversationItemsByCustomerQuery
 } from 'src/app/(actions)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
@@ -79,10 +79,11 @@ export const ConversationsScreen: FC = () => {
           >
             {conversationItems.isFetching && fetchingConversationItemsSkeleton}
             {conversationItems.isSuccess && conversationItems.data.map((conversationItem) => (
-              // conversationItem?.messages?.length &&
-              <div key={conversationItem?.conversationId} data-testid={conversationItem?.conversationId} className="w-full border-b-2 divide-y-2">
-                <CustomerConversationCard height={'16'} conversationItem={conversationItem} />
-              </div>
+              conversationItem?.messages?.length > 0 ?
+                <div key={conversationItem?.conversationId} data-testid={conversationItem?.conversationId} className="w-full border-b-2 divide-y-2">
+                  <CustomerConversationCard height={'16'} conversationItem={conversationItem} />
+                </div>
+                : <></>
             ))}
             {/* {(conversationItems.isSuccess && !conversationItems.data.length &&
               noData

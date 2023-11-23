@@ -74,6 +74,7 @@
     "@aws-sdk/client-bedrock-runtime": "^3.454.0",
     "@aws-sdk/client-dynamodb": "^3.433.0",
     "@aws-sdk/client-s3": "^3.433.0",
+    "@aws-sdk/client-sqs": "^3.454.0",
     "@aws-sdk/credential-provider-node": "^3.451.0",
     "@aws-sdk/s3-request-presigner": "^3.433.0",
     "@aws-sdk/types": "^3.451.0",

@@ -8,9 +8,7 @@ import { Table } from 'sst/node/table';
 import { Topic } from 'sst/node/topic';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-    VisitorClicksOnChatIconData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/triggers/VisitorClicksOnChatIcon';
+import { VisitorClicksOnChatIconData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/triggers/VisitorClicksOnChatIcon';
 import { WsAppDetailType } from '@/types/snsTypes';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
@@ -22,7 +20,8 @@ import { Interaction } from '../../../../../../stacks/entities/interaction';
 import { getAppDb } from '../../../api/src/db';
 import { getNewImage } from '../../../ws/src/helpers';
 import {
-    VisitorBotInteractionTrigger, VisitorPageInteractionTrigger
+  VisitorBotInteractionTrigger,
+  VisitorPageInteractionTrigger,
 } from '../bots/triggers/definitions.type';
 import { BotStateContext } from './botStateContext';
 import { getBotTriggers } from './getBotTriggers';
@@ -36,78 +35,82 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
     const appDb = getAppDb(Config.REGION, Table.app.tableName);
     try {
       const { Records } = event;
-      for (const record of Records) {
-        const newImage = getNewImage(record);
-        const interactionData = Interaction.parse({ Item: newImage }).data;
-        // console.log(interactionData);
-        if (!interactionData) {
-          return {
-            statusCode: 500,
-            body: 'Failed to parse the eventbridge event into a usable entity.',
-          };
-        }
+      await Promise.all(
+        Records.map(async (record) => {
+          const newImage = getNewImage(record);
+          const interactionData = Interaction.parse({ Item: newImage }).data;
+          // console.log(interactionData);
+          if (!interactionData) {
+            return {
+              statusCode: 500,
+              body: 'Failed to parse the eventbridge event into a usable entity.',
+            };
+          }
 
-        const { type } = interactionData;
-        const bots = await appDb.entities.bots.query
-          .byOrg({ orgId: interactionData.orgId })
-          .where(({ active }, { eq }) => `${eq(active, true)}`)
-          .go();
-        const botTriggers = getBotTriggers(bots?.data);
-        console.log('triggers', botTriggers);
+          const { type } = interactionData;
+          const bots = await appDb.entities.bots.query
+            .byOrg({ orgId: interactionData.orgId })
+            .where(({ active }, { eq }) => `${eq(active, true)}`)
+            .go();
+          const botTriggers = getBotTriggers(bots?.data);
+          console.log('triggers', botTriggers);
 
-        const botStates = await processTrigger(
-          interactionData,
-          botTriggers,
-          bots?.data,
-          appDb,
-        );
+          const botStates = await processTrigger(
+            interactionData,
+            botTriggers,
+            bots?.data,
+            appDb,
+          );
 
-        console.log('botStates', botStates);
-        // inform client that this has triggered this node
-        if (botStates?.length) {
-          console.log('publishing');
-          sns
-            .publish({
-              // Get the topic from the environment variable
-              TopicArn: Topic.DdbStreamTopic.topicArn,
-              Message: JSON.stringify({
-                ...interactionData,
-              }),
-              MessageAttributes: {
-                type: {
-                  DataType: 'String',
-                  StringValue: WsAppDetailType.wsAppTriggerStarted,
+          // console.log('botStates', botStates?.length);
+
+          const res = await Promise.all(
+            botStates?.map(async (botState) => {
+              console.log('publishing', botState?.nextNode);
+              await sns
+                .publish({
+                  // Get the topic from the environment variable
+                  TopicArn: Topic.BotNodeTopic.topicArn,
+                  Message: JSON.stringify({
+                    ...botState,
+                    type: botState.nextNode?.type,
+                    currentNode: botState.nextNode,
+                    nextNode: {},
+                  }),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: botState.nextNode?.type,
+                    },
+                  },
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }) ?? [],
+          );
+
+          // inform client that this has triggered this node
+          if (botStates?.length) {
+            console.log('publishing');
+            await sns
+              .publish({
+                // Get the topic from the environment variable
+                TopicArn: Topic.DdbStreamTopic.topicArn,
+                Message: JSON.stringify({
+                  ...interactionData,
+                }),
+                MessageAttributes: {
+                  type: {
+                    DataType: 'String',
+                    StringValue: WsAppDetailType.wsAppTriggerStarted,
+                  },
                 },
-              },
-              MessageStructure: 'string',
-            })
-            .promise();
-        }
-
-        botStates?.forEach(async (botState) => {
-          console.log('publishing');
-          console.log(botState);
-          await sns
-            .publish({
-              // Get the topic from the environment variable
-              TopicArn: Topic.BotNodeTopic.topicArn,
-              Message: JSON.stringify({
-                ...botState,
-                type: botState.nextNode?.type,
-                currentNode: botState.nextNode,
-                nextNode: {},
-              }),
-              MessageAttributes: {
-                type: {
-                  DataType: 'String',
-                  StringValue: botState.nextNode?.type,
-                },
-              },
-              MessageStructure: 'string',
-            })
-            .promise();
-        });
-      }
+                MessageStructure: 'string',
+              })
+              .promise();
+          }
+        }),
+      );
     } catch (err) {
       console.log('err');
       console.log(err);

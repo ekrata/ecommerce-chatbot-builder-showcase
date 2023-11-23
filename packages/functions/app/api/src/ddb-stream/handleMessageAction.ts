@@ -17,37 +17,38 @@ export const handleMessageAction = async (
       messageData.sender === 'customer') ||
     (messageData?.messageFormType !== '' && messageData?.sender === 'bot')
   ) {
-    console.log('ininkjaksdjask');
-    const botStateContext = JSON.parse(
-      messageData?.botStateContext ?? '{}',
-    ) as BotStateContext;
+    if (messageData?.botStateContext) {
+      const botStateContext = JSON.parse(
+        messageData?.botStateContext ?? '{}',
+      ) as BotStateContext;
 
-    // const data = JSON.parse(
-    //   botStateContext ?? '{}',
-    // ) as BotStateContext;
+      // const data = JSON.parse(
+      //   botStateContext ?? '{}',
+      // ) as BotStateContext;
 
-    // console.log(botStateContext);
-    // console.log(botStateContext);
-    console.log(
-      botStateContext?.currentNode?.id,
-      botStateContext?.bot?.nodes,
-      botStateContext?.bot?.edges,
-    );
-    if (
-      botStateContext?.currentNode?.id &&
-      botStateContext?.bot?.nodes &&
-      botStateContext?.bot?.edges
-    ) {
-      console.log('sadjasjdsa');
       // console.log(botStateContext);
-      // current/next node incrementation for inputAction's updating message occurs here rather than in the lambda
-      const newBotStateContext = {
-        ...botStateContext,
-        messages: [...(botStateContext?.messages ?? []), messageData],
-      };
-      console.log('inn botstate');
-      await handleMessageResponse(messageData, botStateContext, appDb);
-      await publishToNextNodes(newBotStateContext, appDb);
+      // console.log(botStateContext);
+      console.log('handled');
+      console.log(
+        botStateContext?.currentNode?.id != null &&
+          botStateContext?.bot?.nodes &&
+          botStateContext?.bot?.edges,
+      );
+      if (
+        botStateContext?.currentNode?.id != null &&
+        botStateContext?.bot?.nodes &&
+        botStateContext?.bot?.edges
+      ) {
+        // console.log(botStateContext);
+        // current/next node incrementation for inputAction's updating message occurs here rather than in the lambda
+        const newBotStateContext = {
+          ...botStateContext,
+          messages: [...(botStateContext?.messages ?? []), messageData],
+        };
+        console.log('hz ');
+        await handleMessageResponse(messageData, botStateContext, appDb);
+        await publishToNextNodes(newBotStateContext, appDb);
+      }
     }
   }
   return [];

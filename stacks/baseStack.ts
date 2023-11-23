@@ -5,9 +5,25 @@ import { FilterOrPolicy, SubscriptionFilter } from 'aws-cdk-lib/aws-sns';
 import { IQueue, QueueProps } from 'aws-cdk-lib/aws-sqs';
 import { Duration } from 'aws-cdk-lib/core';
 import {
-    Api, ApiRouteProps, Auth, Bucket, Config, EventBus, EventBusRuleProps, FunctionInlineDefinition,
-    NextjsSite, Queue, StackContext, StaticSite, Table, Topic, TopicFunctionSubscriberProps,
-    TopicQueueSubscriberProps, use, WebSocketApi, WebSocketApiFunctionRouteProps
+  Api,
+  ApiRouteProps,
+  Auth,
+  Bucket,
+  Config,
+  EventBus,
+  EventBusRuleProps,
+  FunctionInlineDefinition,
+  NextjsSite,
+  Queue,
+  StackContext,
+  StaticSite,
+  Table,
+  Topic,
+  TopicFunctionSubscriberProps,
+  TopicQueueSubscriberProps,
+  use,
+  WebSocketApi,
+  WebSocketApiFunctionRouteProps,
 } from 'sst/constructs';
 
 import { ApiAppDetailType, WsAppDetailType } from '@/types/snsTypes';
@@ -383,8 +399,9 @@ export function baseStack({ stack, app }: StackContext) {
     | undefined = {
     queue: {
       // queueName: "my-queue",
-      visibilityTimeout: Duration.seconds(defaultFunctionTimeout * 60),
-      receiveMessageWaitTime: Duration.seconds(10),
+      // visibilityTimeout: 10 Duration.seconds(defaultFunctionTimeout * 60),
+      visibilityTimeout: Duration.seconds(10),
+      receiveMessageWaitTime: Duration.seconds(1),
     },
   };
 
@@ -690,7 +707,7 @@ export function baseStack({ stack, app }: StackContext) {
             memorySize: `1 GB`,
             handler:
               'packages/functions/app/api/src/nodes/agents/sales/sales.handler',
-            bind: [wsApi, api, REGION, table, OPENAI_API_KEY],
+            bind: [wsApi, api, assets, REGION, table, OPENAI_API_KEY],
             permissions: [
               table,
               'sqs:ReceiveMessage',

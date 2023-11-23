@@ -6,7 +6,7 @@ import { CgSpinner } from 'react-icons/cg';
 import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
-    useConversationItemsByCustomerQuery
+  useConversationItemsByCustomerQuery
 } from 'src/app/(actions)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';

@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useCreateMessageMut } from 'src/app/(actions)/mutations/useCreateMessageMut';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import {
-    useConversationItemsByCustomerQuery
+  useConversationItemsByCustomerQuery
 } from 'src/app/(actions)/queries/useConversationItemsQuery';
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
@@ -115,11 +115,11 @@ export const CustomerChatLog: FC = ({ }) => {
           )}
           {message.sender === 'customer' && (
             <div className="flex flex-col chat chat-end">
-              <div className="min-h-0 p-2 bg-gray-900 rounded-md text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
+              <div className="min-h-0 p-2 bg-gray-900 rounded-md animate-fade-left text-base-100" data-testid={`customer-message-content-${message.messageId}`}>
                 {message.content}
               </div>
               {i + 1 === conversationItem?.messages?.length && (
-                <div className="flex justify-end place-items-center">
+                <div className="flex justify-end animate-duration-1000 place-items-center animate-fade">
                   {createMessageMut.isLoading ? 'Sending...' : <CustomerMessageTimeLabel conversationItem={conversationItem} />}
                 </div>
               )}

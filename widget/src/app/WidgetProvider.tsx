@@ -27,10 +27,15 @@ export const WidgetProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQue
   if (typeof window !== "undefined") {
     const queryClient = new QueryClient({
       defaultOptions: {
+        mutations: {
+          networkMode: 'always'
+        },
         queries: {
           cacheTime: Infinity,
           staleTime: Infinity,
+          networkMode: 'always'
         }
+
       }
     })
 

@@ -16,14 +16,16 @@ export interface Props {
 
 export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQueryClient, mockWsUrl, children }: PropsWithChildren<Props>) => {
   // Create a client
-  const [queryClient] = useState(() => new QueryClient({
+  const queryClient = new QueryClient({
     defaultOptions: {
-      // queries: {
-      //   cacheTime: cacheTime,
-      //   staleTime: ,
-      // }
+      mutations: {
+        networkMode: 'always'
+      },
+      queries: {
+        networkMode: 'always'
+      }
     }
-  }))
+  })
 
   return (
     <>

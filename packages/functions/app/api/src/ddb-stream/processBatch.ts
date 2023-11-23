@@ -59,10 +59,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             });
             const messageData = messageParsed?.data;
             console.log('publishing');
-            await handleMessageAction(
-              messageData as EntityItem<typeof Message>,
-              appDb,
-            );
             await sns
               .publish({
                 TopicArn: Topic.DdbStreamTopic.topicArn,
@@ -76,8 +72,11 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 MessageStructure: 'string',
               })
               .promise();
+            await handleMessageAction(
+              messageData as EntityItem<typeof Message>,
+              appDb,
+            );
           }
-
           if (
             record.dynamodb.NewImage.context?.S === 'conversation' ||
             record.dynamodb.NewImage.__edb_e__?.S === 'conversation'
@@ -251,6 +250,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: '',
       };
     } catch (err) {
+      console.log(err);
       Sentry.captureException(err);
       return {
         statusCode: 500,

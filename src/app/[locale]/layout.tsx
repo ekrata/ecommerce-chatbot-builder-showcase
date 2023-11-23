@@ -9,8 +9,8 @@ import { AuthProvider } from './(hooks)/AuthProvider';
 import { QueryClientWrapper } from './(hooks)/QueryClientProvider';
 
 export const metadata = {
-  title: 'Crow Commerce',
-  description: 'Grow With Crow Commerce',
+  title: 'eChat',
+  description: 'Elevate with eChat',
 };
 
 const locales = ['en', 'de'];

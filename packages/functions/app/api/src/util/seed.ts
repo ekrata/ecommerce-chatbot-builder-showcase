@@ -49,10 +49,6 @@ export interface SeedResponse {
   mockOrgIds: MockOrgIds[];
 }
 
-const limit = pLimit(1);
-
-const http = await getHttp(`${Api.appApi.url}`);
-
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
