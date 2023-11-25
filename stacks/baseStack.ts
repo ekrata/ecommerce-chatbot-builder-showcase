@@ -437,10 +437,6 @@ export function baseStack({ stack, app }: StackContext) {
         | TopicQueueSubscriberProps
       >
     | undefined = Object.entries(wsApiRoutes).reduce((acc, [key, route]) => {
-    // const wsFunc = wsApi.getFunction(route);
-    // console.log(wsFunc?.permissionsNode);
-
-    console.log(key);
     if (key && !key.includes('$')) {
       return {
         ...acc,
@@ -743,7 +739,8 @@ export function baseStack({ stack, app }: StackContext) {
         consumer: {
           function: {
             ...faissLambdaConfig,
-            memorySize: `256 MB`,
+            memorySize: `150 MB`,
+            timeout: defaultFunctionTimeout,
             handler:
               'packages/functions/app/api/src/nodes/agents/sales/sales.handler',
             bind: [

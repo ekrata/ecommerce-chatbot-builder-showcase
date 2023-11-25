@@ -57,21 +57,21 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
             // Update the local chat messages state based on the message type
             switch (type) {
                 case WsAppDetailType.wsAppCreateConversation:
-                    queryClient.setQueryData<InfiniteData<{
+                    queryClient.setQueryData<{
                         cursor: string | null;
                         data: ConversationItem[];
-                    }> | undefined>([...body, QueryKey.conversationItems], (data) => {
+                    }> | undefined > ([...body, QueryKey.conversationItems], (data) => {
                         return [{ cursor: '', data: body }, data,] as any;
                     });
                     break;
                 case WsAppDetailType.wsAppCreateMessage:
                     console.log(Object.values(conversationListFilter))
-                    queryClient.setQueryData<InfiniteData<{
+                    queryClient.setQueryData<{
                         cursor: string | null;
                         data: ConversationItem[];
-                    }> | undefined>([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
-                        const pageNumber = oldData?.pages.findIndex((data) => data?.data?.some((conversationItem) => conversationItem?.conversationId === body?.conversationId))
-                        if (pageNumber != null && oldData?.pages[pageNumber]?.data) {
+                    }> | undefined > ([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
+                        const pageNumber = oldData?.findIndex((data) => data?.data?.some((conversationItem) => conversationItem?.conversationId === body?.conversationId))
+                        if (pageNumber != null && oldData?.data) {
                             console.log('reducing message')
                             oldData.pages[pageNumber].data = newMessageReducer(body as EntityItem<typeof Message>, oldData?.pages[pageNumber].data)
                             return { ...oldData }
