@@ -49,7 +49,7 @@ export const StatusSelect: React.FC<Props> = ({ dropdownPosition }) => {
                 if (key === 'all') {
                   setConversationListFilter({ ...conversationListFilter, status: undefined })
                 } else {
-                  setConversationListFilter({ ...conversationListFilter, status: key as ConversationStatus })
+                  setConversationListFilter({ ...conversationListFilter, status: key as ConversationStatus, ...(key as ConversationStatus === 'unassigned' ? { operatorId: '' } : {}) })
                 }
               }} />
               <div className='flex text-sm place-items-center gap-x-2'>

@@ -1,5 +1,6 @@
 import AWS, { DynamoDB } from 'aws-sdk';
 import { EntityItem } from 'electrodb';
+import { isEmpty } from 'lodash';
 import { ApiHandler, usePathParams } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
@@ -11,8 +12,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
 import { BotStateContext } from '../nodes/botStateContext';
-import { findNextNodes } from '../nodes/getNextNodes';
-import { publishToNextNodes } from '../nodes/publishToNextNodes';
+import { handleMessageResponse } from '../nodes/handleMessageResponse';
 import { handleMessageAction } from './handleMessageAction';
 
 const sns = new AWS.SNS({
@@ -64,8 +64,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 Item: newImage,
               });
               const messageData = messageParsed?.data;
-              console.log('publishing');
-              console.log(messageParsed);
               try {
                 const res = await sns
                   .publish({
@@ -84,11 +82,19 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 console.log(err);
               }
 
-              await handleMessageAction(
-                messageData as EntityItem<typeof Message>,
-                appDb,
-                sns,
-              );
+              if (!isEmpty(messageData?.botStateContext)) {
+                await handleMessageAction(
+                  messageData as EntityItem<typeof Message>,
+                  appDb,
+                  sns,
+                );
+              } else if (messageData?.sender === 'customer') {
+                await handleMessageResponse(
+                  messageData as EntityItem<typeof Message>,
+                  {} as BotStateContext,
+                  appDb,
+                );
+              }
             }
             if (
               record.dynamodb.NewImage.context?.S === 'conversation' ||

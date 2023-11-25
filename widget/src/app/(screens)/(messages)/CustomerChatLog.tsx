@@ -9,6 +9,7 @@ import {
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
 import { sortConversationItems } from 'src/app/(helpers)/sortConversationItems';
+import { useLocalStorage } from 'usehooks-ts';
 
 import { Message, messageFormType } from '@/entities/message';
 import { Action } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
@@ -43,10 +44,22 @@ export const CustomerChatLog: FC = ({ }) => {
   const conversationItem = getItem(conversationItems.data ?? [], selectedConversationId ?? '');
   const configuration = useConfigurationQuery(orgId);
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
+  const [readMessages, setReadMessages] = useLocalStorage<Record<string, boolean>>('readMessages', {})
+
+  const lastMessage = useMemo(() => {
+    // get last message that wasn't a form input
+    return conversationItem?.messages?.filter((message) => !message?.messageFormType)?.slice(-1)[0]
+  }, [conversationItem])
+
+  const readMessageId = `${lastMessage?.conversationId}+${lastMessage?.messageId}`
 
   // Observing message creation/sending state
   const createMessageMut = useCreateMessageMut(orgId, customer?.data?.customerId ?? '', selectedConversationId ?? '')
   const { relativeTime } = useFormatter()
+
+  useEffect(() => {
+    setReadMessages({ ...readMessages, [`${readMessageId}`]: true })
+  }, [conversationItem?.messages])
 
   useEffect(() => {
     setLatestedFormSubmitted(false)

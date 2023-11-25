@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Operator } from '../../../../stacks/entities/operator';
 import { getOperator, useOperatorQuery } from './queries/useOperatorQuery';
 
-export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string } | null>>]>([null, () => null])
+export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string } | EntityItem<typeof Operator> | null>>]>([null, () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
 // export const signoutSession = () => {
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [fetching, setFetching] = useState<boolean>(false);
   const [operator, setOperator] = useState<EntityItem<typeof Operator> | null>(null);
   const [authToken, setAuthToken] = useLocalStorage<string>('authToken', '');
-  const [sessionUser, setSessionUser] = useLocalStorage<{ orgId: string, operatorId: string } | null>('sessionUser', null);
+  const [sessionUser, setSessionUser] = useLocalStorage<{ orgId: string, operatorId: string } | EntityItem<typeof Operator> | null>('sessionUser', null);
   console.log(sessionUser)
 
   useEffect(() => {

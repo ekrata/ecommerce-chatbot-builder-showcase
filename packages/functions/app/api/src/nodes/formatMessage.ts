@@ -9,11 +9,12 @@ export const formatMessage = async (
 ) => {
   let formattedText = text;
   const { conversation } = botStateContext;
-  const { orgId, customerId, customer } = conversation;
+  const orgId = conversation?.orgId ?? '';
+  const customerId = conversation?.customerId ?? '';
   formattedText = await fillTemplateStringFields(
     formattedText,
     orgId,
-    customerId ?? customer?.customerId ?? '',
+    customerId,
     appDb,
   );
   return formattedText;

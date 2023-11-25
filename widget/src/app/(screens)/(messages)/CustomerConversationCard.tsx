@@ -45,7 +45,7 @@ export const CustomerConversationCard: React.FC<Props> = ({ conversationItem, he
     return conversationItem?.messages?.filter((message) => !message?.messageFormType)?.slice(-1)[0]
   }, [conversationItem])
 
-  const readMessageId = `${lastMessage.conversationId}+${lastMessage.messageId}`
+  const readMessageId = `${lastMessage?.conversationId}+${lastMessage?.messageId}`
 
 
   return (

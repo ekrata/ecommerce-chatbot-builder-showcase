@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { Config } from 'sst/node/config';
 import { Topic } from 'sst/node/topic';
 
 import { BotNodeEvent, botNodeEvent, BotNodeType } from '@/entities/bot';
@@ -12,7 +13,7 @@ import { findNextNodes, getNextNodes } from './getNextNodes';
 export const publishToNextNodes = async (
   botStateContext: BotStateContext,
   appDb: ReturnType<typeof getAppDb>,
-  sns: AWS.SNS,
+  sns: AWS.SNS = new AWS.SNS({ region: Config.REGION }),
 ) => {
   try {
     const { customerId, orgId } = botStateContext?.conversation;

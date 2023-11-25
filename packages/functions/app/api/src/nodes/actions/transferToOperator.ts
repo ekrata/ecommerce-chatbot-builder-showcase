@@ -4,15 +4,9 @@ import { Table } from 'sst/node/table';
 import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
 import { botNodeEvent, BotNodeType } from '@/entities/bot';
-import {
-    AskAQuestionData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
-import {
-    SendAChatMessageData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/SendAChatMessage';
-import {
-    TransferToOperatorData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/TransferToOperator';
+import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
+import { SendAChatMessageData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/SendAChatMessage';
+import { TransferToOperatorData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/TransferToOperator';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
@@ -37,10 +31,8 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
 
         const { orgId, conversationId, botId, customerId, operatorId } =
           conversation;
-        console.log(currentNode);
         const { id, position } = currentNode as BotNodeType;
         const data = JSON.parse(currentNode?.data ?? '{}') as BotNodeType;
-        console.log('sendmessage', data);
         const transferToOperatorData =
           data as unknown as TransferToOperatorData;
 
@@ -48,7 +40,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           [
             transferToOperatorData?.transferMessage,
             transferToOperatorData?.waitTimeMessage,
-          ].map(async (message) => {
+          ].map(async (message, i) => {
             const formattedMessage = await formatMessage(
               message,
               botStateContext,
@@ -57,7 +49,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             const res = await appDb.entities.messages
               .upsert({
                 // messageId based on idempotent interactionId
-                messageId: uuidv4(),
+                messageId: `${snsMessageId}_${i}`,
                 conversationId,
                 orgId,
                 operatorId: operatorId ?? '',
@@ -75,13 +67,12 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
           }),
         );
 
-        await publishToNextNodes(
-          {
-            ...botStateContext,
-            messages: [...(botStateContext?.messages ?? []), ...newMessages],
-          },
-          appDb,
-        );
+        await publishToNextNodes(botStateContext, appDb);
+
+        await appDb.entities.conversations
+          .update({ conversationId, orgId })
+          .set({ preventCustomerReplies: true })
+          .go({});
 
         return {
           statusCode: 200,

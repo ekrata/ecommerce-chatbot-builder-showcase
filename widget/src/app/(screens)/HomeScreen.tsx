@@ -74,23 +74,25 @@ export const HomeScreen: FC = () => {
           </h4>
         </div>
         {/* {translationQuery?.data?.translations?.chatWidget?.['How can we help you'] ?? 'How can we help you? '} */}
-        {mostRecentConversationItem && mostRecentConversationItem?.messages?.length && (
+        {mostRecentConversationItem && mostRecentConversationItem?.messages?.length > 0 ? (
           <div className="mx-4 bg-white border-gray-300 rounded-md shadow-md h-30 gap-y-4 animate-fade-left animate-once">
             <CustomerConversationCard height='28' conversationItem={mostRecentConversationItem} rounded showRecentLabel />
           </div>
-        )}
+        )
+          :
+          (<div className="h-20 mx-4 mt-4 rounded-md shadow-lg 5 gap-y-4 animate-fade-left animate-once">
+            {/* {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />} */}
+            {conversationItems.fetchStatus === 'idle' &&
+              (<StartConversationCard />)}
+            {conversationItems.fetchStatus !== 'idle' && conversationItems.isLoading && (
+              <div className="flex flex-col items-start py-4 pl-4 mt-4 bg-white rounded-md gap-y-4 animate-fade-left">
+                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 "></div>
+                <div className="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+              </div>
+            )}
+          </div>)
+        }
 
-        <div className="h-20 mx-4 mt-4 rounded-md shadow-lg 5 gap-y-4 animate-fade-left animate-once">
-          {/* {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />} */}
-          {conversationItems.fetchStatus === 'idle' &&
-            (<StartConversationCard />)}
-          {conversationItems.fetchStatus !== 'idle' && conversationItems.isLoading && (
-            <div className="flex flex-col items-start pl-4 mt-4 bg-white rounded-md gap-y-4 animate-fade-left">
-              <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 "></div>
-              <div className="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-            </div>
-          )}
-        </div>
 
         {articles.isLoading || (articles.isFetched && articles?.data?.length) && <div className="mx-4 mt-4 bg-white border-gray-300 rounded-md shadow-xl dark:bg-gray-900 text-normal gap-y-4 animate-fade-left">
 

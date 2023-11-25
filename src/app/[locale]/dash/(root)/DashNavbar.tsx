@@ -31,7 +31,7 @@ export default function DashNavbar() {
 
   const unreadMessages = conversationItemsQuery?.data?.data?.reduce((prev, curr) => {
     const lastMessage = curr?.messages?.slice(-1)[0]
-    if (readMessages[`${curr?.conversationId}+${lastMessage?.messageId}`] || (lastMessage.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId)) {
+    if (readMessages?.[`${curr?.conversationId}+${lastMessage?.messageId}`] || (lastMessage?.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId)) {
       return prev - 1
     }
     return prev

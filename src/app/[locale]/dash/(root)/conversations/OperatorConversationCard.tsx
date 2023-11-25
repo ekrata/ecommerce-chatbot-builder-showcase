@@ -40,9 +40,9 @@ export const OperatorConversationCard: React.FC<Props> = ({ conversationItem, he
 
   const lastMessage = useMemo(() => {
     return conversationItem?.messages?.slice(-1)[0]
-  }, [conversationItem, conversationItem.messages.slice(-1)[0]?.messageId])
+  }, [conversationItem, conversationItem?.messages.slice(-1)[0]?.messageId])
 
-  const readMessageId = `${lastMessage.conversationId}+${lastMessage.messageId}`
+  const readMessageId = `${lastMessage?.conversationId}+${lastMessage?.messageId}`
   console.log(highlightedFields)
   const composeHighlightedMessage = highlightedFields?.['messages.content']?.map((child) => <>{child}</>)
   return (
@@ -54,7 +54,7 @@ export const OperatorConversationCard: React.FC<Props> = ({ conversationItem, he
               <CustomerAvatar customer={conversationItem?.customer} />
             </div>
             <div className="flex flex-col w-full place-items-start gap-y-1">
-              <h5 className={`justify-stretch text-start w-full  text-sm break-all truncate  justify-self-start ${readMessages?.[readMessageId] || (lastMessage.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId) ? 'font-normal text-neutral-700' : 'font-semibold'} `}>{composeHighlightedMessage ?? `${lastMessage?.content}`}</h5>
+              <h5 className={`justify-stretch text-start w-full  text-sm break-all truncate  justify-self-start ${readMessages?.[readMessageId] || (lastMessage?.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId) ? 'font-normal text-neutral-700' : 'font-semibold'} `}>{composeHighlightedMessage ?? `${lastMessage?.content}`}</h5>
               <div className="flex flex-grow w-full text-xs justify-stretch text-neutral-400 gap-x-1">
                 <OperatorMessageTimeLabel conversationItem={conversationItem} highlightedFields={highlightedFields} />
                 {/* {conversationItem?.topic && <div className='justify-end text-xs badge badge-sm'>{startCase(conversationItem?.topic)}</div>} */}

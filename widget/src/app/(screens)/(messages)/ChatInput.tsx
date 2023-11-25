@@ -64,7 +64,7 @@ export const ChatInput: FC = () => {
           <div className="flex flex-col w-full rounded-b-lg">
             <input
               type="text"
-              disabled={!toggleUserMessaging}
+              disabled={!toggleUserMessaging || conversationItem?.preventCustomerReplies}
               placeholder="Enter your message..."
               autoComplete='off'
               className="w-full h-full text-xs rounded-bl-3xl focus:outline-0 active:outline-0 focus:border-0 input-sm input hover:outline-0 hover:ring-0 focus:ring-0 rounded-xs "

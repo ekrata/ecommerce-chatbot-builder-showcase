@@ -2,7 +2,6 @@ import { EntityItem } from 'electrodb';
 import { isEmpty } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { botNodeEvent } from '@/entities/bot';
 import { ContactPropertiesEnum } from '@/entities/customer';
 import { Message, NodeFormData } from '@/entities/message';
 import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
@@ -62,9 +61,14 @@ export const handleMessageResponse = async (
         .go();
     }
   }
-  if (transferToOperatorMessageData?.transferToOperatorMessage) {
-    const { customerId, conversationId, orgId, operatorId } = conversation;
-    const initiateDate = Date.now() - 10000;
+  console.log(botStateContext);
+  if (
+    transferToOperatorMessageData?.transferToOperatorMessage ||
+    isEmpty(botStateContext) ||
+    botStateContext == null
+  ) {
+    const { customerId, conversationId, orgId, operatorId } = message;
+    const initiateDate = Date.now();
     await Promise.all([
       await appDb?.entities?.messages
         .upsert({
@@ -74,11 +78,13 @@ export const handleMessageResponse = async (
           operatorId: operatorId ?? '',
           customerId: customerId ?? '',
           sender: 'bot',
-          content: await formatMessage(
-            'Transfering you to an operator...',
-            botStateContext,
-            appDb,
-          ),
+          content: botStateContext
+            ? await formatMessage(
+                'Transfering you to an operator...',
+                botStateContext,
+                appDb,
+              )
+            : 'Transfering you to an operator...',
           createdAt: initiateDate,
           sentAt: initiateDate,
         })
@@ -91,11 +97,13 @@ export const handleMessageResponse = async (
           operatorId: operatorId ?? '',
           customerId: customerId ?? '',
           sender: 'bot',
-          content: await formatMessage(
-            `The average wait time is {${ContactPropertiesEnum.averageUnassignedWaitTime}}. We will be with you as soon as possible.`,
-            botStateContext,
-            appDb,
-          ),
+          content: !isEmpty(botStateContext)
+            ? await formatMessage(
+                `The average wait time is {${ContactPropertiesEnum.averageUnassignedWaitTime}}. We will be with you as soon as possible.`,
+                botStateContext,
+                appDb,
+              )
+            : 'We will be with your shortly. Thank you for your patience.',
           createdAt: initiateDate + 10000,
           sentAt: initiateDate + 10000,
           botStateContext: JSON.stringify({
@@ -105,7 +113,7 @@ export const handleMessageResponse = async (
         .go(),
       await appDb.entities?.conversations
         ?.update({ orgId, conversationId })
-        ?.set({ botId: '', operatorId: '' })
+        ?.set({ botId: '', operatorId: '', preventCustomerReplies: true })
         ?.go(),
     ]);
   }

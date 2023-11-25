@@ -53,5 +53,5 @@ export const RandomBackground: React.FC<{ customerId: string }> = ({ customerId 
       background: ${getRandomColor(customerId)}
     }
   `;
-  return <style>{background}</style>;
+  return <style className=''>{background}</style>;
 };
