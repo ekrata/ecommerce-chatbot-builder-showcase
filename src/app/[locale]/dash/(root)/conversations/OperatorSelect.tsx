@@ -42,7 +42,7 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
     setError,
     formState: { errors }, } = useForm<z.infer<typeof schema>>({
       resolver: zodResolver(schema),
-      mode: 'onBlur',
+      mode: 'onSubmit',
     });
 
 
@@ -58,9 +58,10 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
   //   setValue('operatorId', conversationListFilter?.operatorId ?? '')
   // }, [conversationListFilter?.operatorId])
 
-  const onSubmit: SubmitHandler<z.infer<typeof schema>> = async (values) => {
-    setConversationListFilter({ ...conversationListFilter, operatorId: values?.operatorId })
-  }
+  useEffect(() => {
+    setConversationListFilter({ ...conversationListFilter, operatorId: watch()?.operatorId })
+  }, [watch()?.operatorId])
+
 
 
   const displaySelectedAvatar = () => {
@@ -98,7 +99,6 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
     }
   }
 
-  console.log(sessionOperator)
 
 
   return (
@@ -107,13 +107,12 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
         {displaySelectedAvatar()}
         {/* <FaChevronDown className='text-gray-400'></FaChevronDown> */}
       </summary>
-      <form onSubmit={handleSubmit(onSubmit)} >
-
+      <form>
         <ul className="p-2 shadow menu dropdown-content max-h-screen-2/3 overflow-y-scroll z-[1] bg-base-100 rounded-box w-80">
           <li key={'operator'} onClick={() => {
           }}>
             <a className='text-sm'>
-              <input type="radio" className="text-sm form-control radio-primary radio-xs" {...register('operatorId')} value={sessionOperator?.operatorId} />
+              <input type="radio" value={sessionOperator?.operatorId} className="text-sm form-control radio-primary radio-xs" {...register('operatorId')} />
               <div className={`avatar ${sessionOperator?.online ? 'online' : 'offline'}`}>
                 <div className="w-8 rounded-full ">
                   <img src={sessionOperator?.profilePicture} />
@@ -122,19 +121,17 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
               <p>{sessionOperator?.name ?? sessionOperator?.email} ({t('You')})</p>
             </a>
           </li>
-          {sessionOperator?.permissionTier !== 'operator' &&
-            <li key={'all'} onClick={() => {
-            }}>
-              <a className='text-sm font-normal place-items-center'>
-                <input type="radio" className="form-control radio-primary radio-xs" {...register('operatorId')} value={'all'} />
-                <div className={`avatar`}>
-                  <div className="w-8 text-2xl rounded-full">
-                    <BsPeopleFill />
-                  </div>
+          <li key={'all'} >
+            <a className='text-sm font-normal place-items-center'>
+              <input type="radio" className="form-control radio-primary radio-xs" {...register('operatorId')} value={'all'} />
+              <div className={`avatar`}>
+                <div className="w-8 text-2xl rounded-full">
+                  <BsPeopleFill />
                 </div>
-                <p>{t('All conversations')}</p>
-              </a>
-            </li>}
+              </div>
+              <p>{t('All conversations')}</p>
+            </a>
+          </li>
           {sessionOperator?.permissionTier !== 'operator' &&
             <li key={'bots'} >
               <a className='text-sm font-normal'>

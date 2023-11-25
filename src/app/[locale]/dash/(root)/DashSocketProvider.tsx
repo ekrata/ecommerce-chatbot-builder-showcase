@@ -57,8 +57,8 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
             // Update the local chat messages state based on the message type
             switch (type) {
                 case WsAppDetailType.wsAppCreateConversation:
-                    queryClient.setQueryData<{ cursor?: string, data: ConversationItem[] } | undefined>([...body, QueryKey.conversationItems], (data) => {
-                        return [{ cursor: data?.cursor, data: body }, data,] as any;
+                    queryClient.setQueryData<{ cursor?: string, data: ConversationItem[] } | undefined>([...(body ?? {}), QueryKey.conversationItems], (data) => {
+                        return { cursor: data?.cursor, data: [...(data?.data ?? []), body] } as any;
                     });
                     break;
                 case WsAppDetailType.wsAppCreateMessage:
@@ -75,24 +75,16 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
                     console.log(queryData)
                     break;
                 case WsAppDetailType.wsAppUpdateConversation:
-                    queryClient.setQueryData<InfiniteData<{
-                        cursor: string | null;
-                        data: ConversationItem[];
-                    }>>([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
+                    queryClient.setQueryData<{ cursor?: string, data: ConversationItem[] } | undefined>([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
                         const updatedConversationItem = (body as ConversationItem)
-                        const pageNumber = oldData?.pages.findIndex((data) => data?.data?.some((conversationItem) => conversationItem?.conversationId === body?.conversationId))
-                        if (pageNumber && oldData?.pages?.[pageNumber]?.data) {
-                            const unUpdatedData = oldData.pages?.[pageNumber].data.filter((conversationItem) => conversationItem?.conversationId !== updatedConversationItem?.conversationId)
-                            const existingConversationItem = oldData.pages?.[pageNumber].data.find((conversationItem) => conversationItem.conversationId === updatedConversationItem?.conversationId)
-                            const mergedConversationItem: ConversationItem = { ...existingConversationItem, ...updatedConversationItem, messages: existingConversationItem?.messages ?? [] }
-                            const conversationItems = [mergedConversationItem, ...(unUpdatedData ?? [])]
-                            sortConversationItems(conversationItems)
-                            oldData.pages[pageNumber].data = conversationItems
-                            return { ...oldData }
-                        }
-                        return { ...oldData } as any
+                        // const pageNumber = oldData?.pages.findIndex((data) => data?.data?.some((conversationItem) => conversationItem?.conversationId === body?.conversationId))
+                        const unUpdatedData = oldData?.data.filter((conversationItem) => conversationItem?.conversationId !== updatedConversationItem?.conversationId)
+                        const existingConversationItem = oldData?.data.find((conversationItem) => conversationItem.conversationId === updatedConversationItem?.conversationId)
+                        const mergedConversationItem: ConversationItem = { ...existingConversationItem, ...updatedConversationItem, messages: existingConversationItem?.messages ?? [] }
+                        const conversationItems = [mergedConversationItem, ...(unUpdatedData ?? [])]
+                        sortConversationItems(conversationItems)
+                        return { cursor: oldData?.cursor, data: conversationItems }
                     });
-                    break;
                 default:
                     break;
             }

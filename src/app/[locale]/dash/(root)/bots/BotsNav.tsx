@@ -20,14 +20,14 @@ export const BotsNav: FC = () => {
             className={`flex flex-col bg-white  justify-start  w-full  overflow-y-scroll pl-2   `}
           >
             <h2 className='text-lg'>{tBots('My chatbots')}</h2>
-            <ul className='justify-start mb-4 text-base font-normal bg-white animated-flip-down menu dropdown-content' >
+            <ul className='justify-start mb-4 text-sm font-normal bg-white animated-flip-down menu dropdown-content' >
               <li><Link className='flex justify-start text-base place-items-center gap-x-2' href={{ pathname: '/all' }}><FcPositiveDynamic />{tBots('Grow sales')}</Link></li>
               <li><Link className='flex justify-start place-items-center gap-x-2' href={{ pathname: '/generate-leads' }} ><FcDownload />{tBots('Generate leads')}</Link></li>
               <li><Link className='flex justify-start place-items-center gap-x-2' href={{ pathname: '/resolve-issues' }}><FcIdea />{tBots('Resolve issues')}</Link></li>
               <li><Link className='flex justify-start place-items-center gap-x-2' href={{ pathname: '/all' }}>{tDash('All')}</Link></li>
             </ul>
             <h2 className='text-lg'>{tBots('Templates')}</h2>
-            <ul className='justify-start mb-4 text-base font-normal animated-flip-down menu dropdown-content' >
+            <ul className='justify-start mb-4 text-sm font-normal animated-flip-down menu dropdown-content' >
               <li><Link className='flex justify-start place-items-center gap-x-2' href={{ pathname: "/templates/strategies" }}><FcList />{tBots('Strategies')}</Link></li>
               <li><Link className='flex justify-start place-items-center gap-x-2' href={{ pathname: "/templates/grow-sales" }}><FcPositiveDynamic />{tBots('Grow sales')}</Link></li>
               <li><Link className='flex justify-start place-items-center gap-x-2' href={{ pathname: "/templates/generate-leads" }} ><FcDownload />{tBots('Generate leads')}</Link></li>

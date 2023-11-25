@@ -35,7 +35,6 @@ export const OperatorMessageTimeLabel: React.FC<Props> = ({ conversationItem, up
     time = t('just now')
   }
 
-  console.log(highlightedFields)
   const composeHighlightedFields = () => {
     if (highlightedFields?.['customer.name']?.length) {
       return highlightedFields?.['customer.name']?.map((child) => <>{child}</>)
@@ -48,7 +47,6 @@ export const OperatorMessageTimeLabel: React.FC<Props> = ({ conversationItem, up
     return null
   }
 
-  console.log(composeHighlightedFields())
   return (
     <div className='flex place-items-center'>
       <p className="inline-flex text-xs text-neutral-400 place-items-center ">

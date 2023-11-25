@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [operator, setOperator] = useState<EntityItem<typeof Operator> | null>(null);
   const [authToken, setAuthToken] = useLocalStorage<string>('authToken', '');
   const [sessionUser, setSessionUser] = useLocalStorage<{ orgId: string, operatorId: string } | EntityItem<typeof Operator> | null>('sessionUser', null);
-  console.log(sessionUser)
 
   useEffect(() => {
     (async () => {

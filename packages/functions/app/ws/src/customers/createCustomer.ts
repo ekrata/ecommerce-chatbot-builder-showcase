@@ -11,7 +11,6 @@ import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
-import { Message } from '../../../../../../stacks/entities/message';
 import { WsAppDetailType } from '../../../../../../types/snsTypes';
 import { getAppDb } from '../../../api/src/db';
 import { getNewImage } from '../helpers';

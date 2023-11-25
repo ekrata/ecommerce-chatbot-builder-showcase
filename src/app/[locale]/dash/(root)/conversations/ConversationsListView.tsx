@@ -53,8 +53,6 @@ export const ConversationsListView: FC = () => {
 
 
   const [operatorSession] = useAuthContext();
-  console.log(operatorSession)
-  // console.log(operatorSession?.orgId)
   const locale = useLocale();
   const [page, setPage] = useState<number>(0)
   const [pageCursors, setPageCursors] = useState<(string | null | undefined)[]>([])
@@ -67,7 +65,7 @@ export const ConversationsListView: FC = () => {
       // console.log(pageCursors, conversationItems?.data?.cursor)
       setPageCursors([...new Set([...pageCursors, conversationItems?.data?.cursor])])
       setConversationListFilter({
-        ...conversationListFilter, cursor: pageCursors[page], orgId: operatorSession?.orgId, operatorId: operatorSession.operatorId, expansionFields: ['customerId', 'operatorId'], cursor: conversationItems?.data?.pages?.[page ?? 0]?.cursor ?? undefined, includeMessages: 'true'
+        ...conversationListFilter, cursor: pageCursors[page] ?? undefined, orgId: operatorSession?.orgId, expansionFields: ['customerId', 'operatorId'], includeMessages: 'true'
       })
     }
   }, [conversationItems?.data?.cursor, conversationItems?.dataUpdatedAt, page])
@@ -86,13 +84,11 @@ export const ConversationsListView: FC = () => {
       return fetchingArticlesSkeleton
     }
     else {
-      // console.log(page)
-      // console.log(conversationItems.data?.pages)
       return conversationItems.data?.data?.length ? (
         <ul className="w-full h-screen animate-fade-left">
           {conversationItems?.data?.data?.map((item) => {
             if (item?.conversationId) {
-              return <li key={item?.conversationId} className={`flex justify-between overflow-clip    -16 hover:bg-transparent  truncate font-semibold text-base normal-case  border-0   hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
+              return <li key={item?.conversationId} className={`flex justify-between overflow-clip  -16 border-b-[1px] hover:bg-transparent  truncate font-semibold text-base normal-case  border-0   hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
                 <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
               </li>
             }

@@ -9,6 +9,7 @@ import { BiSave, BiTrash } from 'react-icons/bi';
 import { BsInfo } from 'react-icons/bs';
 import { MdOutlineArticle } from 'react-icons/md';
 import ReactQuill from 'react-quill';
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 import {
   getArticleWithContent
@@ -30,8 +31,6 @@ import {
 import { useUpdateArticleMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateArticleMut';
 import { QueryKey } from '@/src/app/[locale]/(hooks)/queries';
 import { useQuery } from '@tanstack/react-query';
-
-import { useNotificationContext } from '../NotificationProvider';
 
 type FormValues = {
   title: string;
@@ -101,7 +100,6 @@ export const EditorView: React.FC = () => {
   const articleId = searchParams?.get('articleId')
   const router = useRouter()
   const pathname = usePathname()
-  const toast = useNotificationContext()
   const newArticleId = uuidv4()
   const newArticleContentId = uuidv4()
   const t = useTranslations('dash');
@@ -216,7 +214,7 @@ export const EditorView: React.FC = () => {
   )
 
   return (
-    < div className="w-full h-screen p-2 bg-white" >
+    < div className="w-full h-screen max-h-screen p-2 overflow-y-scroll bg-white" >
       {!articleId && noData}
       {articleWithContentQuery?.isFetching ? editorSkeleton :
         <form onSubmit={handleSubmit(onSubmit)}>

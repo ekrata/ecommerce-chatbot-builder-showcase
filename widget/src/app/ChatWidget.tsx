@@ -44,13 +44,6 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   const orgId = useSearchParams().get('orgId') ?? ''
   const tWidget = useTranslations('chat-widget')
   const org = useOrgQuery()
-  // const org = useOrgQuery(orgId)
-
-  // if (org?.data?.isWidgetDown) {
-
-  // }
-
-
   const { chatWidget: { widgetVisibility, setWidgetVisibility, selectedConversationId, selectedArticleId, widgetState } } =
     useChatWidgetStore();
   const queryClient = useQueryClient()
@@ -62,10 +55,6 @@ export const ChatWidget: FC<PropsWithChildren<{ mockWsUrl?: string }>> = ({
   const { widgetAppearance } = { ...configuration.data?.channels?.liveChat?.appearance }
   const customerQuery = useCustomerQuery(orgId);
   const createCustomerMut = useCreateCustomerMut(orgId, customerQuery?.data?.customerId ?? '');
-
-
-
-
 
   useEffect(() => {
     createVisitMut.mutateAsync([orgId, visitId, { customerId: customerQuery?.data?.customerId ?? '', orgId: orgId, visitId: visitId, url: window.location.href, at: Date.now() }])

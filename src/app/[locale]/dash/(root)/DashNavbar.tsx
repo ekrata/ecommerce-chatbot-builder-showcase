@@ -141,7 +141,7 @@ export default function DashNavbar() {
         </Link>
       </li>
 
-      <li className='justify-end'>
+      <li className='absolute bottom-0 '>
         <Link
           href={{ pathname: "/dash/settings" }}
           key='settings'
@@ -155,7 +155,6 @@ export default function DashNavbar() {
                 </span>
 
               }
-
               <TbSettings className='w-6 h-6 text-gray-400' />
             </div>
           </div>

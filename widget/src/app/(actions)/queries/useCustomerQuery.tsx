@@ -3,6 +3,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Customer } from '@/entities/customer';
+import { CreateCustomer } from '@/entities/entities';
 import { Triggers } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -67,7 +68,13 @@ export const useCustomerQuery = (orgId: string) => {
         return await getCustomer(orgId, customer?.customerId ?? '')
       } else {
         const newCustomerId = uuidv4()
-        const data = await createCustomerMut.mutateAsync([orgId, newCustomerId, { customerId: newCustomerId, orgId }])
+        const data = await createCustomerMut.mutateAsync([orgId, newCustomerId, {
+          customerId: newCustomerId, orgId,
+          locale: window?.navigator?.language, online: true, address: '', timezone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 0, city: '', userAgent: window.navigator.userAgent
+
+
+
+        }])
         console.log(data)
         queryClient.setQueryData([orgId, QueryKey.customer], () => data)
         await createInteractionMut.mutateAsync([orgId, { customerId: newCustomerId, orgId, createdAt: Date.now(), channel: 'website', status: 'unassigned', type: Triggers.FirstVisitOnSite, lastTriggered: interactionHistory.FirstVisitOnSite }])

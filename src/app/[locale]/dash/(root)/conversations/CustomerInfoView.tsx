@@ -14,13 +14,14 @@ import { BsChat, BsGlobe, BsPerson, BsTagsFill } from 'react-icons/bs';
 import { FaLanguage } from 'react-icons/fa';
 import { GoBrowser } from 'react-icons/go';
 import { HiDocumentText } from 'react-icons/hi2';
+import { IoMdBrowsers } from 'react-icons/io';
 import { MdEmail, MdPhone } from 'react-icons/md';
 
 import { useDashStore } from '../(actions)/useDashStore';
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
-import { useConversationItemQuery } from '../../../(hooks)/queries/useConversationItemQuery';
 import { useConversationItemsQuery } from '../../../(hooks)/queries/useConversationItemsQuery';
 import { useVisitsQuery } from '../../../(hooks)/queries/useVisitsQuery';
+import { ActionsTab } from './ActionsTab';
 import { CustomerAvatar } from './CustomerAvatar';
 
 type InfoTabs = 'Profile' | 'Actions' | 'Visited Pages' | 'Notes';
@@ -97,9 +98,11 @@ export const CustomerInfoView: FC = () => {
         <div className='flex text-center place-items-center'>
           <CustomerAvatar conversationItem={conversationItem} customer={conversationItem?.customer}></CustomerAvatar>
         </div>
-        <div className='flex flex-col'>
+        <div className='flex flex-col text-xs'>
           <p>{name ?? ''}</p>
-          <p>{email}</p>
+          <p>{email ?? ''}</p>
+          <p >{conversationItem?.customer?.customerId ?? ''}</p>
+
           <p className='flex text-sm text-neutral-400 place-items-center gap-x-2'><FaLanguage className='text-xl' />{LocaleCode.getLanguageName(locale)}</p>
         </div>
       </div>
@@ -108,7 +111,7 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='profile-button'
-            className={`tab tab-bordered tab-xs  ${currentTab === profile && tabActive
+            className={`tab tab-bordered tab-sm  ${currentTab === profile && tabActive
               }`}
             onClick={() => setCurrentTab(profile)}
           >
@@ -117,7 +120,7 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='actios-button'
-            className={`tab tab-bordered tab-xs  ${currentTab === actionLabel && tabActive
+            className={`tab tab-bordered tab-sm ${currentTab === actionLabel && tabActive
               }`}
             onClick={() => setCurrentTab(actionLabel)}
           >
@@ -126,7 +129,7 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='visited-pages-button'
-            className={`tab tab-bordered tab-xs  ${currentTab === visitedPagesTabLabel && tabActive
+            className={`tab tab-bordered tab-sm  ${currentTab === visitedPagesTabLabel && tabActive
               }`}
             onClick={() => setCurrentTab(visitedPagesTabLabel)}
           >
@@ -135,7 +138,7 @@ export const CustomerInfoView: FC = () => {
           <button
             type='button'
             data-testid='notes-button'
-            className={`tab tab-bordered tab-xs  ${currentTab === notesTab && tabActive
+            className={`tab tab-bordered tab-sm  ${currentTab === notesTab && tabActive
               }`}
             onClick={() => setCurrentTab(notesTab)}
           >
@@ -143,7 +146,7 @@ export const CustomerInfoView: FC = () => {
           </button>
         </div>
         {currentTab === 'Profile' && (
-          <div className='my-6 text-sm'>
+          <div className='my-6 text-xs'>
             <ul className='space-y-4 animate-fade-left'>
               <li className='flex justify-start place-items-center gap-x-4 '>
                 <MdEmail className='text-lg text-primary' />
@@ -151,10 +154,10 @@ export const CustomerInfoView: FC = () => {
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
                 <MdPhone className='text-lg text-primary' />
-                <p>{phone ?? 'Phone...'}</p>
+                <p>{phone ?? ''}</p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
-                <GoBrowser className='w-8 h-8 text-primary' />
+                <IoMdBrowsers className='text-lg shrink-0 text-start text-primary' />
                 <p>{userAgent ?? ''}</p>
               </li>
               <li className='flex justify-start place-items-center gap-x-4'>
@@ -185,6 +188,9 @@ export const CustomerInfoView: FC = () => {
               </li> */}
             </ul>
           </div>
+        )}
+        {currentTab === 'Actions' && (
+          <ActionsTab conversationItem={conversationItem} />
         )}
         {currentTab === 'Visited Pages' && (
           <div className='p-4 mt-4 overflow-y-scroll md:h-[650px] animate-fade-left'>

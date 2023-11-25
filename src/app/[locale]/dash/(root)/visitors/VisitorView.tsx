@@ -86,7 +86,7 @@ export const VisitorView: FC = () => {
   const handleStartChat = async (customerId: string) => {
     const conversationId = uuidv4()
     await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, operatorId: operatorSession?.operatorId, customerId, channel: 'website', status: 'open' }])
-    router.push(`/conversations?conversationId=${conversationId}`)
+    router.push(`/dash/conversations?conversationId=${conversationId}`)
   }
 
   return (

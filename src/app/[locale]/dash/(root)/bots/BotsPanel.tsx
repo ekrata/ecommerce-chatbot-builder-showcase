@@ -77,7 +77,7 @@ export const BotsPanel: FC<Props> = ({ title }) => {
   console.log(bots?.data)
 
   return (
-    < div className="flex flex-col justify-between w-full h-full p-2 bg-white " >
+    < div className="flex flex-col justify-between w-full h-screen max-h-screen p-2 overflow-y-scroll bg-white" >
       <div className='flex flex-row justify-between'>
         <h2 className='text-xl font-semibold'>{title === 'All' ? tDash('All') : tDash(`bots.categories.${title}`)}</h2>
         <div className="flex gap-x-2" >
@@ -103,25 +103,25 @@ export const BotsPanel: FC<Props> = ({ title }) => {
           <div className="w-full h-full max-h-screen min-h-screen overflow-x-auto">
             <table className="table w-full table-lg">
               <thead className=''>
-                <tr className='bg-white border-b-[1px] normal-case text-xl'>
+                <tr className='bg-white border-b-[1px] normal-case text-sm'>
                   <th className='text-lg normal-case bg-transparent disabled'>
                     <label>
-                      <input type="checkbox" className="checkbox" checked={false} />
+                      <input type="checkbox" className="checkbox checkbox-sm" checked={false} />
                     </label>
                   </th>
-                  <th className='text-lg normal-case bg-transparent'>{tDash('Name')}</th>
-                  <th className='text-lg normal-case bg-transparent'>{tBots('Triggers')}</th>
-                  <th className='text-lg normal-case bg-transparent'>{tBots('Triggered')}</th>
-                  <th className='text-lg normal-case bg-transparent'>{tBots('Engagement')}</th>
-                  <th className='text-lg normal-case bg-transparent'>{tBots('Satisfaction')}</th>
-                  <th className='text-lg normal-case bg-transparent'>{tDash('Active')}</th>
+                  <th className='text-sm normal-case bg-transparent '>{tDash('Name')}</th>
+                  <th className='text-sm normal-case bg-transparent '>{tBots('Triggers')}</th>
+                  <th className='text-sm normal-case bg-transparent '>{tBots('Triggered')}</th>
+                  <th className='text-sm normal-case bg-transparent '>{tBots('Engagement')}</th>
+                  <th className='text-sm normal-case bg-transparent '>{tBots('Satisfaction')}</th>
+                  <th className='text-sm normal-case bg-transparent '>{tDash('Active')}</th>
                 </tr>
               </thead>
               <tbody className='h-full animate-fade-left'>
                 {(bots?.isFetching ? [...Array(skeletonLength).keys()] : bots?.data ?? [])?.map((data, i) => {
                   const bot = (data as EntityItem<typeof Bot>)
                   return (
-                    <tr className='w-full text-base font-normal group hover:cursor-pointer'
+                    <tr className='w-full text-sm font-normal group hover:cursor-pointer'
                     >
                       <th className='group-hover:bg-gray-300'>
                         <label>

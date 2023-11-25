@@ -1,5 +1,4 @@
 'use client'
-import { toast, ToastContainer } from 'react-toastify';
 
 import { useAuthContext } from '../../(hooks)/AuthProvider';
 
