@@ -57,26 +57,19 @@ export const DashSocketProvider: React.FC<PropsWithChildren<Props>> = ({ childre
             // Update the local chat messages state based on the message type
             switch (type) {
                 case WsAppDetailType.wsAppCreateConversation:
-                    queryClient.setQueryData<{
-                        cursor: string | null;
-                        data: ConversationItem[];
-                    }> | undefined > ([...body, QueryKey.conversationItems], (data) => {
-                        return [{ cursor: '', data: body }, data,] as any;
+                    queryClient.setQueryData<{ cursor?: string, data: ConversationItem[] } | undefined>([...body, QueryKey.conversationItems], (data) => {
+                        return [{ cursor: data?.cursor, data: body }, data,] as any;
                     });
                     break;
                 case WsAppDetailType.wsAppCreateMessage:
                     console.log(Object.values(conversationListFilter))
-                    queryClient.setQueryData<{
-                        cursor: string | null;
-                        data: ConversationItem[];
-                    }> | undefined > ([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
-                        const pageNumber = oldData?.findIndex((data) => data?.data?.some((conversationItem) => conversationItem?.conversationId === body?.conversationId))
-                        if (pageNumber != null && oldData?.data) {
+                    queryClient.setQueryData<{ cursor?: string, data: ConversationItem[] } | undefined>([QueryKey.conversationItems, ...Object.values(conversationListFilter)], (oldData) => {
+                        const oldConversationItem = oldData?.data.find((conversationItem) => conversationItem?.conversationId === body?.conversationId)
+                        if (oldConversationItem) {
                             console.log('reducing message')
-                            oldData.pages[pageNumber].data = newMessageReducer(body as EntityItem<typeof Message>, oldData?.pages[pageNumber].data)
-                            return { ...oldData }
+                            return { cursor: oldData?.cursor, data: newMessageReducer(body as EntityItem<typeof Message>, oldData?.data ?? []) }
                         }
-                        return { ...oldData } as any
+                        return oldData
                     });
                     const queryData = queryClient.getQueryData<{ cursor: string | null, data: ConversationItem[] }>([QueryKey.conversationItems, ...Object.values(conversationListFilter)])
                     console.log(queryData)

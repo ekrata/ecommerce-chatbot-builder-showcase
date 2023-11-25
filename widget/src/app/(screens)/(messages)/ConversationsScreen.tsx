@@ -65,7 +65,7 @@ export const ConversationsScreen: FC = () => {
   console.log(conversationItems.data)
   const render = useMemo(() => {
     return (
-      <div className="flex justify-between w-full h-full rounded-3xl">
+      <div className="flex justify-between w-full h-full select-none rounded-3xl">
         <div className="flex flex-col w-full h-full place-items-center">
           <div
             className={`background text-white flex place-items-center w-full animated-flip-up justify-center rounded-t-lg text-xl font-semibold p-2 px-6 gap-x-2   `}
@@ -74,6 +74,7 @@ export const ConversationsScreen: FC = () => {
             {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
             {t('Messages')}
           </div>
+
           <div
             className={`flex flex-col place-items-center w-full overflow-y-scroll `}
           >
@@ -85,20 +86,20 @@ export const ConversationsScreen: FC = () => {
                 </div>
                 : <></>
             ))}
-            {/* {(conversationItems.isSuccess && !conversationItems.data.length &&
+            {(conversationItems.isSuccess && !conversationItems.data.length &&
               noData
-            )} */}
+            )}
 
           </div>
-          <button onClick={async () => {
+          {/* <button onClick={async () => {
             const conversationId = uuidv4()
-            setSelectedConversationId(conversationId);
             const res = await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, operatorId: '', channel: 'website', status: 'unassigned' }])
+            setSelectedConversationId(conversationId);
           }}
             className="fixed z-10 justify-center normal-case border-0 shadow-lg btn gap-x-2 background rounded-3xl bottom-20">{t('Send us a message')}
             {configuration.data && <DynamicBackground configuration={configuration.data as any} />}
             <BiSend className='text-xl' />
-          </button>
+          </button> */}
         </div>
       </div>
     );

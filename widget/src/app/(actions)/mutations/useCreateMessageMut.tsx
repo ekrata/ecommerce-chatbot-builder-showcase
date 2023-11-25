@@ -25,6 +25,7 @@ export const newMessageReducer = (newMessage: EntityItem<typeof Message>, conver
 
   if (conversationItem?.conversationId) {
     const newConversationItem: ConversationItem = { ...conversationItem, messages: [...(conversationItem?.messages ?? []), newMessage] }
+
     const items = [newConversationItem, ...oldConversationItems]
     sortConversationItems(items)
     return items

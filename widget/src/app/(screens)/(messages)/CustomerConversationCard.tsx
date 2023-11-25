@@ -6,6 +6,7 @@ import { BiSend } from 'react-icons/bi';
 import { useConfigurationQuery } from 'src/app/(actions)/queries/useConfigurationQuery';
 import { useCustomerQuery } from 'src/app/(actions)/queries/useCustomerQuery';
 import { useOrgQuery } from 'src/app/(actions)/queries/useOrgQuery';
+import { useLocalStorage } from 'usehooks-ts';
 
 import { Configuration } from '@/entities/configuration';
 import { ConversationItem } from '@/entities/conversation';
@@ -36,6 +37,7 @@ export const CustomerConversationCard: React.FC<Props> = ({ conversationItem, he
   const configuration = useConfigurationQuery(orgId);
   const widgetAppearance = { ...configuration.data?.channels?.liveChat?.appearance }
   var halfAnHourAgo = new Date(Date.now())
+  const [readMessages, setReadMessages] = useLocalStorage<Record<string, boolean>>('readMessages', {})
   halfAnHourAgo.setMinutes(halfAnHourAgo.getMinutes() - 30);
 
   const lastMessage = useMemo(() => {
@@ -43,10 +45,13 @@ export const CustomerConversationCard: React.FC<Props> = ({ conversationItem, he
     return conversationItem?.messages?.filter((message) => !message?.messageFormType)?.slice(-1)[0]
   }, [conversationItem])
 
+  const readMessageId = `${lastMessage.conversationId}+${lastMessage.messageId}`
+
 
   return (
-    <button className={`btn btn-ghost block ${rounded && 'rounded-3xl'} font-light justify-between h-${height}  normal-case place-items-center animate-fade-left w-full  text-sm`}
+    <button className={`btn btn-ghost block ${rounded && 'rounded-md'} font-light justify-between h-${height}  normal-case place-items-center animate-fade-left w-full  text-sm`}
       onClick={() => {
+        setReadMessages({ ...readMessages, [`${readMessageId}`]: true })
         setWidgetState('conversations');
         setSelectedConversationId(conversationItem?.conversationId)
       }}>
@@ -60,7 +65,7 @@ export const CustomerConversationCard: React.FC<Props> = ({ conversationItem, he
           <img src={widgetAppearance?.widgetAppearance?.botLogo}></img>
         </div> */}
         <div className="flex flex-col w-3/5 place-items-start gap-y-1">
-          <h5 className='justify-start w-full text-sm break-all truncate text-start font-base justify-self-start'>{`${lastMessage?.content}`}</h5>
+          <h5 className={`justify-start w-full text-sm break-all truncate text-start font-base justify-self-start ${(readMessages?.[readMessageId] || lastMessage?.sender === 'customer') ? 'font-normal text-neutral-700' : 'font-medium'}`}>{`${lastMessage?.content}`}</h5>
           <div className="flex text-xs text-neutral-400 gap-x-1 ">
             <CustomerMessageTimeLabel conversationItem={conversationItem} />
           </div>

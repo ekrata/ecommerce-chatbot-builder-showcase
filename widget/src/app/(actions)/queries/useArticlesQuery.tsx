@@ -1,5 +1,6 @@
 import { EntityItem } from 'electrodb';
 
+import { OrgPlanTier } from '@/entities/org';
 import { useQuery } from '@tanstack/react-query';
 
 import { Article } from '../../../../../stacks/entities/article';
@@ -12,12 +13,12 @@ import { QueryKey } from '../queries';
 * @param {Parameters<typeof getArticles>} params
 * @returns {*}
 */
-export const useArticlesQuery = (params: Parameters<typeof getArticles>) => useQuery<EntityItem<typeof Article>[]>(
+export const useArticlesQuery = (params: Parameters<typeof getArticles>, planTier?: OrgPlanTier) => useQuery<EntityItem<typeof Article>[]>(
   {
     queryKey: [...params, QueryKey.articles],
     queryFn: () => getArticles(...params) ?? [],
     keepPreviousData: true,
-    enabled: !!params[0]
+    enabled: !!params[0] && planTier === 'plus'
   })
 
 

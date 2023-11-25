@@ -127,7 +127,7 @@ export const CustomerChatLog: FC = ({ }) => {
           )}
         </div>
       ))
-    , [conversationItem?.messages, conversationItem?.messages?.slice(-1)[0]?.messageId, latestFormSubmitted])
+    , [conversationItem?.messages?.length, conversationItem?.messages, conversationItem?.messages?.slice(-1)[0]?.messageId, latestFormSubmitted])
 
   return (
     <div

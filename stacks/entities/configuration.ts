@@ -102,17 +102,17 @@ export const Configuration = new Entity({
                     logo: {
                       type: 'string',
                       default:
-                        'https://upload.wikimedia.org/wikipedia/commons/c/c5/Gymshark_logo.svg',
+                        'https://ekrata-statics.s3.us-west-1.amazonaws.com/static/Ekrata_clipdrop-background-removal.png',
                     },
                     botLogo: {
                       type: 'string',
                       default:
-                        'https://seeklogo.com/images/G/gymshark-logo-3F1E7A14A4-seeklogo.com.png',
+                        'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3212952/robot-icon-md.png',
                     },
                     backgroundColor: {
                       type: 'string',
                       default:
-                        'linear-gradient(to right, rgb(236, 72, 153), rgb(239, 68, 68), rgb(234, 179, 8))',
+                        'linear-gradient(to right top, rgb(139, 92, 246), rgb(253, 186, 116))',
                     },
                     darkBackgroundColor: {
                       type: 'string',

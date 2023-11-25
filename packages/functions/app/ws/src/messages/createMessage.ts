@@ -26,10 +26,7 @@ const gateway = new ApiGatewayManagementApi({
 const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent, context) => {
     try {
-      console.log('duh');
       // await fsProm.writeFile('event.json', JSON.stringify(event));
-      console.log(event);
-      console.log(context);
       // context.callbackWaitsForEmptyEventLoop = false;
       const Records = event?.Records;
       // console.log('here', Records);

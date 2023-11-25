@@ -1,7 +1,7 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
-export const orgPlanTier = ['free', 'starter', 'scale', 'plus'] as const;
+export const orgPlanTier = ['starter', 'plus'] as const;
 export type OrgPlanTier = (typeof orgPlanTier)[number];
 
 export const Org = new Entity({

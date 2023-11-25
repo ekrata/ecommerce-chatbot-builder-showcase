@@ -39,11 +39,11 @@ export const ChatInput: FC = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({ mode: 'onSubmit' });
   const onSubmit: SubmitHandler<Inputs> = async ({ msg }) => {
     const messageId = uuidv4()
     // if last operator message was sent by a bot, create a message with the previous message's botStateContext
-    const lastMessage = conversationItem?.messages.findLast((item) => item.sender === 'bot' || item.sender === 'operator')
+    const lastMessage = conversationItem?.messages?.findLast((item) => item.sender === 'bot' || item.sender === 'operator')
     const createMessage: CreateMessage = {
       messageId: messageId,
       conversationId: selectedConversationId ?? '',
@@ -69,14 +69,15 @@ export const ChatInput: FC = () => {
               autoComplete='off'
               className="w-full h-full text-xs rounded-bl-3xl focus:outline-0 active:outline-0 focus:border-0 input-sm input hover:outline-0 hover:ring-0 focus:ring-0 rounded-xs "
               data-testid="msg-input"
-              {...register('msg', { required: true })}
+              {...register('msg', { minLength: 1 })}
             />
             {errors.msg && (
               <span
-                className="bg-transparent text-error"
+                className="text-xs bg-transparent text-error"
                 data-testid="msg-error"
               >
-                Write a message first.
+                {t("Messages must have atleast one character")}
+                {/* Write a message first. */}
               </span>
             )}
           </div>

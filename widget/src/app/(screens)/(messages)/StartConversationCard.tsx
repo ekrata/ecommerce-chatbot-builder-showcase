@@ -37,31 +37,38 @@ export const StartConversationCard: React.FC = () => {
   halfAnHourAgo.setMinutes(halfAnHourAgo.getMinutes() - 30);
 
   const onClick = async () => {
-    setWidgetState('conversations')
     const conversationId = uuidv4()
-    const customerId = uuidv4()
     setSelectedConversationId(conversationId);
-    await createCustomerMut.mutateAsync([orgId, '', { customerId, orgId }])
-    await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, channel: 'website', status: 'unassigned' }])
+    // await createCustomerMut.mutateAsync([orgId, '', { customerId, orgId }])
+    await createConversationMut.mutateAsync([orgId ?? '', conversationId, { orgId, customerId: customer?.data?.customerId, channel: 'website', status: 'unassigned', operatorId: '' }])
+    setWidgetState('conversations')
   }
 
+  const averageWaitTime = org?.data?.averageUnassignedWaitTime?.slice(-1)?.[0]?.averageWaitTime
+
+  const averageWaitTimeElement = (<div className="flex text-xs font-thin gap-x-1 ">
+    <p>{`${t('We typically reply in under')} `}</p>
+    <p className="">
+      {averageWaitTime != null && `${relativeTime(averageWaitTime,
+        Date.now()
+      ).split(' ago')[0]}`}
+    </p>
+  </div>)
   return (
-    <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light text-black normal-case btn btn-ghost hover:bg-transparent rounded-3xl place-items-center animate-fade-left animate-once " onClick={async () => await onClick()} >
+    <button className="justify-between block w-full h-20 p-2 py-4 text-sm font-light text-black normal-case bg-white rounded-md select-none hover:bg-gray-300 btn btn-ghost place-items-center animate-fade-left animate-once " onClick={async () => await onClick()} >
       <div className="flex justify-around place-items-center">
-        <div className="w-12 h-12 p-2 rounded-full avatar background ring-2 ring-info online">
+        <div className="w-12 h-12 p-2 rounded-full avatar background ring-1 ring-white online">
           {configuration.data && <DynamicBackground configuration={configuration.data as EntityItem<typeof Configuration>} />}
           <img src={widgetAppearance?.botLogo}></img>
         </div>
         <div className="flex flex-col place-items-start gap-y-1 ">
-          <h5 className='justify-start text-base font-semibold justify-self-start '>{t('Send us a message')}</h5>
-          <div className="flex text-xs gap-x-1 ">
-            <p>{`${t('We typically reply in under')} `}</p>
-            <p className="">
-              {` ${relativeTime(halfAnHourAgo,
-                Date.now()
-              ).split(' ago')[0]}`}
-            </p>
-          </div>
+          <h5 className='justify-start text-sm font-semibold justify-self-start '>{t('Send us a message')}</h5>
+          {averageWaitTime ? averageWaitTimeElement :
+            <div className="flex text-xs font-thin gap-x-1 ">
+              {t("answerQuestions")}
+            </div>
+
+          }
         </div>
         <BiSend className="ml-1 text-2xl justify-self-end justify-right " />
       </div>
