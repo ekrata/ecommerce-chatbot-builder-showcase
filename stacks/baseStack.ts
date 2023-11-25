@@ -95,9 +95,7 @@ export function baseStack({ stack, app }: StackContext) {
   // Create the WebSocket API
   // All are batch operations
 
-  const wsApiRoutes:
-    | Record<string, FunctionInlineDefinition | WebSocketApiFunctionRouteProps>
-    | undefined = {
+  const wsApiRoutes: Record<string, string> | undefined = {
     [`${WsAppDetailType.wsAppCreateMessage}`]:
       'packages/functions/app/ws/src/messages/createMessage.handler',
     [`${WsAppDetailType.wsAppUpdateMessage}`]:
@@ -139,12 +137,15 @@ export function baseStack({ stack, app }: StackContext) {
     },
     defaults: {
       function: {
+        memorySize: '150 MB',
         bind: [table, REGION, appEventBus, STAGE],
         permissions: [
           table,
           'sqs:ReceiveMessage',
           'sqs:DeleteMessage',
           'sqs:GetQueueAttributes',
+          'sns:Publish',
+          'kms:Decrypt',
         ],
       },
     },
@@ -319,6 +320,7 @@ export function baseStack({ stack, app }: StackContext) {
       },
       function: {
         timeout: defaultFunctionTimeout,
+        memorySize: '150 MB',
         bind: [
           table,
           assets,
@@ -338,8 +340,11 @@ export function baseStack({ stack, app }: StackContext) {
         permissions: [
           table,
           'sqs:ReceiveMessage',
+          'sqs:SendMessage',
           'sqs:DeleteMessage',
           'sqs:GetQueueAttributes',
+          'sns:Publish',
+          'kms:Decrypt',
         ],
       },
     },
@@ -353,8 +358,6 @@ export function baseStack({ stack, app }: StackContext) {
   const processInteractionFunction = api.getFunction(
     processInteractionRoute ?? '',
   );
-
-  processInteractionFunction;
 
   if (!processInteractionFunction) {
     throw new Error('Could not find process interaction function');
@@ -391,6 +394,19 @@ export function baseStack({ stack, app }: StackContext) {
   //   sourceArn: processInteractionRule?.ruleArn,
   // });
 
+  // const deadLetterQueue = new Queue(stack, 'DeadLetterQueue', {
+  //   cdk: {
+  //     queue: {
+  //       visibilityTimeout: Duration.hours(12),
+  //     },
+  //   },
+  // });
+  // deadLetterQueue.attachPermissions([
+  //   'sns:ReceiveMessage',
+  //   'sqs:ReceiveMessage',
+  //   'sqs:DeleteMessage',
+  //   'sqs:GetQueueAttributes',
+  // ]);
   const defaultQueueConfig:
     | {
         id?: string | undefined;
@@ -399,9 +415,16 @@ export function baseStack({ stack, app }: StackContext) {
     | undefined = {
     queue: {
       // queueName: "my-queue",
-      // visibilityTimeout: 10 Duration.seconds(defaultFunctionTimeout * 60),
-      visibilityTimeout: Duration.seconds(10),
-      receiveMessageWaitTime: Duration.seconds(1),
+      visibilityTimeout: Duration.seconds(defaultFunctionTimeout * 60),
+      receiveMessageWaitTime: Duration.seconds(10),
+
+      // visibilityTimeout: Duration.seconds(10),
+      // receiveMessageWaitTime: Duration.seconds(1),
+      // deadLetterQueue: {
+      //   queue: deadLetterQueue.cdk.queue,
+      //   // if the message is not consumed successfully, send it to DLQ immediately
+      //   maxReceiveCount: 1,
+      // },
     },
   };
 
@@ -413,23 +436,32 @@ export function baseStack({ stack, app }: StackContext) {
         | TopicFunctionSubscriberProps
         | TopicQueueSubscriberProps
       >
-    | undefined = wsApi.routes.reduce((acc, route) => {
-    const wsFunc = wsApi.getFunction(route);
-    if (wsFunc && !wsFunc.id.includes('$')) {
-      console.log(wsFunc?.id);
+    | undefined = Object.entries(wsApiRoutes).reduce((acc, [key, route]) => {
+    // const wsFunc = wsApi.getFunction(route);
+    // console.log(wsFunc?.permissionsNode);
+
+    console.log(key);
+    if (key && !key.includes('$')) {
       return {
         ...acc,
-        [`${wsFunc.id}`]: {
+        [`${key}`]: {
           type: 'queue',
-          queue: new Queue(stack, `${route}_queue`, {
+          queue: new Queue(stack, `${key}_queue`, {
             cdk: defaultQueueConfig,
             consumer: {
-              cdk: {
-                function: lambda.Function.fromFunctionArn(
-                  stack,
-                  wsFunc.id,
-                  wsFunc.functionArn,
-                ),
+              function: {
+                // ...faissLambdaConfig,
+                // memorySize: `150 MB`,
+                handler: route,
+                timeout: 120,
+                bind: [wsApi, api, assets, REGION, table, OPENAI_API_KEY],
+                permissions: [
+                  table,
+                  'sqs:ReceiveMessage',
+                  'sqs:DeleteMessage',
+                  'sqs:GetQueueAttributes',
+                  'kms:Decrypt',
+                ],
               },
             },
           }),
@@ -437,7 +469,7 @@ export function baseStack({ stack, app }: StackContext) {
             subscription: {
               filterPolicy: {
                 type: SubscriptionFilter.stringFilter({
-                  allowlist: [wsFunc.id],
+                  allowlist: [key],
                 }),
               },
             },
@@ -502,7 +534,14 @@ export function baseStack({ stack, app }: StackContext) {
     allowedOrigins,
     assets,
   ]);
-  ddbStreamTopic.attachPermissions([table]);
+  ddbStreamTopic.attachPermissions([
+    table,
+    'sqs:ReceiveMessage',
+    'sqs:DeleteMessage',
+    'sqs:GetQueueAttributes',
+    'sns:Publish',
+    'lambda:InvokeFunction',
+  ]);
   ddbStreamTopic.addSubscribers(stack, {
     ...ddbStreamWsTopicSubs,
     ...ddbStreamApiTopicSubs(),
@@ -704,15 +743,24 @@ export function baseStack({ stack, app }: StackContext) {
         consumer: {
           function: {
             ...faissLambdaConfig,
-            memorySize: `1 GB`,
+            memorySize: `256 MB`,
             handler:
               'packages/functions/app/api/src/nodes/agents/sales/sales.handler',
-            bind: [wsApi, api, assets, REGION, table, OPENAI_API_KEY],
+            bind: [
+              wsApi,
+              api,
+              assets,
+              REGION,
+              table,
+              OPENAI_API_KEY,
+              ...faissLambdaConfig.bind,
+            ],
             permissions: [
               table,
               'sqs:ReceiveMessage',
               'sqs:DeleteMessage',
               'sqs:GetQueueAttributes',
+              ...faissLambdaConfig.permissions,
             ],
           },
         },
@@ -762,6 +810,8 @@ export function baseStack({ stack, app }: StackContext) {
     'sqs:ReceiveMessage',
     'sqs:DeleteMessage',
     'sqs:GetQueueAttributes',
+    'sns:Publish',
+    'lambda:InvokeFunction',
   ]);
   botNodeTopic.addSubscribers(stack, botNodeTopicSubs);
   // defaults: {

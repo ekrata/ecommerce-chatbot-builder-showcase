@@ -78,13 +78,14 @@ export function dbStack({ stack, app }: StackContext) {
           permissions: ['sns:Publish'],
           handler:
             'packages/functions/app/api/src/ddb-stream/processBatch.handler',
-          timeout: parseInt(defaultFunctionTimeout.value),
+          timeout: 120,
+          memorySize: '150 MB',
         },
-        cdk: {
-          eventSource: {
-            startingPosition: lambda.StartingPosition.LATEST,
-          },
-        },
+        // cdk: {
+        //   eventSource: {
+        //     startingPosition: lambda.StartingPosition.LATEST,
+        //   },
+        // },
       },
     },
   });

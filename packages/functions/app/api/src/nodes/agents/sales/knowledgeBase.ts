@@ -2,7 +2,10 @@ import fs from 'fs';
 import fsProm from 'fs/promises';
 import { BaseLanguageModel } from 'langchain/base_language';
 import { RetrievalQAChain } from 'langchain/chains';
-import { ChatOpenAI, ChatOpenAICallOptions } from 'langchain/chat_models/openai';
+import {
+  ChatOpenAI,
+  ChatOpenAICallOptions,
+} from 'langchain/chat_models/openai';
 import { Embeddings } from 'langchain/dist/embeddings/base';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -53,7 +56,9 @@ export async function setup_knowledge_base(
   const { orgId, lang } = params;
   const pklKey = `${orgId}/${lang}/faiss/docstore.json`;
   const faissKey = `${orgId}/${lang}/faiss/faiss.index`;
-  if (!fs.existsSync(`/tmp/${pklKey}`)) {
+  const faissFilePath = `/tmp/faiss.index`;
+  const pklFilePath = `/tmp/docstore.json`;
+  if (!fs.existsSync(pklFilePath)) {
     const getPkl = new GetObjectCommand({
       Bucket: Bucket?.['echat-app-assets'].bucketName,
       Key: pklKey,
@@ -61,9 +66,9 @@ export async function setup_knowledge_base(
     const pklObject = await s3.send(getPkl);
     const pkl = await pklObject.Body?.transformToString();
     if (pkl) {
-      await fsProm.writeFile(`/tmp/${pklKey}`, pkl);
+      await fsProm.writeFile('/tmp/docstore.json', pkl);
     }
-  } else if (!fs.existsSync(`/tmp/${faissKey}`)) {
+  } else if (!fs.existsSync(faissFilePath)) {
     const getFaiss = new GetObjectCommand({
       Bucket: Bucket?.['echat-app-assets'].bucketName,
       Key: faissKey,
@@ -71,17 +76,15 @@ export async function setup_knowledge_base(
     const faissObject = await s3.send(getFaiss);
     const faiss = await faissObject.Body?.transformToString();
     if (faiss) {
-      await fsProm.writeFile(`/tmp/${faissKey}`, faiss);
+      await fsProm.writeFile('/tmp/faiss.index', faiss);
     }
   }
 
   // const faissFile = await fsProm.readFile(`/tmp/${faissKey}`);
   // const pklFile = await fsProm.readFile(`/tmp/${pklKey}`);
 
-  const vectorStore = await FaissStore.load(
-    `/tmp/${orgId}/${lang}/faiss`,
-    embeddings,
-  );
+  console.log(await fsProm.readdir('/tmp/'));
+  const vectorStore = await FaissStore.load(`/tmp`, embeddings);
 
   console.log('got vectorStore');
   if (vectorStore) {

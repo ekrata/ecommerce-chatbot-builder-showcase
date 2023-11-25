@@ -28,7 +28,10 @@ import { getBotTriggers } from './getBotTriggers';
 import { getNextNodes } from './getNextNodes';
 import { publishToNextNodes } from './publishToNextNodes';
 
-const sns = new AWS.SNS();
+const sns = new AWS.SNS({
+  httpOptions: { timeout: 25000 },
+  region: Config.REGION,
+});
 
 const lambdaHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent, context) => {

@@ -38,7 +38,7 @@ export function paramStack({ stack, app }: StackContext) {
     stack,
     'DEFAULT_FUNCTION_TIMEOUT',
     {
-      value: '200',
+      value: '10',
     },
   );
 
@@ -81,6 +81,7 @@ export function paramStack({ stack, app }: StackContext) {
       function: {
         permissions: [
           'sqs:ReceiveMessage',
+          'sqs:Sendmessage',
           'sqs:DeleteMessage',
           'sqs:GetQueueAttributes',
         ],

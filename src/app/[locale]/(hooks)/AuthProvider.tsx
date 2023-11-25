@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   // console.log(operatorQuery.data)
   return (
     <AuthContext.Provider value={[sessionUser, setSessionUser]}>
-      {!pathname?.includes('/dash') || !fetching ?
+      {(!pathname?.includes('/dash') || sessionUser?.operatorId) ?
         children :
         < div className="justify-center w-screen h-screen gap-2 bg-white ">
           <div className='flex flex-row justify-center h-full gap-2 place-items-center animate-fade-left '>

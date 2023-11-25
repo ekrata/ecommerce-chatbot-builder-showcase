@@ -9,6 +9,7 @@ import { BsGlobe, BsInfinity, BsInfo, BsPerson, BsPersonLinesFill, BsRobot } fro
 import { FaMailBulk, FaShopify } from 'react-icons/fa';
 import { FaFacebookMessenger, FaInstagram, FaPeopleGroup, FaWhatsapp } from 'react-icons/fa6';
 import { FiMinus, FiPlus } from 'react-icons/fi';
+import { LuBrainCircuit } from 'react-icons/lu';
 import { MdAutoGraph, MdOutlineDraw } from 'react-icons/md';
 
 import { RadioGroup } from '@headlessui/react';
@@ -289,6 +290,7 @@ export function Pricing() {
             description={t("All you need to scale and take your customer service to the next level")}
             href={plusLink?.url ?? ''}
             features={[
+              <span className='inline-flex place-items-center gap-x-2'><LuBrainCircuit className="w-24 h-24 " />{t('llm')}</span>,
               <span className='inline-flex place-items-center gap-x-2'><BiSolidHelpCircle className="text-4xl" />{t('Help Center and Articles integrated into chat widget')}</span>,
               <span className='inline-flex place-items-center gap-x-2'><FaMailBulk className='text-xl' />{t('Handle tickets with email')}</span>,
               <span>

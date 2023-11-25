@@ -11,7 +11,6 @@ export type BotStateContext = {
   interaction: EntityItem<typeof Interaction>;
   bot: EntityItem<typeof Bot>;
   conversation: ConversationItem;
-  messages?: EntityItem<typeof Message>[];
   nextNode?: BotNodeType;
   currentNode?: BotNodeType;
 };

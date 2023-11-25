@@ -232,7 +232,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
 
   // create bots from templates
   mockOrg.botIds = await bots
-    .slice(0, mockBotCount)
+    // .slice(0, mockBotCount)
     .reduce<Promise<Record<TestBotKey, string>>>(
       async (prev, bot, i) => {
         const botId = uuidv4();

@@ -1,3 +1,4 @@
+import DynamoDB from 'aws-sdk/clients/dynamodb';
 import { Service } from 'electrodb';
 
 import { Bot } from '@/entities/bot';
@@ -34,8 +35,12 @@ export const getAppDb = (region: string, tableName: string) =>
       articleContents: ArticleContent,
     },
     {
-      client: new DynamoDBClient({
+      client: new DynamoDB.DocumentClient({
         region,
+        // maxRetries: 3,
+        // httpOptions: {
+        //   timeout: 5000,
+        // },
       }),
       table: tableName,
     },

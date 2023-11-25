@@ -5,7 +5,7 @@ import { EntityItem } from 'electrodb';
 import { invert } from 'lodash';
 // Import necessary hooks and libraries
 import {
-    createContext, PropsWithChildren, useCallback, useContext, useEffect, useState
+    createContext, PropsWithChildren, useCallback, useContext, useEffect, useRef, useState
 } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useLocalStorage } from 'usehooks-ts';
@@ -52,6 +52,7 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
     const [interactionHistory, setInteractionHistory] = useLocalStorage<Partial<Record<keyof typeof Triggers, number>>>('interactionHistory', {});
     const customer = useCustomerQuery(orgId)
     const [wsUrl, setWsUrl] = useState('');
+    const didUnmount = useRef(false);
     // const createCustomerMut = useCreateCustomerMut(orgId, newCustomerId)
 
     useEffect(() => {
@@ -63,7 +64,23 @@ export const WidgetSockerProvider: React.FC<PropsWithChildren> = ({ children }) 
         }
     }, [orgId, customer?.data?.customerId])
 
-    const ws = useWebSocket(wsUrl, {});
+    const ws = useWebSocket(wsUrl, {
+        shouldReconnect: (closeEvent) => {
+            /*
+            useWebSocket will handle unmounting for you, but this is an example of a 
+            case in which you would not want it to automatically reconnect
+          */
+            return didUnmount.current === false;
+        },
+        reconnectAttempts: 10,
+        reconnectInterval: 3000,
+    });
+
+    useEffect(() => {
+        return () => {
+            didUnmount.current = true;
+        };
+    }, []);
     const { lastMessage } = ws
     // Initialize the queryClient from react-query
     const queryClient = useQueryClient();

@@ -10,6 +10,7 @@ import { publishToNextNodes } from '../nodes/publishToNextNodes';
 export const handleMessageAction = async (
   messageData: EntityItem<typeof Message>,
   appDb: ReturnType<typeof getAppDb>,
+  sns: AWS.SNS,
 ) => {
   console.log('we here');
   if (
@@ -39,15 +40,9 @@ export const handleMessageAction = async (
         botStateContext?.bot?.nodes &&
         botStateContext?.bot?.edges
       ) {
-        // console.log(botStateContext);
-        // current/next node incrementation for inputAction's updating message occurs here rather than in the lambda
-        const newBotStateContext = {
-          ...botStateContext,
-          messages: [...(botStateContext?.messages ?? []), messageData],
-        };
         console.log('hz ');
         await handleMessageResponse(messageData, botStateContext, appDb);
-        await publishToNextNodes(newBotStateContext, appDb);
+        return await publishToNextNodes(botStateContext, appDb, sns);
       }
     }
   }

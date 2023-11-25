@@ -15,236 +15,252 @@ import { findNextNodes } from '../nodes/getNextNodes';
 import { publishToNextNodes } from '../nodes/publishToNextNodes';
 import { handleMessageAction } from './handleMessageAction';
 
-const sns = new AWS.SNS();
+const sns = new AWS.SNS({
+  httpOptions: { timeout: 25000 },
+  region: Config.REGION,
+});
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
-  ApiHandler(async (event: any, ctx) => {
+  ApiHandler(async (event: any, context) => {
+    // context.callbackWaitsForEmptyEventLoop = false;
+    // console.log(context);
     try {
       // eslint-disable-next-line no-use-before-define
-      event?.Records?.forEach(async (record: any) => {
-        // eslint-disable-next-line no-use-before-define
-        // CREATE
-        console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
-        if (record.eventName === 'INSERT') {
-          if (
-            record.dynamodb.NewImage.context?.S === 'interaction' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'interaction'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: ApiAppDetailType.apiAppCreateInteraction,
+      await Promise.all(
+        event?.Records?.map(async (record: any) => {
+          // eslint-disable-next-line no-use-before-define
+          // CREATE
+          console.log(record.eventName, record.dynamodb.NewImage.__edb_e__?.S);
+          if (record.eventName === 'INSERT') {
+            if (
+              record.dynamodb.NewImage.context?.S === 'interaction' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'interaction'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: ApiAppDetailType.apiAppCreateInteraction,
+                    },
                   },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+
+            if (
+              record.dynamodb.NewImage.context?.S === 'message' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'message'
+            ) {
+              const newImage = DynamoDB.Converter.unmarshall(
+                record.dynamodb.NewImage,
+              );
+              const messageParsed = Message.parse({
+                Item: newImage,
+              });
+              const messageData = messageParsed?.data;
+              console.log('publishing');
+              console.log(messageParsed);
+              try {
+                const res = await sns
+                  .publish({
+                    TopicArn: Topic.DdbStreamTopic.topicArn,
+                    Message: JSON.stringify(record),
+                    MessageAttributes: {
+                      type: {
+                        DataType: 'String',
+                        StringValue: WsAppDetailType.wsAppCreateMessage,
+                      },
+                    },
+                    MessageStructure: 'string',
+                  })
+                  .promise();
+              } catch (err) {
+                console.log(err);
+              }
+
+              await handleMessageAction(
+                messageData as EntityItem<typeof Message>,
+                appDb,
+                sns,
+              );
+            }
+            if (
+              record.dynamodb.NewImage.context?.S === 'conversation' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'conversation'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppCreateConversation,
+                    },
+                  },
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+
+            if (
+              record.dynamodb.NewImage.context?.S === 'operator' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'operator'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppCreateOperator,
+                    },
+                  },
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+
+            if (
+              record.dynamodb.NewImage.context?.S === 'customer' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'customer'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppCreateCustomer,
+                    },
+                  },
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+
+            if (
+              record.dynamodb.NewImage.context?.S === 'visit' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'visit'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppCreateVisit,
+                    },
+                  },
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
           }
 
-          if (
-            record.dynamodb.NewImage.context?.S === 'message' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'message'
-          ) {
-            const newImage = DynamoDB.Converter.unmarshall(
-              record.dynamodb.NewImage,
-            );
-            const messageParsed = Message.parse({
-              Item: newImage,
-            });
-            const messageData = messageParsed?.data;
-            console.log('publishing');
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppCreateMessage,
-                  },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-            await handleMessageAction(
-              messageData as EntityItem<typeof Message>,
-              appDb,
-            );
-          }
-          if (
-            record.dynamodb.NewImage.context?.S === 'conversation' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'conversation'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppCreateConversation,
-                  },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-          }
+          // UPDATE
+          if (record.eventName === 'MODIFY') {
+            if (
+              record.dynamodb.NewImage.context?.S === 'message' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'message'
+            ) {
+              const newImage = DynamoDB.Converter.unmarshall(
+                record.dynamodb.NewImage,
+              );
+              const messageParsed = Message.parse({
+                Item: newImage,
+              });
+              const messageData = messageParsed?.data;
+              await handleMessageAction(
+                messageData as EntityItem<typeof Message>,
+                appDb,
+                sns,
+              );
 
-          if (
-            record.dynamodb.NewImage.context?.S === 'operator' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'operator'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppCreateOperator,
-                  },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-          }
+              // console.log('updateMessage', messageData);
 
-          if (
-            record.dynamodb.NewImage.context?.S === 'customer' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'customer'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppCreateCustomer,
+              // route responses to bot actions/conditions to the appropriate next node
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppUpdateMessage,
+                    },
                   },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-          }
-
-          if (
-            record.dynamodb.NewImage.context?.S === 'visit' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'visit'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppCreateVisit,
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+            if (
+              record.dynamodb.NewImage.context?.S === 'conversation' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'conversation'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppUpdateConversation,
+                    },
                   },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-          }
-        }
-
-        // UPDATE
-        if (record.eventName === 'MODIFY') {
-          if (
-            record.dynamodb.NewImage.context?.S === 'message' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'message'
-          ) {
-            const newImage = DynamoDB.Converter.unmarshall(
-              record.dynamodb.NewImage,
-            );
-            const messageParsed = Message.parse({
-              Item: newImage,
-            });
-            const messageData = messageParsed?.data;
-            handleMessageAction(
-              messageData as EntityItem<typeof Message>,
-              appDb,
-            );
-
-            // console.log('updateMessage', messageData);
-
-            // route responses to bot actions/conditions to the appropriate next node
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppUpdateMessage,
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+            if (
+              record.dynamodb.NewImage.context?.S === 'operator' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'operator'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppUpdateOperator,
+                    },
                   },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-          }
-          if (
-            record.dynamodb.NewImage.context?.S === 'conversation' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'conversation'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppUpdateConversation,
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+            if (
+              record.dynamodb.NewImage.context?.S === 'customer' ||
+              record.dynamodb.NewImage.__edb_e__?.S === 'customer'
+            ) {
+              await sns
+                .publish({
+                  TopicArn: Topic.DdbStreamTopic.topicArn,
+                  Message: JSON.stringify(record),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: WsAppDetailType.wsAppUpdateCustomer,
+                    },
                   },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
           }
-          if (
-            record.dynamodb.NewImage.context?.S === 'operator' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'operator'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppUpdateOperator,
-                  },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-          }
-          if (
-            record.dynamodb.NewImage.context?.S === 'customer' ||
-            record.dynamodb.NewImage.__edb_e__?.S === 'customer'
-          ) {
-            await sns
-              .publish({
-                TopicArn: Topic.DdbStreamTopic.topicArn,
-                Message: JSON.stringify(record),
-                MessageAttributes: {
-                  type: {
-                    DataType: 'String',
-                    StringValue: WsAppDetailType.wsAppUpdateCustomer,
-                  },
-                },
-                MessageStructure: 'string',
-              })
-              .promise();
-          }
-        }
-      });
+          return;
+        }),
+      );
       return {
         statusCode: 200,
         body: '',

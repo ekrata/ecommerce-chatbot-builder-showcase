@@ -5,10 +5,10 @@ import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
 import { botNodeEvent, BotNodeType } from '@/entities/bot';
 import {
-    AskAQuestionData
+  AskAQuestionData
 } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
 import {
-    DecisionQuickRepliesData
+  DecisionQuickRepliesData
 } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
@@ -18,10 +18,12 @@ import { getAppDb } from '../../db';
 import { BotStateContext } from '../botStateContext';
 import { formatMessage } from '../formatMessage';
 
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
+
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
-  async (event: SQSEvent) => {
+  async (event: SQSEvent, context) => {
+    context.callbackWaitsForEmptyEventLoop = false;
     try {
-      const appDb = getAppDb(Config.REGION, Table.app.tableName);
       const { Records } = event;
       console.log('quickreplies', Records)
       for (const record of Records) {

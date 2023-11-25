@@ -1,5 +1,4 @@
 import { SNSMessage, SQSEvent } from 'aws-lambda';
-import AWS from 'aws-sdk';
 /**
  *  Define a custom Output Parser
  */
@@ -7,22 +6,11 @@ import { BaseLanguageModel } from 'langchain/base_language';
 import { LLMChain, RetrievalQAChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import {
-  BasePromptTemplate,
-  BaseStringPromptTemplate,
-  PromptTemplate,
-  renderTemplate,
-  SerializedBasePromptTemplate,
-  StringPromptValue,
-} from 'langchain/prompts';
-import { DynamoDBChatMessageHistory } from 'langchain/stores/message/dynamodb';
-import { ApiHandler, useJsonBody, useQueryParams } from 'sst/node/api';
+import { PromptTemplate } from 'langchain/prompts';
 import { Config } from 'sst/node/config';
-import { Queue } from 'sst/node/queue';
 import { Table } from 'sst/node/table';
-import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
-import { botNodeEvent, BotNodeType } from '@/entities/bot';
 import { SalesBotAgentData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/agents/SalesBotAgent';
 import middy from '@middy/core';
 import eventNormalizer from '@middy/event-normalizer';
@@ -216,188 +204,211 @@ const config = {
 // const client = new BedrockRuntime();
 
 // reuse between invokes
+
+const llm = new ChatOpenAI({
+  temperature: 0.9,
+  openAIApiKey: await Config?.OPENAI_API_KEY,
+  modelName: 'gpt-3.5-turbo-1106',
+});
+
+const retrievalLlm = new ChatOpenAI({
+  temperature: 0,
+  openAIApiKey: await Config?.OPENAI_API_KEY,
+});
+const embeddings = new OpenAIEmbeddings({
+  openAIApiKey: await Config?.OPENAI_API_KEY,
+});
+
+const appDb = getAppDb(Config.REGION, Table.app.tableName);
+
 export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
-  async (event: SQSEvent) => {
-    const appDb = getAppDb(Config.REGION, Table.app.tableName);
-    console.log('IN SALES AGENT');
-    const llm = new ChatOpenAI({
-      temperature: 0.9,
-      openAIApiKey: await Config?.OPENAI_API_KEY,
-      modelName: 'gpt-3.5-turbo-1106',
-    });
-    console.log(llm.modelName);
+  async (event: SQSEvent, context) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+    // console.log(context);
+    try {
+      console.log('IN SALES AGENT');
+      // console.log(event);
+      const Records = event?.Records;
+      await Promise.all(
+        Records?.map(async (record) => {
+          // if (record == null) return;
+          // console.log(record);
+          const snsMessageId = record?.messageId;
+          console.log(record?.body);
+          console.log(record?.body?.['Message']);
+          const botStateContext: BotStateContext =
+            // record.body as unknown as SNSMessage
+            JSON.parse(
+              record?.body?.['Message'] as string,
+            ) as unknown as BotStateContext;
+          const {
+            type,
+            bot,
+            conversation,
+            nextNode,
+            interaction,
+            currentNode,
+          } = botStateContext;
 
-    const retrievalLlm = new ChatOpenAI({
-      temperature: 0,
-      openAIApiKey: await Config?.OPENAI_API_KEY,
-    });
-    const embeddings = new OpenAIEmbeddings({
-      openAIApiKey: await Config?.OPENAI_API_KEY,
-    });
-
-    const { Records } = event;
-    await Promise.all(
-      Records.map(async (record) => {
-        const snsMessageId = record?.messageId;
-        const botStateContext: BotStateContext = (
-          record.body as unknown as SNSMessage
-        )?.Message as unknown as BotStateContext;
-        const { type, bot, conversation, nextNode, interaction, currentNode } =
-          botStateContext;
-
-        const messagesRes = await appDb.entities.messages.query
-          .byConversation({
-            orgId: conversation.orgId,
-            conversationId: conversation.conversationId,
-          })
-          .go({ limit: 20, order: 'asc' });
-
-        const messages = messagesRes.data.sort(
-          (a, b) => b.createdAt - a.createdAt,
-        );
-        const {
-          orgId,
-          conversationId,
-          botId,
-          customer,
-          customerId,
-          operatorId,
-        } = conversation;
-        // const { id, position, data } = currentNode as BotNodeType;
-
-        const botFormData = JSON.parse(
-          currentNode?.data ?? '{}',
-        ) as SalesBotAgentData;
-
-        const botData: SalesGPTData = {
-          salesperson_name: botFormData.name,
-          salesperson_role: botFormData.businessRole,
-          company_name: botFormData.companyName,
-          company_business: botFormData.companyBusiness,
-          company_values: botFormData.companyValues,
-          conversation_purpose: botFormData.conversationPurpose,
-          conversation_type: 'chatbot on a website',
-        };
-
-        const salesAgent = await SalesGPT.from_llm(
-          llm,
-          retrievalLlm,
-          embeddings,
-          false,
-          config,
-          botData,
-          orgId,
-          customer?.locale ?? 'en',
-        );
-        salesAgent?.seed_agent();
-
-        // get last message sent by bot
-        const lastBotMessageIdx = messages.findLastIndex(
-          (message) => message?.sender === 'bot',
-        );
-
-        // format last 50 messages for conversationHistory prompt
-        const conversationHistory = messages
-          // ?.slice(-20, lastBotMessageIdx)
-          ?.map((message) => {
-            console.log(message);
-            if (message?.sender === 'bot' || message?.sender === 'operator') {
-              return `${botFormData?.name ?? 'Bot'}: ${message?.content}`;
-            } else if (message?.sender === 'customer') {
-              return `User: ${message?.content}`;
-            }
-          });
-
-        const messagesSinceLastBotMessage =
-          lastBotMessageIdx === 0 ||
-          lastBotMessageIdx === -1 ||
-          lastBotMessageIdx == null
-            ? [messages?.slice(-1)?.[0]]
-            : messages?.slice(-1 * lastBotMessageIdx);
-
-        // console.log('lam history', conversationHistory);
-        // console.log('message', messagesSinceLastBotMessage);
-        if (salesAgent) {
-          salesAgent.conversation_history = [
-            ...conversationHistory?.filter((el): el is string => el != null),
-          ];
-          console.log(salesAgent.conversation_history);
-          console.log(salesAgent.conversation_history);
-          // if (messagesSinceLastBotMessage?.length) {
-          //   salesAgent.human_step(
-          //     messagesSinceLastBotMessage
-          //       .map((message) => message?.content)
-          //       ?.join('\n'),
-          //   );
-          // }
-          const stageResponse = await salesAgent.determine_conversation_stage();
-          const response = await salesAgent.step();
-
-          const res = await appDb.entities.messages
-            ?.upsert({
-              messageId: snsMessageId,
-              conversationId,
-              orgId,
-              operatorId: operatorId ?? '',
-              customerId: customerId ?? '',
-              botStateContext: JSON.stringify({
-                ...botStateContext,
-                messages: [...(botStateContext?.messages ?? [])],
-              }),
-              sender: 'bot',
-              content: response as unknown as string,
-              createdAt: Date.now(),
-              sentAt: Date.now(),
+          const messagesRes = await appDb.entities.messages.query
+            .byConversation({
+              orgId: conversation.orgId,
+              conversationId: conversation.conversationId,
             })
-            .go();
+            .go({ limit: 20, order: 'asc' });
 
-          // // update message just created with the message??
-          // const res2 = await appDb.entities.messages
-          //   ?.update({
-          //     messageId: snsMessageId,
-          //     conversationId,
-          //     orgId,
-          //   })
-          //   .set({
-          //     botStateContext: JSON.stringify({
-          //       ...botStateContext,
-          //       messages: [...(botStateContext?.messages ?? []), res?.data],
-          //     }),
-          //   })
-          //   .go({ response: 'all_new' });
+          const messages = messagesRes.data.sort(
+            (a, b) => b.createdAt - a.createdAt,
+          );
+          console.log(messages?.map((message) => message.createdAt));
+          const {
+            orgId,
+            conversationId,
+            botId,
+            customer,
+            customerId,
+            operatorId,
+          } = conversation;
+          // const { id, position, data } = currentNode as BotNodeType;
 
-          // console.log(res2);
+          const botFormData = JSON.parse(
+            currentNode?.data ?? '{}',
+          ) as SalesBotAgentData;
 
-          // await appDb.entities?.messages
-          //   .upsert({
-          //     messageId: uuidv4(),
-          //     conversationId,
-          //     orgId,
-          //     operatorId: operatorId ?? '',
-          //     customerId: customerId ?? '',
-          //     sender: 'bot',
-          //     content: '',
-          //     messageFormType: botNodeEvent.AskAQuestion,
-          //     messageFormData: data,
-          //     createdAt: initiateAt + 10000,
-          //     sentAt: initiateAt + 10000,
-          //     botStateContext: JSON.stringify({
-          //       ...botStateContext,
-          //     } as BotStateContext),
-          //   })
-          //   .go({});
-
-          return {
-            conversationStage: salesAgent.current_conversation_stage,
-            response,
+          const botData: SalesGPTData = {
+            salesperson_name: botFormData.name,
+            salesperson_role: botFormData.businessRole,
+            company_name: botFormData.companyName,
+            company_business: botFormData.companyBusiness,
+            company_values: botFormData.companyValues,
+            conversation_purpose: botFormData.conversationPurpose,
+            conversation_type: 'chatbot on a website',
           };
-        }
-      }),
-    );
-    return {
-      statusCode: 200,
-      body: '',
-    };
+
+          const salesAgent = await SalesGPT.from_llm(
+            llm,
+            retrievalLlm,
+            embeddings,
+            false,
+            config,
+            botData,
+            orgId,
+            customer?.locale ?? 'en',
+          );
+          salesAgent?.seed_agent();
+
+          // get last message sent by bot
+          const lastBotMessageIdx = messages.findLastIndex(
+            (message) => message?.sender === 'bot',
+          );
+
+          // format last 50 messages for conversationHistory prompt
+          const conversationHistory = messages
+            // ?.slice(-20, lastBotMessageIdx)
+            ?.map((message) => {
+              if (message?.sender === 'bot' || message?.sender === 'operator') {
+                return `${botFormData?.name ?? 'Bot'}: ${message?.content}`;
+              } else if (message?.sender === 'customer') {
+                return `User: ${message?.content}`;
+              }
+            });
+
+          const messagesSinceLastBotMessage =
+            lastBotMessageIdx === 0 ||
+            lastBotMessageIdx === -1 ||
+            lastBotMessageIdx == null
+              ? [messages?.slice(-1)?.[0]]
+              : messages?.slice(-1 * lastBotMessageIdx);
+
+          // console.log('lam history', conversationHistory);
+          // console.log('message', messagesSinceLastBotMessage);
+          console.log(!!salesAgent);
+          if (salesAgent) {
+            salesAgent.conversation_history = [
+              ...conversationHistory?.filter((el): el is string => el != null),
+            ];
+            console.log(salesAgent.conversation_history);
+            console.log(salesAgent.conversation_history);
+            // if (messagesSinceLastBotMessage?.length) {
+            //   salesAgent.human_step(
+            //     messagesSinceLastBotMessage
+            //       .map((message) => message?.content)
+            //       ?.join('\n'),
+            //   );
+            // }
+            const stageResponse =
+              await salesAgent.determine_conversation_stage();
+            const response = await salesAgent.step();
+
+            console.log('ressing');
+            const res = await appDb.entities.messages
+              ?.create({
+                messageId: uuidv4(),
+                conversationId,
+                orgId,
+                operatorId: operatorId ?? '',
+                customerId: customerId ?? '',
+                botStateContext: JSON.stringify({
+                  ...botStateContext,
+                  messages: [...(botStateContext?.messages ?? [])],
+                }),
+                sender: 'bot',
+                content: response as unknown as string,
+                createdAt: Date.now(),
+                sentAt: Date.now(),
+              })
+              .go();
+
+            console.log(res);
+            // // update message just created with the message??
+            // const res2 = await appDb.entities.messages
+            //   ?.update({
+            //     messageId: snsMessageId,
+            //     conversationId,
+            //     orgId,
+            //   })
+            //   .set({
+            //     botStateContext: JSON.stringify({
+            //       ...botStateContext,
+            //       messages: [...(botStateContext?.messages ?? []), res?.data],
+            //     }),
+            //   })
+            //   .go({ response: 'all_new' });
+
+            // console.log(res2);
+
+            // await appDb.entities?.messages
+            //   .upsert({
+            //     messageId: uuidv4(),
+            //     conversationId,
+            //     orgId,
+            //     operatorId: operatorId ?? '',
+            //     customerId: customerId ?? '',
+            //     sender: 'bot',
+            //     content: '',
+            //     messageFormType: botNodeEvent.AskAQuestion,
+            //     messageFormData: data,
+            //     createdAt: initiateAt + 10000,
+            //     sentAt: initiateAt + 10000,
+            //     botStateContext: JSON.stringify({
+            //       ...botStateContext,
+            //     } as BotStateContext),
+            //   })
+            //   .go({});
+          }
+        }),
+      );
+      return {
+        statusCode: 200,
+        body: 'ddd',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: 500,
+        body: err,
+      };
+    }
   },
 );
 
