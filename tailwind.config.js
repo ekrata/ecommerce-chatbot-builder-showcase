@@ -6,6 +6,7 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./node_modules/flowbite/**/*.js"
   ],
   safelist: [
     'bg-gradient-to-r',
@@ -28,5 +29,7 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('tailwindcss-animated'),
     require('daisyui'),
+    require('flowbite/plugin')({charts: true})
+
   ],
 };

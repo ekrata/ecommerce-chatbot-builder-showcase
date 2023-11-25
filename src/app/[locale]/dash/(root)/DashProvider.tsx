@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/navigation';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
@@ -16,6 +17,7 @@ export interface Props {
 
 export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQueryClient, mockWsUrl, children }: PropsWithChildren<Props>) => {
   // Create a client
+  const router = useRouter()
   const queryClient = new QueryClient({
     defaultOptions: {
       mutations: {
@@ -29,6 +31,7 @@ export const DashProvider: React.FC<PropsWithChildren<Props>> = ({ overrideQuery
 
   return (
     <>
+      {process?.env?.NEXT_PUBLIC_STAGE === 'prod' && router.push('/')}
       <QueryClientProvider
         client={overrideQueryClient ?? queryClient}
       >
