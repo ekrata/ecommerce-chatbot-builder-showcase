@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { faker } from '@faker-js/faker';
 
-import { rating } from './conversation';
+import { conversationChannel, rating } from './conversation';
 
 export enum ContactPropertiesEnum {
   name = 'name',
@@ -80,7 +80,17 @@ export const Customer = new Entity({
       type: 'string',
       default: '',
     },
+    omniChannelSource: {
+      type: conversationChannel,
+      default: '',
+    },
     metaSenderId: {
+      type: 'string',
+    },
+    whatsappPhoneId: {
+      type: 'string',
+    },
+    whatsappConversationId: {
       type: 'string',
     },
     connectionId: {

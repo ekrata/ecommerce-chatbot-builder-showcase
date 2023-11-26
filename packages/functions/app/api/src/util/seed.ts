@@ -42,6 +42,7 @@ import { senderType } from '../../../../../../stacks/entities/message';
 import * as botTemplates from '../botTemplates/templates';
 import { AppDb, getAppDb } from '../db';
 import { getHttp } from '../http';
+import { whatsappMessagesMock1 } from '../meta/whatsapp/mocks';
 import { MockArgs, mockArticleTitles, MockOrgIds, TestBotKey } from './';
 
 export interface SeedResponse {
@@ -109,6 +110,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     name: `Test corp ${orgIndex}`,
     domain: 'localhost',
     email: faker.internet.email(),
+    whatsappPhoneId: whatsappMessagesMock1.value.metadata.phone_number_id,
   };
   await db.entities.orgs.create(createOrg).go();
   const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;

@@ -8,7 +8,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
 import { MessengerEvent } from '../metaEvents';
-import { verifyMetaRequestSignature } from './verifyMetaRequestSignature';
+import { verifyMetaRequestSignature } from '../verifyMetaRequestSignature';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -20,7 +20,6 @@ export const handler = Sentry.AWSLambda.wrapHandler(
     let mode = useQueryParam('hub.mode');
     let token = useQueryParam('hub.verify_token');
     let challenge = useQueryParam('hub.challenge');
-    const body = useJsonBody();
 
     // Check if a token and mode is in the query string of the request
     if (mode && token) {
@@ -30,37 +29,22 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         console.log('WEBHOOK_VERIFIED');
         return { statusCode: 200, body: challenge };
       } else {
-          const res = verifyMetaRequestSignature();
-          if(res) {
-            return res
-          }
-          if(body?.id) {
-            if(body?.messages) {
-              Promise.all(body.messages?.map(async (message) => {
-                return await  sns.publish({
-                  // Get the topic from the environment variable
-                  TopicArn: Topic.MetaMessengerTopic,
-                  Message: JSON.stringify({ topic: MessengerEvent.Messages, payload: message }),
-                  MessageStructure: "string",
-                })
-                .promise();
-              }))
-
-  console.log("Order confirmed!");
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ status: "successful" }),
-  };
-            }
-            if(body?.messaging) {
-              body?.messaging.map()
-            }
-          }
-
+        const res = verifyMetaRequestSignature();
+        if (res) {
+          return res;
         }
-        // Respond with '403 Forbidden' if verify tokens do not match
-        return { statusCode: 403, body: '' };
+        // if(body?.id) {
+        //   if(body?.messages) {
+        //     Promise.all(body.messages?.map(async (message) => {
+        //       return await  sns.publish({
+        //         // Get the topic from the environment variable
+        //         TopicArn: Topic.MetaMessengerTopic,
+        //         Message: JSON.stringify({ topic: MessengerEvent.Messages, payload: message }),
+        //         MessageStructure: "string",
+        //       })
+        //       .promise();
+        //     }))
+        //   }
       }
     }
   }),

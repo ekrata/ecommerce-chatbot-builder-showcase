@@ -21,6 +21,10 @@ export const Org = new Entity({
       type: 'string',
       default: '',
     },
+    whatsappPhoneId: {
+      type: 'string',
+    },
+
     isWidgetDown: {
       type: 'boolean',
       default: true,

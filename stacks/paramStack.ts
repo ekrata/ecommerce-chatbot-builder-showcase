@@ -75,8 +75,51 @@ export function paramStack({ stack, app }: StackContext) {
   const OPENAI_API_KEY = new Config.Secret(stack, 'OPENAI_API_KEY');
 
   const appEventBus = new EventBus(stack, 'appEventBus', {});
+  // for dynamodb streams
   const ddbStreamTopic = new Topic(stack, 'DdbStreamTopic', {});
+
+  // for bot actions
   const botNodeTopic = new Topic(stack, 'BotNodeTopic', {
+    defaults: {
+      function: {
+        permissions: [
+          'sqs:ReceiveMessage',
+          'sqs:Sendmessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes',
+        ],
+      },
+    },
+  });
+  // for meta webhooks
+  const metaMessengerTopic = new Topic(stack, 'MetaMessengerTopic', {
+    defaults: {
+      function: {
+        permissions: [
+          'sqs:ReceiveMessage',
+          'sqs:Sendmessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes',
+        ],
+      },
+    },
+  });
+
+  // for meta webhooks
+  const metaWhatsappTopic = new Topic(stack, 'MetaWhatsappTopic', {
+    defaults: {
+      function: {
+        permissions: [
+          'sqs:ReceiveMessage',
+          'sqs:Sendmessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes',
+        ],
+      },
+    },
+  });
+
+  const metaInstagramTopic = new Topic(stack, 'MetaInstagramTopic', {
     defaults: {
       function: {
         permissions: [
@@ -109,6 +152,9 @@ export function paramStack({ stack, app }: StackContext) {
     appEventBus,
     ddbStreamTopic,
     botNodeTopic,
+    metaMessengerTopic,
+    metaWhatsappTopic,
+    metaInstagramTopic,
     REGION,
     faissLambdaConfig,
     STAGE,

@@ -7,7 +7,7 @@ import { Topic } from 'sst/node/topic';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
-import { MessengerEvent } from '../metaEvents';
+import { MessengerEvent, MetaEvent, MetaEvents } from '../metaEvents';
 import { verifyMetaRequestSignature } from '../verifyMetaRequestSignature';
 
 // import { verifyMetaRequestSignature } from './verifyMetaRequestSignature';
@@ -18,6 +18,7 @@ const sns = new AWS.SNS();
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
+    console.log('hiii');
     // Parse the query params
     let mode = useQueryParam('hub.mode');
     let token = useQueryParam('hub.verify_token');
@@ -33,23 +34,26 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         return { statusCode: 200, body: challenge };
       } else {
         const res = verifyMetaRequestSignature();
-        if (res) {
-          return {
-            statusCode: 200,
-            body: JSON.stringify(res),
-          };
+        if (res && body?.field) {
+          switch (body?.field) {
+            case MetaEvent.WhatsappMessages: {
+              return await sns
+                .publish({
+                  // Get the topic from the environment variable
+                  TopicArn: Topic.MetaMessengerTopic.topicArn,
+                  Message: JSON.stringify(body),
+                  MessageAttributes: {
+                    type: {
+                      DataType: 'String',
+                      StringValue: MetaEvent.WhatsappMessages,
+                    },
+                  },
+                  MessageStructure: 'string',
+                })
+                .promise();
+            }
+          }
         }
-        // if(body?.id) {
-        //   if(body?.messages) {
-        //     Promise.all(body.messages?.map(async (message) => {
-        //       return await  sns.publish({
-        //         // Get the topic from the environment variable
-        //         TopicArn: Topic.MetaMessengerTopic.topicArn,
-        //         Message: JSON.stringify({ topic: MessengerEvent.Messages, payload: message }),
-        //         MessageStructure: "string",
-        //       })
-        //       .promise();
-        //     }))
       }
     }
   }),

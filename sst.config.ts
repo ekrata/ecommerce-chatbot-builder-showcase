@@ -10,7 +10,9 @@ import { conversationsStack } from './packages/functions/app/api/src/conversatio
 import { customersStack } from './packages/functions/app/api/src/customers/customersStack';
 import { interactionsStack } from './packages/functions/app/api/src/interactions/interactionsStack';
 import { messagesStack } from './packages/functions/app/api/src/messages/messagesStack';
-import { metaStack } from './packages/functions/app/api/src/meta/metaStack';
+import { metaInstagramStack } from './packages/functions/app/api/src/meta/instagram/metaInstagramStack';
+import { metaMessengerStack } from './packages/functions/app/api/src/meta/messenger/metaMessengerStack';
+import { metaWhatsappStack } from './packages/functions/app/api/src/meta/whatsapp/metaWhatsappStack';
 import { nodesStack } from './packages/functions/app/api/src/nodes/nodesStack';
 import { operatorsStack } from './packages/functions/app/api/src/operators/operatorsStack';
 import { orgsStack } from './packages/functions/app/api/src/orgs/orgsStack';
@@ -50,6 +52,8 @@ export default {
       .stack(botTemplatesStack)
       .stack(interactionsStack)
       .stack(stripeStack)
-      .stack(metaStack);
+      .stack(metaInstagramStack)
+      .stack(metaWhatsappStack)
+      .stack(metaMessengerStack);
   },
 } satisfies SSTConfig;
