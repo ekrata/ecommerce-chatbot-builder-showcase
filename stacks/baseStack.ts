@@ -152,6 +152,7 @@ export function baseStack({ stack, app }: StackContext) {
           'sqs:DeleteMessage',
           'sqs:GetQueueAttributes',
           'sns:Publish',
+
           'kms:Decrypt',
         ],
       },

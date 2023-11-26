@@ -7,7 +7,7 @@ import { Topic } from 'sst/node/topic';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../db';
-import { MessengerEvent, MetaEvent, MetaEvents } from '../metaEvents';
+import { MessengerEvent, MetaEvent } from '../metaEvents';
 import { verifyMetaRequestSignature } from '../verifyMetaRequestSignature';
 
 // import { verifyMetaRequestSignature } from './verifyMetaRequestSignature';

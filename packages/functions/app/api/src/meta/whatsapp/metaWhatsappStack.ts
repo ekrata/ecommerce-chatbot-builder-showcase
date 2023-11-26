@@ -7,5 +7,7 @@ export function metaWhatsappStack({ app, stack }: StackContext) {
   api.addRoutes(stack, {
     'GET /meta/whatsapp/webhook':
       'packages/functions/app/api/src/meta/whatsapp/webhook.handler',
+    'POST /meta/whatsapp/webhook':
+      'packages/functions/app/api/src/meta/whatsapp/webhook.handler',
   });
 }

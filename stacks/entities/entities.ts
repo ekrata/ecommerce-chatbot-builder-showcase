@@ -1,5 +1,6 @@
 import { CreateEntityItem, UpdateEntityItem } from 'electrodb';
 
+import { Analytic } from './analytics';
 import { Article } from './article';
 import { ArticleContent } from './articleContent';
 import { Bot } from './bot';
@@ -37,6 +38,9 @@ export type UpdateConfiguration = UpdateEntityItem<typeof Configuration>;
 
 export type CreateTranslation = CreateEntityItem<typeof Translation>;
 export type UpdateTranslation = UpdateEntityItem<typeof Translation>;
+
+export type CreateAnalytic = CreateEntityItem<typeof Analytic>;
+export type UpdateAnalytic = UpdateEntityItem<typeof Analytic>;
 
 export type CreateArticle = CreateEntityItem<typeof Article>;
 export type UpdateArticle = UpdateEntityItem<typeof Article>;

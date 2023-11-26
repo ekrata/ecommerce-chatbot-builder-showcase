@@ -1,23 +1,25 @@
 import { ApiHandler, usePathParams } from 'sst/node/api';
-import * as Sentry from '@sentry/serverless';
-import { Table } from 'sst/node/table';
-import { getAppDb } from '../db';
 import { Config } from 'sst/node/config';
+import { Table } from 'sst/node/table';
+
+import * as Sentry from '@sentry/serverless';
+
+import { getAppDb } from '../../db';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
-    const { orgId, lang, articleId } = usePathParams();
-    if (!orgId || !lang || !articleId) {
+    const { orgId, analyticId } = usePathParams();
+    if (!orgId || !analyticId) {
       return {
         statusCode: 422,
         body: 'Failed to parse an id from the url.',
       };
     }
     try {
-      const res = await appDb.entities.articles
-        .get({ orgId, lang, articleId })
+      const res = await appDb.entities.analytics
+        .get({ orgId, analyticId })
         .go();
       if (res.data) {
         return {
@@ -27,7 +29,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       }
       return {
         statusCode: 404,
-        body: `No article with orgId: ${orgId}, lang: ${lang}, or articleId: ${articleId} exists. `,
+        body: `No article with orgId: ${orgId}, or articleId: ${analyticId} exists. `,
       };
     } catch (err) {
       Sentry.captureException(err);
@@ -36,5 +38,5 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         body: JSON.stringify(err),
       };
     }
-  })
+  }),
 );

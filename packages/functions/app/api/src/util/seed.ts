@@ -110,6 +110,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     name: `Test corp ${orgIndex}`,
     domain: 'localhost',
     email: faker.internet.email(),
+    planTier: 'plus',
     whatsappPhoneId: whatsappMessagesMock1.value.metadata.phone_number_id,
   };
   await db.entities.orgs.create(createOrg).go();

@@ -1,8 +1,15 @@
 import { Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
+export const csatQuestion = ['How was your experience?'];
+export const npsQuestion = [
+  'How likely are you to recommend us to a friend or colleague?',
+];
 /**
- * Basic Article Entity that stores Rich Text Format data
+ * Basic Analytic Entity that stores Rich Text Format data
+ * @date 12/06/2023 - 17:08:29
+/**
+ * Basic Analytic Entity that stores Rich Text Format data
  * @date 12/06/2023 - 17:08:29
  *
  * @type {*}
@@ -17,17 +24,15 @@ export const Analytic = new Entity({
     analyticId: {
       type: 'string',
       required: true,
-      readOnly: true,
       default: () => uuidv4(),
+    },
+    orgId: {
+      type: 'string',
     },
     createdAt: {
       type: 'number',
       readOnly: true,
       default: Date.now(),
-    },
-    orgId: {
-      type: 'string',
-      required: true,
     },
     articles: {
       type: 'map',
@@ -43,30 +48,30 @@ export const Analytic = new Entity({
         },
       },
     },
-  },
-  conversations: {
-    type: 'map',
-    default: {},
-    properties: {
-      topics: {
-        type: 'map',
-        default: {},
-        properties: {
-          products: {
-            type: 'number',
-            default: 0,
-          },
-          orderStatus: {
-            type: 'number',
-            default: 0,
-          },
-          orderIssues: {
-            type: 'number',
-            default: 0,
-          },
-          shippingPolicy: {
-            type: 'number',
-            default: 0,
+    conversations: {
+      type: 'map',
+      default: {},
+      properties: {
+        topics: {
+          type: 'map',
+          default: {},
+          properties: {
+            products: {
+              type: 'number',
+              default: 0,
+            },
+            orderStatus: {
+              type: 'number',
+              default: 0,
+            },
+            orderIssues: {
+              type: 'number',
+              default: 0,
+            },
+            shippingPolicy: {
+              type: 'number',
+              default: 0,
+            },
           },
         },
         channel: {
@@ -96,7 +101,154 @@ export const Analytic = new Entity({
           },
         },
       },
-      ratings: {
+    customer: {
+      type: 'map',
+      default: {},
+      properties: {
+      feedback: {
+        type: 'map',
+        default: {},
+        properties: {
+          nps: {
+            type: 'list',
+            default: [],
+            items: {
+              customerQuestionRatings: {
+                type: 'map',
+                default: {},
+                properties: {
+                  customerId: {
+                    type: 'string',
+                  },
+                  questionResponse: {
+                    type: 'list',
+                    default: {},
+                    items: {
+                      type: 'map',
+                      default: {},
+                      properties: {
+                        question: {
+                          type: csatQuestion,
+                        },
+                        ratings: {
+                          type: 'map',
+                          default: {},
+                          properties: {
+                            1: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            2: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            3: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            4: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            5: {
+                              type: 'number',
+                              default: 0,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        csat: {
+          type: 'list',
+          default: [],
+          items: {
+            customerQuestionRatings: {
+              type: 'map',
+              default: {},
+              properties: {
+                customerId: {
+                  type: 'string',
+                },
+                longFormResponse: {
+                  type: 'map',
+                  property: {
+                    'What was the reason for the score you gave us?': {
+                      type: 'string',
+                      default: 'string',
+                    },
+                    'What can we do better to improve your experience with our brand?':
+                      {
+                        type: 'string',
+                        default: 'string',
+                      },
+                    'Did you face any challenges while shopping with us? If yes, please share what they were. ':
+                      {
+                        type: 'string',
+                        default: 'string',
+                      },
+                    'What would you like for us to change about our product/service/company?':
+                      {
+                        type: 'string',
+                        default: 'string',
+                      },
+                  },
+                  questionResponse: {
+                    type: 'list',
+                    default: {},
+                    items: {
+                      type: 'map',
+                      default: {},
+                      properties: {
+                        question: {
+                          type: csatQuestion,
+                        },
+                        ratings: {
+                          type: 'map',
+                          default: {},
+                          properties: {
+                            1: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            2: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            3: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            4: {
+                              type: 'number',
+                              default: 0,
+                            },
+                            5: {
+                              type: 'number',
+                              default: 0,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        }
+      }
+    }
+  }
+    ratings: {
+      type: 'map',
+      default: {},
+      properties: {
         '1': {
           type: 'number',
           default: 0,
@@ -118,31 +270,31 @@ export const Analytic = new Entity({
           default: 0,
         },
       },
-      new: {
-        type: 'number',
-        default: 0,
-      },
-      unassigned: {
-        type: 'number',
-        default: 0,
-      },
-      open: {
-        type: 'number',
-        default: 0,
-      },
-      solved: {
-        type: 'number',
-        default: 0,
-      },
-      // time it takes for conversation to go from unassigned to assigned
-      avgWaitTime: {
-        type: 'number',
-        default: 0,
-      },
-      avgRating: {
-        type: 'number',
-        default: 0,
-      },
+    },
+    new: {
+      type: 'number',
+      default: 0,
+    },
+    unassigned: {
+      type: 'number',
+      default: 0,
+    },
+    open: {
+      type: 'number',
+      default: 0,
+    },
+    solved: {
+      type: 'number',
+      default: 0,
+    },
+    // time it takes for conversation to go from unassigned to assigned
+    avgWaitTime: {
+      type: 'number',
+      default: 0,
+    },
+    avgRating: {
+      type: 'number',
+      default: 0,
     },
   },
   visitors: {
@@ -187,11 +339,22 @@ export const Analytic = new Entity({
     get: {
       pk: {
         field: 'pk',
-        composite: ['analyticId'],
+        composite: ['orgId', 'analyticId'],
       },
       sk: {
         field: 'sk',
-        composite: ['createdAt'],
+        composite: [],
+      },
+    },
+    byOrg: {
+      index: 'gsi2pk-gsi2sk-index',
+      pk: {
+        field: 'gsi2-pk',
+        composite: ['orgId'],
+      },
+      sk: {
+        field: 'gsi2-sk',
+        composite: [],
       },
     },
   },

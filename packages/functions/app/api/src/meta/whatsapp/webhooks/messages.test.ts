@@ -1,22 +1,27 @@
 import { Api } from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
+import { beforeAll, describe, it } from 'vitest';
 
 import { getAppDb } from '../../../db';
 import { getHttp } from '../../../http';
 import { MockOrgIds } from '../../../util';
 import { whatsappMessagesMock1, whatsappMessagesMock2 } from '../mocks';
 
+console.log(process.env.SST_Config_REGION);
 const http = getHttp(`${Api.appApi.url}`);
-const appDb = getAppDb(Config.REGION, Table.app.tableName);
+const appDb = getAppDb(
+  process?.env?.SST_Config_REGION,
+  process.env.SST_Config_REGION,
+);
 
-let mockOrgIds: MockOrgIds[] = [];
-beforeAll(async () => {
-  mockOrgIds = (await http.post(`/util/seed-test-db`)).data as MockOrgIds[];
-  if (!mockOrgIds) {
-    throw new Error('Mock Organisation undefined');
-  }
-});
+// let mockOrgIds: MockOrgIds[] = [];
+// beforeAll(async () => {
+//   mockOrgIds = (await http.post(`/util/seed-test-db`)).data as MockOrgIds[];
+//   if (!mockOrgIds) {
+//     throw new Error('Mock Organisation undefined');
+//   }
+// });
 
 describe('metaWhatsapp: tests whatsapp webhook handlers', () => {
   it('creates a new customer, conversation, and message', async () => {
