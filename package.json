@@ -93,6 +93,7 @@
     "@middy/event-normalizer": "^4.6.5",
     "@middy/http-error-handler": "^4.6.5",
     "@middy/validator": "^4.6.5",
+    "@next/font": "^14.0.3",
     "@next/mdx": "^14.0.3",
     "@react-oauth/google": "^0.11.1",
     "@sentry/nextjs": "^7.74.1",

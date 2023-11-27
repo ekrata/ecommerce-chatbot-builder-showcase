@@ -34,7 +34,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         await Promise.all(
           Records?.map(async (record) => {
             const newImage = getNewImage(record);
-            console.log(newImage);
             const messageData = Message.parse({ Item: newImage }).data;
             if (!messageData) {
               return {
@@ -49,8 +48,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             const conversation = await appDb.entities.conversations
               .get({ orgId, conversationId })
               .go();
-
-            console.log(conversation);
 
             // filter recipitents
             const operators = await appDb.entities.operators.query
@@ -77,7 +74,6 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(
               .primary({ orgId, customerId })
               .go();
 
-            console.log(customer);
             await postToConnection(
               appDb,
               gateway,

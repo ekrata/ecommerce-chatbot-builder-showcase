@@ -15,12 +15,11 @@ module.exports = {
     'to-purple-600',
   ],
   theme: {
-    // extend: {
-    //   fontFamily: {
-    //     sans: ['var(--font-inter)'],
-    //     mono: ['var(--font-roboto-mono)'],
-    //   },
-    // },
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+      }
+    }
   },
   daisyui: {
     themes: ['lofi', 'dark'],

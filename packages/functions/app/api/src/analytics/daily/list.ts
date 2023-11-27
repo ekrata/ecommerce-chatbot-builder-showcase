@@ -56,10 +56,9 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const now = data?.data[-1];
       const yesterday = data?.data[-2];
       const twoDaysAgo = data?.data[-3];
-      const feedbackDiff = relativeDiff(yesterday., twoDaysAgo);
+      const feedbackDiff = relativeDiff(yesterday.conversations., twoDaysAgo);
 
       // get change
-
       return {
         statusCode: 200,
         body: JSON.stringify(data),

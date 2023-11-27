@@ -24,7 +24,6 @@ export const Org = new Entity({
     whatsappPhoneId: {
       type: 'string',
     },
-
     isWidgetDown: {
       type: 'boolean',
       default: true,
@@ -161,6 +160,17 @@ export const Org = new Entity({
       },
       sk: {
         field: 'gsi1sk',
+        composite: ['createdAt'],
+      },
+    },
+    whatsappId: {
+      index: 'gsi2pk-gsi2sk-index',
+      pk: {
+        field: 'gsi2pk',
+        composite: ['whatsappPhoneId'],
+      },
+      sk: {
+        field: 'gsi2sk',
         composite: ['createdAt'],
       },
     },

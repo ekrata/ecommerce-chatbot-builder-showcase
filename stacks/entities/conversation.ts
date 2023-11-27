@@ -1,6 +1,7 @@
 import { Entity, EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
+import { csatQuestion, npsQuestion } from './analytics';
 import { Customer } from './customer';
 import { Message } from './message';
 import { Operator } from './operator';
@@ -98,10 +99,6 @@ export const Conversation = new Entity({
       required: true,
       readOnly: true,
       default: () => uuidv4(),
-    },
-    metaConversationId: {
-      type: 'string',
-      default: '',
     },
     orgId: {
       type: 'string',
@@ -203,6 +200,116 @@ export const Conversation = new Entity({
     lastMessageId: {
       type: 'string',
       default: undefined,
+    },
+    // feedback only
+    feedback: {
+      type: 'map',
+      default: {},
+      properties: {
+        nps: {
+          type: 'map',
+          default: {},
+          properties: {
+            question: {
+              type: npsQuestion,
+            },
+            ratings: {
+              type: 'map',
+              default: {},
+              properties: {
+                1: {
+                  type: 'number',
+                  default: 0,
+                },
+                2: {
+                  type: 'number',
+                  default: 0,
+                },
+                3: {
+                  type: 'number',
+                  default: 0,
+                },
+                4: {
+                  type: 'number',
+                  default: 0,
+                },
+                5: {
+                  type: 'number',
+                  default: 0,
+                },
+              },
+            },
+          },
+        },
+        csat: {
+          type: 'map',
+          default: {},
+          properties: {
+            customerId: {
+              type: 'string',
+            },
+            longFormResponse: {
+              type: 'map',
+              properties: {
+                'What was the reason for the score you gave us?': {
+                  type: 'string',
+                },
+                'What can we do better to improve your experience with our brand?':
+                  {
+                    type: 'string',
+                  },
+                'Did you face any challenges while shopping with us? If yes, please share what they were. ':
+                  {
+                    type: 'string',
+                  },
+                'What would you like for us to change about our product/service/company?':
+                  {
+                    type: 'string',
+                  },
+              },
+            },
+            questionsRating: {
+              type: 'list',
+              default: [],
+              items: {
+                type: 'map',
+                default: {},
+                properties: {
+                  question: {
+                    type: csatQuestion,
+                  },
+                  ratings: {
+                    type: 'map',
+                    default: {},
+                    properties: {
+                      1: {
+                        type: 'number',
+                        default: 0,
+                      },
+                      2: {
+                        type: 'number',
+                        default: 0,
+                      },
+                      3: {
+                        type: 'number',
+                        default: 0,
+                      },
+                      4: {
+                        type: 'number',
+                        default: 0,
+                      },
+                      5: {
+                        type: 'number',
+                        default: 0,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     createdAt: {
       type: 'number',

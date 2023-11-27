@@ -1,6 +1,7 @@
 import '../globals.css';
 
 import { NextIntlClientProvider, useLocale } from 'next-intl';
+import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
@@ -12,6 +13,12 @@ export const metadata = {
   title: 'eChat',
   description: 'Elevate with eChat',
 };
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 const locales = ['en', 'de'];
 export async function generateStaticParams() {
@@ -31,7 +38,7 @@ export default async function LocaleLayout({ children, params: { locale, overrid
   if (!isValidLocale) notFound();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={`${inter.variable} font-sans`}>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <QueryClientWrapper

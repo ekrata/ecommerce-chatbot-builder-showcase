@@ -1,10 +1,9 @@
 import { SNSEvent, SNSEventRecord, SNSMessage, SQSEvent } from 'aws-lambda';
 import { EntityItem } from 'electrodb';
+import { c } from 'msw/lib/glossary-de6278a9';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
-import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 
-import { botNodeEvent, BotNodeType } from '@/entities/bot';
 import { Conversation } from '@/entities/conversation';
 import { Customer } from '@/entities/customer';
 import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
@@ -14,7 +13,7 @@ import eventNormalizer from '@middy/event-normalizer';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../../../db';
-import { Message, MessagesBody } from '../types/messages';
+import { MessagesBody } from '../types/messages';
 
 const appDb = getAppDb(Config.REGION, Table.app.tableName);
 
@@ -27,21 +26,28 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         const body = (record.body as unknown as SNSMessage)
           ?.Message as unknown as MessagesBody;
 
-        const whatsappPhoneId = body?.value?.metadata?.phone_number_id;
+        const whatsappOrgPhoneId = body?.value?.metadata?.phone_number_id;
 
-        const org = await appDb.entities.orgs.scan
-          .where((org, { eq }) => eq(org?.whatsappPhoneId, whatsappPhoneId))
-          .go({ limit: 1 });
+        const org = (
+          await appDb.entities.orgs.query
+            .whatsappId({ whatsappPhoneId: whatsappOrgPhoneId })
+            .go()
+        ).data?.[0];
+
+        console.log('org', org);
 
         const customers = await appDb.entities.customers.scan
           .where((customer, { eq }) => {
-            return body.value.messages
-              .map((message) => {
-                `${eq(customer?.whatsappPhoneId, message.from)}`;
-              })
+            const res = body.value.messages
+              .map(
+                (message) => `${eq(customer?.whatsappPhoneId, message?.from)}`,
+              )
               .join(` AND `);
+            return res;
           })
           .go();
+
+        console.log('cuss', customers);
 
         type BodyReduce = {
           customerRes: EntityItem<typeof Customer> | undefined | null;
@@ -56,14 +62,15 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
             // they are the same if message?.from is the same
             const prevResolved = await prev;
             let customerRes: EntityItem<typeof Customer> | undefined | null =
-              prevResolved[message?.id].customerRes ??
-              customers.data.find((customer) => {
-                customer?.whatsappPhoneId === message.from;
-              });
+              prevResolved?.[message?.id]?.customerRes ??
+              customers?.data?.find(
+                (customer) => customer?.customerId === message?.from,
+              );
+            console.log('cusres', customerRes);
             let conversationRes:
               | EntityItem<typeof Conversation>
               | undefined
-              | null = prevResolved[message?.id].conversationRes;
+              | null = prevResolved[message?.id]?.conversationRes;
 
             // first message, customer won't exist.. create it
             if (!customerRes) {
@@ -72,8 +79,7 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
                   .upsert({
                     // messageId based on idempotent interactionId
                     customerId: message?.from,
-                    orgId: org?.data?.[0]?.orgId,
-                    whatsappPhoneId: message?.from,
+                    orgId: org?.orgId,
                     name:
                       body?.value.contacts.find(
                         (contact) => contact.wa_id === message?.from,
@@ -86,47 +92,58 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
               )?.data;
             }
 
-            // create a single conversation for this customer
+            console.log(1);
+            // if there is already a whatsapp conversation
+            console.log(customerRes?.whatsappConversationId);
             if (customerRes?.whatsappConversationId) {
               conversationRes = (
                 await appDb.entities.conversations
                   .get({
-                    conversationId: customerRes?.whatsappConversationId,
+                    conversationId: message?.from,
                     orgId: customerRes?.orgId,
                   })
+
                   .go()
               )?.data;
-            } else {
+            }
+            if (!conversationRes) {
+              // else create one
               conversationRes = (
                 await appDb.entities.conversations
                   .upsert({
-                    // messageId based on idempotent interactionId
+                    // create conversation with same id as first message of convo
                     conversationId: message.from,
-                    messageId: message.id,
                     orgId: customerRes?.orgId,
                     operatorId: '',
                     customerId: customerRes?.customerId,
+                    channel: 'whatsapp',
                     createdAt: parseInt(message?.timestamp, 10),
                     sentAt: parseInt(message?.timestamp, 10),
                   })
                   .go({ response: 'all_new' })
               )?.data;
-
-              await appDb.entities.customers
-                .update({
-                  customerId: customerRes?.customerId,
-                  orgId: customerRes?.orgId,
-                })
-                .set({
-                  whatsappConversationId: conversationRes?.conversationId,
-                })
-                .go({});
             }
 
+            console.log(2);
+
+            console.log(conversationRes);
+
+            // const messages1 = await appDb.entities.messages.query
+            //   .byOrgConversation({
+            //     orgId: conversationRes?.orgId,
+            //     conversationId: conversationRes?.conversationId,
+            //   })
+            //   .where((messageIteration, { eq }) =>
+            //     eq(messageIteration?.messageId, message.id),
+            //   )
+
+            //   ?.go();
+            // console.log(messages1);
+            // finally, create the messages
             const res = await appDb.entities.messages
               .upsert({
                 // messageId based on idempotent interactionId
-                messageId: message.id,
+                messageId: message?.id,
                 conversationId: conversationRes?.conversationId,
                 orgId: conversationRes?.orgId,
                 operatorId: '',
@@ -138,6 +155,17 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
               })
               .go({ response: 'all_new' });
 
+            // console.log(res);
+            // const messages = await appDb.entities.messages.query
+            //   .byOrgConversation({
+            //     orgId: conversationRes?.orgId,
+            //     conversationId: conversationRes?.conversationId,
+            //   })
+            //   .where((messageIteration, { eq }) =>
+            //     eq(messageIteration?.whatsappMessageId, message.id),
+            //   )
+            //   ?.go();
+            // console.log(messages);
             return {
               ...prev,
               [`${message?.from}`]: {

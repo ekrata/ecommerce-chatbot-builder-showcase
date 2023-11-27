@@ -4,7 +4,8 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import hero from '../../../../../public/hero-image/all.png';
+// import hero from '../../../../../public/hero-image/all.png';
+import hero from '../../../../../public/graphics/chatbot.gif';
 import { Button } from '../components/Button';
 import { Container } from '../components/Container';
 import { SignupModal } from './SignupModal';
@@ -13,9 +14,18 @@ import { SignupModal } from './SignupModal';
 export function Hero() {
   const t = useTranslations('marketing')
   return (
-    <Container className="h-screen min-h-screen pt-20 pb-16 text-center bg-white md:pt-10 ">
-      <div className='flex flex-col w-full mt-32 text-center md:flex-row animate-fade place-items-center'>
-        <div className="max-w-4xl mx-auto text-lg font-medium tracking-tight md:pr-10 lg:pr-40 md:text-xl text-start font-display text-slate-900 sm:text-7xl">
+    <Container className="h-screen min-h-screen pt-4 pb-40 text-center bg-white lg:pt-20 md:pt-10 ">
+      <div className='flex flex-col w-full text-center lg:mt-32 lg:flex-row animate-fade place-items-center'>
+        <div className='justify-center w-full px-0 mt-10 rounded-md animate-fade-left duration-[2000ms] md:p-0 place-items-center'>
+          {/* <Image src={download1} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
+          {/* <div className="p-4 px-0 pb-0 border rounded-md mockup-window bg-base-300 animate-flip-up"> */}
+          <Image src={hero} className=" skeleton  saturate-150  self-center         rounded-t-none rounded-md border-0            lg:w-[600px]  " alt={''}></Image>
+          {/* </div> */}
+
+          {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
+          {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
+        </div>
+        <div className="max-w-4xl mx-auto text-lg font-medium tracking-tight md:pr-10 lg:pr-10 md:text-xl text-start font-display text-slate-900 sm:text-7xl">
           {/* <h2 className="inline-flex w-full px-2 py-1 mb-4 text-5xl bg-white rounded-md shadow-md place-items-center text-slate-900 bg-gradient-to-tr from-violet-500 to-orange-300">
             <span className='ml-2 text-sm font-normal tracking-normal md:text-2xl text-slate-100 animate-fade-left bg-clip-text'>
               eChat by Ekrata™️ - AI Powered Customer Service
@@ -55,15 +65,7 @@ export function Hero() {
 
           </h2>
         </div>
-        <div className='justify-center w-full px-0 mt-10 rounded-md shadow-xl animate-fade md:p-0 place-items-center'>
-          {/* <Image src={download1} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
-          <div className="p-4 px-0 pb-0 border rounded-md mockup-window bg-base-300 animate-flip-up">
-            <Image src={hero} className="filterToggle skeleton   p-4  self-center         rounded-t-none rounded-md border-0    bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500/10 mix-blend-multiply backdrop-blur-sm to-indigo-700/10     md:w-[900px]  " alt={''}></Image>
-          </div>
 
-          {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
-          {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
-        </div>
       </div>
       {/* <p className="max-w-2xl mx-auto mt-12 text-lg tracking-tight text-slate-700">
         Most bookkeeping software is accurate, but hard to use. We make the

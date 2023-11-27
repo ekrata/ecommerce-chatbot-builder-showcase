@@ -2,18 +2,10 @@ import { CustomAttributeType, Entity } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 import { string } from 'zod';
 
-import {
-    AskAQuestionData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
-import {
-    DecisionButtonsData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionButtons';
-import {
-    DecisionCardMessagesData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionCardMessages';
-import {
-    DecisionQuickRepliesData
-} from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
+import { AskAQuestionData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/AskAQuestion';
+import { DecisionButtonsData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionButtons';
+import { DecisionCardMessagesData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionCardMessages';
+import { DecisionQuickRepliesData } from '@/src/app/[locale]/dash/(root)/bots/[botId]/nodes/actions/DecisionQuickReplies';
 
 import { botNodeEvent } from './bot';
 
@@ -101,9 +93,14 @@ export const Message = new Entity({
       readOnly: true,
       default: () => uuidv4(),
     },
-    externalMetaId: {
+    whatsappMessageId: {
       type: 'string',
-      default: '',
+    },
+    instagramMessageId: {
+      type: 'string',
+    },
+    messengerMessageId: {
+      type: 'string',
     },
     conversationId: {
       type: 'string',
@@ -224,17 +221,6 @@ export const Message = new Entity({
       sk: {
         field: 'sk',
         composite: [],
-      },
-    },
-    byConversation: {
-      index: 'gsi1pk-gsi1sk-index',
-      pk: {
-        field: 'gsi1pk',
-        composite: ['orgId', 'conversationId'],
-      },
-      sk: {
-        field: 'gsi1sk',
-        composite: ['sentAt'],
       },
     },
     byOrg: {

@@ -17,17 +17,21 @@ export const verifyMetaRequestSignature = () => {
       var elements = signature.split('=');
       var signatureHash = elements[1];
       var expectedHash = crypto
-        .createHmac('sha256', Config.META_APP_SECRET)
+        .createHmac('sha256', Config.META_VERIFY_SECRET)
         .update('buf')
         .digest('hex');
+
       if (signatureHash != expectedHash) {
         return {
           statusCode: 403,
           body: JSON.stringify("Couldn't validate the request signature."),
         };
+      } else {
+        return true;
       }
     }
   } catch (err) {
+    console.log(err);
     Sentry.captureException(err);
     return {
       statusCode: 500,

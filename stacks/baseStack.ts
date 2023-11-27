@@ -1072,6 +1072,8 @@ export function baseStack({ stack, app }: StackContext) {
   process.env.NEXT_PUBLIC_WS_API_URL = wsApi.customDomainUrl;
   process.env.VITEST_REGION = REGION.value ?? '';
   process.env.VITEST_TABLE = tableName.value ?? '';
+  // no need to test on prod
+  process.env.VITEST_META_VERIFY_SECRET = 'fYkdoKni11F7jwQNOggfHA==';
 
   const widgetHost = `widget-${domain}`;
   const widgetDomain =
