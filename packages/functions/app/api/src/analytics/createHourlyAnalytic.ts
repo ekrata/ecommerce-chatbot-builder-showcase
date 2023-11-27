@@ -14,7 +14,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
 
-type RatingCount = {
+export type RatingCount = {
   1: number;
   2: number;
   3: number;

@@ -34,12 +34,14 @@ export const handler = AuthHandler({
 
           let operators: EntityItem<typeof Operator>[] = [];
           do {
-            const results = await appDb.entities?.operators?.scan
+            const operatorsResponse: {
+              cursor: string | null;
+              data: EntityItem<typeof Operator>[];
+            } = await appDb.entities?.operators?.scan
               .where(({ email }, { eq }) => eq(email, claims.email))
               .go({ cursor });
-            console.log(results);
-            operators = [...operators, ...results.data];
-            cursor = results.cursor;
+            operators = [...operators, ...operatorsResponse.data];
+            cursor = operatorsResponse.cursor;
           } while (cursor !== null);
 
           console.log(operators);

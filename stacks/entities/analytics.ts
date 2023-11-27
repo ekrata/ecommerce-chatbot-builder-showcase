@@ -184,48 +184,17 @@ export const Analytic = new Entity({
     csat: {
       type: 'number',
     },
-    // visitorMetrics
-    // visitors: {
-    //   type: 'map',
-    //   default: {},
-    //   properties: {
-    //     new: {
-    //       type: 'number',
-    //       default: 0,
-    //     },
-    //     returning: {
-    //       type: 'number',
-    //       default: 0,
-    //     },
-    //     vistedUrlsFreq: {
-    //       type: 'list',
-    //       items: {
-    //         type: 'map',
-    //         default: {},
-    //         properties: {
-    //           url: {
-    //             type: 'string',
-    //             default: '',
-    //           },
-    //           visits: {
-    //             type: 'number',
-    //             default: 0,
-    //           },
-    //           avg: {
-    //             type: 'number',
-    //             default: 0,
-    //           },
-    //         },
-    //       },
-    //     },
-    //   },
-    // },
     updatedAt: {
       type: 'number',
       readOnly: true,
       default: Date.now(),
       watch: '*',
       set: () => Date.now(),
+    },
+    createdAt: {
+      type: 'number',
+      readOnly: true,
+      default: Date.now(),
     },
   },
   indexes: {

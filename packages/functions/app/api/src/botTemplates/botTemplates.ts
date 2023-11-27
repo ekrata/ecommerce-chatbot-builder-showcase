@@ -1,5 +1,3 @@
-import { Action } from 'aws-cdk-lib/aws-ec2';
-import { Condition } from 'aws-cdk-lib/aws-stepfunctions';
 import { AxiosError } from 'axios';
 import { EntityItem } from 'electrodb';
 import { writeFile } from 'fs';
@@ -10,7 +8,11 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { Bot, BotEdgeType, BotNodeType } from '@/entities/bot';
 
 import { CreateBot } from '../../../../../../stacks/entities/entities';
-import { VisitorBotInteractionTrigger } from '../bots/triggers/definitions.type';
+import {
+  Action,
+  Condition,
+  VisitorBotInteractionTrigger,
+} from '../bots/triggers/definitions.type';
 import { getHttp } from '../http';
 import { MockOrgIds } from '../util';
 
@@ -28,7 +30,7 @@ beforeAll(async () => {
 describe.concurrent('/bots', async () => {
   it('gets a bot', async () => {
     const { orgId, botIds } = mockOrgIds[0];
-    const botId = botIds[0];
+    const botId = botIds['emailSubscribe'];
     const res = await http.get(`/orgs/${orgId}/bots/${botId}`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
@@ -38,14 +40,13 @@ describe.concurrent('/bots', async () => {
   });
   it.only('lists bots by org', async () => {
     const { orgId, botIds } = mockOrgIds[0];
-    const botId = botIds[0];
     const res = await http.get(`/orgs/${orgId}/bots`);
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
     expect(res?.data).toBeTruthy();
-    botIds.map((botId: string) => {
+    [botIds.emailSubscribe]?.map((botId: string) => {
       res?.data.forEach((bot: EntityItem<typeof Bot>) => {
-        expect(botIds.includes(bot?.botId)).toBeTruthy();
+        expect([botId]?.includes(bot?.botId)).toBeTruthy();
       });
     });
 
@@ -55,7 +56,7 @@ describe.concurrent('/bots', async () => {
     });
   });
   it('creates a bot', async () => {
-    const { orgId, botIds } = mockOrgIds[0];
+    const { orgId } = mockOrgIds[0];
     const botId = uuidv4();
     const nodes: BotNodeType[] = [
       {
@@ -66,7 +67,7 @@ describe.concurrent('/bots', async () => {
       },
       {
         id: '2',
-        type: Condition.ChatStatus,
+        type: Condition.BasedOnContactProperty,
         data: '',
         position: { x: -200, y: 200 },
       },
@@ -107,7 +108,7 @@ describe.concurrent('/bots', async () => {
   });
   it('updates the nodes and edges of a bot', async () => {
     const { orgId, botIds } = mockOrgIds[0];
-    const botId = botIds[0];
+    const botId = botIds.emailSubscribe;
 
     // Get prexisting data for patch
     const prepareRes = await http.get(`/orgs/${orgId}/bots/${botId}`);
@@ -116,26 +117,28 @@ describe.concurrent('/bots', async () => {
 
     // patch
     const { data } = prepareRes;
+
     const nodes: BotNodeType[] = [
       {
         id: '1',
-        nodeType: 'trigger',
-        nodeSubType: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+        type: VisitorBotInteractionTrigger.VisitorClicksBotsButton,
+        data: '',
         position: { x: 0, y: 50 },
       },
       {
         id: '2',
-        nodeType: 'condition',
-        nodeSubType: Condition.Day,
+        type: Condition.Day,
+        data: '',
         position: { x: -200, y: 200 },
       },
       {
         id: '3',
-        nodeType: 'action',
-        nodeSubType: Action.AskAQuestion,
+        type: Action.SendAChatMessage,
+        data: '',
         position: { x: 200, y: 200 },
       },
     ];
+
     const edges: BotEdgeType[] = [
       {
         id: 'e1-2',
@@ -170,7 +173,7 @@ describe.concurrent('/bots', async () => {
   });
   it('deletes a bot', async () => {
     const { orgId, botIds } = mockOrgIds?.[0];
-    const botId = botIds[1];
+    const botId = botIds?.emailSubscribe;
 
     const res = await http.delete(`/orgs/${orgId}/bots/${botId}`);
     expect(res).toBeTruthy();

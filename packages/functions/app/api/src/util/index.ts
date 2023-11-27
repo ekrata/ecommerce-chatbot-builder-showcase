@@ -21,6 +21,7 @@ export type MockOrgIds = {
   botIds: Record<TestBotKey, string>;
   botTemplateIds: string[];
   operatorIds: string[];
+  analyticIds: string[];
   customers: {
     customerId: string;
     conversations: { conversationId: string; messageIds: string[] }[];
@@ -76,5 +77,9 @@ export interface MockArgs {
   mockConversationCountPerCustomer: number;
   mockVisitsPerCustomer: number;
   mockMessageCountPerConversation: number;
+  /**
+   * 24 analytic entities per day
+   **/
+  mockAnalyticDaysCount: number;
   existingOperator?: CreateOperator;
 }

@@ -42,6 +42,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockArticleHighlightCount: 5,
         mockConversationCountPerCustomer: 1,
         mockVisitsPerCustomer: 1,
+        mockAnalyticDaysCount: 1,
         mockMessageCountPerConversation: 1,
         existingOperator: createOperator,
       };

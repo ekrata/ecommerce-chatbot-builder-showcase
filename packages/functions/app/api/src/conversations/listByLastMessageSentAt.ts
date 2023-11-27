@@ -161,7 +161,7 @@ export const listConversations = async (params: ConversationFilterParams) => {
       data = await Promise.all(
         conversations?.data?.map(async (conversation) => {
           const messages = await appDb.entities.messages.query
-            .byOrgConversation({
+            .byConversation({
               orgId,
               conversationId: conversation.conversationId,
             })

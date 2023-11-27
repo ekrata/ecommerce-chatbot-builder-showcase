@@ -234,7 +234,7 @@ export const Message = new Entity({
         composite: ['sentAt'],
       },
     },
-    byOrgConversation: {
+    byConversation: {
       index: 'gsi3pk-gsi3sk-index',
       pk: {
         field: 'gsi3pk',

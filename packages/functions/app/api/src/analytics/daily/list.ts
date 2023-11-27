@@ -1,6 +1,11 @@
 import { endOfMonth, getDaysInMonth, startOfMonth, sub } from 'date-fns';
 import { relativeDiff } from 'src/helpers';
-import { ApiHandler, usePathParams, useQueryParam, useQueryParams } from 'sst/node/api';
+import {
+  ApiHandler,
+  usePathParams,
+  useQueryParam,
+  useQueryParams,
+} from 'sst/node/api';
 import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 
@@ -31,7 +36,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const data = await appDb.entities.analytics.query
         .byOrg({ orgId })
         .where((analytics, { between }) => {
-          const createdAt = new Date(analytics.createdAt);
+          const createdAt = new Date(analytics?.createdAt);
           if (rangeType && rangeType === 'period') {
             return `${between(
               createdAt,
@@ -56,7 +61,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
       const now = data?.data[-1];
       const yesterday = data?.data[-2];
       const twoDaysAgo = data?.data[-3];
-      const feedbackDiff = relativeDiff(yesterday.conversations., twoDaysAgo);
+      // const feedbackDiff = relativeDiff(yesterday.conversations., twoDaysAgo);
 
       // get change
       return {

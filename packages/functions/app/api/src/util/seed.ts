@@ -7,6 +7,7 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
 
+import { repeat } from '@/src/helpers';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
@@ -98,6 +99,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     mockConversationCountPerCustomer,
     mockVisitsPerCustomer,
     mockMessageCountPerConversation,
+    mockAnalyticDaysCount,
     mockBotCount,
     existingOperator,
   } = mockArgs;

@@ -62,10 +62,6 @@ export const lambdaHandler = Sentry.AWSLambda.wrapHandler(
         await publishToNextNodes(
           {
             ...botStateContext,
-            messages: [
-              ...(botStateContext?.messages ?? []),
-              res?.data as EntityItem<typeof Message>,
-            ],
           },
           appDb,
         );

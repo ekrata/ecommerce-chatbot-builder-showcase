@@ -23,11 +23,17 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
       // console.log(record);
       // console.log((record.body as any)?.Message);
       const botStateContext: BotStateContext = (record.body as any)?.Message;
-      const { type, bot, conversation, interaction, messages } =
-        botStateContext;
+      const { type, bot, conversation, interaction } = botStateContext;
+      const { orgId, conversationId } = conversation;
+      const messages = (
+        await appDb.entities.messages.query
+          .byConversation({
+            conversationId: conversationId,
+            orgId: orgId ?? '',
+          })
+          .go()
+      )?.data;
 
-      console.log(bot, bot.nodes, bot.edges);
-      const { orgId } = conversation;
       // const { id, position, data } = nextNode;
       // const params = {};
       const lastNodeMessage = messages?.slice(-1)[0];
@@ -40,22 +46,11 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
           })
           .set({ mailingSubscribed: true })
           .go({ response: 'all_new' });
-
-        const filteredMessages = messages
-          ?.filter(
-            (message) => message.messageId !== lastNodeMessage?.messageId,
-          )
-          .filter(Boolean);
-
         // console.log(JSON.parse(lastNodeMessage?.botStateContext ?? ''));
 
         await publishToNextNodes(
           {
             ...botStateContext,
-            messages: [
-              ...(filteredMessages ?? []),
-              res?.data as EntityItem<typeof Message>,
-            ],
           },
           appDb,
         );
@@ -65,14 +60,7 @@ const lambdaHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent) => {
         body: `Successfully subscribed ${lastNodeMessage?.customerId} to mailing list`,
       };
     }
-  } catch (err) {
-    console.log(err);
-    Sentry.captureException(err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify(err),
-    };
-  }
+  } catch (err) {}
 });
 
 export const handler = middy(lambdaHandler).use(eventNormalizer());

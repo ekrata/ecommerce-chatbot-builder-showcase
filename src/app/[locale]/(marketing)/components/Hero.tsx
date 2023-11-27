@@ -15,11 +15,11 @@ export function Hero() {
   const t = useTranslations('marketing')
   return (
     <Container className="h-screen min-h-screen pt-4 pb-40 text-center bg-white lg:pt-20 md:pt-10 ">
-      <div className='flex flex-col w-full text-center lg:mt-32 lg:flex-row animate-fade place-items-center'>
+      <div className='flex flex-col w-full text-center lg:mt-12 lg:flex-row animate-fade place-items-center'>
         <div className='justify-center w-full px-0 mt-10 rounded-md animate-fade-left duration-[2000ms] md:p-0 place-items-center'>
           {/* <Image src={download1} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
           {/* <div className="p-4 px-0 pb-0 border rounded-md mockup-window bg-base-300 animate-flip-up"> */}
-          <Image src={hero} className=" skeleton  saturate-150  self-center         rounded-t-none rounded-md border-0            lg:w-[600px]  " alt={''}></Image>
+          <Image src={hero} className="  object-contain  saturate-200  self-center         rounded-t-none rounded-md border-0            lg:w-[600px]  " alt={''}></Image>
           {/* </div> */}
 
           {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}

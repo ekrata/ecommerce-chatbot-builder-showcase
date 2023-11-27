@@ -44,7 +44,7 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         if (res && body?.field) {
           switch (body?.field) {
             case MetaEvent.WhatsappMessages: {
-              return await sns
+              await sns
                 .publish({
                   // Get the topic from the environment variable
                   TopicArn: Topic.MetaWhatsappTopic.topicArn,
@@ -60,6 +60,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                 .promise();
             }
           }
+          return {
+            statusCode: 200,
+            body: 'published to body?.field',
+          };
         }
       }
     } catch (err) {
