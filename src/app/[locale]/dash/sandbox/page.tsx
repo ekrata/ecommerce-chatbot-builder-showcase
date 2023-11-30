@@ -1,12 +1,11 @@
 'use client'
 
 import { useAuthContext } from '../../(hooks)/AuthProvider';
+import { cardSkeleton } from '../cardSkeleton';
 
 export default function Page() {
   const [sessionUser] = useAuthContext()
   if (typeof window !== 'undefined') {
-    console.log(process.env.NEXT_PUBLIC_APP_API_URL)
-    console.log(process.env.NEXT_PUBLIC_APP_WIDGET_URL)
 
     return (
       <div className='relative w-screen h-screen bg-white'>

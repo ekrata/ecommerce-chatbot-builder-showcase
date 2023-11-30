@@ -62,7 +62,7 @@ export const useCustomerQuery = (orgId: string) => {
       console.log(data)
       const customerCache = queryClient.getQueryCache().find(data?.queryKey)
       console.log(customerCache)
-      const customer = queryClient.getQueryCache<EntityItem<typeof Customer>>([data?.queryKey])
+      const customer = queryClient.getQueryData<EntityItem<typeof Customer>>([data?.queryKey])
       console.log(customer)
       if (customer?.customerId) {
         return await getCustomer(orgId, customer?.customerId ?? '')

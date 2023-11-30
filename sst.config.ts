@@ -1,6 +1,7 @@
 import { SSTConfig } from 'sst';
 import { dbStack } from 'stacks/dbStack';
 
+import { analyticsStack } from './packages/functions/app/api/src/analytics/analyticsStack';
 import { articleContentsStack } from './packages/functions/app/api/src/article-contents/articleContentsStack';
 import { articlesStack } from './packages/functions/app/api/src/articles/articlesStack';
 import { botsStack } from './packages/functions/app/api/src/bots/botsStack';
@@ -53,6 +54,7 @@ export default {
       .stack(interactionsStack)
       .stack(stripeStack)
       .stack(metaInstagramStack)
+      .stack(analyticsStack)
       .stack(metaWhatsappStack)
       .stack(metaMessengerStack);
   },

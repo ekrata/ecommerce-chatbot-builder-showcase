@@ -239,8 +239,7 @@ export const AskAQuestionMessageForm: React.FC<Props> = ({ message, formSubmitte
           <span className="label-text">{tForm('validationTypeLabel')}</span>
         </label> */}
       </div>
-      
-      }
+
     </form >
   )
 }

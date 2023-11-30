@@ -67,10 +67,10 @@ export const HomeScreen: FC = () => {
         </div>
         <div className='z-10 mx-4 text-3xl font-bold text-white '>
           <h4 className='text-gray-200'>
-            {translationQuery?.data?.translations?.chatWidget?.['Hi there'] ?? 'Hi there!'}
+            {t('Hi there!')}
           </h4>
           <h4>
-            {translationQuery?.data?.translations?.chatWidget?.['Chat with us']}
+            {t('Chat with us')}
           </h4>
         </div>
         {/* {translationQuery?.data?.translations?.chatWidget?.['How can we help you'] ?? 'How can we help you? '} */}

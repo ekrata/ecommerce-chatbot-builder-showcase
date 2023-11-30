@@ -27,6 +27,7 @@ export type MockOrgIds = {
     conversations: { conversationId: string; messageIds: string[] }[];
     visitIds: string[];
   }[];
+  createdAt: number;
 };
 
 export const mockArticleTitles: { [key in ArticleCategory]: string[] } = {

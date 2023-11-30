@@ -8,7 +8,7 @@ import { useTimeout } from 'usehooks-ts';
 
 import { Popover, Transition } from '@headlessui/react';
 
-import { signoutSession, useAuthContext } from '../../(hooks)/AuthProvider';
+import { useAuthContext } from '../../(hooks)/AuthProvider';
 import ekrataLogo from '../../../../../public/graphics/ekrataLogo.png';
 import { Button } from './Button';
 import { Container } from './Container';
@@ -130,8 +130,8 @@ export function Header() {
         <Container>
           <nav className="relative flex justify-between animate-fade-down">
             <div className="flex items-center md:gap-x-12">
-              <Link href="#" aria-label="Home" className='shadow-2xl mask mask-squircle' >
-                <Image src={ekrataLogo} className="object-contain " width={36} height={36} alt={''}></Image>
+              <Link href="#" aria-label="Home" className='rounded-md shadow-xl mask mask-parallelogram' >
+                <Image src={ekrataLogo} className="object-contain p-2 bg-black rounded-md shadow-2xl " width={42} height={42} alt={''}></Image>
               </Link>
               <div className="hidden md:flex md:gap-x-6">
                 <NavLink hash='features' href='/'>Features</NavLink>

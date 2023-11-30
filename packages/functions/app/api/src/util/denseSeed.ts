@@ -79,11 +79,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockSearchPhrase: `30-Day returns`,
         mockArticleHighlightCount: 5,
         mockConversationCountPerCustomer: 4,
+        mockAnalyticDaysCount: 1,
         mockVisitsPerCustomer: 2,
         mockMessageCountPerConversation: 2,
         existingOperator: createOperator,
       };
-      const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
+      const mockOrgIds: (Partial<MockOrgIds> | null)[] = await Promise.all(
         [...Array(mockArgs.mockOrgCount)].map((_, i) => seed(db, mockArgs, i)),
       );
       return {

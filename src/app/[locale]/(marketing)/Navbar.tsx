@@ -195,9 +195,9 @@ export default function Navbar() {
           <Image
             src={logoImage}
             alt='Logo'
-            className='h-12 w-12 p-1  bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-yellow-500 via-purple-500 to-blue-500 rounded-2xl shadow-2xl'
+            className='h-6 w-6 p-1  bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-yellow-500 via-purple-500 to-blue-500 rounded-2xl shadow-2xl'
           />
-          Crow Commerce
+
         </h2>
       </div>
       <div className='navbar-center'>

@@ -13,7 +13,7 @@ module.exports = {
     'from-green-300',
     'via-blue-500',
     'to-purple-600',
-  ],
+],
   theme: {
     extend: {
       fontFamily: {

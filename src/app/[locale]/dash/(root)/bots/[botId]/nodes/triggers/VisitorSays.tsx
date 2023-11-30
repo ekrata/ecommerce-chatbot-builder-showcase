@@ -149,11 +149,11 @@ export const VisitorSaysTriggerForm: React.FC<Props> = ({ node }) => {
         <label className="label">
           <span className="label-text">{tForm('conversationTopic')}</span>
         </label>
-        <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm"  {...register('conversationTopic')}>
+        {/* <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm"  {...register('conversationTopic')}>
           {visitorSaysTopic?.map((topic) => (
-            <option key={topic} label={tVisitorSaysTopic(topic)} value={topic}></option>
+            <option key={topic} label={tVisitorSaysTopic(topic as keyof typeof tVisitorSaysTopic)} value={topic}></option>
           ))}
-        </select>
+        </select> */}
         <label className="label">
           <span className="inline-flex text-xs ">{tForm('phraseDescription')} <FcInfo className='flex text-4xl' /></span>
         </label>

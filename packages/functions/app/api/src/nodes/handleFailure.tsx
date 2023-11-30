@@ -58,9 +58,6 @@ const handleFailure = (botStateContext: BotStateContext) => {
                   type: nextNodeType?.[1],
                   nextNode: {},
                   currentNode: nextNode,
-                  messages: [
-                    ...(botStateContext?.messages ?? [])
-                  ],
                 } as BotStateContext),
                 MessageAttributes: {
                   type: {

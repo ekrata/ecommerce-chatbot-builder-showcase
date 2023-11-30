@@ -16,6 +16,7 @@ import { useDashStore } from '../(actions)/useDashStore';
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
 
 export const topicIconMap: Record<ConversationTopic | 'all', ReactNode> = {
+  '': <MdOutlineTopic />,
   'all': <MdOutlineTopic />,
   'products': < FcPaid />,
   'orderStatus': <FcClock />,

@@ -197,7 +197,7 @@ export const BotEditor: React.FC = () => {
 
 
 
-  const onPaneClick = (event) => {
+  const onPaneClick = (event: any) => {
     event.preventDefault()
     console.log('onPaneClick')
     setNodes([...nodes?.map((node) => {

@@ -1,8 +1,8 @@
 import 'reactflow/dist/style.css';
 
 import EmojiPicker, {
-    Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
-    SuggestionMode, Theme
+  Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
+  SuggestionMode, Theme
 } from 'emoji-picker-react';
 import { c } from 'msw/lib/glossary-de6278a9';
 import { useTranslations } from 'next-intl';
@@ -11,9 +11,9 @@ import { FC, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { FcInfo } from 'react-icons/fc';
 import {
-    addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
-    EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
-    useEdges, useNodeId, useNodes
+  addEdge, BaseEdge, ConnectionLineComponent, ConnectionLineComponentProps, Edge,
+  EdgeLabelRenderer, EdgeProps, getBezierPath, Handle, Node, NodeProps, Position, updateEdge,
+  useEdges, useNodeId, useNodes
 } from 'reactflow';
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
@@ -69,7 +69,7 @@ export const CouponCodeActionNode: FC<NodeProps> = (node) => {
   return (
     <div className={`w-16  `} >
       <Handle type="source" position={Position.Top} className='w-3 h-3 mask mask-diamond' />
-      <NodeWrapper node={node} nodeElement={actionNode(type)} nodeName={tNodes(`Action.CouponCode`)} hasErrors={hasErrors} />
+      <NodeWrapper nodeElement={actionNode(type)} nodeName={tNodes(`Action.CouponCode`)} hasErrors={hasErrors} />
       {createTargetHandles(node, nodeEdges, outputKey)}
     </div >
   );

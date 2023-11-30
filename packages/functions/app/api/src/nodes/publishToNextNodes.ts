@@ -16,7 +16,7 @@ export const publishToNextNodes = async (
   sns: AWS.SNS = new AWS.SNS({ region: Config.REGION }),
 ) => {
   try {
-    const { customerId, orgId } = botStateContext?.conversation;
+    const { customerId, conversationId, orgId } = botStateContext?.conversation;
     // if agent, we do not pass to next node. we repeat the current node until bot requests to transfer to human
 
     // console.log('currNode', botStateContext?.currentNode);
@@ -47,7 +47,16 @@ export const publishToNextNodes = async (
       }
       return [botStateContext.currentNode];
     } else {
-      const nextNodes = findNextNodes(botStateContext);
+      const messages = (
+        await appDb.entities.messages.query
+          .byConversation({
+            conversationId: conversationId,
+            orgId: orgId ?? '',
+          })
+          .go()
+      )?.data;
+
+      const nextNodes = findNextNodes(botStateContext, messages);
       console.log(nextNodes);
       // stop bot
       if (!nextNodes?.length && customerId) {

@@ -31,7 +31,7 @@ import {
 import { nodeSubType } from '@/entities/bot';
 
 export type SubNodeType = (typeof nodeSubType)[number]
-export const nodeSubTypeIcons: Record<SubNodeType, ReactNode> = {
+export const nodeSubTypeIcons: Partial<Record<SubNodeType, ReactNode>> = {
     "Sales Agent": <BiSolidPurchaseTag />,
     "Customer Service Agent": <FaPersonCircleQuestion />,
     'Ask a question': <BsQuestion />,

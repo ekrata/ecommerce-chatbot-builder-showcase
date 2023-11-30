@@ -99,42 +99,44 @@ export const handler = Sentry.AWSLambda.wrapHandler(
           console.log(orgDocs);
           return await Promise.all(
             orgDocs.filter(Boolean).map(async (langDocs) => {
-              await Promise.all(
-                Object.entries(langDocs).map(async ([_, docsByLang]) => {
-                  console.log('in docsbylang');
-                  const { orgId, lang, docs } = docsByLang;
-                  const dir = `/tmp/${orgId}/${lang}/faiss`;
-                  const vectorStore = await FaissStore.fromDocuments(
-                    docs,
-                    new OpenAIEmbeddings({
-                      openAIApiKey: Config?.OPENAI_API_KEY,
-                    }),
-                  );
+              if (langDocs) {
+                return await Promise.all(
+                  Object.entries(langDocs).map(async ([_, docsByLang]) => {
+                    console.log('in docsbylang');
+                    const { orgId, lang, docs } = docsByLang;
+                    const dir = `/tmp/${orgId}/${lang}/faiss`;
+                    const vectorStore = await FaissStore.fromDocuments(
+                      docs,
+                      new OpenAIEmbeddings({
+                        openAIApiKey: Config?.OPENAI_API_KEY,
+                      }),
+                    );
 
-                  console.log('got vectorstore');
-                  await vectorStore.save(dir);
-                  // console.log(await fs.readdir(dir));
-                  const faissIndex = new PutObjectCommand({
-                    ACL: 'public-read',
-                    Bucket: Bucket?.['echat-app-assets'].bucketName,
-                    Key: `${orgId}/${lang}/faiss/faiss.index`,
-                    Body: await fs.readFile(`${dir}/faiss.index`),
-                  });
-                  const pklIndex = new PutObjectCommand({
-                    ACL: 'public-read',
-                    Bucket: Bucket?.['echat-app-assets'].bucketName,
-                    Key: `${orgId}/${lang}/faiss/docstore.json`,
-                    Body: await fs.readFile(`${dir}/docstore.json`),
-                  });
-                  console.log('uploading');
-                  await s3.send(faissIndex);
-                  await s3.send(pklIndex);
-                  return {
-                    statusCode: 200,
-                    body: `Succesfully updated the article store for ${orgId} ${lang}`,
-                  };
-                }),
-              );
+                    console.log('got vectorstore');
+                    await vectorStore.save(dir);
+                    // console.log(await fs.readdir(dir));
+                    const faissIndex = new PutObjectCommand({
+                      ACL: 'public-read',
+                      Bucket: Bucket?.['echat-app-assets'].bucketName,
+                      Key: `${orgId}/${lang}/faiss/faiss.index`,
+                      Body: await fs.readFile(`${dir}/faiss.index`),
+                    });
+                    const pklIndex = new PutObjectCommand({
+                      ACL: 'public-read',
+                      Bucket: Bucket?.['echat-app-assets'].bucketName,
+                      Key: `${orgId}/${lang}/faiss/docstore.json`,
+                      Body: await fs.readFile(`${dir}/docstore.json`),
+                    });
+                    console.log('uploading');
+                    await s3.send(faissIndex);
+                    await s3.send(pklIndex);
+                    return {
+                      statusCode: 200,
+                      body: `Succesfully updated the article store for ${orgId} ${lang}`,
+                    };
+                  }),
+                );
+              }
             }),
           );
         }),

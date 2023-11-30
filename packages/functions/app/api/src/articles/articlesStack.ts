@@ -5,8 +5,8 @@ export function articlesStack({ stack }: StackContext) {
   const { api } = use(baseStack);
 
   api.addRoutes(stack, {
-    'GET /orgs/{orgId}/lang/{lang}/articles':
-      'packages/functions/app/api/src/articles/list.handler',
+    // 'GET /orgs/{orgId}/lang/{lang}/articles':
+    //   'packages/functions/app/api/src/articles/list.handler',
     'GET /orgs/{orgId}/lang/{lang}/articles/search':
       'packages/functions/app/api/src/articles/search.handler',
     'GET /orgs/{orgId}/lang/{lang}/articles/{articleId}/with-content':
@@ -18,6 +18,6 @@ export function articlesStack({ stack }: StackContext) {
     'PATCH /orgs/{orgId}/lang/{lang}/articles/{articleId}':
       'packages/functions/app/api/src/articles/update.handler',
     'GET /orgs/{orgId}/lang/{lang}/articles/{articleId}':
-      'packages/functions/app/api/src/articles/get.handler',
+      'packages/functions/app/api/src/articles/getWithContent.handler',
   });
 }

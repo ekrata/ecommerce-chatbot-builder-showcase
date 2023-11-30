@@ -1,3 +1,4 @@
+'use server'
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { lazy, Suspense } from 'react';

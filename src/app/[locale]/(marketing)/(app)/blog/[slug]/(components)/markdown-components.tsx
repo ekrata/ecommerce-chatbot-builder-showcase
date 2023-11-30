@@ -1,12 +1,12 @@
 import Image from 'next/image';
 // app/(subpages)/blog/[slug]/components/markdown-components.tsx
 import Link from 'next/link';
-import { forwardRef, PropsWithChildren, ReactNode } from 'react';
+import { forwardRef, LegacyRef, PropsWithChildren, ReactNode, Ref } from 'react';
 
 export const mdxComponents: PropsWithChildren<{ a: any, img: any }> = {
   a: ({ children, ...props }: PropsWithChildren<JSX.IntrinsicElements["a"]>) => {
     return (
-      <Link {...props} href={{ pathname: props.href || '' }}>
+      <Link {...props as Ref<HTMLAnchorElement> | undefined} href={{ pathname: props?.href }}>
         {children}
       </Link>
     )

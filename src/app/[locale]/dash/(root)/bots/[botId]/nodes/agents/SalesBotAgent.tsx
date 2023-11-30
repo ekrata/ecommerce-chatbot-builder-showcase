@@ -1,5 +1,6 @@
 import 'reactflow/dist/style.css';
 
+import { EntityItem } from 'electrodb';
 import EmojiPicker, {
   Categories, Emoji, EmojiClickData, EmojiStyle, SkinTonePickerLocation, SkinTones,
   SuggestionMode, Theme
@@ -16,9 +17,8 @@ import {
 import { useOnClickOutside } from 'usehooks-ts';
 import { z } from 'zod';
 
-import { validationType } from '@/entities/bot';
+import { Operator } from '@/entities/operator';
 import { Action, Agent } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
-import { toolset, toolsetKey } from '@/packages/functions/app/api/src/nodes/agents/toolsets';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -108,7 +108,7 @@ export const SalesBotAgentForm: React.FC<Props> = ({ node }) => {
     formState: { errors }, } = useForm<FormValues>({
       resolver: zodResolver(schema),
       defaultValues: {
-        companyName: operatorSession?.name,
+        companyName: (operatorSession as EntityItem<typeof Operator>)?.name,
         companyBusiness: '',
         companyValues: tForm('companyValuesPlaceholder'),
         conversationPurpose: tForm('conversationPurposePlaceholder'),

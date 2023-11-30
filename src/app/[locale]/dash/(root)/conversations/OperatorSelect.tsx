@@ -34,12 +34,7 @@ export const OperatorSelect: React.FC<Props> = ({ dropdownPosition }) => {
   const operators = useOperatorsQuery(sessionOperator?.orgId ?? '')
 
   const { register,
-    handleSubmit,
-    control,
     watch,
-    setValue,
-    getValues,
-    setError,
     formState: { errors }, } = useForm<z.infer<typeof schema>>({
       resolver: zodResolver(schema),
       mode: 'onSubmit',

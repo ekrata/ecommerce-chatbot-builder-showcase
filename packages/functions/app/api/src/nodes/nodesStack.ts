@@ -39,33 +39,33 @@ export function nodesStack({ stack, app }: StackContext) {
         permissions: [table, assets, ...faissLambdaConfig.permissions],
       },
     },
-    'POST /orgs/{orgId}/nodes/chatbots/chat/test': {
-      function: {
-        handler:
-          'packages/functions/app/api/src/nodes/chatbots/chat/index.testHandler',
-        ...faissLambdaConfig,
-      },
-    },
-    'POST /orgs/{orgId}/nodes/chatbots/chat/run': {
-      function: {
-        handler:
-          'packages/functions/app/api/src/nodes/chatbots/sales/index.testHandler',
-        ...faissLambdaConfig,
-      },
-    },
+    // 'POST /orgs/{orgId}/nodes/chatbots/chat/test': {
+    //   function: {
+    //     handler:
+    //       'packages/functions/app/api/src/nodes/chatbots/chat/index.testHandler',
+    //     ...faissLambdaConfig,
+    //   },
+    // },
+    // 'POST /orgs/{orgId}/nodes/chatbots/chat/run': {
+    //   function: {
+    //     handler:
+    //       'packages/functions/app/api/src/nodes/chatbots/sales/index.testHandler',
+    //     ...faissLambdaConfig,
+    //   },
+    // },
     'POST /orgs/{orgId}/nodes/chatbots/sales': {
       function: {
         handler:
-          'packages/functions/app/api/src/nodes/chatbots/sales/index.handler',
+          'packages/functions/app/api/src/nodes/agents/sales/sales.handler',
         ...faissLambdaConfig,
       },
     },
-    'POST /orgs/{orgId}/nodes/chatbots/sales-test': {
-      function: {
-        handler:
-          'packages/functions/app/api/src/nodes/chatbots/sales/index.testHandler',
-        ...faissLambdaConfig,
-      },
-    },
+    // 'POST /orgs/{orgId}/nodes/chatbots/sales-test': {
+    //   function: {
+    //     handler:
+    //       'packages/functions/app/api/src/nodes/chatbots/sales/index.testHandler',
+    //     ...faissLambdaConfig,
+    //   },
+    // },
   });
 }

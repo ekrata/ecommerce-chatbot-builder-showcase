@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { add, sub } from 'date-fns';
 import fs from 'fs';
 import pLimit from 'p-limit';
 import { Api, ApiHandler } from 'sst/node/api';
@@ -7,7 +8,7 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
 
-import { repeat } from '@/src/helpers';
+import { randomDate, repeat } from '@/src/helpers';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
@@ -66,11 +67,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockArticleSearchPhraseFreq: 4,
         mockSearchPhrase: `30-Day returns`,
         mockArticleHighlightCount: 5,
+        mockAnalyticDaysCount: 1,
         mockConversationCountPerCustomer: 4,
         mockVisitsPerCustomer: 5,
         mockMessageCountPerConversation: 10,
       };
-      const mockOrgIds: Partial<MockOrgIds>[] = await Promise.all(
+      const mockOrgIds: (Partial<MockOrgIds> | null)[] = await Promise.all(
         [...Array(mockArgs.mockOrgCount)].map((_, i) => seed(db, mockArgs, i)),
       );
       return {
@@ -108,6 +110,8 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   try {
     const s3 = new S3Client(Config.REGION);
     const orgId = uuidv4();
+    const timeNow = Date.now();
+    const timeHourAgo = sub(timeNow, { hours: 1 }).getTime();
     const createOrg: CreateOrg = {
       orgId,
       name: `Test corp ${orgIndex}`,
@@ -115,10 +119,12 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
       email: faker.internet.email(),
       planTier: 'plus',
       whatsappPhoneId: whatsappMessagesMock1.value.metadata.phone_number_id,
+      createdAt: timeHourAgo,
     };
     await db.entities.orgs.create(createOrg).go();
     const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
     mockOrg.orgId = orgId;
+    mockOrg.createdAt = timeHourAgo;
     mockOrg.lang = mockLang;
     const avatarKey = `${orgId}-configuration-botLogo`;
     const logoKey = `${orgId}-configuration-logo`;
@@ -405,12 +411,20 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
                   read: false,
                   dismissed: false,
                   orgId,
+                  createdAt: faker.date
+                    .between(new Date(timeHourAgo), new Date(timeNow))
+                    .getTime(),
                   operatorId:
                     status === 'unassigned' ? '' : operator.operatorId,
                 };
+
                 const conversation = await db.entities.conversations
                   .create(createConversation)
                   .go();
+
+                const adminOperatorCreatedAt = faker.date
+                  .between(new Date(timeHourAgo), new Date(timeNow))
+                  .getTime();
 
                 const adminConversation = await db.entities.conversations
                   .create({
@@ -419,6 +433,13 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
                     channel: faker.helpers.arrayElement(conversationChannel),
                     topic: faker.helpers.arrayElement(conversationTopic),
                     status,
+                    timeAtOpen: add(adminOperatorCreatedAt, {
+                      minutes: 5,
+                    }).getTime(),
+                    timeAtResolved: add(adminOperatorCreatedAt, {
+                      minutes: 25,
+                    }).getTime(),
+                    createdAt: adminOperatorCreatedAt,
                     customerId,
                     read: false,
                     dismissed: false,
@@ -435,8 +456,15 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
                     customerId,
                     read: false,
                     dismissed: false,
+                    createdAt: faker.date
+                      .between(new Date(timeHourAgo), new Date(timeNow))
+                      .getTime(),
                   })
                   .go();
+
+                const ownerCreatedAt = faker.date
+                  .between(new Date(timeHourAgo), new Date(timeNow))
+                  .getTime();
                 const ownerConversation = await db.entities.conversations
                   .create({
                     orgId,
@@ -447,8 +475,19 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
                     customerId,
                     read: false,
                     dismissed: false,
+                    createdAt: ownerCreatedAt,
+                    timeAtOpen: add(ownerCreatedAt, {
+                      minutes: 5,
+                    }).getTime(),
+                    timeAtResolved: add(ownerCreatedAt, {
+                      minutes: 25,
+                    }).getTime(),
                   })
                   .go();
+
+                const operatorCreated = faker.date
+                  .between(new Date(timeHourAgo), new Date(timeNow))
+                  .getTime();
 
                 const operatorConversation = await db.entities.conversations
                   .create({
@@ -460,6 +499,40 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
                     customerId,
                     read: false,
                     dismissed: false,
+                    createdAt: operatorCreated,
+                    timeAtOpen: add(operatorCreated, {
+                      minutes: 5,
+                    }).getTime(),
+                    timeAtResolved: add(operatorCreated, {
+                      minutes: 25,
+                    }).getTime(),
+                    feedback: {
+                      nps: {
+                        question:
+                          'How likely are you to recommend us to friends or colleagues?',
+                        ratings: {
+                          1: 0,
+                          2: 0,
+                          3: 0,
+                          4: 0,
+                          5: 0,
+                        },
+                      },
+                      csat: {
+                        questionsRating: [
+                          {
+                            question: 'How was your experience?',
+                            ratings: {
+                              1: 0,
+                              2: 0,
+                              3: 0,
+                              4: 4,
+                              5: 0,
+                            },
+                          },
+                        ],
+                      },
+                    },
                   })
                   .go();
 
@@ -471,20 +544,23 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
                     ownerConversation.data,
                     operatorConversation.data,
                   ].map(async (conversation) => {
-                    const { conversationId } = conversation;
+                    const { conversationId, createdAt } = conversation;
                     const messageIds = await Promise.all(
                       [...Array(mockMessageCountPerConversation)].map(
                         async (_, messageIndex) => {
                           const messageId = uuidv4();
                           const before = new Date();
-                          before.setHours(before.getHours() - 2);
+                          // before.setHours(before.getHours() - 2);
                           const createMessage: CreateMessage = {
                             messageId,
                             conversationId,
                             orgId,
                             customerId,
                             sentAt: faker.date
-                              .between(before, new Date())
+                              .between(createdAt ?? 0, new Date())
+                              .getTime(),
+                            createdAt: faker.date
+                              .between(createdAt ?? 0, new Date())
                               .getTime(),
                             content:
                               conversationIndex === 0 && messageIndex === 0

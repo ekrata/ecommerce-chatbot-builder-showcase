@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 
 import { useDashStore } from '../(actions)/useDashStore';
 import { useAuthContext } from '../../../(hooks)/AuthProvider';
+import { AnalyticsView } from './AnalyticsView';
 
 export default function Page() {
   const searchParams = useSearchParams();

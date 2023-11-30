@@ -74,7 +74,7 @@ export const CustomerChatLog: FC = ({ }) => {
       // if the last message was a form message, the user has selected(content set), and there are next nodes, show the bot as typing 
       const botStateContext = JSON.parse(message?.botStateContext)
       console.log('botStateContext', botStateContext)
-      const nextNodes = findNextNodes(botStateContext)
+      const nextNodes = findNextNodes(botStateContext, conversationItem?.messages ?? [])
       console.log('nextnodes', nextNodes, message?.content)
       if (nextNodes?.length && latestFormSubmitted) {
         console.log('setting bot')
@@ -151,7 +151,7 @@ export const CustomerChatLog: FC = ({ }) => {
       {botTyping && <div className="flex flex-col justify-start w-full px-4 animate-fade-left gap-x-2 gap-y-1" >
         <div className="flex flex-row place-items-center gap-x-2">
           <Avatar conversationItem={conversationItem} toggleIndicator={true} />
-          <p className={`justify-start p-2 rounded-md place-items-start flex-initial dark:bg-gray-600 bg-gray-100 ${!message.sentAt && 'animate-pulse'
+          <p className={`justify-start p-2 rounded-md place-items-start flex-initial dark:bg-gray-600 bg-gray-100 
             } tooltip-bottom z-10`}
             data-testid={`operator-message-content-typing`}
           // data-tip={<CustomerMessageTimeLabel conversationItem={conversationItem} />}

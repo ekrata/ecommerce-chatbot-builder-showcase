@@ -16,7 +16,7 @@ export const metadata = {
 
 const inter = Inter({
   subsets: ['latin'],
-  display: 'swap',
+  // display: 'swap',
   variable: '--font-inter',
 })
 
@@ -38,8 +38,8 @@ export default async function LocaleLayout({ children, params: { locale, overrid
   if (!isValidLocale) notFound();
 
   return (
-    <html lang={locale} className={`${inter.variable} font-sans`}>
-      <body>
+    <html lang={locale} className={`${inter.variable} font-sans w-screen`}>
+      <body className='w-screen font-sans'>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <QueryClientWrapper
           >

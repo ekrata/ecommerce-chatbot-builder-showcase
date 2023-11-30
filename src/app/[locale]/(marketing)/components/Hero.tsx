@@ -19,7 +19,7 @@ export function Hero() {
         <div className='justify-center w-full px-0 mt-10 rounded-md animate-fade-left duration-[2000ms] md:p-0 place-items-center'>
           {/* <Image src={download1} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
           {/* <div className="p-4 px-0 pb-0 border rounded-md mockup-window bg-base-300 animate-flip-up"> */}
-          <Image src={hero} className="  object-contain  saturate-200  self-center         rounded-t-none rounded-md border-0            lg:w-[600px]  " alt={''}></Image>
+          <Image src={hero} className="  object-scale-down contrast-200    saturate-200  self-center         rounded-t-none rounded-md border-0            lg:w-[600px]  " alt={''}></Image>
           {/* </div> */}
 
           {/* <Image src={hero} className="self-center skew-y-6 rounded-md shadow-lg bg-white/50 shadow-blue-100  md:h-[500px] md:w-[500px] " alt={''}></Image> */}
@@ -34,16 +34,17 @@ export function Hero() {
           </h2> */}
           <br />
           <br />
-          <h2 className="text-3xl md:text-6xl animate-fade-left">
+          <h2 className="pl-4 text-3xl lg: md:text-6xl animate-fade-left">
             {/* {t('Ecommerce')} */
             }
-            <span className="relative text-transparent text-blue-600 bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 ">
-              Human and AI-Based Customer Service
+            <span className="relative font-sans text-transparent text-blue-600 mb-10 bg-clip-text bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700 ">
+              Human and AI-Powered Customer Service
             </span>
-            {' like never before.'}
+            <span className=''>
+              {' like never before.'}
+            </span>
 
-            <div className='divider divider-vertical'></div>
-            <span className="relative text-center ">
+            <span className="relative mt-10 text-center">
               {/* <svg
                 aria-hidden="true"
                 viewBox="0 0 300 42"
@@ -53,7 +54,8 @@ export function Hero() {
                 <path stroke="none" fill="currentColor" d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z" />
               </svg> */}
 
-              <span className="relative inline-flex justify-center text-xl text-center place-items-center gap-x-4 md:justify-start md:text-start md:text-5xl ">Excel with eChat by Ekrata™
+              <br />
+              <span className="relative inline-flex justify-center mt-10 text-base font-normal text-center place-items-center gap-x-4 md:justify-start md:text-start md:text-3xl ">Excel with eChat by Ekrata™
               </span>
 
               <br />

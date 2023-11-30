@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Operator } from '../../../../stacks/entities/operator';
 import { getOperator, useOperatorQuery } from './queries/useOperatorQuery';
 
-export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < { orgId: string, operatorId: string } | EntityItem<typeof Operator> | null>>]>([null, () => null])
+export const AuthContext = createContext<[...ReturnType<typeof useLocalStorage < EntityItem<typeof Operator> | null>>]>([null, () => null])
 export const useAuthContext = () => useContext(AuthContext);
 
 // export const signoutSession = () => {

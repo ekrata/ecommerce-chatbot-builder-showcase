@@ -52,11 +52,10 @@ const getPresignedUploadUrl = async (operatorId: string, orgId: string) => {
 export default function Page() {
   const tDash = useTranslations('dash')
   const t = useTranslations('dash.settings.Account')
-  const [user, _, refreshSession] = useAuthContext()
+  const [user, _] = useAuthContext()
   const orgId = user?.orgId ?? ''
   const operatorId = user?.operatorId ?? ''
   const updateOperatorMut = useUpdateOperatorMut(orgId, operatorId)
-  const [image, setImage] = useState<File | null>(null)
   const presignedUploadUrlQuery = useQuery([QueryKey?.operatorPictureUploadUrl, orgId, operatorId], async () => await getPresignedUploadUrl(operatorId, orgId));
   const presignedUploadUrlMut = useMutation([QueryKey?.operatorPictureUploadUrl, orgId, operatorId], async (file: File | null | undefined) => {
     if (file) {
@@ -82,19 +81,13 @@ export default function Page() {
 
   const { register, handleSubmit, setValue, getValues, control, formState: { errors } } = useForm<FormValues>({ defaultValues: { ...user }, resolver: zodResolver(schema) });
 
-  useEffect(() => {
-    // setValue('profilePicture', user?.profilePicture)
-    if (user?.profilePicture) {
-      // console.log(user?.profilePicture)
-      setImage(user?.profilePicture);
-    }
-  }, [user])
+
   const onSubmit = handleSubmit(async (data) => {
     const imageRes = await presignedUploadUrlMut.mutateAsync(data?.profilePicture?.item(0))
     console.log(imageRes)
     const body: UpdateOperator = {
       ...data,
-      profilePicture: imageRes?.split('?')?.[0] as string,
+      profilePicture: (imageRes as unknown as string)?.split('?')?.[0] as string,
     }
 
 
@@ -108,10 +101,6 @@ export default function Page() {
       toast.success(`Failed to update your account: ${updateOperatorMut.error}`)
     }
   })
-
-  const onImageChange = (files: FileList) => {
-    setImage(files?.item(0))
-  }
 
   return (
     <form className='h-screen px-2 bg-white' onSubmit={onSubmit} >
@@ -145,9 +134,7 @@ export default function Page() {
             </div>
           </div>
           <input id="image-input" type="file" className="w-full max-w-xs file-input file-input-bordered file-input-sm file-input-primary " accept="image/png, image/jpeg" {...register('profilePicture')} onChange={(event) => {
-            if (event?.target?.files) {
-              onImageChange(event?.target?.files)
-            }
+
           }} />
           {errors?.profilePicture && <p className='justify-start text-xs text-error'>{errors?.profilePicture?.message?.toString()}</p>}
         </div>

@@ -22,6 +22,7 @@ import { z } from 'zod';
 import { validationType } from '@/entities/bot';
 import { contactProperties, contactSelector } from '@/entities/customer';
 import { Action, Condition } from '@/packages/functions/app/api/src/bots/triggers/definitions.type';
+import { constructZodLiteralUnionType } from '@/src/(helpers)/zodHelpers';
 import { useAuthContext } from '@/src/app/[locale]/(hooks)/AuthProvider';
 import { useUpdateBotMut } from '@/src/app/[locale]/(hooks)/mutations/useUpdateBotMut';
 import { useBotQuery } from '@/src/app/[locale]/(hooks)/queries/useBotQuery';
@@ -41,7 +42,7 @@ import { updateNodes } from '../updateNodes';
 
 
 const schema = z.object({
-  fieldName: z.enum(contactProperties),
+  fieldName: constructZodLiteralUnionType(contactProperties.map((literal) => z.literal(literal))),
   fieldSelector: z.enum(contactSelector),
   fieldValue: z.string()?.min(1)?.optional(),
   outputs: z.array(z.string()?.min(1)).refine(items => new Set(items).size === items.length, {
@@ -142,7 +143,7 @@ export const BasedOnContactPropertyConditionForm: React.FC<Props> = ({ node }) =
         </label>
         <select className="w-full max-w-xs bg-gray-200 select select-ghost select-sm" {...register('fieldName')}>
           {contactProperties?.map((property) => (
-            <option key={property} label={tContactProperties(property)} value={property}></option>
+            <option key={property} label={tContactProperties(property as "email" | "name" | "firstName" | "phone" | "countryCode" | "city" | "projectDomain" | "projectName")} value={property}></option>
           ))}
         </select>
 

@@ -15,8 +15,8 @@ export const npsQuestion = [
  * @type {*}
  */
 
-export type AnalyticConversations = NonNullable<
-  NonNullable<EntityItem<typeof Analytic>['conversations']>
+export type AnalyticConversations = Required<
+  Required<EntityItem<typeof Analytic>['conversations']>
 >;
 
 // type ConfigLiveChat = NonNullable<ConfigChannels>['liveChat'];
@@ -84,18 +84,22 @@ export const Analytic = new Entity({
           properties: {
             products: {
               type: 'number',
+              required: true,
               default: 0,
             },
             orderStatus: {
               type: 'number',
+              required: true,
               default: 0,
             },
             orderIssues: {
               type: 'number',
+              required: true,
               default: 0,
             },
             shippingPolicy: {
               type: 'number',
+              required: true,
               default: 0,
             },
           },
@@ -106,22 +110,27 @@ export const Analytic = new Entity({
           properties: {
             website: {
               type: 'number',
+              required: true,
               default: 0,
             },
             messenger: {
               type: 'number',
+              required: true,
               default: 0,
             },
             whatsapp: {
               type: 'number',
+              required: true,
               default: 0,
             },
             instagram: {
               type: 'number',
+              required: true,
               default: 0,
             },
             emailTicket: {
               type: 'number',
+              required: true,
               default: 0,
             },
           },
@@ -132,14 +141,17 @@ export const Analytic = new Entity({
           properties: {
             unassigned: {
               type: 'number',
+              required: true,
               default: 0,
             },
             open: {
               type: 'number',
+              required: true,
               default: 0,
             },
             solved: {
               type: 'number',
+              required: true,
               default: 0,
             },
           },
@@ -152,27 +164,33 @@ export const Analytic = new Entity({
             unassignedSecondsTotal: {
               type: 'number',
               default: 0,
+              required: true,
             },
             unassignedCount: {
               type: 'number',
               default: 0,
+              required: true,
             },
             unassignedSecondsAvg: {
               type: 'number',
               default: 0,
+              required: true,
             },
             // avg time spent in open
             openSecondsAvg: {
               type: 'number',
               default: 0,
+              required: true,
             },
             openSecondsTotal: {
               type: 'number',
               default: 0,
+              required: true,
             },
             openCount: {
               type: 'number',
               default: 0,
+              required: true,
             },
           },
         },

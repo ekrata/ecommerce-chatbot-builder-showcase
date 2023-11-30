@@ -19,9 +19,6 @@ const nextConfig = {
   // Other Next.js configuration ...
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
-  experimental: {
-    typedRoutes: true,
-  },
   webpack(config) {
     config.experiments = { ...config.experiments, topLevelAwait: true };
     return config;

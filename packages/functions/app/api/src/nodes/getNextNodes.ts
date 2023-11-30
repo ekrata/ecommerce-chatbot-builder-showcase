@@ -1,4 +1,7 @@
+import { EntityItem } from 'electrodb';
+
 import { BotEdgeType, BotNodeType } from '@/entities/bot';
+import { Message } from '@/entities/message';
 import { OutputFieldsKeys } from '@/src/app/[locale]/dash/(root)/bots/outputFields';
 
 import { BotStateContext } from './botStateContext';
@@ -25,9 +28,12 @@ export const getNextNodes = (
   return nodes?.filter(({ id }) => nodeIds?.includes(id)) ?? [];
 };
 
-export const findNextNodes = (botStateContext: BotStateContext) => {
+export const findNextNodes = (
+  botStateContext: BotStateContext,
+  messages: EntityItem<typeof Message>[],
+) => {
   console.log(botStateContext);
-  const { currentNode, bot, messages, conversation } = botStateContext;
+  const { currentNode, bot, conversation } = botStateContext;
   const { orgId } = conversation;
   const customerId =
     conversation?.customerId ?? conversation?.customer.customerId;

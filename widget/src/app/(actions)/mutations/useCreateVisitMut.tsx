@@ -1,8 +1,8 @@
 import { EntityItem } from 'electrodb';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Visit } from '@/entities/customer';
 import { CreateVisit } from '@/entities/entities';
+import { Visit } from '@/entities/visit';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { MutationKey } from '../mutations';
@@ -28,7 +28,7 @@ export const useCreateVisitMut = (orgId: string, visitId: string) => {
 }
 
 
-const createVisit = async (orgId: string, visitId: string, body: CreateVisit): Promise<EntityItem<typeof Visit>> => {
+const createVisit = async (orgId: string, visitId: string, body: CreateVisit): Promise<EntityItem<typeof Visit> | undefined> => {
   if (orgId && visitId) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL}/orgs/${orgId}/visits/${visitId}`,
@@ -40,5 +40,4 @@ const createVisit = async (orgId: string, visitId: string, body: CreateVisit): P
     }
     return res.json()
   }
-  return {}
 };
