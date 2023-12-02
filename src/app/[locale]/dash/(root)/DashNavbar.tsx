@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BiHelpCircle } from 'react-icons/bi';
+import { BiChart, BiHelpCircle } from 'react-icons/bi';
 import { BsFillPeopleFill, BsRobot } from 'react-icons/bs';
 import { CgWebsite } from 'react-icons/cg';
 import { IoMdChatboxes } from 'react-icons/io';
@@ -63,6 +63,26 @@ export default function DashNavbar() {
           <div className='normal-case tooltip lg:tooltip-right hover:bg-opacity-0' data-tip={t('home')}>
             <Image src={ekrataLogo} alt='Ekrata logo' className='max-w-none' width={32} height={40} />
             {/* <MdOutlineDashboard className='w-6 h-6' /> */}
+          </div>
+        </Link>
+      </li>
+      <li>
+        <Link
+          href={{ pathname: "/dash/analytics" }}
+          key='analytics'
+          className='flex btn btn-ghost hover:bg-opacity-0'
+        >
+          <div className='normal-case tooltip lg:tooltip-right' data-tip={t('analytics')}>
+            <div className='indicator'>
+
+              {/* {unreadMessages != null && unreadMessages > 0 &&
+                <span className='-m-1 text-xs bg-opacity-100 border-0 rounded-md indicator-item badge bg-gradient-to-tr from-violet-500 to-orange-300 '>
+                  {unreadMessages}
+                </span>
+
+              } */}
+              <BiChart className='w-6 h-6' />
+            </div>
           </div>
         </Link>
       </li>

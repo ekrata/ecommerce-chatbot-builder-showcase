@@ -17,6 +17,7 @@ export enum QueryKey {
   translation = 'translation',
   customer = 'customer',
   customers = 'customers',
+  analytics = 'analytics',
   bot = 'bot',
   botTemplates = 'botTemplates',
   bots = 'bots',

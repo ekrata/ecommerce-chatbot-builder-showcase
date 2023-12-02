@@ -146,15 +146,6 @@ export const listConversations = async (params: ConversationFilterParams) => {
     console.log(conversations);
     // make distinct per conversationId
 
-    // const conversations = await appDb.entities.conversations
-    //   .get(
-    //     uniqueMessages.map(({ orgId, conversationId }) => ({
-    //       orgId,
-    //       conversationId,
-    //     })),
-    //   )
-    //   .go({ preserveBatchOrder: true });
-
     console.log('conversations', conversations);
 
     if (params.includeMessages) {

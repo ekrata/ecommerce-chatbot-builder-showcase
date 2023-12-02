@@ -4,6 +4,8 @@ import { Link, useFormatter, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { ReactNode, useMemo } from 'react';
 import { BiSend } from 'react-icons/bi';
+import { BsChevronRight, BsRobot } from 'react-icons/bs';
+import { FcMediumPriority } from 'react-icons/fc';
 import { useQueryParams } from 'sst/node/api';
 import { useSession } from 'sst/node/auth';
 import { useLocalStorage } from 'usehooks-ts';
@@ -30,6 +32,7 @@ interface Props {
  */
 export const OperatorConversationCard: React.FC<Props> = ({ conversationItem, height = '12', rounded = false, showRecentLabel, highlightedFields }) => {
   const { relativeTime } = useFormatter()
+  const t = useTranslations('dash')
   const [sessionOperator] = useAuthContext();
   var halfAnHourAgo = new Date(Date.now())
   halfAnHourAgo.setMinutes(halfAnHourAgo.getMinutes() - 30);
@@ -44,16 +47,25 @@ export const OperatorConversationCard: React.FC<Props> = ({ conversationItem, he
 
   const readMessageId = `${lastMessage?.conversationId}+${lastMessage?.messageId}`
   const composeHighlightedMessage = highlightedFields?.['messages.content']?.map((child) => <>{child}</>)
+
+  const botLabel = <div className='flex place-items-center gap-x-1'><BsRobot className='text-xs' />{t("Bot")}</div>
+  const unassignedLabel = <div className='flex place-items-center gap-x-1'><FcMediumPriority className='text-xs' />{t("Unassigned")}</div>
   return (
     <Link onClick={() => setReadMessages({ ...readMessages, [`${readMessageId}`]: true })} key={conversationItem?.conversationId} href={{ pathname: '/dash/conversations', query: { conversationId: conversationItem?.conversationId } }} className='flex w-full' >
-      <button className={`btn btn-ghost  rounded-none ${rounded && 'rounded-3xl'} font-light pl-0  h-${height}    justify-between normal-case place-items-center  w-full  text-sm px-2`}>
+      <button className={`btn btn-ghost  rounded-none ${rounded && 'rounded-3xl'} font-light pl-0  h-${height}  justify-between normal-case place-items-center  w-full  text-sm px-2`}>
         <div className="flex justify-between w-full place-items-center animate-fade-left">
           <div className='flex flex-row justify-between flex-shrink w-10/12 place-items-center'>
             <div className="flex w-12 h-12 p-2 ">
               <CustomerAvatar customer={conversationItem?.customer} />
             </div>
             <div className="flex flex-col w-full place-items-start gap-y-1">
-              <h5 className={`justify-stretch text-start w-full  text-xs break-all truncate  justify-self-start ${readMessages?.[readMessageId] || (lastMessage?.sender === 'operator' && lastMessage?.operatorId === sessionOperator?.operatorId) ? 'font-normal text-neutral-700' : 'font-semibold'} `}>{composeHighlightedMessage ?? `${lastMessage?.content}`}</h5>
+              <div className="flex flex-grow w-full text-xs justify-stretch text-neutral-400 place-items-center gap-x-1">
+                {conversationItem?.botId != null ? botLabel : conversationItem?.operator?.name ?? conversationItem?.operator?.email ?? unassignedLabel} <BsChevronRight className='text-xs' /> {conversationItem?.customer?.name ?? conversationItem?.customer?.email}
+              </div>
+              <h5 className={`justify-stretch text-start w-full  text-sm break-all truncate  justify-self-start 
+              ${readMessages?.[readMessageId] || (lastMessage?.sender === 'operator'
+                  && lastMessage?.operatorId === sessionOperator?.operatorId) ? 'font-normal text-neutral-700' : 'font-semibold'} `}>
+                {composeHighlightedMessage ?? `${lastMessage?.content}`}</h5>
               <div className="flex flex-grow w-full text-xs justify-stretch text-neutral-400 gap-x-1">
                 <OperatorMessageTimeLabel conversationItem={conversationItem} highlightedFields={highlightedFields} />
                 {/* {conversationItem?.topic && <div className='justify-end text-xs badge badge-sm'>{startCase(conversationItem?.topic)}</div>} */}

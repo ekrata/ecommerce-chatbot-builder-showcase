@@ -1,43 +1,48 @@
 import { EntityItem } from 'electrodb';
 
+import { Analytic } from '@/entities/analytics';
 import { Article } from '@/entities/article';
 import { useQuery } from '@tanstack/react-query';
 
+import { RelativeDateKey } from '../../dash/(root)/analytics/AnalyticsView';
 import { QueryKey } from '../queries';
 
+type AnalyticsQueryData = { current: EntityItem<typeof Analytic>[], previous: EntityItem<typeof Analytic>[] }
+
 /**
-* Returns articles without content  
+* Returns analytics without content  
 * @date 23/07/2023 - 12:27:11
 *
-* @param {Parameters<typeof getArticles>} params
+* @param {Parameters<typeof getAnalytics>} params
 * @returns {*}
 */
-export const use = (params: Parameters<typeof getArticles>) => useQuery<EntityItem<typeof Article>[]>(
+export const useAnalyticsQuery = (params: Parameters<typeof getAnalytics>) => useQuery<AnalyticsQueryData>(
   {
-    queryKey: [...params, QueryKey.articles],
-    queryFn: () => getArticles(...params) ?? [],
+    queryKey: [...params, QueryKey.analytics],
+    queryFn: () => getAnalytics(...params) ?? [],
     keepPreviousData: true,
     enabled: !!params[0]
   })
 
-
 /**
-* Returns articles without their content
+* Returns analytics without their content
 * @date 23/07/2023 - 12:24:28
 *
 * @async
 * @param {string} orgId
 * @param {string} lang 
-* @returns {Promise<EntityItem<typeof Article>[]>}
+* @returns {Promise<AnalyticsQueryData>}
 */
-export const getArticles = async (
+export const getAnalytics = async (
   orgId: string,
-  lang: string
-): Promise<EntityItem<typeof Article>[]> => {
+  fromTimestamp: number,
+  endTimestamp: number,
+  duration: RelativeDateKey
+): Promise<AnalyticsQueryData> => {
   const res = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_APP_API_URL
-      }/orgs/${orgId}/lang/${lang}/articles`
+      }/orgs/${orgId}/analytics?fromTimestamp=${fromTimestamp}&endTimestamp=${endTimestamp}&duration=${duration}`
     )
   ).json();
   return res.data;

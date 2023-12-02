@@ -27,20 +27,6 @@ export type AnalyticNps = Required<
   Required<EntityItem<typeof Analytic>['nps']>
 >;
 
-// type ConfigLiveChat = NonNullable<ConfigChannels>['liveChat'];
-
-// export type ConfigLiveChatAppearance = NonNullable<
-//   NonNullable<ConfigLiveChat>['appearance']
-// >;
-
-// export type WidgetAppearance = NonNullable<
-//   NonNullable<ConfigLiveChatAppearance>['widgetAppearance']
-// >;
-
-// export type ConfigTicketing = NonNullable<
-//   NonNullable<ConfigChannels>['ticketing']
-// >;
-
 export const analyticDuration = ['hour', 'day', 'week', 'month'] as const;
 export type AnalyticDuration = (typeof analyticDuration)[number];
 
@@ -93,6 +79,9 @@ export const Analytic = new Entity({
       type: 'map',
       default: {},
       properties: {
+        totalCount: {
+          type: 'number',
+        },
         topics: {
           type: 'map',
           default: {},
@@ -275,25 +264,15 @@ export const Analytic = new Entity({
         composite: [],
       },
     },
-    range: {
-      pk: {
-        field: 'pk',
-        composite: ['orgId', 'endAt', 'startAt', 'duration'],
-      },
-      sk: {
-        field: 'sk',
-        composite: [],
-      },
-    },
     byOrg: {
       index: 'gsi2pk-gsi2sk-index',
       pk: {
         field: 'gsi2-pk',
-        composite: ['orgId', 'duration'],
+        composite: ['orgId'],
       },
       sk: {
         field: 'gsi2-sk',
-        composite: [],
+        composite: ['startAt', 'endAt'],
       },
     },
   },

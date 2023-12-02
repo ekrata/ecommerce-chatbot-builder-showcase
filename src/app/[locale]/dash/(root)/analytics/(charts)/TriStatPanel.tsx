@@ -1,7 +1,7 @@
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 
 export interface Props {
-  stats: { name: string, stat: string, previousStat: string, change: string, changeType: 'increase' }[]
+  stats: { name: string, stat: string, previousStat: string, change: string, changeType: 'increase' | 'decrease' | 'neutral' }[]
 }
 
 
@@ -9,8 +9,7 @@ export interface Props {
 export const TriStatPanel: React.FC<Props> = ({ stats }) => {
 
   return (
-    <div>
-      <h3 className="text-base font-semibold leading-6 text-gray-900">Last 30 days</h3>
+    <div className='animate-fade-left'>
       <dl className="grid grid-cols-1 mt-5 overflow-hidden bg-white divide-y divide-gray-200 rounded-lg shadow md:grid-cols-3 md:divide-x md:divide-y-0">
         {stats?.map((item) => (
           <div key={item.name} className="px-4 py-5 sm:p-6">

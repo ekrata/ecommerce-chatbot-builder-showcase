@@ -1,4 +1,5 @@
-import { eachHourOfInterval } from 'date-fns';
+import { eachDayOfInterval, eachHourOfInterval } from 'date-fns';
+import { writeFile } from 'fs/promises';
 import pLimit from 'p-limit';
 import { Api, ApiHandler } from 'sst/node/api';
 import { Config } from 'sst/node/config';
@@ -41,10 +42,11 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         connectionId: '',
         region: '',
       };
+
       const mockArgs: MockArgs = {
         mockLang: 'en',
         mockOrgCount: 1,
-        mockCustomerCount: 80,
+        mockCustomerCount: 20,
         mockOperatorCount: 4,
         mockBotCount: 4,
         mockArticleCount: 10,
@@ -58,27 +60,53 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockEndDate: new Date('2023-12-01').getTime(),
         existingOperator: createOperator,
       };
+
+      console.log('hi1');
       const mockOrgIds: (Partial<MockOrgIds> | null)[] = await Promise.all(
         [...Array(mockArgs.mockOrgCount)].map((_, i) => seed(db, mockArgs, i)),
       );
+
+      console.log('hi');
+
+      await writeFile(
+        'packages/functions/app/api/src/util/mockOrgIds.json',
+        JSON.stringify(mockOrgIds),
+      );
+
       if (mockArgs.mockStartDate && mockArgs.mockEndDate) {
-        const dates = eachHourOfInterval({
+        const dates = eachDayOfInterval({
           start: mockArgs.mockStartDate,
           end: mockArgs.mockEndDate,
         });
+
+        const fromTimestamp = mockArgs.mockStartDate;
+        const endTimestamp = mockArgs.mockEndDate;
 
         // create an hourly analytic for duration
         await Promise.all(
           dates.map(async (date) => {
             return limit(() =>
               http.post(
-                `/analytics/create-hourly-analytic?fromTimestamp=${date.getTime()}`,
+                `/analytics/create-daily-analytic?fromTimestamp=${date.getTime()}`,
                 {},
               ),
             );
           }),
         );
+
+        // create weekly analytics for duration
+        await http.post(
+          `/analytics/combine-into-weekly-analytic?fromTimestamp=${fromTimestamp}&endTimestamp=${endTimestamp}`,
+          {},
+        );
+
+        // create monthly analytics for duration
+        await http.post(
+          `/analytics/combine-into-monthly-analytic?fromTimestamp=${fromTimestamp}&endTimestamp=${endTimestamp}`,
+          {},
+        );
       }
+
       return {
         statusCode: 200,
         body: JSON.stringify({ mockArgs, mockOrgs: mockOrgIds }),

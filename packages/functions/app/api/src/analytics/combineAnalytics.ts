@@ -1,18 +1,18 @@
-import { differenceInSeconds } from 'date-fns';
 import { EntityItem } from 'electrodb';
 import _ from 'lodash';
+import pLimit from 'p-limit';
 
 import {
-  AnalyticConversations,
-  AnalyticCsat,
+  Analytic,
   AnalyticDuration,
   analyticDuration,
-  AnalyticNps,
 } from '@/entities/analytics';
 import { CreateAnalytic } from '@/entities/entities';
 import { Org } from '@/entities/org';
 
 import { getAppDb } from '../db';
+
+const limit = pLimit(4);
 
 export const combineAnalytics = async (
   fromTimestamp: number,
@@ -41,188 +41,205 @@ export const combineAnalytics = async (
         analyticDuration.findIndex((value) => value === duration) - 1
       ];
     const analytics = Promise.all(
-      orgs?.map(async (org) => {
-        // articles
+      await limit(
+        () =>
+          orgs?.map(async (org) => {
+            // articles
 
-        // aggreate conversations
-        const analytics = await appDb.entities.analytics.query
-          .byOrg({
-            orgId: org.orgId,
-            duration: subDuration,
-          })
-          .where(({ createdAt }, { between }) =>
-            between(createdAt, endTimestamp, fromTimestamp),
-          )
-          .go({ limit: 500 });
+            let analytics: EntityItem<typeof Analytic>[] = [];
 
-        if (!analytics?.data) {
-          return;
-        }
+            let cursor = null;
 
-        // scores/averages get averaged; add atomic scores together and then divide by analytics length
-        // otherwise, other metrics/counts are just summed
+            do {
+              // aggreate conversations
+              const analyticsRes = await appDb.entities.analytics.query
+                .byOrg({
+                  orgId: org.orgId,
+                  duration: subDuration,
+                })
+                .where(({ createdAt }, { between }) =>
+                  between(createdAt, endTimestamp, fromTimestamp),
+                )
+                .go();
 
-        const newAnalytic = analytics.data.reduce((prev, curr) => {
-          const newCsat = curr.csat?.map((question) => {
-            const prevQuestion = prev.csat?.find(
-              (item) => question === item?.question,
-            );
-            if (
-              prevQuestion &&
-              question.score &&
-              question.respondents &&
-              question.question
-            ) {
-              return {
-                score: (prevQuestion?.score ?? 0) + question.score,
-                respondents:
-                  (prevQuestion.respondents ?? 0) + question.respondents,
-                question: question.question,
-              };
+              analytics = [...analytics, ...analyticsRes.data];
+              cursor = analyticsRes.cursor;
+            } while (cursor != null);
+
+            if (!analytics.length) {
+              return;
             }
-            return question;
-          });
-          const newNps = curr.nps?.map((question) => {
-            const prevQuestion = prev.nps?.find(
-              (item) => question === item?.question,
-            );
-            if (
-              prevQuestion &&
-              question.score &&
-              question.respondents &&
-              question.question
-            ) {
+
+            // scores/averages get averaged; add atomic scores together and then divide by analytics length
+            // otherwise, other metrics/counts are just summed
+
+            const newAnalytic = analytics.reduce((prev, curr) => {
+              const newCsat = curr.csat?.map((question) => {
+                const prevQuestion = prev.csat?.find(
+                  (item) => question === item?.question,
+                );
+                if (
+                  prevQuestion &&
+                  question.score &&
+                  question.respondents &&
+                  question.question
+                ) {
+                  return {
+                    score: (prevQuestion?.score ?? 0) + question.score,
+                    respondents:
+                      (prevQuestion.respondents ?? 0) + question.respondents,
+                    question: question.question,
+                  };
+                }
+                return question;
+              });
+              const newNps = curr.nps?.map((question) => {
+                const prevQuestion = prev.nps?.find(
+                  (item) => question === item?.question,
+                );
+                if (
+                  prevQuestion &&
+                  question.score &&
+                  question.respondents &&
+                  question.question
+                ) {
+                  return {
+                    score: (prevQuestion?.score ?? 0) + question.score,
+                    respondents:
+                      (prevQuestion.respondents ?? 0) + question.respondents,
+                    question: question.question,
+                  };
+                }
+                return question;
+              });
+
+              const prevAvgWaitTime = prev.conversations?.avgWaitTime;
+              const currAvgWaitTime = curr.conversations?.avgWaitTime;
+              const newAvgWaitTime = {
+                unassignedCount:
+                  (prevAvgWaitTime?.unassignedCount ?? 0) +
+                  (currAvgWaitTime?.unassignedCount ?? 0),
+                unassignedSecondsTotal:
+                  (prevAvgWaitTime?.unassignedSecondsTotal ?? 0) +
+                  (currAvgWaitTime?.unassignedSecondsTotal ?? 0),
+                openCount:
+                  (prevAvgWaitTime?.openCount ?? 0) +
+                  (currAvgWaitTime?.openCount ?? 0),
+                openSecondsTotal:
+                  (prevAvgWaitTime?.unassignedSecondsTotal ?? 0) +
+                  (currAvgWaitTime?.unassignedSecondsTotal ?? 0),
+              } as typeof currAvgWaitTime;
+
+              const prevStatus = prev.conversations?.status;
+              const currStatus = curr.conversations?.status;
+
+              const newStatus = {
+                open: (prevStatus?.open ?? 0) + (currStatus?.open ?? 0),
+                solved: (prevStatus?.solved ?? 0) + (currStatus?.solved ?? 0),
+                unassigned:
+                  (prevStatus?.unassigned ?? 0) + (currStatus?.unassigned ?? 0),
+              } as typeof currStatus;
+
+              const prevTopics = prev.conversations?.topics;
+              const currTopics = curr.conversations?.topics;
+              const newTopics = {
+                orderIssues:
+                  (prevTopics?.orderIssues ?? 0) +
+                  (currTopics?.orderIssues ?? 0),
+                orderStatus:
+                  (prevTopics?.orderStatus ?? 0) +
+                  (currTopics?.orderStatus ?? 0),
+                products:
+                  (prevTopics?.products ?? 0) + (currTopics?.products ?? 0),
+                shippingPolicy:
+                  (prevTopics?.shippingPolicy ?? 0) +
+                  (currTopics?.shippingPolicy ?? 0),
+              } as typeof currTopics;
+
+              const prevChannels = prev.conversations?.channels;
+              const currChannels = curr.conversations?.channels;
+
+              const newChannels = {
+                website:
+                  (prevChannels?.website ?? 0) + (currChannels?.website ?? 0),
+                whatsapp:
+                  (prevChannels?.whatsapp ?? 0) + (currChannels?.whatsapp ?? 0),
+                instagram:
+                  (prevChannels?.instagram ?? 0) +
+                  (currChannels?.instagram ?? 0),
+                messenger:
+                  (prevChannels?.messenger ?? 0) +
+                  (currChannels?.messenger ?? 0),
+                emailTicket:
+                  (prevChannels?.emailTicket ?? 0) +
+                  (currChannels?.emailTicket ?? 0),
+              } as typeof currChannels;
+
               return {
-                score: (prevQuestion?.score ?? 0) + question.score,
-                respondents:
-                  (prevQuestion.respondents ?? 0) + question.respondents,
-                question: question.question,
+                duration: subDuration,
+                orgId: prev.orgId,
+                analyticId: prev.analyticId,
+                csat: newCsat,
+                nps: newNps,
+                conversations: {
+                  avgWaitTime: newAvgWaitTime,
+                  topics: newTopics,
+                  channels: newChannels,
+                  status: newStatus,
+                },
+                startAt: curr.startAt,
+                endAt: curr.endAt,
               };
-            }
-            return question;
-          });
+            });
 
-          const prevAvgWaitTime = prev.conversations?.avgWaitTime;
-          const currAvgWaitTime = curr.conversations?.avgWaitTime;
-          const newAvgWaitTime = {
-            unassignedCount:
-              (prevAvgWaitTime?.unassignedCount ?? 0) +
-              (currAvgWaitTime?.unassignedCount ?? 0),
-            unassignedSecondsTotal:
-              (prevAvgWaitTime?.unassignedSecondsTotal ?? 0) +
-              (currAvgWaitTime?.unassignedSecondsTotal ?? 0),
-            openCount:
-              (prevAvgWaitTime?.openCount ?? 0) +
-              (currAvgWaitTime?.openCount ?? 0),
-            openSecondsTotal:
-              (prevAvgWaitTime?.unassignedSecondsTotal ?? 0) +
-              (currAvgWaitTime?.unassignedSecondsTotal ?? 0),
-          } as typeof currAvgWaitTime;
+            // avg new scores
 
-          const prevStatus = prev.conversations?.status;
-          const currStatus = curr.conversations?.status;
+            const avgWaitTime = newAnalytic.conversations?.avgWaitTime;
 
-          const newStatus = {
-            open: (prevStatus?.open ?? 0) + (currStatus?.open ?? 0),
-            solved: (prevStatus?.solved ?? 0) + (currStatus?.solved ?? 0),
-            unassigned:
-              (prevStatus?.unassigned ?? 0) + (currStatus?.unassigned ?? 0),
-          } as typeof currStatus;
+            const createBody: CreateAnalytic = {
+              ...newAnalytic,
+              csat: newAnalytic.csat?.map((item) => ({
+                ...item,
+                score:
+                  item.score != null && item?.respondents != null
+                    ? item?.score / item?.respondents
+                    : undefined,
+              })),
+              nps: newAnalytic.nps?.map((item) => ({
+                ...item,
+                score:
+                  item.score != null && item?.respondents != null
+                    ? item?.score / item?.respondents
+                    : undefined,
+              })),
+              conversations: {
+                ...newAnalytic.conversations,
+                avgWaitTime: {
+                  ...newAnalytic.conversations?.avgWaitTime,
+                  unassignedSecondsAvg:
+                    avgWaitTime?.unassignedCount &&
+                    avgWaitTime.unassignedSecondsTotal
+                      ? avgWaitTime.unassignedSecondsTotal /
+                        avgWaitTime.unassignedCount
+                      : undefined,
+                  openSecondsAvg:
+                    avgWaitTime?.openCount && avgWaitTime.openSecondsTotal
+                      ? avgWaitTime.openSecondsTotal / avgWaitTime.openCount
+                      : undefined,
+                },
+              },
+              orgId: org.orgId,
+              duration,
+              startAt: fromTimestamp,
+              endAt: endTimestamp,
+            };
 
-          const prevTopics = prev.conversations?.topics;
-          const currTopics = curr.conversations?.topics;
-          const newTopics = {
-            orderIssues:
-              (prevTopics?.orderIssues ?? 0) + (currTopics?.orderIssues ?? 0),
-            orderStatus:
-              (prevTopics?.orderStatus ?? 0) + (currTopics?.orderStatus ?? 0),
-            products: (prevTopics?.products ?? 0) + (currTopics?.products ?? 0),
-            shippingPolicy:
-              (prevTopics?.shippingPolicy ?? 0) +
-              (currTopics?.shippingPolicy ?? 0),
-          } as typeof currTopics;
-
-          const prevChannels = prev.conversations?.channels;
-          const currChannels = curr.conversations?.channels;
-
-          const newChannels = {
-            website:
-              (prevChannels?.website ?? 0) + (currChannels?.website ?? 0),
-            whatsapp:
-              (prevChannels?.whatsapp ?? 0) + (currChannels?.whatsapp ?? 0),
-            instagram:
-              (prevChannels?.instagram ?? 0) + (currChannels?.instagram ?? 0),
-            messenger:
-              (prevChannels?.messenger ?? 0) + (currChannels?.messenger ?? 0),
-            emailTicket:
-              (prevChannels?.emailTicket ?? 0) +
-              (currChannels?.emailTicket ?? 0),
-          } as typeof currChannels;
-
-          return {
-            duration: subDuration,
-            orgId: prev.orgId,
-            analyticId: prev.analyticId,
-            csat: newCsat,
-            nps: newNps,
-            conversations: {
-              avgWaitTime: newAvgWaitTime,
-              topics: newTopics,
-              channels: newChannels,
-              status: newStatus,
-            },
-            startAt: curr.startAt,
-            endAt: curr.endAt,
-          };
-        });
-
-        // avg new scores
-
-        const avgWaitTime = newAnalytic.conversations?.avgWaitTime;
-
-        const createBody: CreateAnalytic = {
-          ...newAnalytic,
-          csat: newAnalytic.csat?.map((item) => ({
-            ...item,
-            score:
-              item.score != null && item?.respondents != null
-                ? item?.score / item?.respondents
-                : undefined,
-          })),
-          nps: newAnalytic.nps?.map((item) => ({
-            ...item,
-            score:
-              item.score != null && item?.respondents != null
-                ? item?.score / item?.respondents
-                : undefined,
-          })),
-          conversations: {
-            ...newAnalytic.conversations,
-            avgWaitTime: {
-              ...newAnalytic.conversations?.avgWaitTime,
-              unassignedSecondsAvg:
-                avgWaitTime?.unassignedCount &&
-                avgWaitTime.unassignedSecondsTotal
-                  ? avgWaitTime.unassignedSecondsTotal /
-                    avgWaitTime.unassignedCount
-                  : undefined,
-              openSecondsAvg:
-                avgWaitTime?.openCount && avgWaitTime.openSecondsTotal
-                  ? avgWaitTime.openSecondsTotal / avgWaitTime.openCount
-                  : undefined,
-            },
-          },
-          orgId: org.orgId,
-          duration,
-          startAt: fromTimestamp,
-          endAt: endTimestamp,
-        };
-
-        console.log(createBody);
-        // if every user gave the highest score for every csat question
-        const res = await appDb.entities.analytics.upsert(createBody).go();
-        return res;
-      }),
+            console.log(createBody);
+            // if every user gave the highest score for every csat question
+            const res = await appDb.entities.analytics.upsert(createBody).go();
+            return res;
+          }),
+      ),
     );
     return {
       statusCode: 200,

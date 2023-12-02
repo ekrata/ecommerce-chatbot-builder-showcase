@@ -1,12 +1,13 @@
 import { EntityItem, Service } from 'electrodb';
 
+import { Bot } from '@/entities/bot';
 import { Customer } from '@/entities/customer';
 import { Operator } from '@/entities/operator';
 import * as Sentry from '@sentry/serverless';
 
 import { getAppDb } from '../db';
 
-export const expandableField = ['customerId', 'operatorId'] as const;
+export const expandableField = ['customerId', 'operatorId', 'botId'] as const;
 export type ExpandableField = (typeof expandableField)[number];
 // /**
 
@@ -109,6 +110,36 @@ export const expandObjects = async (
         throw new Error(`Failed to expand operatorid: ${err}`);
       }
     }
+    // if (expansionFields.includes('botId')) {
+    //   try {
+    //     const uniqueBotData = Object.values(
+    //       data.reduce((acc, item) => {
+    //         const { orgId, botId } = item;
+    //         return { ...acc, [`${orgId}-${botId}`]: item };
+    //       }, {}),
+    //     );
+    //     const batchBots = await db.entities.bots
+    //       .get(
+    //         uniqueBotData.map((item) => ({
+    //           botId: item?.['botId'],
+    //           orgId: item?.['orgId'],
+    //         })),
+    //       )
+    //       .go({ preserveBatchOrder: true });
+    //     expandedData = await Promise.all(
+    //       [...expandedData].map((item, i) => ({
+    //         ...item,
+    //         bot: batchBots.data.find(
+    //           (bot) =>
+    //             `${item.orgId}-${item.botId}` === `${bot?.orgId}-${bot?.botId}`,
+    //         ) as EntityItem<typeof Bot>,
+    //       })),
+    //     );
+    //   } catch (err) {
+    //     Sentry.captureException(err);
+    //     throw new Error(`Failed to expand operatorid: ${err}`);
+    //   }
+    // }
     return expandedData;
   };
 

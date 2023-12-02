@@ -238,6 +238,7 @@
     "at": "at",
     "Yes": "Yes",
     "No": "No",
+    "Unassigned": "Unassigned",
     "Cancel": "Cancel",
     "Article": "Article",
     "articleCategory": {
@@ -283,6 +284,7 @@
     "Copied to clipboard": "Copied to clipboard",
     "Import": "Import",
     "Remove": "Remove",
+    "Bot": "Bot",
     "Value": "Value",
     "Save": "Save",
     "Fetching": "Fetching",
@@ -338,6 +340,22 @@
       "orgName": "Organisation name",
       "averageUnassignedWaitTime": "Average time elapsed until a conversation is assigned",
       "averageOpenWaitTime": "Average time it takes to resolve a conversation"
+    },
+    "analytics": {
+      "metrics": {
+        "Conversations": "Conversations",
+        "Average wait time": "Average wait time",
+        "Average resolution time": "Average resolution time"
+      },
+      "relativeTime": {
+        "Today": "Today",
+        "Yesterday": "Yesterday",
+        "Last 7 days": "Last 7 days",
+        "Last 30 days": "Last 30 days",
+        "Last 90 days": "Last 90 days",
+        "Last year": "Last year",
+        "All time": "All time"
+      }
     },
     "bots": {
       "categories": {

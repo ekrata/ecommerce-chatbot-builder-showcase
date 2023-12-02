@@ -18,10 +18,6 @@ import {
   articleStatus,
 } from '../../../../../../stacks/entities/article';
 import {
-  BotEdgeType,
-  BotNodeType,
-} from '../../../../../../stacks/entities/bot';
-import {
   conversationChannel,
   conversationStatus,
   conversationTopic,
@@ -47,7 +43,7 @@ import { getHttp } from '../http';
 import { whatsappMessagesMock1 } from '../meta/whatsapp/mocks';
 import { MockArgs, mockArticleTitles, MockOrgIds, TestBotKey } from './';
 
-const limit = pLimit(2);
+const limit = pLimit(1);
 
 const http = getHttp(`${Api.appApi.url}`);
 
@@ -145,7 +141,8 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     await db.entities.orgs.create(createOrg).go();
     const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
     mockOrg.orgId = orgId;
-    mockOrg.createdAt = startDate;
+    mockOrg.startAt = startDate;
+    mockOrg.endAt = endDate;
     mockOrg.lang = mockLang;
     const avatarKey = `${orgId}-configuration-botLogo`;
     const logoKey = `${orgId}-configuration-logo`;

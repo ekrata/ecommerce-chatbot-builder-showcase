@@ -20,6 +20,8 @@ export type MockOrgIds = {
   lang: string;
   botIds: Record<TestBotKey, string>;
   botTemplateIds: string[];
+  startAt: number;
+  endAt: number;
   operatorIds: string[];
   analyticIds: string[];
   customers: {
@@ -27,7 +29,6 @@ export type MockOrgIds = {
     conversations: { conversationId: string; messageIds: string[] }[];
     visitIds: string[];
   }[];
-  createdAt: number;
 };
 
 export const mockArticleTitles: { [key in ArticleCategory]: string[] } = {

@@ -15,11 +15,13 @@ export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
     try {
       const fromTimestamp = useQueryParam('fromTimestamp') ?? undefined;
+      const endTimestamp = useQueryParam('endTimestamp') ?? undefined;
+      const endDate = endTimestamp ? parseInt(endTimestamp, 10) : Date.now();
       const startDate = fromTimestamp
         ? parseInt(fromTimestamp, 10)
         : sub(Date.now(), { months: 1 }).getTime();
 
-      const analytics = combineAnalytics(startDate, Date.now(), 'month', appDb);
+      const analytics = combineAnalytics(startDate, endDate, 'month', appDb);
       return {
         statusCode: 200,
         body: JSON.stringify(analytics),

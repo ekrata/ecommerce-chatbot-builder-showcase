@@ -9,6 +9,7 @@ import {
   ApiRouteProps,
   Auth,
   Bucket,
+  Cognito,
   Config,
   EventBus,
   EventBusRuleProps,
@@ -1048,6 +1049,10 @@ export function baseStack({ stack, app }: StackContext) {
     authenticator: {
       handler: 'packages/functions/app/api/src/auth.handler',
     },
+  });
+
+  const cogAuth = new Cognito(stack, 'cogAuth', {
+    login: ['email', 'phone'],
   });
 
   auth.attach(stack, {

@@ -57,7 +57,7 @@ export const ConversationsListView: FC = () => {
   const [page, setPage] = useState<number>(0)
   const [pageCursors, setPageCursors] = useState<(string | null | undefined)[]>([])
 
-  const conversationItems = useConversationItemsQuery({ ...conversationListFilter })
+  const conversationItems = useConversationItemsQuery({ ...conversationListFilter, cursor: pageCursors?.[page] ?? undefined })
 
   useEffect(() => {
     // update last cursor
@@ -89,12 +89,12 @@ export const ConversationsListView: FC = () => {
           {conversationItems?.data?.data?.map((item) => {
             if (item?.conversationId) {
               return <li key={item?.conversationId} className={`flex justify-between overflow-clip  -16 border-b-[1px] hover:bg-transparent  truncate font-semibold text-base normal-case  border-0   hover:border-gray-300 border-gray-300 rounded-none place-items-center text-normal ${conversationId === item?.conversationId && 'bg-gray-300'}`} >
-                <OperatorConversationCard height='16' conversationItem={item}></OperatorConversationCard>
+                <OperatorConversationCard height='20' conversationItem={item}></OperatorConversationCard>
               </li>
             }
           })}
-          <div className='absolute bottom-0 w-full bg-white'>
-            <div className='flex justify-between w-full'>
+          <div className='fixed w-full bg-white '>
+            <div className='flex justify-between w-full mb-2'>
               <Pagination pageState={[page ?? 0, setPage]} currentCursor={pageCursors[page ?? 0]} limitPerPage={10} pageItemCount={conversationItems?.data?.data?.length} />
             </div>
           </div>

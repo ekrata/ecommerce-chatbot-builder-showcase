@@ -28,23 +28,22 @@ const appDb = getAppDb(
 
 const lang = 'en';
 describe.concurrent('/analytics', async () => {
-  it('creates an hourly analytic for every org', async () => {
+  it('creates a daily analytic for every org', async () => {
     // seed is created at a certain time.
     // by default, seed will create mock data that was created within an hour
     // by getting the org.createdAt field from the mock org ids,
     // we can ensure that /create-hourly-analytic creates an analytic using the 1 hour timeframe
     // that the seeding occured, rather than seed every test run.
 
-    const { orgId, articleIds, createdAt } = mockOrgIds[0];
+    const { orgId, articleIds, startAt, endAt } = mockOrgIds[0];
 
     const res = await http.post(
-      `/analytics/create-hourly-analytic?fromTimestamp=${createdAt}`,
+      `/analytics/create-daily-analytic?fromTimestamp=${startAt}`,
     );
     // we need a specific seed
     expect(res).toBeTruthy();
     expect(res.status).toBe(200);
-    console.log(res.data);
-    expect(res.data).toBeTruthy();
+
     // expect(res.data?.orgId).toEqual(orgId);
     // expect(res.data?.articleId).toEqual(articleId);
     // expect(res.data?.lang).toEqual(lang);

@@ -1,1 +1,975 @@
-[{"orgId":"cef9e8fc-e2ec-4ce5-bc7e-93c0e5ad4222","createdAt":1701390398871,"lang":"en","articleIds":[{"articleId":"484e0e34-5d2f-4e24-9ff6-9eb0b552ca31","articleContentId":"e7d5f677-cc58-49fc-9f83-d3eef485a18d"},{"articleId":"409f5c57-b2d5-4a02-b0a3-c70404960827","articleContentId":"37c885d4-8458-418c-b886-90012906daa0"},{"articleId":"a8a4eed2-189b-4638-8116-18f0c22b1fe3","articleContentId":"5003b22c-11cc-405f-9b38-bfe147a37956"},{"articleId":"57a400d1-58a3-438f-a5a7-a01ec5adbafb","articleContentId":"0fd2eac1-ff6a-4e2d-a80f-d80375809fb5"},{"articleId":"967c32ce-ebee-45f6-8f0a-ddbce79306ff","articleContentId":"177119eb-9731-4a67-bf9c-ab6826548532"},{"articleId":"095dcce2-0dc9-4a70-8d62-37e0224da482","articleContentId":"3d8e1c97-1e8a-49ed-8bce-4601f9e4f4a8"},{"articleId":"7926ba71-7caa-4f7e-b297-8aebbc54316b","articleContentId":"d80c941e-21ca-496e-8409-3b468e74f0be"},{"articleId":"90ce3ba6-f4f9-49cc-855c-4edbeb744af7","articleContentId":"2a1e32da-dbf9-492a-9e3d-dc12a2b6ac59"},{"articleId":"089753d5-945f-46f5-9ff6-ce74847730d4","articleContentId":"4c2670b2-9624-4cd7-8813-3faf2d4a72e0"},{"articleId":"fefcd24b-c000-48ec-bd54-1b70ec01c3be","articleContentId":"0956488c-bf7f-446a-8c4c-8fbbbe6d2e5d"},{"articleId":"0a857112-94b1-4040-9ae0-6dc8b01e55d9","articleContentId":"0ec13eaa-b7b3-488b-8eb3-8be3bbbb4a9e"},{"articleId":"2570cd78-0ab8-49b8-ae8f-88931d01c3ff","articleContentId":"23d7ea7f-db7b-4a3b-af65-a0a3cea640e6"},{"articleId":"048c638e-fe00-4a4a-958c-d87b4f1467e1","articleContentId":"21cf31dd-fdfb-4d1f-90eb-2efbf149123b"},{"articleId":"33f372cc-b6a6-44f7-a396-11192d30fa8b","articleContentId":"61381230-70b2-4ae8-a379-98890793cf15"},{"articleId":"8432dbbc-4311-4b3c-abc1-2a53dd05693b","articleContentId":"2c76ec23-eb96-49b1-b1d5-2909a3390a5d"},{"articleId":"85d1168c-b43a-4759-81ae-aee7b68f084e","articleContentId":"34cc277a-d9c9-4649-ad67-f6b790fb8834"}],"botIds":{"Sales Bot":"fa0c1323-0bd4-4610-811c-444bec0eff43"},"botTemplateIds":["cf209c6f-f0cd-4830-ad0b-cb3537d7873d","b338c4a2-4e21-453f-9662-ad6aca59c6a2","63b91e97-e7a3-4ff8-9ed1-ee3c22879229","2cbd7040-0e84-476b-bb17-2d3cdf88aa06"],"operatorIds":["973196ce-bedd-4f11-b679-fce1146d8892","843a69c1-9418-4d68-8574-34030809880b"],"ownerId":"c21d443e-b1d7-4cee-b29d-9bc2cba05def","adminId":"109111481709970940866","moderatorId":"117138631241434182915","mockGoogleAccountUserId":"101620729708291176316","customers":[{"customerId":"ca17e755-4904-4071-b69f-6a6e026bd6c2","conversations":[{"conversationId":"ed46ae4f-3d6b-4153-88df-a63ce8c8e863","messageIds":["3e28bef7-3e81-4d8d-a326-a36647fcc1f1"]},{"conversationId":"af4b9944-999d-4998-9011-df836ec1a6b4","messageIds":["251045fe-0876-4c68-b423-dde303e38c8a"]},{"conversationId":"2adfab0f-d4b7-4a81-bdf5-7abab3e13591","messageIds":["ff3cdad9-a658-4a2f-b999-21175d252e61"]},{"conversationId":"9e5c1baa-cd93-4c5d-b2ce-7bdb36b64595","messageIds":["154e7d64-961a-4eaf-b55e-bb44c5f8ca4b"]},{"conversationId":"a38ca030-e6a3-4dc4-ba5b-87ee6f40908f","messageIds":["055cd9f3-57fd-4178-aff9-78613b2ebc8f"]}],"visitIds":["efb44ac7-dd3a-4c90-8335-cbf6d4e5ad61"]}]}]
+[
+  {
+    "orgId": "f5d197a2-5456-48a3-91f9-691e3827b5f7",
+    "startAt": 1690848000000,
+    "endAt": 1701388800000,
+    "lang": "en",
+    "articleIds": [
+      {
+        "articleId": "07841d7c-be5d-472c-8b2b-8dce4a0e14cd",
+        "articleContentId": "f42e4908-6555-46f6-b8c2-45921cd495fd"
+      },
+      {
+        "articleId": "b0cf03b1-d3c7-4fca-b226-b0ddcb481d3b",
+        "articleContentId": "2f4017f6-a3da-4529-8fb9-e164cecee4cc"
+      },
+      {
+        "articleId": "5dd0b623-7f13-4bf0-ab2d-63687a8206e1",
+        "articleContentId": "670a5241-46ca-4a69-b984-965e2eab6360"
+      },
+      {
+        "articleId": "d70093f2-a56d-4b45-ac04-56e1070be7e5",
+        "articleContentId": "599a3197-d3e9-4e42-9377-a4651414278d"
+      },
+      {
+        "articleId": "32cd9be2-d70d-4a87-a9f0-40dcb0211d05",
+        "articleContentId": "82e702b0-7022-499d-8551-7e059a67387c"
+      },
+      {
+        "articleId": "0c380529-f7a2-4498-aed5-353f5f181382",
+        "articleContentId": "f9a29572-700a-4c73-956e-11944d28f4ab"
+      },
+      {
+        "articleId": "1fcad024-a154-4013-9fc9-38fdd90501ed",
+        "articleContentId": "7194bcbf-5aab-416e-b094-570721cf50b0"
+      },
+      {
+        "articleId": "4b668e4b-f598-4eeb-8490-4cf1f4970604",
+        "articleContentId": "877e4e36-329c-4b9e-b6a1-2cb4a14bc49c"
+      },
+      {
+        "articleId": "db75acca-8f65-4233-a40d-3b03eb394e78",
+        "articleContentId": "72acdc79-1ae6-4757-a9b1-ee3aaae07574"
+      },
+      {
+        "articleId": "548302d7-fd7e-4170-963e-9e17e9e435fd",
+        "articleContentId": "f2fe36ad-e682-4483-b2df-44b5e1fb644e"
+      },
+      {
+        "articleId": "e67b7fc9-946e-4962-9dd5-62b140350eb2",
+        "articleContentId": "6f33fddb-7d0f-4d6a-849c-945c64418a21"
+      },
+      {
+        "articleId": "aac986d2-1b1f-4452-bad6-b1820a50ad87",
+        "articleContentId": "b17d2cd2-3f67-4f20-bda8-ace58fa91fc9"
+      },
+      {
+        "articleId": "723e3a04-79b8-4d85-a55c-7b8402d6a942",
+        "articleContentId": "8ecf134c-8bf6-4593-a31c-dd072a17847a"
+      },
+      {
+        "articleId": "ef95a295-ca31-4d46-8711-6bf4abe5e63b",
+        "articleContentId": "821352d0-d8cc-439c-9ef3-7d1f30cf44fc"
+      },
+      {
+        "articleId": "98c1d99c-fcfd-4b28-ad96-30cc383fbbe5",
+        "articleContentId": "26073878-8d0c-457e-bdff-ab7f3633b584"
+      },
+      {
+        "articleId": "ad70fbe4-766e-458c-a671-6144ed8fc7cf",
+        "articleContentId": "db80784b-ffcf-4a11-9e97-d24aaf099d99"
+      }
+    ],
+    "botIds": {
+      "Sales Bot": "9636cb0f-79f3-483e-b6ee-cbf9bf9a0aa3"
+    },
+    "botTemplateIds": [
+      "c634ea04-3327-49f6-a728-dadc02c0c5d0",
+      "4cd944e9-cb62-49eb-a7ab-15644051410f",
+      "c0c05b43-1e6b-41da-812a-a9d2ad03e014",
+      "3289741b-1030-4042-bc3c-1016e9d81ccd"
+    ],
+    "operatorIds": [
+      "34e904b1-bf70-45cf-a321-b4e81f94e9e3",
+      "987f0324-9fcd-48b9-9673-af7647457323",
+      "48247dce-fb78-43aa-9723-20eb8fc450ab",
+      "10934b12-07c9-4858-a19e-0bb833fb20c7"
+    ],
+    "ownerId": "357aeadc-af85-4f16-9e3b-8306b8366085",
+    "adminId": "109111481709970940866",
+    "moderatorId": "117138631241434182915",
+    "mockGoogleAccountUserId": "101620729708291176316",
+    "customers": [
+      {
+        "customerId": "068f394c-7e31-4092-a618-08900ab5e4c9",
+        "conversations": [
+          {
+            "conversationId": "8ed91d47-eece-42af-8593-4e709dc13587",
+            "messageIds": [
+              "8bcc3eeb-c499-4d08-9485-c269a4836dcc",
+              "eb50fa1c-f14d-448c-8fb2-2b2783d9c63a"
+            ]
+          },
+          {
+            "conversationId": "b2677d6a-91c3-4889-b4f3-a0b8e561933a",
+            "messageIds": [
+              "f42ab300-bd18-49ec-83d5-f0475b3c60f0",
+              "5267cc83-9efd-4956-8697-cdf489dbd43a"
+            ]
+          },
+          {
+            "conversationId": "16f57dcc-579f-447d-ac42-a4693b47607a",
+            "messageIds": [
+              "e199f210-ff86-4a46-a2cf-d6b33fdbee2a",
+              "ee7220a2-205b-408c-9fce-f77c59486e76"
+            ]
+          },
+          {
+            "conversationId": "de144115-3a1c-4443-8eb7-3f6f7d7e9863",
+            "messageIds": [
+              "dbfce622-da4f-478c-8ff5-ba5bc13abd49",
+              "f1d19c97-6236-44d3-9faa-3680da503e3f"
+            ]
+          },
+          {
+            "conversationId": "c08acf86-30f2-40d2-bb97-c56cf9c4c360",
+            "messageIds": [
+              "bbf2c64d-40c1-4cf1-aaac-4cc6dd22e39c",
+              "26c8bb42-aa27-4124-b347-bc1a37eb997e"
+            ]
+          }
+        ],
+        "visitIds": [
+          "3a829bd9-3d12-4daf-ba50-868717585c2a",
+          "2c4cb81c-b0d4-4921-948b-a3602ebf03c9"
+        ]
+      },
+      {
+        "customerId": "f2fc0829-2532-49c9-81a1-7f2552235c91",
+        "conversations": [
+          {
+            "conversationId": "17fa43f9-9f91-4585-b4cf-d289a17090d6",
+            "messageIds": [
+              "08e22225-f026-44db-9330-4f4524a7c0d6",
+              "6949c66d-5b46-4adb-8f9f-7ff79a4d3338"
+            ]
+          },
+          {
+            "conversationId": "da68e8bc-884e-4520-ad87-7836f2ee5ab9",
+            "messageIds": [
+              "cb20200a-1311-44a4-b577-7f93bac3056c",
+              "e9d4d581-c312-45fa-ae9c-297ce87ca53a"
+            ]
+          },
+          {
+            "conversationId": "cbdaeeae-aac7-441a-8269-d9f44d890ddb",
+            "messageIds": [
+              "b20d423a-c339-43ef-b807-94a50d558e57",
+              "d93d23b5-3cae-4da6-b449-ad1f521639f2"
+            ]
+          },
+          {
+            "conversationId": "7979894a-8dfd-4673-b6ec-5d10120e0de3",
+            "messageIds": [
+              "f6f52623-5faa-49df-8648-b16c0e8611cc",
+              "dfbe0ef4-c9b7-4d2c-829e-ddcc48e29c4d"
+            ]
+          },
+          {
+            "conversationId": "74776671-dbf3-4eb8-8135-6b314030b701",
+            "messageIds": [
+              "859e085f-08aa-40d1-9c81-641807aeedc4",
+              "a137e852-2684-425d-9cce-51ac2473be26"
+            ]
+          }
+        ],
+        "visitIds": [
+          "f4e9df38-6601-435e-bfee-0dcc702e7030",
+          "b61b8a75-baa7-4068-add9-285f78348b6b"
+        ]
+      },
+      {
+        "customerId": "e317af4c-f4be-4aa5-b2c7-7dfda37c6a88",
+        "conversations": [
+          {
+            "conversationId": "826662d2-23c1-43d5-a6c0-aa869d317c1c",
+            "messageIds": [
+              "45a2ef62-df8b-4f87-adb1-c5d4f60ce3b8",
+              "23337b14-939e-45fc-a0bc-9bbe3eabb321"
+            ]
+          },
+          {
+            "conversationId": "6baca2c8-c334-45fd-9fb1-34713ca31a93",
+            "messageIds": [
+              "734897ea-5e63-4817-8492-a5feb972f718",
+              "eae0a85b-4a57-4586-81aa-6235f79a6558"
+            ]
+          },
+          {
+            "conversationId": "76c8998a-4a20-42e0-8bb3-00d769830562",
+            "messageIds": [
+              "7350613b-470c-45ee-8b53-9f44c7313c8b",
+              "3258a303-25aa-495c-9216-724082bbf097"
+            ]
+          },
+          {
+            "conversationId": "7bedbc54-aede-4d4f-a9f0-c2e2eeee0f7e",
+            "messageIds": [
+              "68001410-514c-4d60-aa8b-ec0fad689841",
+              "f19a59eb-e4c0-43be-835f-efcf5121e348"
+            ]
+          },
+          {
+            "conversationId": "3eb05fc6-999a-4a88-91d5-83c1570e6302",
+            "messageIds": [
+              "1accd5cc-7ea2-403a-ab99-9af39383b181",
+              "a604da96-b23f-4df3-bb4d-37abb3d93a79"
+            ]
+          }
+        ],
+        "visitIds": [
+          "c9790446-8a4f-4288-905b-fb52e05a0760",
+          "370e9102-e9a6-4946-851c-0627a7f5cca7"
+        ]
+      },
+      {
+        "customerId": "94e1ea69-8c06-4541-b739-57f63c1fcb4f",
+        "conversations": [
+          {
+            "conversationId": "a41a1dec-c54f-4e1c-b2ba-cc3067c012bb",
+            "messageIds": [
+              "289a54c1-8c1d-4376-9f96-ed04e6743b1f",
+              "35b4bf2b-fd1b-4ff6-8860-4935e6679f6f"
+            ]
+          },
+          {
+            "conversationId": "a9376d82-f7cd-4f3d-bfe9-fd3d5e7f7219",
+            "messageIds": [
+              "eb8c5f81-a55d-4a31-a4f9-fc6a269b146a",
+              "ebaa76ea-9b8f-443b-8a84-e021c5357eb0"
+            ]
+          },
+          {
+            "conversationId": "fa49c08f-def9-4f05-916d-c924c4ee47ce",
+            "messageIds": [
+              "fb8066de-c8cc-4a69-a06a-54e2fc3ea631",
+              "0961dbe8-87e6-43f7-ae7e-bbfcf634dabd"
+            ]
+          },
+          {
+            "conversationId": "9202d9a9-2c17-4d86-a5ff-93113a1f9b82",
+            "messageIds": [
+              "59f5c62f-0eb0-42f9-ab8c-a14b25403ece",
+              "eed0d65a-bd08-454c-87d8-665190c124f2"
+            ]
+          },
+          {
+            "conversationId": "e0d1b36e-af39-4ca9-89f1-a7be9dd666bd",
+            "messageIds": [
+              "5c0421b6-6785-489c-878d-31045865d1d8",
+              "fabb3c51-161c-4f4f-8869-30e0827e40a1"
+            ]
+          }
+        ],
+        "visitIds": [
+          "ee8bbb37-5de7-4b64-879a-142124c0ad35",
+          "7eb664fa-7b20-4660-ae6a-159d6f457912"
+        ]
+      },
+      {
+        "customerId": "f88bbace-0b0e-4426-9a84-1cc78a7f289b",
+        "conversations": [
+          {
+            "conversationId": "d88b0246-e9fd-452e-a106-b6f0cd9936ca",
+            "messageIds": [
+              "37d3f1d2-cc80-4ad9-9006-72ad9a4794f7",
+              "92e0550b-c005-4026-9be2-19817941a0ad"
+            ]
+          },
+          {
+            "conversationId": "27bdaeda-c25a-4a38-bcd0-d06c823abb33",
+            "messageIds": [
+              "7a8fa726-e44b-4f98-8fcc-fc6d9666fee2",
+              "bfedc97c-5483-4b03-a85e-2090e65bd926"
+            ]
+          },
+          {
+            "conversationId": "90da0148-da09-4840-8a14-83b3eb457bbf",
+            "messageIds": [
+              "4657c751-434a-42a9-b16a-1fc846866ab8",
+              "811533ea-596c-4185-954a-d7934461fb23"
+            ]
+          },
+          {
+            "conversationId": "33598f2b-6d96-4b54-be87-aa7948930048",
+            "messageIds": [
+              "bf28c556-ad2b-45c2-814c-db1008d8dd27",
+              "5aa874bd-e97b-4c99-ba05-e69a8d8693fa"
+            ]
+          },
+          {
+            "conversationId": "958f039e-3ee5-49a5-9544-decc67265247",
+            "messageIds": [
+              "ca171858-0d0a-46d1-8b3b-e4ec390f3370",
+              "f1f88fd3-0232-4cdb-a4bb-2063192df5f1"
+            ]
+          }
+        ],
+        "visitIds": [
+          "3a34caa4-5825-4d3a-8e28-9ea0722ab372",
+          "6d301309-a491-4d36-b622-f45df7293532"
+        ]
+      },
+      {
+        "customerId": "c2731974-61d7-49ad-a320-2e658212799f",
+        "conversations": [
+          {
+            "conversationId": "0fa3aff3-21fe-4564-ab2f-d6b585ceab2e",
+            "messageIds": [
+              "d0785b96-693e-4f49-8da7-327b75f0bfe2",
+              "2e16faae-5467-4241-802a-2c427efc4efd"
+            ]
+          },
+          {
+            "conversationId": "a383f6c0-f674-4ee0-9c18-6ce1f0f4f1da",
+            "messageIds": [
+              "c78998c1-36b2-42e9-ad18-169e2a13a530",
+              "a888f43e-447c-4810-bed1-f1a9adc8ce14"
+            ]
+          },
+          {
+            "conversationId": "d2886b39-1fa1-4a48-a14d-36cc935e3a3d",
+            "messageIds": [
+              "e2334a08-ace8-4203-81d6-1d79bd8c7c0e",
+              "43591201-a414-4fcb-9310-ff0bdeb4805f"
+            ]
+          },
+          {
+            "conversationId": "35bd1415-4c8e-4a5a-8782-5705b99d0d9e",
+            "messageIds": [
+              "c4dfffed-5eb0-44c3-85fe-a5b20704b6f7",
+              "63799c74-3b70-4643-8642-1b6d265ada03"
+            ]
+          },
+          {
+            "conversationId": "fcf95b8c-e994-4400-a4d1-740649852c13",
+            "messageIds": [
+              "ae6d5658-ea00-43c4-a6c7-a2c195c2da18",
+              "33939f73-4c61-47ea-8dcd-83247eb5a949"
+            ]
+          }
+        ],
+        "visitIds": [
+          "a3160e2b-a0ca-4946-b721-51345fd89d83",
+          "d2470be7-20d5-4e55-991e-8da344aec386"
+        ]
+      },
+      {
+        "customerId": "38203dfa-8f77-4310-aa88-ad62024efd93",
+        "conversations": [
+          {
+            "conversationId": "865d99d3-e1a2-4c60-96e9-f891e12d8b33",
+            "messageIds": [
+              "7c5ae2f9-a3a9-401a-bd68-d271c31f3b90",
+              "dd14066b-b8a9-499a-b24e-6930b555c10a"
+            ]
+          },
+          {
+            "conversationId": "3c081bdc-6cc7-4214-ae6d-a9bd9a4b6f44",
+            "messageIds": [
+              "b58ccf3b-48ed-434a-8e97-38f21c00787c",
+              "dd84825f-04e6-4008-bae9-f9e06b490d85"
+            ]
+          },
+          {
+            "conversationId": "0b538885-68f8-446b-9ed2-34169d925610",
+            "messageIds": [
+              "a5c3c772-f788-4212-bd79-abca828107d9",
+              "f7b9e1de-6a6a-4ca2-b873-041239b38a46"
+            ]
+          },
+          {
+            "conversationId": "27bcde3f-e20d-490c-9746-f61083321bea",
+            "messageIds": [
+              "35c5aaf2-5f04-49f4-84f2-c74babc0927b",
+              "906e6006-9ca5-40f9-ab80-ba17716988ef"
+            ]
+          },
+          {
+            "conversationId": "10d09db4-f6af-4b15-9004-52c1298dd25d",
+            "messageIds": [
+              "4b0f9da4-bfc3-414b-9c17-7bb7dfc06ffb",
+              "5327a5c1-e902-484f-a1b0-53b5e72ec28c"
+            ]
+          }
+        ],
+        "visitIds": [
+          "f9531180-6e19-4678-ad26-20862a71cf14",
+          "317c434a-0e5f-4b87-8db2-dc1889472635"
+        ]
+      },
+      {
+        "customerId": "809caf2a-398a-49e8-be9b-90a9a6f45d6c",
+        "conversations": [
+          {
+            "conversationId": "b463f005-6670-4eeb-a453-9e1acf499d1b",
+            "messageIds": [
+              "2f0f1bdf-5139-4d69-a125-96ac62332a26",
+              "c84821fe-dee3-411d-a772-fc594b7af10d"
+            ]
+          },
+          {
+            "conversationId": "bf953e0a-53c4-4d18-9025-4c4f20845192",
+            "messageIds": [
+              "dae9c98f-b97f-4553-ac72-d754a2eb17fe",
+              "3c040054-eb81-4df4-b0d1-cbe4f0d90faf"
+            ]
+          },
+          {
+            "conversationId": "4404380f-fa46-43b2-b725-946c77595ed9",
+            "messageIds": [
+              "633391a8-4e91-441c-ab06-cd58d7707f55",
+              "76c0723b-65c5-4652-bbd0-6e96b5867cf0"
+            ]
+          },
+          {
+            "conversationId": "d19e2062-cd36-498b-b5d8-e14f7426bf6e",
+            "messageIds": [
+              "ec7b626d-0ad4-4771-8fbf-53d25dc027d6",
+              "c6f03ee7-a42e-494a-b2f2-edda29a83a68"
+            ]
+          },
+          {
+            "conversationId": "231aec33-eff6-49e7-9a27-eb9313260f43",
+            "messageIds": [
+              "286d1c70-9ce3-47e9-96f1-2dfcde3317d6",
+              "86817df3-5bca-4135-997c-7dbdf7052e8c"
+            ]
+          }
+        ],
+        "visitIds": [
+          "efc9591f-0634-480d-9f75-ea29977c6941",
+          "b991ffe1-e322-4690-b0f0-f74d3493183a"
+        ]
+      },
+      {
+        "customerId": "8572da40-bb62-4bac-a6f2-61a53a2d671f",
+        "conversations": [
+          {
+            "conversationId": "1a43f5d6-9a81-48fb-9ddc-c2506cbfa053",
+            "messageIds": [
+              "acd61234-81ca-4391-9912-30f29ad459a9",
+              "5bcff869-c295-4c0d-8a73-f1eb79ad4a64"
+            ]
+          },
+          {
+            "conversationId": "cf62c912-3190-4d82-b571-648bcac5457f",
+            "messageIds": [
+              "e1b848b8-2c83-4d05-bfbb-0815bd488987",
+              "369a0d0c-fe2c-478b-83f0-bcb04abb3d2a"
+            ]
+          },
+          {
+            "conversationId": "304bb552-1d81-47db-ba32-a8cbdce7cd14",
+            "messageIds": [
+              "e3da33e9-2814-4fb1-b447-429b7fed8cc8",
+              "24266075-92cd-4faa-816b-729e512cf5e3"
+            ]
+          },
+          {
+            "conversationId": "14e90c63-8623-4d23-9862-3f051105f677",
+            "messageIds": [
+              "bfdc8cfd-5f9b-457a-b87b-0f2fe261cbe5",
+              "be888abb-990c-41a0-8446-49e9da58a338"
+            ]
+          },
+          {
+            "conversationId": "9bc8f5cc-39a3-4761-94da-133e6ba3b376",
+            "messageIds": [
+              "4444f4ef-29a5-4681-942a-de320a131080",
+              "9a794cf9-c083-4c8f-9e27-032367c0ee95"
+            ]
+          }
+        ],
+        "visitIds": [
+          "9169a1da-80f8-4fdb-971b-a2d7ec9d9230",
+          "bf9c42b7-5295-4e48-9ef9-17c6730446a0"
+        ]
+      },
+      {
+        "customerId": "029ea2b1-6137-42ca-8dde-2d19443e9904",
+        "conversations": [
+          {
+            "conversationId": "4f3471c0-c5fa-4416-92b8-423877ec4a4d",
+            "messageIds": [
+              "b08325c4-ac44-42e3-8b90-aca01660edee",
+              "9a171db0-815e-4760-8134-8fb2244f90e3"
+            ]
+          },
+          {
+            "conversationId": "d84e3762-010b-4963-9831-e9b026f8d137",
+            "messageIds": [
+              "0b4bdffe-c752-4878-b887-685cf98ef8d3",
+              "bfc791b3-2653-4312-ae7c-cbdf92e6e001"
+            ]
+          },
+          {
+            "conversationId": "bd00c01b-d884-4a5e-9b10-9a039882754b",
+            "messageIds": [
+              "3fd393a1-0898-4cfd-b938-158c9a887555",
+              "dbac87f3-3dfe-4e01-a65c-4d1fed6492ac"
+            ]
+          },
+          {
+            "conversationId": "c277e134-acf4-4b5d-8b00-7fc6995bff6d",
+            "messageIds": [
+              "b8e04691-7aa6-4ceb-a760-090e7f297862",
+              "d381049a-c485-4a66-9c14-e907cb98cc46"
+            ]
+          },
+          {
+            "conversationId": "797da0c7-af9d-429c-83ca-9df362fb997f",
+            "messageIds": [
+              "5990e48b-ef22-4d96-b355-d5a2da8e0fd9",
+              "2d3e693f-702e-4ec4-9766-836691a8f453"
+            ]
+          }
+        ],
+        "visitIds": [
+          "cf85a9b7-f691-4729-982f-1fd569143567",
+          "371719df-455a-4fa7-9d41-acd6d094d653"
+        ]
+      },
+      {
+        "customerId": "997fc685-5689-4680-b29f-fe1e4699a035",
+        "conversations": [
+          {
+            "conversationId": "2d7be413-92c0-4e7a-9f3f-2a663dc80fdb",
+            "messageIds": [
+              "0050a3c1-955a-4bd3-b576-073e36822c2d",
+              "b6f58b73-b0a0-43ed-9965-adff77d5940d"
+            ]
+          },
+          {
+            "conversationId": "4a39e006-83a5-4844-bb6c-75d0967258a0",
+            "messageIds": [
+              "78a8e88a-8d5e-44b7-9df7-86bd0703499b",
+              "dbbaf274-8520-4a15-b812-a665e625bdf6"
+            ]
+          },
+          {
+            "conversationId": "967d3cb7-8b3c-4cfe-878f-a5778c4dd14d",
+            "messageIds": [
+              "ba1d5240-b91f-45e8-97bb-1505e7eca607",
+              "58b6f4e4-d56e-4b48-8301-7a5b6ea843bb"
+            ]
+          },
+          {
+            "conversationId": "d002cd04-2323-49ec-b214-c904c0874565",
+            "messageIds": [
+              "7010a95b-3831-4dde-b589-2b5ab380a478",
+              "8402f982-79c4-4f69-a3f7-943c04e6c55b"
+            ]
+          },
+          {
+            "conversationId": "ddfef6b8-62bf-4f4b-988e-f07bbbc771be",
+            "messageIds": [
+              "899a4318-b20f-4742-8dd1-8c1304b31d68",
+              "0b500378-f82e-4b69-93e3-9cbb8b2385e9"
+            ]
+          }
+        ],
+        "visitIds": [
+          "04b15cee-860b-466e-80c1-db59ba42cdda",
+          "ecb69724-8668-4f1c-b52f-7a2c8fcc0634"
+        ]
+      },
+      {
+        "customerId": "5e3e2c33-c714-4d7a-9c54-50cf046cb846",
+        "conversations": [
+          {
+            "conversationId": "1a2bbe23-d8c8-4beb-9504-74f62407d821",
+            "messageIds": [
+              "3c0a886e-28cd-4608-8677-30db027ce8e4",
+              "c1303903-1f4c-4612-b024-4e2603a7a7db"
+            ]
+          },
+          {
+            "conversationId": "7c825d3a-2844-49b4-815a-c30d3ac91269",
+            "messageIds": [
+              "2941c2c0-1f3a-4105-b1b3-dffe9a327c9c",
+              "0dbcc924-5eac-4734-b13e-3da700df7bfe"
+            ]
+          },
+          {
+            "conversationId": "7da0f67e-b86d-41f5-ad99-cec2c2a7acec",
+            "messageIds": [
+              "88565490-a9bf-4c9b-95b2-eee32271b9d7",
+              "0269fc1d-3ad9-4157-b8fb-8bed1b03248e"
+            ]
+          },
+          {
+            "conversationId": "ea246bfc-79cf-4c91-aa4d-5f88795848dd",
+            "messageIds": [
+              "f67f54ed-2cfa-4a68-9ecb-0f8b9b22b5a4",
+              "8556890e-be25-4df6-b46a-fc5f4fa8d161"
+            ]
+          },
+          {
+            "conversationId": "d7dbbd1c-58c5-463a-9bc7-46f3b354a4dc",
+            "messageIds": [
+              "e84e5da2-b04b-4d8f-8bbd-d40d92bd84db",
+              "77c0f385-f7ec-4e5c-af3f-12f377d56515"
+            ]
+          }
+        ],
+        "visitIds": [
+          "6e4304fa-9bec-4803-8d59-815c81174b38",
+          "3dbd143c-d00f-46ac-9d40-857f5d52783a"
+        ]
+      },
+      {
+        "customerId": "63f5be40-ccca-47d1-b6c2-96f29393f0f2",
+        "conversations": [
+          {
+            "conversationId": "a825c9ee-0064-4b8f-8bff-b84176f8be89",
+            "messageIds": [
+              "27e92a83-3786-46a4-b275-0e191a1b5532",
+              "20a47e52-3076-497c-b730-90916a6455d5"
+            ]
+          },
+          {
+            "conversationId": "075bc89d-90e4-49e2-a73f-f3426b5e113e",
+            "messageIds": [
+              "97ac1256-37c9-4c02-86d5-6ca8ef622c17",
+              "258a928f-9308-4da0-a457-7763d83c5034"
+            ]
+          },
+          {
+            "conversationId": "8f249623-6efb-42fd-98e6-2b582516a40d",
+            "messageIds": [
+              "0d913001-41a1-4c56-84de-b454176c53c5",
+              "ad06e38a-0b76-4069-aef9-3e4a4fe641e3"
+            ]
+          },
+          {
+            "conversationId": "b5f4d7a6-5543-4ac1-842c-b63d7478fa54",
+            "messageIds": [
+              "d5ee1835-0cd1-4559-9415-a806b9f63420",
+              "9e410a88-e8a3-4504-89a1-6eac28bd5a48"
+            ]
+          },
+          {
+            "conversationId": "9fe31f5c-4ae3-4146-8e2f-c470ea5447b3",
+            "messageIds": [
+              "2b9ab719-0821-4548-8fdd-88e68e0d8ba4",
+              "174b9e4c-ab0d-4db5-a0d6-d4028c1d7cab"
+            ]
+          }
+        ],
+        "visitIds": [
+          "0c431319-3d6d-481c-a30c-d4826030dfc5",
+          "b47d85ff-bb3f-4c5b-b1b6-3550091ee8c4"
+        ]
+      },
+      {
+        "customerId": "71d15941-b669-43be-9025-59d1ed59637f",
+        "conversations": [
+          {
+            "conversationId": "48b79c1e-3549-4fcf-b80a-786ba24fb167",
+            "messageIds": [
+              "c8edee4d-0732-4733-b098-e388868b9fed",
+              "2ddda3ba-01bd-4c3b-acf0-ecf1d213416a"
+            ]
+          },
+          {
+            "conversationId": "6bab22b7-b5c9-4ffe-93b2-00a0506dca21",
+            "messageIds": [
+              "0c65035a-88d0-4c0a-89ae-70b565d44535",
+              "fe881bbb-4600-4be4-a2ea-7d1a2935c88b"
+            ]
+          },
+          {
+            "conversationId": "3c28e3cd-bc4b-484d-b0c6-24b93debe3c4",
+            "messageIds": [
+              "7f667d00-1779-47aa-bb18-be87d3f992fd",
+              "bbac07ef-794d-4edb-854f-70ca68eee591"
+            ]
+          },
+          {
+            "conversationId": "9bd07160-c0a6-41c4-af4a-ebe046cce734",
+            "messageIds": [
+              "6f8bd4e7-af70-415c-beb4-02697eff250b",
+              "36fc1050-b758-4b0c-9fa7-b677449fa824"
+            ]
+          },
+          {
+            "conversationId": "f0bdf207-0bd0-42fc-80df-326a2db46824",
+            "messageIds": [
+              "f82b5300-b59e-4cd3-ab9e-c0a9255a9184",
+              "b27d0e29-804d-4e04-a021-fce842c0662d"
+            ]
+          }
+        ],
+        "visitIds": [
+          "fc8606c9-d570-431b-90f9-a6e0cbe0a9fa",
+          "9c589bc9-f3c9-42c5-94ba-21fb1cd51102"
+        ]
+      },
+      {
+        "customerId": "f764000b-6da4-4234-978e-78a7f744ffaf",
+        "conversations": [
+          {
+            "conversationId": "0590da6f-8e20-415a-aea4-b471838f517d",
+            "messageIds": [
+              "ea1bd266-2a2a-492e-9f1c-88554ccc0774",
+              "8722f6e7-3a3c-4719-8a36-d76c8ab368ea"
+            ]
+          },
+          {
+            "conversationId": "d6532c1c-3361-41cb-b19b-53b4675beb5b",
+            "messageIds": [
+              "2e300150-e13c-4472-b3f8-1fce2076e15b",
+              "88032b68-0b62-41ea-981d-348c0306ac10"
+            ]
+          },
+          {
+            "conversationId": "b8685a53-fb67-4842-82e4-81796ed25cb1",
+            "messageIds": [
+              "b744183b-cd4c-410b-8b10-27767c6a4943",
+              "b9062079-6873-4251-9cea-0970b851f511"
+            ]
+          },
+          {
+            "conversationId": "f54fb499-d009-4cce-9185-f4355a7a7546",
+            "messageIds": [
+              "581b302d-5c24-42b1-8545-f9dfdedc2685",
+              "d824b57d-e587-4f61-96bd-4965d38b2757"
+            ]
+          },
+          {
+            "conversationId": "bbda09fd-fca8-4ac3-a79b-0aacf4f6c77c",
+            "messageIds": [
+              "f9712c90-7177-400d-a12e-9cefc1435a91",
+              "ede9c3e1-b2e3-4dd5-b6d9-f38f4287b149"
+            ]
+          }
+        ],
+        "visitIds": [
+          "2044f6f5-4cd8-42f3-8120-701fbb0d4c99",
+          "d4c16843-88c4-4003-ae28-a2ea60708c18"
+        ]
+      },
+      {
+        "customerId": "1212e672-7b8c-4c17-bdd2-87353070f8e3",
+        "conversations": [
+          {
+            "conversationId": "33d753f6-0f74-4543-8b16-66cea2514c49",
+            "messageIds": [
+              "3b0919de-88af-44f2-83cf-00ca1544fe1c",
+              "5066ed73-bd96-43c3-879f-8f8a84769961"
+            ]
+          },
+          {
+            "conversationId": "7b548bca-3fc2-4475-9745-fce40db6552a",
+            "messageIds": [
+              "2093b1a3-58f3-4a0b-a39e-8b5524642498",
+              "42996e38-0b4d-4612-ae17-83a8a89fb1b1"
+            ]
+          },
+          {
+            "conversationId": "57cffd14-4c50-456a-9cd4-9937f995efc3",
+            "messageIds": [
+              "48441464-219b-4f44-9ebb-6075c3153daa",
+              "44d86b6e-d3f4-45c7-a5d9-d9026238ca94"
+            ]
+          },
+          {
+            "conversationId": "b88f22b8-b761-4a1f-ba07-dd10e13c20fc",
+            "messageIds": [
+              "b01cf20c-5a09-42a9-9f4b-2ddfa1291631",
+              "06630658-7a28-4efb-a473-4cd149167ab6"
+            ]
+          },
+          {
+            "conversationId": "35bce06f-9003-4053-9199-38de7b29158d",
+            "messageIds": [
+              "bd0b1a77-1c5e-4447-8ba9-fb6efce841c4",
+              "e661c77a-ca91-4082-a5a6-a9b772ea2e78"
+            ]
+          }
+        ],
+        "visitIds": [
+          "dedbecbd-0646-4b39-9aad-52b42906f1d7",
+          "c1b2d5ca-1014-46a1-927d-30ffe0a5a69e"
+        ]
+      },
+      {
+        "customerId": "ac981ed8-cddf-4a3f-b418-39bee8ac54cf",
+        "conversations": [
+          {
+            "conversationId": "0e700b26-811e-445a-acf0-0f72ace72e5f",
+            "messageIds": [
+              "c09f7a5a-474c-43b5-8e1b-29a58de976d2",
+              "84aae4a4-f17f-424a-a4c6-57a39e5bd3b3"
+            ]
+          },
+          {
+            "conversationId": "ac8f3095-5313-4911-812c-263e7b1e3fb3",
+            "messageIds": [
+              "e0226144-184e-416e-aaa9-0ad7d6d26092",
+              "d0a7765a-7baa-4ad2-a9e8-af49c5839d05"
+            ]
+          },
+          {
+            "conversationId": "f0a77741-a2c0-4fa6-8215-8d2703331e92",
+            "messageIds": [
+              "6e18cad6-f592-434b-a34f-1989ea68ed29",
+              "8d7b7889-64d1-4385-8584-3dc9a85f24f8"
+            ]
+          },
+          {
+            "conversationId": "b5e407a8-4c4a-47b1-8087-4b32b1a79305",
+            "messageIds": [
+              "fa94f1b5-6388-4cf3-96f9-4321f2b2bbd3",
+              "242b4f83-d8dd-420d-b8b6-0bf0472300a3"
+            ]
+          },
+          {
+            "conversationId": "a2f43ada-c639-4f5c-8b86-9c50e10a7266",
+            "messageIds": [
+              "52a08e29-8a3f-41cb-b6ef-8fd9d0d37d13",
+              "ad9618a2-df43-486d-b67d-5bb28bbdf069"
+            ]
+          }
+        ],
+        "visitIds": [
+          "9e971190-6b5d-4a02-bf5b-7ff8baaf05eb",
+          "cb682b57-0ac5-40fb-b162-a5c5dc1ea733"
+        ]
+      },
+      {
+        "customerId": "7f5ae928-bd78-4e8c-a30f-70221ea84d3d",
+        "conversations": [
+          {
+            "conversationId": "041e1d9b-cfae-4bd5-8bc7-7da28bc4f9ab",
+            "messageIds": [
+              "7d7c6172-db47-47c8-8c4b-68f190baa587",
+              "23e6f178-2b14-4189-8960-6a283b659c4d"
+            ]
+          },
+          {
+            "conversationId": "ce604743-5a8a-48c7-bfee-1abb44ae8cc6",
+            "messageIds": [
+              "0b4d4da2-e9f8-4ee9-ad5b-41f2d6a74325",
+              "22877716-666f-4c9f-ad7f-9b71763163e0"
+            ]
+          },
+          {
+            "conversationId": "8ccb8891-7895-4471-9b30-a2c2bbc6f598",
+            "messageIds": [
+              "8803f887-077e-45f9-84da-9e2a3af7c376",
+              "60285c04-d5d4-4289-a03d-93efa1793a4f"
+            ]
+          },
+          {
+            "conversationId": "7454cd87-1e61-4071-b949-7601861a2c91",
+            "messageIds": [
+              "5e4278e9-e62f-4306-963e-c23b9e8d2915",
+              "4e6ea8f1-36e8-4f9f-83bd-d8a086917b06"
+            ]
+          },
+          {
+            "conversationId": "fd30918d-b8b4-440d-8809-554e4c6ffb7b",
+            "messageIds": [
+              "98bb6067-0695-43df-9a13-1f7d7d462db9",
+              "b91311a1-0c15-4991-8de9-df20c0631e4c"
+            ]
+          }
+        ],
+        "visitIds": [
+          "7266a4fa-08ac-41b9-8e3d-31b5403df661",
+          "8725fe0d-dbc8-4491-b76f-18aa1a4858d2"
+        ]
+      },
+      {
+        "customerId": "6a1278a9-5d28-4a71-a570-4c97966844f9",
+        "conversations": [
+          {
+            "conversationId": "ebc91172-4aba-46b7-9d1b-267f020ea220",
+            "messageIds": [
+              "9ee1f297-f38f-41ab-90c3-6b26cb498fb4",
+              "f8ffdd53-cc5d-4c48-9804-af01d3dc8aa8"
+            ]
+          },
+          {
+            "conversationId": "0b1069d0-9083-4773-ad27-112dff1a8ccd",
+            "messageIds": [
+              "3b90b6bc-9420-42cf-8169-7e360060aa07",
+              "b2b6a785-4aeb-4103-b80c-ce46ef48bf8d"
+            ]
+          },
+          {
+            "conversationId": "7fbbeb28-62bd-4ebf-a918-64daf827a7e5",
+            "messageIds": [
+              "d52bac7e-932f-48e3-87c1-2b3d417a2822",
+              "4f996296-4149-48dc-887f-d87fd501a6e9"
+            ]
+          },
+          {
+            "conversationId": "b3b95047-1588-4b0c-b678-d5e5f732f2d6",
+            "messageIds": [
+              "331021a2-5f89-41d1-b476-1753c3b82fc2",
+              "d9f74874-dc60-4b96-93fc-124f04ceb8f5"
+            ]
+          },
+          {
+            "conversationId": "ae620af9-6248-406b-a0f9-2ca929aac5e4",
+            "messageIds": [
+              "0194b8bb-1d09-4125-885a-ac8eb802bf9c",
+              "cb60e844-4706-4862-bf57-302da240294b"
+            ]
+          }
+        ],
+        "visitIds": [
+          "d0f8eea3-edf0-4e6f-93e2-138630b7fc1e",
+          "726796bf-ab40-4d64-87af-5703416e0e5e"
+        ]
+      },
+      {
+        "customerId": "6042855d-89dc-4e52-b134-b4d920de5df6",
+        "conversations": [
+          {
+            "conversationId": "be7371be-519c-40ca-ae6b-00ef777348be",
+            "messageIds": [
+              "fb948af4-38a5-4d27-9150-f401fc3963e7",
+              "530eecf5-e83f-45c1-89f4-3458b3a61788"
+            ]
+          },
+          {
+            "conversationId": "99d4f8d2-32e9-476a-ae52-8da792a345f5",
+            "messageIds": [
+              "71cb6d77-be8a-4660-bcb6-648b04dd89f0",
+              "0bd5b137-a009-44d6-a85d-f542088513e7"
+            ]
+          },
+          {
+            "conversationId": "522edba1-d8b5-4e98-9886-904268944bd8",
+            "messageIds": [
+              "9b633e60-4cee-4924-899c-f7d87a5981fd",
+              "4f1794dc-acbb-47e7-a885-7c0cce942feb"
+            ]
+          },
+          {
+            "conversationId": "f316b4a9-d3de-46b8-adf9-aba093e00527",
+            "messageIds": [
+              "31edca63-5162-4f03-ac1a-d0b7dbb6b2a3",
+              "7f239b65-5cf6-4992-b65d-8aaec3f2c842"
+            ]
+          },
+          {
+            "conversationId": "5427fbe7-2ba5-477b-9210-61f5466eaa98",
+            "messageIds": [
+              "9dc2c849-4c23-4576-bd2e-88062a4f2dd8",
+              "57052de0-c6da-4e14-b06b-81df70c7c10e"
+            ]
+          }
+        ],
+        "visitIds": [
+          "2c8e5629-04cc-4469-a03a-2ebf7c4df7e3",
+          "b8603914-a6a7-429e-9ca7-2c43f6bce456"
+        ]
+      }
+    ]
+  }
+]

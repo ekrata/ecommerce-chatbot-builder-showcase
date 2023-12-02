@@ -13,12 +13,10 @@ export function analyticsStack({ app, stack }: StackContext) {
       'packages/functions/app/api/src/analytics/monthly/list.handler',
     'GET /orgs/{orgId}/analytics/daily':
       'packages/functions/app/api/src/analytics/daily/list.handler',
-    'POST /analytics/create-hourly-analytic':
-      'packages/functions/app/api/src/analytics/createHourlyAnalytic.handler',
+    'POST /analytics/create-daily-analytic':
+      'packages/functions/app/api/src/analytics/createDailyAnalytic.handler',
     'POST /analytics/combine-analytics':
       'packages/functions/app/api/src/analytics/combineAnalytics.handler',
-    'POST /analytics/combine-into-daily-analytic':
-      'packages/functions/app/api/src/analytics/combineIntoDailyAnalytic.handler',
     'POST /analytics/combine-into-weekly-analytic':
       'packages/functions/app/api/src/analytics/combineIntoWeeklyAnalytic.handler',
     'POST /analytics/combine-into-monthly-analytic':
@@ -32,7 +30,7 @@ export function analyticsStack({ app, stack }: StackContext) {
   });
 
   const combineIntoDailyAnalytic = new Cron(stack, 'combineIntoDailyAnalytic', {
-    schedule: 'rate(1 hour)',
+    schedule: 'rate(1 day)',
     job: 'packages/functions/app/api/src/analytics/combineIntoDailyAnalytic.handler',
     enabled: !app.local,
   });
@@ -41,7 +39,7 @@ export function analyticsStack({ app, stack }: StackContext) {
     stack,
     'combineIntoWeeklyAnalytic',
     {
-      schedule: 'rate(1 week)',
+      schedule: 'rate(7 days)',
       job: 'packages/functions/app/api/src/analytics/combineIntoWeeklyAnalytic.handler',
       enabled: !app.local,
     },
@@ -51,7 +49,7 @@ export function analyticsStack({ app, stack }: StackContext) {
     stack,
     'combineIntoMonthlyAnalytic',
     {
-      schedule: 'rate(1 month)',
+      schedule: 'rate(30 days)',
       job: 'packages/functions/app/api/src/analytics/combineIntoMonthlyAnalytic.handler',
       enabled: !app.local,
     },
