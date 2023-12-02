@@ -12,7 +12,12 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Analytic, AnalyticConversations } from '@/entities/analytics';
+import {
+  Analytic,
+  AnalyticConversations,
+  AnalyticCsat,
+  AnalyticNps,
+} from '@/entities/analytics';
 import { CreateAnalytic, CreateArticle } from '@/entities/entities';
 import { Org } from '@/entities/org';
 import * as Sentry from '@sentry/serverless';
@@ -67,12 +72,20 @@ export const handler = Sentry.AWSLambda.wrapHandler(
             )
             .go({ limit: 500 });
 
+          if (!conversations?.data) {
+            return;
+          }
+
+          let csatRatingsSum: {
+            [question: string]: { rating: RatingCount; respondents: number };
+          } = {};
+          let npsRatingSum: {
+            [question: string]: { rating: RatingCount; respondents: number };
+          } = {};
+
           let analyticData: Required<
-            AnalyticConversations & {
-              npsTotal: RatingCount;
-              npsCount?: number;
-              csatTotal: RatingCount;
-              csatCount?: number;
+            AnalyticConversations & { csat: AnalyticCsat } & {
+              nps: AnalyticNps;
             }
           > = {
             topics: {
@@ -101,26 +114,12 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               unassignedCount: 0,
               unassignedSecondsAvg: 0,
             },
-            csatCount: 0,
-            csatTotal: {
-              1: 0,
-              2: 0,
-              3: 0,
-              4: 0,
-              5: 0,
-            },
-            npsCount: 0,
-            npsTotal: {
-              1: 0,
-              2: 0,
-              3: 0,
-              4: 0,
-              5: 0,
-            },
+            csat: [],
+            nps: [],
           };
 
           conversations?.data.forEach((curr) => {
-            console.log('curr', curr);
+            // console.log('curr', curr);
             switch (curr?.topic) {
               case 'orderIssues': {
                 analyticData.topics.orderIssues += 1;
@@ -179,76 +178,78 @@ export const handler = Sentry.AWSLambda.wrapHandler(
               analyticData.avgWaitTime.openCount += 1;
             }
 
-            if (curr.feedback?.nps?.ratings) {
-              analyticData.npsTotal = _.assignWith(
-                {},
-                analyticData?.npsTotal,
-                curr.feedback?.nps?.ratings as RatingCount,
-                _.add,
-              );
-              analyticData.npsCount += 1;
+            if (curr?.feedback?.csat?.questionsRating != null) {
+              curr?.feedback?.csat.questionsRating.forEach((feedback) => {
+                if (feedback?.question && feedback.ratings) {
+                  csatRatingsSum[feedback.question] = {
+                    respondents:
+                      csatRatingsSum[feedback.question]?.respondents != null
+                        ? csatRatingsSum[feedback.question]?.respondents + 1
+                        : 1,
+                    rating:
+                      csatRatingsSum[feedback.question]?.rating != null
+                        ? _.assignWith(
+                            {},
+                            csatRatingsSum[feedback.question].rating,
+                            feedback.ratings,
+                            _.add,
+                          )
+                        : feedback.ratings,
+                  };
+                }
+              });
             }
 
-            if (curr?.feedback?.csat?.questionsRating != null) {
-              analyticData.csatTotal = curr?.feedback?.csat?.questionsRating
-                .map((obj) => obj.ratings)
-                .reduce(
-                  (prev, curr) => {
-                    const nextTotal = _.assignWith(
-                      {},
-                      prev,
-                      curr as RatingCount,
-                      _.add,
-                    );
-                    analyticData.csatCount += 1;
-                    return nextTotal as RatingCount;
-                  },
-                  { ...(analyticData.csatTotal as RatingCount) },
-                ) as RatingCount;
+            if (curr?.feedback?.nps?.questionsRating != null) {
+              curr?.feedback?.nps?.questionsRating.forEach((feedback) => {
+                if (feedback?.question && feedback.ratings) {
+                  // initalize
+                  npsRatingSum[feedback.question] = {
+                    respondents:
+                      npsRatingSum[feedback.question]?.respondents != null
+                        ? npsRatingSum[feedback.question].respondents + 1
+                        : 1,
+                    rating:
+                      npsRatingSum[feedback.question]?.rating != null
+                        ? _.assignWith(
+                            {},
+                            npsRatingSum[feedback.question].rating,
+                            feedback.ratings,
+                            _.add,
+                          )
+                        : feedback.ratings,
+                  };
+                }
+              });
             }
           });
 
-          // // aggregate visitors
-          // const visits = await appDb.entities.visits.query
-          //   .byOrg({
-          //     orgId: org.orgId,
-          //   })
-          //   .where((visit, { between }) =>
-          //     between(new Date(visit.createdAt), startAt, new Date(dateNow)),
-          //   )
-          //   .go({ limit: 500 });
+          const csat = Object.entries(csatRatingsSum).map(([key, value]) => {
+            return {
+              question: key,
+              score: (value.rating[4] + value.rating[5]) / value.respondents,
+              respondents: value.respondents,
+            };
+          });
 
-          // const urls = visits?.data?.map((visit) => visit.url);
-          // const visitedUrlsFreq = _.maxBy(
-          //   _.map(_.groupBy(urls), (url) => ({
-          //     url: url[0],
-          //     number: url.length,
-          //     avg: url.length / urls.length,
-          //   })),
-          //   'number',
-          // );
+          const nps = Object.entries(npsRatingSum).map(([key, value]) => {
+            const promoters = value?.rating[5];
+            const detractors =
+              value?.rating[1] + value?.rating[2] + value?.rating[3];
+            const promoterPercentage =
+              (promoters - detractors) / value.respondents;
+            return {
+              question: key,
+              score: promoterPercentage,
+              respondents: value.respondents,
+            };
+          });
 
-          // if every user gave the highest score for every csat question
-          const csatMax = (analyticData.csatCount ?? 0) * 5;
+          // console.log(csatRatingsSum);
+          console.log(csat);
 
-          // add up all the ratings
-          const actualCsatScoreTotal =
-            analyticData.csatTotal[1] +
-            analyticData.csatTotal[2] +
-            analyticData.csatTotal[3] +
-            analyticData.csatTotal[4] +
-            analyticData.csatTotal[5];
-
-          const promoters = analyticData.npsTotal[5];
-          const passive = analyticData.npsTotal[4];
-          const detractors =
-            analyticData.npsTotal[1] +
-            analyticData.npsTotal[2] +
-            analyticData.npsTotal[3];
-
-          const totalNps = promoters + passive + detractors;
-          const promoterPercentage = promoters / totalNps;
-          const detractorPercentage = detractors / totalNps;
+          // console.log(npsRatingSum);
+          // console.log(nps);
 
           const createBody: CreateAnalytic = {
             orgId: org.orgId,
@@ -268,8 +269,8 @@ export const handler = Sentry.AWSLambda.wrapHandler(
                     (analyticData?.avgWaitTime?.openCount ?? 0) || undefined,
               },
             },
-            csat: actualCsatScoreTotal / csatMax || undefined,
-            nps: promoterPercentage - detractorPercentage || undefined,
+            csat,
+            nps,
           };
 
           console.log(createBody);

@@ -1,7 +1,6 @@
 import ApexCharts from 'apexcharts';
 
 export const AreaChart: React.FC = () => {
-
   window.addEventListener("load", function () {
     let options = {
       chart: {

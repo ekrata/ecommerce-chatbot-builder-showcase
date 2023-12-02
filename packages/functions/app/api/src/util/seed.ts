@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { add, sub } from 'date-fns';
+import { add, eachHourOfInterval, sub } from 'date-fns';
 import fs from 'fs';
 import pLimit from 'p-limit';
 import { Api, ApiHandler } from 'sst/node/api';
@@ -8,7 +8,7 @@ import { Config } from 'sst/node/config';
 import { Table } from 'sst/node/table';
 import { v4 as uuidv4 } from 'uuid';
 
-import { randomDate, repeat } from '@/src/helpers';
+import { repeat } from '@/src/helpers';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { faker } from '@faker-js/faker';
 import * as Sentry from '@sentry/serverless';
@@ -47,10 +47,29 @@ import { getHttp } from '../http';
 import { whatsappMessagesMock1 } from '../meta/whatsapp/mocks';
 import { MockArgs, mockArticleTitles, MockOrgIds, TestBotKey } from './';
 
+const limit = pLimit(2);
+
+const http = getHttp(`${Api.appApi.url}`);
+
 export interface SeedResponse {
   mockArgs: MockArgs;
   mockOrgIds: MockOrgIds[];
 }
+
+export const randomRating = () => {
+  const fakeRating = faker.helpers.arrayElement([1, 2, 3, 4, 5]);
+
+  const ratings = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  };
+
+  ratings[fakeRating as keyof typeof ratings] = 1;
+  return ratings;
+};
 
 export const handler = Sentry.AWSLambda.wrapHandler(
   ApiHandler(async () => {
@@ -67,9 +86,10 @@ export const handler = Sentry.AWSLambda.wrapHandler(
         mockArticleSearchPhraseFreq: 4,
         mockSearchPhrase: `30-Day returns`,
         mockArticleHighlightCount: 5,
-        mockAnalyticDaysCount: 1,
         mockConversationCountPerCustomer: 4,
         mockVisitsPerCustomer: 5,
+        mockStartDate: new Date('2023-08-01').getTime(),
+        mockEndDate: new Date('2023-12-01').getTime(),
         mockMessageCountPerConversation: 10,
       };
       const mockOrgIds: (Partial<MockOrgIds> | null)[] = await Promise.all(
@@ -101,8 +121,9 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
     mockConversationCountPerCustomer,
     mockVisitsPerCustomer,
     mockMessageCountPerConversation,
-    mockAnalyticDaysCount,
     mockBotCount,
+    mockStartDate,
+    mockEndDate,
     existingOperator,
   } = mockArgs;
   // org
@@ -110,8 +131,8 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
   try {
     const s3 = new S3Client(Config.REGION);
     const orgId = uuidv4();
-    const timeNow = Date.now();
-    const timeHourAgo = sub(timeNow, { hours: 1 }).getTime();
+    const endDate = mockEndDate ?? Date.now();
+    const startDate = mockStartDate ?? sub(endDate, { hours: 1 }).getTime();
     const createOrg: CreateOrg = {
       orgId,
       name: `Test corp ${orgIndex}`,
@@ -119,12 +140,12 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
       email: faker.internet.email(),
       planTier: 'plus',
       whatsappPhoneId: whatsappMessagesMock1.value.metadata.phone_number_id,
-      createdAt: timeHourAgo,
+      createdAt: startDate,
     };
     await db.entities.orgs.create(createOrg).go();
     const mockOrg: Partial<MockOrgIds> = {} as Partial<MockOrgIds>;
     mockOrg.orgId = orgId;
-    mockOrg.createdAt = timeHourAgo;
+    mockOrg.createdAt = startDate;
     mockOrg.lang = mockLang;
     const avatarKey = `${orgId}-configuration-botLogo`;
     const logoKey = `${orgId}-configuration-logo`;
@@ -315,7 +336,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
       email: 'ekrata.adm1n@gmail.com',
       orgId,
       online: false,
-      createdAt: Date.now(),
+      createdAt: startDate,
       name: 'Sarah',
       language: '',
       permissionTier: 'admin',
@@ -330,7 +351,7 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
       email: 'ekrata.moderator@gmail.com',
       online: false,
       operatorId: moderatorOperatorId,
-      createdAt: Date.now(),
+      createdAt: startDate,
       name: 'David',
       language: '',
       permissionTier: 'moderator',
@@ -346,8 +367,8 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
         .upsert({
           ...existingOperator,
           orgId: orgId,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
+          createdAt: startDate,
+          updatedAt: startDate,
         })
         .go();
       mockOrg.mockGoogleAccountUserId = existingOperator.operatorId;
@@ -359,234 +380,303 @@ export const seed = async (db: AppDb, mockArgs: MockArgs, orgIndex: number) => {
 
     mockOrg.customers = await Promise.all(
       [...Array(mockCustomerCount)].map(async (_, i) => {
-        const customerId = uuidv4();
-        const operator = faker.helpers.arrayElement(operators.data);
-        const createCustomer: CreateCustomer = {
-          customerId,
-          orgId,
-          email: faker.internet.email(),
-          profilePicture: faker.image.people(),
-          ip: faker.internet.ipv4(),
-          locale: 'en-US',
-          timezone: faker.address.timeZone(),
-          userAgent: faker.internet.userAgent(),
-          online: faker.datatype.boolean(),
-          omniChannelSource: faker.helpers.arrayElement(conversationChannel),
-          phone: faker.phone.number('501-###-###'),
-          whatsappPhoneId:
-            i === 0 ? whatsappMessagesMock1.value.messages?.[0]?.from : '',
-        };
+        return limit(async () => {
+          const customerId = uuidv4();
+          const operator = faker.helpers.arrayElement(operators.data);
+          const createCustomer: CreateCustomer = {
+            customerId,
+            orgId,
+            email: faker.internet.email(),
+            profilePicture: faker.image.people(),
+            ip: faker.internet.ipv4(),
+            locale: 'en-US',
+            timezone: faker.address.timeZone(),
+            userAgent: faker.internet.userAgent(),
+            online: faker.datatype.boolean(),
+            omniChannelSource: faker.helpers.arrayElement(conversationChannel),
+            phone: faker.phone.number('501-###-###'),
+            whatsappPhoneId:
+              i === 0 ? whatsappMessagesMock1.value.messages?.[0]?.from : '',
+          };
 
-        const visitIds = await Promise.all(
-          [...Array(mockVisitsPerCustomer)].map(async () => {
-            const visitId = uuidv4();
-            const createVisit: CreateVisit = {
-              orgId: mockOrg.orgId ?? '',
-              visitId,
-              customerId,
-              at: faker.date.recent().getTime(),
-              url: `${visitedBaseUrl}/${faker.internet.domainWord()}`,
-            };
-            await db.entities.visits.create(createVisit).go();
-            return visitId;
-          }),
-        );
+          const visitIds = await Promise.all(
+            [...Array(mockVisitsPerCustomer)].map(async () => {
+              const visitId = uuidv4();
+              const createVisit: CreateVisit = {
+                orgId: mockOrg.orgId ?? '',
+                visitId,
+                customerId,
+                at: faker.date.recent().getTime(),
+                url: `${visitedBaseUrl}/${faker.internet.domainWord()}`,
+              };
+              await db.entities.visits.create(createVisit).go();
+              return visitId;
+            }),
+          );
 
-        // const visits = await db.entities.visits.put(visitBodies).go();
+          await db.entities.customers.create(createCustomer).go();
 
-        await db.entities.customers.create(createCustomer).go();
-
-        const conversations = (
-          await Promise.all(
-            [...Array(mockConversationCountPerCustomer)].map(
-              async (_, conversationIndex) => {
-                const conversationId = uuidv4();
-                const status = faker.helpers.arrayElement(conversationStatus);
-                const createConversation: CreateConversation = {
-                  conversationId,
-                  channel: faker.helpers.arrayElement(conversationChannel),
-                  topic: faker.helpers.arrayElement(conversationTopic),
-                  status,
-                  customerId,
-                  read: false,
-                  dismissed: false,
-                  orgId,
-                  createdAt: faker.date
-                    .between(new Date(timeHourAgo), new Date(timeNow))
-                    .getTime(),
-                  operatorId:
-                    status === 'unassigned' ? '' : operator.operatorId,
-                };
-
-                const conversation = await db.entities.conversations
-                  .create(createConversation)
-                  .go();
-
-                const adminOperatorCreatedAt = faker.date
-                  .between(new Date(timeHourAgo), new Date(timeNow))
-                  .getTime();
-
-                const adminConversation = await db.entities.conversations
-                  .create({
-                    orgId,
-                    operatorId: adminOperatorId,
-                    channel: faker.helpers.arrayElement(conversationChannel),
-                    topic: faker.helpers.arrayElement(conversationTopic),
-                    status,
-                    timeAtOpen: add(adminOperatorCreatedAt, {
-                      minutes: 5,
-                    }).getTime(),
-                    timeAtResolved: add(adminOperatorCreatedAt, {
-                      minutes: 25,
-                    }).getTime(),
-                    createdAt: adminOperatorCreatedAt,
-                    customerId,
-                    read: false,
-                    dismissed: false,
-                  })
-                  .go();
-
-                const moderatorConversation = await db.entities.conversations
-                  .create({
-                    orgId,
-                    operatorId: moderatorOperatorId,
+          const conversations = (
+            await Promise.all(
+              [...Array(mockConversationCountPerCustomer)].map(
+                async (_, conversationIndex) => {
+                  const conversationId = uuidv4();
+                  const status = faker.helpers.arrayElement(conversationStatus);
+                  const createConversation: CreateConversation = {
+                    conversationId,
                     channel: faker.helpers.arrayElement(conversationChannel),
                     topic: faker.helpers.arrayElement(conversationTopic),
                     status,
                     customerId,
                     read: false,
                     dismissed: false,
+                    orgId,
                     createdAt: faker.date
-                      .between(new Date(timeHourAgo), new Date(timeNow))
+                      .between(new Date(startDate), new Date(endDate))
                       .getTime(),
-                  })
-                  .go();
-
-                const ownerCreatedAt = faker.date
-                  .between(new Date(timeHourAgo), new Date(timeNow))
-                  .getTime();
-                const ownerConversation = await db.entities.conversations
-                  .create({
-                    orgId,
-                    operatorId: ownerOperatorId,
-                    channel: faker.helpers.arrayElement(conversationChannel),
-                    topic: faker.helpers.arrayElement(conversationTopic),
-                    status,
-                    customerId,
-                    read: false,
-                    dismissed: false,
-                    createdAt: ownerCreatedAt,
-                    timeAtOpen: add(ownerCreatedAt, {
-                      minutes: 5,
-                    }).getTime(),
-                    timeAtResolved: add(ownerCreatedAt, {
-                      minutes: 25,
-                    }).getTime(),
-                  })
-                  .go();
-
-                const operatorCreated = faker.date
-                  .between(new Date(timeHourAgo), new Date(timeNow))
-                  .getTime();
-
-                const operatorConversation = await db.entities.conversations
-                  .create({
-                    orgId,
-                    operatorId: existingOperator?.operatorId ?? '',
-                    channel: faker.helpers.arrayElement(conversationChannel),
-                    topic: faker.helpers.arrayElement(conversationTopic),
-                    status,
-                    customerId,
-                    read: false,
-                    dismissed: false,
-                    createdAt: operatorCreated,
-                    timeAtOpen: add(operatorCreated, {
-                      minutes: 5,
-                    }).getTime(),
-                    timeAtResolved: add(operatorCreated, {
-                      minutes: 25,
-                    }).getTime(),
+                    operatorId:
+                      status === 'unassigned' ? '' : operator.operatorId,
                     feedback: {
                       nps: {
-                        question:
-                          'How likely are you to recommend us to friends or colleagues?',
-                        ratings: {
-                          1: 0,
-                          2: 0,
-                          3: 0,
-                          4: 0,
-                          5: 0,
-                        },
+                        questionsRating: [
+                          {
+                            question:
+                              'How likely are you to recommend us to friends or colleagues?',
+                            ratings: randomRating(),
+                          },
+                        ],
                       },
                       csat: {
                         questionsRating: [
                           {
                             question: 'How was your experience?',
-                            ratings: {
-                              1: 0,
-                              2: 0,
-                              3: 0,
-                              4: 4,
-                              5: 0,
-                            },
+                            ratings: randomRating(),
                           },
                         ],
                       },
                     },
-                  })
-                  .go();
+                  };
 
-                return await Promise.all(
-                  [
-                    conversation.data,
-                    adminConversation.data,
-                    moderatorConversation.data,
-                    ownerConversation.data,
-                    operatorConversation.data,
-                  ].map(async (conversation) => {
-                    const { conversationId, createdAt } = conversation;
-                    const messageIds = await Promise.all(
-                      [...Array(mockMessageCountPerConversation)].map(
-                        async (_, messageIndex) => {
-                          const messageId = uuidv4();
-                          const before = new Date();
-                          // before.setHours(before.getHours() - 2);
-                          const createMessage: CreateMessage = {
-                            messageId,
-                            conversationId,
-                            orgId,
-                            customerId,
-                            sentAt: faker.date
-                              .between(createdAt ?? 0, new Date())
-                              .getTime(),
-                            createdAt: faker.date
-                              .between(createdAt ?? 0, new Date())
-                              .getTime(),
-                            content:
-                              conversationIndex === 0 && messageIndex === 0
-                                ? `${mockSearchPhrase} ${faker.lorem.lines()}`
-                                : faker.lorem.lines(),
-                            sender: faker.helpers.arrayElement(senderType),
-                            operatorId: conversation?.operatorId ?? '',
-                          };
-                          const data = await db.entities.messages
-                            .create(createMessage)
-                            .go();
-                          console.log(data);
-                          return messageId;
+                  const conversation = await db.entities.conversations
+                    .create(createConversation)
+                    .go();
+
+                  const adminOperatorCreatedAt = faker.date
+                    .between(new Date(startDate), new Date(endDate))
+                    .getTime();
+
+                  const adminConversation = await db.entities.conversations
+                    .create({
+                      orgId,
+                      operatorId: adminOperatorId,
+                      channel: faker.helpers.arrayElement(conversationChannel),
+                      topic: faker.helpers.arrayElement(conversationTopic),
+                      status,
+                      timeAtOpen: add(adminOperatorCreatedAt, {
+                        minutes: 5,
+                      }).getTime(),
+                      timeAtResolved: add(adminOperatorCreatedAt, {
+                        minutes: 25,
+                      }).getTime(),
+                      createdAt: adminOperatorCreatedAt,
+                      customerId,
+                      read: false,
+                      dismissed: false,
+                      feedback: {
+                        nps: {
+                          questionsRating: [
+                            {
+                              question:
+                                'How likely are you to recommend us to friends or colleagues?',
+                              ratings: randomRating(),
+                            },
+                          ],
                         },
-                      ),
-                    );
-                    return { conversationId, messageIds };
-                  }),
-                );
-              },
-            ),
-          )
-        ).flat();
-        return { customerId, conversations, visitIds };
+                        csat: {
+                          questionsRating: [
+                            {
+                              question: 'How was your experience?',
+                              ratings: randomRating(),
+                            },
+                          ],
+                        },
+                      },
+                    })
+                    .go();
+
+                  const moderatorConversation = await db.entities.conversations
+                    .create({
+                      orgId,
+                      operatorId: moderatorOperatorId,
+                      channel: faker.helpers.arrayElement(conversationChannel),
+                      topic: faker.helpers.arrayElement(conversationTopic),
+                      status,
+                      customerId,
+                      read: false,
+                      dismissed: false,
+                      createdAt: faker.date
+                        .between(new Date(startDate), new Date(endDate))
+                        .getTime(),
+                      feedback: {
+                        nps: {
+                          questionsRating: [
+                            {
+                              question:
+                                'How likely are you to recommend us to friends or colleagues?',
+                              ratings: randomRating(),
+                            },
+                          ],
+                        },
+                        csat: {
+                          questionsRating: [
+                            {
+                              question: 'How was your experience?',
+                              ratings: randomRating(),
+                            },
+                          ],
+                        },
+                      },
+                    })
+                    .go();
+
+                  const ownerCreatedAt = faker.date
+                    .between(new Date(startDate), new Date(endDate))
+                    .getTime();
+                  const ownerConversation = await db.entities.conversations
+                    .create({
+                      orgId,
+                      operatorId: ownerOperatorId,
+                      channel: faker.helpers.arrayElement(conversationChannel),
+                      topic: faker.helpers.arrayElement(conversationTopic),
+                      status,
+                      customerId,
+                      read: false,
+                      dismissed: false,
+                      createdAt: ownerCreatedAt,
+                      timeAtOpen: add(ownerCreatedAt, {
+                        minutes: 5,
+                      }).getTime(),
+                      timeAtResolved: add(ownerCreatedAt, {
+                        minutes: 25,
+                      }).getTime(),
+                      feedback: {
+                        nps: {
+                          questionsRating: [
+                            {
+                              question:
+                                'How likely are you to recommend us to friends or colleagues?',
+                              ratings: randomRating(),
+                            },
+                          ],
+                        },
+                        csat: {
+                          questionsRating: [
+                            {
+                              question: 'How was your experience?',
+                              ratings: randomRating(),
+                            },
+                          ],
+                        },
+                      },
+                    })
+                    .go();
+
+                  const operatorCreated = faker.date
+                    .between(new Date(startDate), new Date(endDate))
+                    .getTime();
+
+                  const operatorConversation = await db.entities.conversations
+                    .create({
+                      orgId,
+                      operatorId: existingOperator?.operatorId ?? '',
+                      channel: faker.helpers.arrayElement(conversationChannel),
+                      topic: faker.helpers.arrayElement(conversationTopic),
+                      status,
+                      customerId,
+                      read: false,
+                      dismissed: false,
+                      createdAt: operatorCreated,
+                      timeAtOpen: add(operatorCreated, {
+                        minutes: 5,
+                      }).getTime(),
+                      timeAtResolved: add(operatorCreated, {
+                        minutes: 25,
+                      }).getTime(),
+                      feedback: {
+                        nps: {
+                          questionsRating: [
+                            {
+                              question:
+                                'How likely are you to recommend us to friends or colleagues?',
+                              ratings: randomRating(),
+                            },
+                          ],
+                        },
+                        csat: {
+                          questionsRating: [
+                            {
+                              question: 'How was your experience?',
+                              ratings: randomRating(),
+                            },
+                          ],
+                        },
+                      },
+                    })
+                    .go();
+
+                  return await Promise.all(
+                    [
+                      conversation.data,
+                      adminConversation.data,
+                      moderatorConversation.data,
+                      ownerConversation.data,
+                      operatorConversation.data,
+                    ].map(async (conversation) => {
+                      const { conversationId, createdAt } = conversation;
+                      const messageIds = await Promise.all(
+                        [...Array(mockMessageCountPerConversation)].map(
+                          async (_, messageIndex) => {
+                            const messageId = uuidv4();
+                            const before = new Date();
+                            // before.setHours(before.getHours() - 2);
+                            const createMessage: CreateMessage = {
+                              messageId,
+                              conversationId,
+                              orgId,
+                              customerId,
+                              sentAt: faker.date
+                                .between(createdAt ?? 0, new Date())
+                                .getTime(),
+                              createdAt: faker.date
+                                .between(createdAt ?? 0, new Date())
+                                .getTime(),
+                              content:
+                                conversationIndex === 0 && messageIndex === 0
+                                  ? `${mockSearchPhrase} ${faker.lorem.lines()}`
+                                  : faker.lorem.lines(),
+                              sender: faker.helpers.arrayElement(senderType),
+                              operatorId: conversation?.operatorId ?? '',
+                            };
+                            const data = await db.entities.messages
+                              .create(createMessage)
+                              .go();
+                            console.log(data);
+                            return messageId;
+                          },
+                        ),
+                      );
+                      return { conversationId, messageIds };
+                    }),
+                  );
+                },
+              ),
+            )
+          ).flat();
+          return { customerId, conversations, visitIds };
+        });
       }),
     );
+
     return mockOrg;
   } catch (err) {
     console.log(err);

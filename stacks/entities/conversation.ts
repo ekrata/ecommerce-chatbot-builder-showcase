@@ -210,32 +210,48 @@ export const Conversation = new Entity({
           type: 'map',
           default: {},
           properties: {
-            question: {
-              type: npsQuestion,
-            },
-            ratings: {
-              type: 'map',
-              default: {},
-              properties: {
-                1: {
-                  type: 'number',
-                  default: 0,
-                },
-                2: {
-                  type: 'number',
-                  default: 0,
-                },
-                3: {
-                  type: 'number',
-                  default: 0,
-                },
-                4: {
-                  type: 'number',
-                  default: 0,
-                },
-                5: {
-                  type: 'number',
-                  default: 0,
+            questionsRating: {
+              type: 'list',
+              default: [],
+              items: {
+                type: 'map',
+                default: {},
+                properties: {
+                  question: {
+                    type: 'string',
+                    default: '',
+                  },
+                  ratings: {
+                    type: 'map',
+                    default: {},
+                    properties: {
+                      1: {
+                        type: 'number',
+                        required: true,
+                        default: 0,
+                      },
+                      2: {
+                        type: 'number',
+                        required: true,
+                        default: 0,
+                      },
+                      3: {
+                        type: 'number',
+                        required: true,
+                        default: 0,
+                      },
+                      4: {
+                        type: 'number',
+                        required: true,
+                        default: 0,
+                      },
+                      5: {
+                        type: 'number',
+                        required: true,
+                        default: 0,
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -276,7 +292,8 @@ export const Conversation = new Entity({
                 default: {},
                 properties: {
                   question: {
-                    type: csatQuestion,
+                    type: 'string',
+                    default: '',
                   },
                   ratings: {
                     type: 'map',
@@ -284,22 +301,27 @@ export const Conversation = new Entity({
                     properties: {
                       1: {
                         type: 'number',
+                        required: true,
                         default: 0,
                       },
                       2: {
                         type: 'number',
+                        required: true,
                         default: 0,
                       },
                       3: {
                         type: 'number',
+                        required: true,
                         default: 0,
                       },
                       4: {
                         type: 'number',
+                        required: true,
                         default: 0,
                       },
                       5: {
                         type: 'number',
+                        required: true,
                         default: 0,
                       },
                     },

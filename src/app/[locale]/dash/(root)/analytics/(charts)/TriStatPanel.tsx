@@ -4,13 +4,10 @@ export interface Props {
   stats: { name: string, stat: string, previousStat: string, change: string, changeType: 'increase' }[]
 }
 
-const stats = [
-  { name: 'Total Conversations', stat: '71,897', previousStat: '70,946', change: '12%', changeType: 'increase' },
-  { name: 'Avg. Open Rate', stat: '58.16%', previousStat: '56.14%', change: '2.02%', changeType: 'increase' },
-  { name: 'Avg. Click Rate', stat: '24.57%', previousStat: '28.62%', change: '4.05%', changeType: 'decrease' },
-]
 
-export const TriStatePanel: React.FC<Props> = ({ stats }) => {
+
+export const TriStatPanel: React.FC<Props> = ({ stats }) => {
+
   return (
     <div>
       <h3 className="text-base font-semibold leading-6 text-gray-900">Last 30 days</h3>

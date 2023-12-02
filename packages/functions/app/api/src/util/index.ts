@@ -78,9 +78,19 @@ export interface MockArgs {
   mockConversationCountPerCustomer: number;
   mockVisitsPerCustomer: number;
   mockMessageCountPerConversation: number;
-  /**
-   * 24 analytic entities per day
-   **/
-  mockAnalyticDaysCount: number;
   existingOperator?: CreateOperator;
+  /**
+   * conversations start here
+   * @date 01/12/2023 - 14:13:34
+   *
+   * @type {number}
+   */
+  mockStartDate?: number;
+  /**
+   * conversations end here
+   * @date 01/12/2023 - 14:13:34
+   *
+   * @type {number}
+   */
+  mockEndDate?: number;
 }

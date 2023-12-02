@@ -19,6 +19,14 @@ export type AnalyticConversations = Required<
   Required<EntityItem<typeof Analytic>['conversations']>
 >;
 
+export type AnalyticCsat = Required<
+  Required<EntityItem<typeof Analytic>['csat']>
+>;
+
+export type AnalyticNps = Required<
+  Required<EntityItem<typeof Analytic>['nps']>
+>;
+
 // type ConfigLiveChat = NonNullable<ConfigChannels>['liveChat'];
 
 // export type ConfigLiveChatAppearance = NonNullable<
@@ -32,6 +40,9 @@ export type AnalyticConversations = Required<
 // export type ConfigTicketing = NonNullable<
 //   NonNullable<ConfigChannels>['ticketing']
 // >;
+
+export const analyticDuration = ['hour', 'day', 'week', 'month'] as const;
+export type AnalyticDuration = (typeof analyticDuration)[number];
 
 export const Analytic = new Entity({
   model: {
@@ -47,6 +58,10 @@ export const Analytic = new Entity({
     },
     orgId: {
       type: 'string',
+    },
+    duration: {
+      type: analyticDuration,
+      default: 'hour',
     },
     startAt: {
       type: 'number',
@@ -196,11 +211,45 @@ export const Analytic = new Entity({
         },
       },
     },
-    nps: {
-      type: 'number',
-    },
     csat: {
-      type: 'number',
+      type: 'list',
+      default: [],
+      items: {
+        type: 'map',
+        default: {},
+        properties: {
+          question: {
+            type: 'string',
+            default: '',
+          },
+          score: {
+            type: 'number',
+          },
+          respondents: {
+            type: 'number',
+          },
+        },
+      },
+    },
+    nps: {
+      type: 'list',
+      default: [],
+      items: {
+        type: 'map',
+        default: {},
+        properties: {
+          question: {
+            type: 'string',
+            default: '',
+          },
+          score: {
+            type: 'number',
+          },
+          respondents: {
+            type: 'number',
+          },
+        },
+      },
     },
     updatedAt: {
       type: 'number',
@@ -226,11 +275,21 @@ export const Analytic = new Entity({
         composite: [],
       },
     },
+    range: {
+      pk: {
+        field: 'pk',
+        composite: ['orgId', 'endAt', 'startAt', 'duration'],
+      },
+      sk: {
+        field: 'sk',
+        composite: [],
+      },
+    },
     byOrg: {
       index: 'gsi2pk-gsi2sk-index',
       pk: {
         field: 'gsi2-pk',
-        composite: ['orgId'],
+        composite: ['orgId', 'duration'],
       },
       sk: {
         field: 'gsi2-sk',
