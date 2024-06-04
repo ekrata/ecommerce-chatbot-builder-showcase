@@ -2,13 +2,6 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 [![Seed Status](https://api.seed.run/ekrata-main/marketing-app-next-js-sst/stages/prod/build_badge)](https://console.seed.run/ekrata-main/marketing-app-next-js-sst)
 
-## PR Acceptance
-
-- Emphasis on pure, functional components
-- Server Side Rendered Page, with all prop data passed into client components from a server component. This allows us to mock each client component independent of the Server Component.
-- Client Components tested using jest, in storybook
-
-
 # Install 
 
 ```bash
